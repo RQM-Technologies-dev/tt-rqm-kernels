@@ -1,0 +1,63 @@
+"""Structured quaternion and rotor reference kernels."""
+
+from tt_rqm_kernels.phase_ops import (
+    integrate_phase,
+    phase_difference,
+    phase_to_unit_vector,
+    rotor_angle,
+    rotor_orientation_error,
+    smooth_phase,
+    unwrap_phase,
+    wrap_phase,
+)
+from tt_rqm_kernels.quaternion_ops import (
+    qconj,
+    qdot,
+    qinverse,
+    qmul,
+    qnorm,
+    qnormalize,
+)
+from tt_rqm_kernels.rotor_ops import (
+    is_unit_rotor,
+    qrotate_vector,
+    validate_unit_rotor,
+    vector_to_pure_quaternion,
+)
+from tt_rqm_kernels.qtensor import (
+    broadcast_leading_shapes,
+    broadcast_qtensors,
+    broadcast_quaternion_and_vector,
+    broadcast_vectors,
+    leading_shape,
+    validate_qtensor,
+    validate_vector_tensor,
+)
+
+__all__ = [
+    "broadcast_leading_shapes",
+    "broadcast_qtensors",
+    "broadcast_quaternion_and_vector",
+    "broadcast_vectors",
+    "integrate_phase",
+    "is_unit_rotor",
+    "leading_shape",
+    "phase_difference",
+    "phase_to_unit_vector",
+    "qconj",
+    "qdot",
+    "qinverse",
+    "qmul",
+    "qnorm",
+    "qnormalize",
+    "qrotate_vector",
+    "rotor_angle",
+    "rotor_orientation_error",
+    "smooth_phase",
+    "unwrap_phase",
+    "validate_qtensor",
+    "validate_unit_rotor",
+    "validate_vector_tensor",
+    "vector_to_pure_quaternion",
+    "wrap_phase",
+]

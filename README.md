@@ -1,0 +1,72 @@
+# tt-rqm-kernels
+
+Structured quaternion and rotor kernels for Tenstorrent hardware
+
+`tt-rqm-kernels` is an independent open-source RQM Technologies LLC project for structured numerical kernels targeting the Tenstorrent ecosystem. The first release surface is a correctness-tested CPU/PyTorch reference library. Later work can move selected kernels down into TT-Metalium, TT-NN, and TT-Forge / TT-MLIR.
+
+This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
+
+## Core Idea
+
+RQM Technologies develops structured numerical kernels where quaternions, rotors, phase, orientation, and wave states are represented inside ordinary floating-point tensors.
+
+A quaternion can live inside floats as:
+
+```text
+[..., 4] = [real, i, j, k]
+```
+
+The tensor is still a regular real-valued PyTorch tensor. The structure comes from the convention and the operators applied to the final dimension. For example, a quaternion multiplication kernel consumes two tensors with final dimension `4` and returns a tensor with the same final dimension.
+
+This keeps the data layout friendly to accelerator stacks while preserving useful algebraic structure at the operator level.
+
+## Why Structured Tensor Kernels Matter
+
+Modern AI accelerators are optimized around dense tensor movement, tiling, and fused math. Many domains, however, carry structured state:
+
+- orientations and poses in robotics
+- rotations and streams of transforms in graphics
+- phase in wireless and signal processing
+- vector and wave state in imaging and simulation
+- geometric features in scientific computing and physical AI
+- downstream defense applications where these numerical patterns are relevant
+
+Representing these states as ordinary floating-point tensors makes them compatible with accelerator data paths. Implementing the right structured kernels then lets software keep the math meaningful without leaving the tensor runtime.
+
+The goal of this repository is correctness first:
+
+- simple PyTorch reference operators
+- clear validation and broadcasting rules
+- tests for algebraic identities and numerical tolerances
+- benchmarks that make future accelerator ports comparable
+
+## Current Milestone
+
+Phase 1 implements CPU/PyTorch reference kernels for quaternion and rotor operations:
+
+- Hamilton product: `qmul`
+- conjugate, norm, normalization, inverse, and dot product
+- vector rotation by unit rotors
+- phase and orientation tracking helpers
+- examples and benchmark scripts
+
+## Install for Development
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest
+```
+
+## Repository Layout
+
+```text
+tt_rqm_kernels/        Reference Python package
+docs/                  Thesis and Tenstorrent backend roadmap
+examples/              Small domain-oriented usage examples
+benchmarks/            CPU reference benchmark scripts
+tests/                 Correctness and shape tests
+```
+
+## License
+
+MIT License. See `LICENSE`.
