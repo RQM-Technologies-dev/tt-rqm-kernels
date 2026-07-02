@@ -67,6 +67,43 @@ python -m tt_rqm_kernels.structuredbench --suite full
 
 StructuredBench emits a versioned report schema intended to compare CPU/PyTorch reference results against later TT-Metalium and TT-NN backend implementations.
 
+## StructuredBench Hardware Metrics
+
+StructuredBench now reports hardware-relevant estimates alongside latency, throughput, and numerical error:
+
+- estimated FLOPs
+- estimated FLOPs/sec
+- estimated bytes read and written
+- effective GB/sec
+- arithmetic intensity in FLOPs/byte
+
+The estimates are intentionally simple and documented. For example, `qmul` counts 28 FLOPs per Hamilton product, reads two 4-lane quaternion inputs, and writes one 4-lane quaternion output. These are comparison metrics for backend evaluation, not hardware-counter measurements.
+
+Generate JSON and Markdown reports:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --suite smoke \
+  --json-output reports/structuredbench_latest.json \
+  --markdown-output reports/structuredbench_latest.md
+```
+
+## Connection Points To Tenstorrent
+
+The Tenstorrent-facing surfaces are:
+
+- [docs/tenstorrent-rfc.md](docs/tenstorrent-rfc.md)
+- [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
+- [docs/operator-contracts.md](docs/operator-contracts.md)
+- [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
+
+Proposed backend path:
+
+- future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
+- future `qrotate_vector` stream benchmark
+- future TT-NN wrapper once placement guidance is clear
+- future TT-MLIR lowering discussion after an explicit lower-stack kernel exists
+
 ## Install for Development
 
 ```bash
@@ -81,6 +118,7 @@ tt_rqm_kernels/        Reference Python package
 docs/                  Thesis and Tenstorrent backend roadmap
 examples/              Small domain-oriented usage examples
 benchmarks/            CPU reference benchmark scripts
+reports/               Generated StructuredBench and outreach reports
 tests/                 Correctness and shape tests
 ```
 

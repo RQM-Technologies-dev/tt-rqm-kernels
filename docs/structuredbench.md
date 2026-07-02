@@ -42,10 +42,13 @@ Emit JSON for comparison pipelines:
 python -m tt_rqm_kernels.structuredbench --suite smoke --format json
 ```
 
-Write a report file:
+Write JSON and Markdown report files:
 
 ```bash
-python -m tt_rqm_kernels.structuredbench --suite full --format json --output structuredbench.json
+python -m tt_rqm_kernels.structuredbench \
+  --suite smoke \
+  --json-output reports/structuredbench_latest.json \
+  --markdown-output reports/structuredbench_latest.md
 ```
 
 Use smaller inputs for local development:
@@ -95,9 +98,50 @@ Each result includes:
 - maximum relative error
 - RMS error
 - optional stability metric
+- scalar reference spot-check error
+- estimated FLOPs
+- estimated FLOPs/sec
+- estimated bytes read
+- estimated bytes written
+- estimated total bytes
+- effective GB/sec
+- arithmetic intensity in FLOPs/byte
 - checksum
 
 The current backend is `torch`. Future TT-Metalium and TT-NN benchmark paths should emit the same fields so reports can be compared directly.
+
+## Hardware Metric Estimates
+
+StructuredBench reports simple hardware-relevant estimates. These are not hardware-counter measurements; they are contract-level estimates for comparing CPU/PyTorch and future accelerator backend reports.
+
+`qmul`:
+
+- 28 FLOPs per Hamilton product
+- reads two 4-lane quaternion inputs
+- writes one 4-lane quaternion output
+- bytes per value comes from dtype
+
+`qrotate`:
+
+- 64 estimated FLOPs per rotated vector
+- counts two Hamilton products plus conservative conjugate/vector-packing overhead
+- logical traffic reads one rotor `[N, 4]` and one vector `[N, 3]`, then writes one vector `[N, 3]`
+
+`qnormalize`:
+
+- 13 estimated FLOPs per quaternion
+- counts norm, reciprocal/division or scaling, and output write traffic
+
+`qinverse`:
+
+- 15 estimated FLOPs per quaternion
+- counts conjugate, norm squared, reciprocal/division or scaling, and output write traffic
+
+`phase_update`:
+
+- 6 estimated FLOPs per item
+- phase integration plus sin/cos state generation and amplitude scaling
+- transcendental-heavy behavior is marked in reports and should be interpreted separately from simple fused multiply-add throughput
 
 ## Workload Notes
 
