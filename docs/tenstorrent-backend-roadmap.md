@@ -11,6 +11,7 @@ Goals:
 - validate shape and broadcasting behavior
 - test Hamilton product identities, associativity tolerance, inverses, and unit-rotor norm preservation
 - provide benchmark scripts with stable inputs and simple metrics
+- provide StructuredBench reports for repeatable backend comparisons
 
 Initial operators:
 
@@ -22,6 +23,7 @@ Initial operators:
 - `qdot`
 - `qrotate_vector`
 - phase and orientation tracking helpers
+- StructuredBench `smoke`, `full`, `qmul`, and `qrotate` suites
 
 ## Phase 2: TT-Metalium `qmul` and `qrotate` Kernels
 
@@ -32,6 +34,7 @@ Goals:
 - map quaternion final-dimension layout onto Tenstorrent tile and memory movement constraints
 - compare TT-Metalium outputs against the PyTorch reference kernels
 - report throughput, latency, and numerical error against CPU reference outputs
+- emit the `structuredbench.v1` report fields for CPU/PyTorch and TT-Metalium runs
 
 Candidate work:
 

@@ -36,6 +36,7 @@ The project is intended to demonstrate a non-LLM structured numerical workload f
 - CPU/PyTorch reference validation
 - deterministic correctness tests
 - throughput, latency, numerical-error, and scaling benchmarks
+- StructuredBench reports that can later compare CPU/PyTorch, TT-Metalium, and TT-NN backends
 
 ## Proposed First Integration
 
@@ -101,6 +102,8 @@ The first benchmark should report:
 - scaling across input sizes
 
 If Tenstorrent has preferred benchmark formats, this project should adopt those formats rather than inventing a separate reporting style.
+
+The current repository includes StructuredBench as the CPU/PyTorch report generator. Future Tenstorrent backend examples should aim to emit the same `structuredbench.v1` fields when practical.
 
 ## Questions for Tenstorrent Maintainers
 

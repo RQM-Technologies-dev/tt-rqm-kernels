@@ -39,6 +39,7 @@ The goal of this repository is correctness first:
 - clear validation and broadcasting rules
 - tests for algebraic identities and numerical tolerances
 - benchmarks that make future accelerator ports comparable
+- StructuredBench reports for quaternion, rotor, inverse, normalization, and phase workloads
 
 ## Current Milestone
 
@@ -48,7 +49,23 @@ Phase 1 implements CPU/PyTorch reference kernels for quaternion and rotor operat
 - conjugate, norm, normalization, inverse, and dot product
 - vector rotation by unit rotors
 - phase and orientation tracking helpers
-- examples and benchmark scripts
+- examples, benchmark scripts, and the StructuredBench CLI
+
+Run the benchmark smoke suite:
+
+```bash
+python -m tt_rqm_kernels.structuredbench --suite smoke
+```
+
+Run focused or full suites:
+
+```bash
+python -m tt_rqm_kernels.structuredbench --suite qmul
+python -m tt_rqm_kernels.structuredbench --suite qrotate
+python -m tt_rqm_kernels.structuredbench --suite full
+```
+
+StructuredBench emits a versioned report schema intended to compare CPU/PyTorch reference results against later TT-Metalium and TT-NN backend implementations.
 
 ## Install for Development
 
@@ -66,6 +83,8 @@ examples/              Small domain-oriented usage examples
 benchmarks/            CPU reference benchmark scripts
 tests/                 Correctness and shape tests
 ```
+
+See [docs/structuredbench.md](docs/structuredbench.md) for benchmark suite details.
 
 ## License
 
