@@ -32,6 +32,9 @@ The repo is ready for a first handshake:
 - a developer tutorial for structured `[N, 4]` `qmul` kernels:
   `docs/structured-qmul-tutorial.md`
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
+- a narrower `tt-metal` placement issue opened after the Discussion waiting
+  period:
+  https://github.com/tenstorrent/tt-metal/issues/48944
 - `tt-awesome` submission issue #104 approved, with generated entry PR #106
   merged:
   https://github.com/tenstorrent/tt-awesome/pull/106
@@ -42,9 +45,9 @@ maintainer placement guidance and the first hardware-facing implementation path.
 
 ## Recommended Next Step
 
-Track TT-Metalium `qmul` placement guidance, then implement the first minimal
-TT-Metalium candidate through the `external-qmul` harness once the placement
-path is clear.
+Track TT-Metalium `qmul` placement guidance in the public Discussion and narrow
+`tt-metal` issue, then implement the first minimal TT-Metalium candidate through
+the `external-qmul` harness once the placement path is clear.
 
 Why this is next:
 
@@ -197,17 +200,21 @@ Exit criteria:
 
 ## Outreach Sequence
 
-1. Continue the `tenstorrent/tt-metal` GitHub Discussion if maintainers reply.
-2. Post or refresh a short Discord note pointing to the Discussion only if it
-   helps route maintainers to the narrow placement question.
-3. If there is still no Discussion reply after the waiting period, open a
-   shorter `tt-metal` issue:
+Current outreach state:
 
-```text
-Feature proposal: minimal TT-Metalium qmul example for structured [N, 4] tensors
-```
+- Discussion #48871 is open in `tenstorrent/tt-metal` with no maintainer
+  comments as of July 3, 2026:
+  https://github.com/tenstorrent/tt-metal/discussions/48871
+- Narrow placement issue #48944 is open in `tenstorrent/tt-metal`:
+  https://github.com/tenstorrent/tt-metal/issues/48944
 
-4. Contact Tenstorrent OSPO only after the repo has a technical packet plus either a TT-Lang simulation or a clear maintainer response.
+Next outreach actions:
+
+1. Continue the Discussion or issue if Tenstorrent maintainers reply.
+2. Post or refresh a short Discord note pointing to the narrow placement issue
+   only if it helps route maintainers to the question.
+3. Contact Tenstorrent OSPO only after the repo has a technical packet plus
+   either a TT-Lang simulation or a clear maintainer response.
 
 ## Public Messaging Rules
 
