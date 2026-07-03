@@ -57,6 +57,23 @@ The same report schema can compare:
 - future compiler-lowering experiments
 - future hardware runs on Tenstorrent systems
 
+## Scientific/HPC Kernel Adjacency
+
+Tenstorrent is already surfacing non-LLM scientific workloads in public ecosystem
+channels, including spectral element method work on Wormhole-class hardware. That
+is useful context for `tt-rqm-kernels`, but it is not a claim that spectral
+element methods require quaternion kernels.
+
+`tt-rqm-kernels` complements that direction with a smaller structured-kernel
+benchmark class: `[N, 4]` floating-point tensor values, fixed cross-lane
+operators, CPU/PyTorch references, scalar spot checks, TT-Lang simulator output,
+and future TT-Metalium comparison. The shared concern is lower-stack scientific
+and HPC-style kernel behavior: data layout, data movement, lane structure,
+fusion, register reuse, numerical error, and arithmetic intensity.
+
+The first RQM contribution should remain `qmul` as a compact structured-kernel
+benchmark, not a proposed Nekbone or spectral-element integration.
+
 ## Collaboration Lanes
 
 ### tt-awesome

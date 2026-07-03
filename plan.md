@@ -22,16 +22,22 @@ The repo is ready for a first handshake:
 - StructuredBench benchmark reports with latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
 - optional TT-Lang simulator `qmul` prototype with a StructuredBench-compatible simulator report
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
+- a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
+- scientific/HPC positioning that relates RQM structured kernels to
+  Tenstorrent's broader non-LLM scientific workload direction
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
 - a `tt-awesome` submission issue opened:
   https://github.com/tenstorrent/tt-awesome/issues/104
 
-The next move should be broader than asking for help porting `qmul`. The repo should become a structured-compute collaboration surface.
+The completed setup work should now be treated as background. The active work is
+response tracking, maintainer placement guidance, and the first hardware-facing
+implementation path.
 
 ## Recommended Next Step
 
-Track the `tt-awesome` maintainer response and create focused tracking issues
-for the remaining collaboration lanes.
+Commit the scientific/HPC positioning wording, then create focused tracking
+issues for the remaining collaboration lanes, starting with `tt-awesome`
+approval tracking and TT-Metalium `qmul` placement guidance.
 
 Why this is next:
 
@@ -39,8 +45,11 @@ Why this is next:
   point, and a public collaboration map
 - the `tt-awesome` submission is opened and waiting on maintainer-side
   labeling or approval
-- the minimal TT-Metalium `qmul` design document is present, so the next repo
-  step is issue tracking rather than more design prose
+- the minimal TT-Metalium `qmul` design document is present, so the next step is
+  coordination and implementation planning rather than more design prose
+- the scientific/HPC positioning now gives RQM a conservative way to reference
+  adjacent Tenstorrent scientific workload activity without claiming that
+  spectral element methods need quaternion kernels
 
 ## Priority Lanes
 
@@ -56,15 +65,16 @@ Why this is next:
 
 ## Next Repo Work
 
-### 1. Add Tracking Issues
+### 1. Open Remaining Tracking Issues
 
 Create issues in the `tt-rqm-kernels` repo:
 
 1. `Track tt-awesome submission approval`
-2. `Run StructuredBench on Tenstorrent Cloud`
-3. `Design minimal TT-Metalium qmul example`
-4. `Define TT-NN wrapper path after lower-stack qmul proof`
-5. `Draft structured-kernel tutorial for Tenstorrent developers`
+2. `Track TT-Metalium qmul placement guidance`
+3. `Implement minimal TT-Metalium qmul example after placement is confirmed`
+4. `Run StructuredBench on Tenstorrent Cloud`
+5. `Define TT-NN wrapper path after lower-stack qmul proof`
+6. `Draft structured-kernel tutorial for Tenstorrent developers`
 
 Each issue should include:
 
@@ -83,13 +93,13 @@ Goal:
 
 Tasks:
 
-- track `tt-awesome` issue #104
+- track `tt-awesome` issue #104 and any generated entry PR
 - respond to maintainer placement or metadata feedback
 - link to README, StructuredBench spec, operator contracts, and outreach packet
 
 Exit criteria:
 
-- submission or PR opened
+- `tt-awesome` approval or generated entry PR merged
 - public description leads with structured-kernel benchmarking, not quaternion theory
 
 ### Phase 2: TT-Metalium `qmul`
@@ -101,6 +111,7 @@ Goal:
 Tasks:
 
 - follow maintainer guidance from the GitHub Discussion
+- use `docs/tt-metalium-qmul-design.md` as the implementation contract
 - start with `[N, 4]` layout
 - compare against CPU/PyTorch and scalar references
 - report latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
@@ -172,10 +183,13 @@ Exit criteria:
 
 ## Outreach Sequence
 
-1. Continue the `tenstorrent/tt-metal` GitHub Discussion.
-2. Post a short Discord note pointing to that Discussion.
-3. Prepare `tt-awesome` submission.
-4. If there is no Discussion reply after about one week, open a shorter `tt-metal` issue:
+1. Monitor `tt-awesome` issue #104 for maintainer labeling, approval, or entry
+   PR generation.
+2. Continue the `tenstorrent/tt-metal` GitHub Discussion if maintainers reply.
+3. Post or refresh a short Discord note pointing to the Discussion only if it
+   helps route maintainers to the narrow placement question.
+4. If there is still no Discussion reply after the waiting period, open a
+   shorter `tt-metal` issue:
 
 ```text
 Feature proposal: minimal TT-Metalium qmul example for structured [N, 4] tensors
