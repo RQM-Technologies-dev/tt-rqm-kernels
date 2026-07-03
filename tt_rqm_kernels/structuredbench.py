@@ -3,10 +3,15 @@
 from __future__ import annotations
 
 import argparse
+from array import array
 import json
 import math
+import os
 import platform
+import shlex
+import subprocess
 import sys
+import tempfile
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
@@ -18,8 +23,9 @@ import torch
 from tt_rqm_kernels.backends import scalar_reference, torch_backend
 
 SCHEMA_VERSION = "structuredbench.v1"
+EXTERNAL_QMUL_PROTOCOL = "tt-rqm-external-qmul.v1"
 SUPPORTED_SUITES = ("smoke", "full", "qmul", "qrotate")
-SUPPORTED_BACKENDS = ("torch", "tt-lang-sim")
+SUPPORTED_BACKENDS = ("torch", "tt-lang-sim", "external-qmul")
 SUPPORTED_DTYPES = {
     "float32": torch.float32,
     "float64": torch.float64,
@@ -160,6 +166,7 @@ def run_suite(
     items_override: int | None = None,
     iterations_override: int | None = None,
     warmup_override: int | None = None,
+    external_command: str | None = None,
 ) -> dict[str, object]:
     """Run a StructuredBench suite and return a JSON-serializable report."""
 
@@ -174,6 +181,16 @@ def run_suite(
             items_override=items_override,
             iterations_override=iterations_override,
             warmup_override=warmup_override,
+        )
+    if backend == "external-qmul":
+        return _run_external_qmul_suite(
+            suite,
+            dtype_name=dtype_name,
+            seed=seed,
+            items_override=items_override,
+            iterations_override=iterations_override,
+            warmup_override=warmup_override,
+            external_command=external_command,
         )
     if backend != "torch":
         raise ValueError(f"unsupported backend: {backend}")
@@ -380,6 +397,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--json-output", type=Path, default=None)
     parser.add_argument("--markdown-output", type=Path, default=None)
+    parser.add_argument(
+        "--external-command",
+        default=None,
+        help=(
+            "Command used by --backend external-qmul. StructuredBench exposes "
+            "TT_RQM_EXTERNAL_QMUL_DIR and TT_RQM_EXTERNAL_QMUL_MANIFEST."
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.threads is not None:
@@ -394,6 +419,7 @@ def main(argv: list[str] | None = None) -> int:
         items_override=args.items,
         iterations_override=args.iters,
         warmup_override=args.warmup,
+        external_command=args.external_command,
     )
     rendered = (
         json.dumps(report, indent=2, sort_keys=True)
@@ -444,6 +470,134 @@ def _run_tt_lang_sim_suite(
     from tt_rqm_kernels.backends.tt_lang.runner import run_qmul_cases
 
     return run_qmul_cases([case], seed=seed)
+
+
+def _run_external_qmul_suite(
+    suite: str,
+    *,
+    dtype_name: str,
+    seed: int,
+    items_override: int | None,
+    iterations_override: int | None,
+    warmup_override: int | None,
+    external_command: str | None,
+) -> dict[str, object]:
+    if suite != "qmul":
+        raise ValueError("external-qmul backend currently supports --suite qmul only")
+    if dtype_name != "float32":
+        raise ValueError("external-qmul backend currently supports --dtype float32 only")
+    if not external_command:
+        raise ValueError("--backend external-qmul requires --external-command")
+
+    cases = build_cases(
+        suite,
+        items_override=items_override,
+        iterations_override=iterations_override,
+        warmup_override=warmup_override,
+    )
+    results = [
+        _run_external_qmul_case(
+            suite=suite,
+            case=case,
+            external_command=external_command,
+            seed=seed + index,
+        )
+        for index, case in enumerate(cases)
+    ]
+    device = results[0].device if results else "external-command"
+    return {
+        "schema": SCHEMA_VERSION,
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "suite": suite,
+        "backend": "external-qmul",
+        "device": device,
+        "dtype": dtype_name,
+        "seed": seed,
+        "protocol": EXTERNAL_QMUL_PROTOCOL,
+        "external_command": external_command,
+        "torch_version": torch.__version__,
+        "python_version": sys.version.split()[0],
+        "platform": platform.platform(),
+        "results": [asdict(result) for result in results],
+    }
+
+
+def _run_external_qmul_case(
+    *,
+    suite: str,
+    case: BenchmarkCase,
+    external_command: str,
+    seed: int,
+) -> BenchmarkResult:
+    generator = torch.Generator(device="cpu").manual_seed(seed)
+    a64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
+    b64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
+    a = a64.to(dtype=torch.float32)
+    b = b64.to(dtype=torch.float32)
+    reference = torch_backend.qmul(a64, b64)
+
+    with tempfile.TemporaryDirectory(prefix="tt-rqm-external-qmul-") as tmp_dir:
+        work_dir = Path(tmp_dir)
+        a_path = work_dir / "a.bin"
+        b_path = work_dir / "b.bin"
+        out_path = work_dir / "out.bin"
+        metrics_path = work_dir / "metrics.json"
+        manifest_path = work_dir / "manifest.json"
+
+        _write_float32_binary(a_path, a)
+        _write_float32_binary(b_path, b)
+        _write_text(
+            manifest_path,
+            json.dumps(
+                {
+                    "schema": EXTERNAL_QMUL_PROTOCOL,
+                    "workload": "qmul",
+                    "dtype": "float32",
+                    "lane_order": ["real", "i", "j", "k"],
+                    "items": case.items,
+                    "iterations": case.iterations,
+                    "warmup": case.warmup,
+                    "shape": [case.items, 4],
+                    "input_format": "raw little-endian float32 row-major",
+                    "output_format": "raw little-endian float32 row-major",
+                    "inputs": {
+                        "a": "a.bin",
+                        "b": "b.bin",
+                    },
+                    "outputs": {
+                        "out": "out.bin",
+                        "metrics": "metrics.json",
+                    },
+                    "seed": seed,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+        )
+
+        _run_external_command(
+            external_command,
+            work_dir=work_dir,
+            manifest_path=manifest_path,
+        )
+        metrics = _load_external_metrics(metrics_path)
+        elapsed_s = _external_elapsed_s(metrics)
+        output = _read_float32_binary(out_path, (case.items, 4))
+
+    scalar_error = _scalar_check_qmul(output, a64, b64, "float32")
+    return _result_from_output(
+        suite,
+        case,
+        "external-qmul",
+        str(metrics.get("device", "external-command")),
+        torch.float32,
+        "float32",
+        output,
+        reference,
+        elapsed_s,
+        scalar_reference_max_abs_error=scalar_error,
+    )
 
 
 def _run_case(
@@ -661,7 +815,7 @@ def _result_from_output(
     suite: str,
     case: BenchmarkCase,
     backend: str,
-    device: torch.device,
+    device: torch.device | str,
     dtype: torch.dtype,
     dtype_name: str,
     output: torch.Tensor,
@@ -728,6 +882,81 @@ def _measure(
     if output is None:
         output = op()
     return output, elapsed_s
+
+
+def _run_external_command(
+    external_command: str,
+    *,
+    work_dir: Path,
+    manifest_path: Path,
+) -> None:
+    command = shlex.split(external_command)
+    if not command:
+        raise ValueError("--external-command must not be empty")
+
+    env = os.environ.copy()
+    env["TT_RQM_EXTERNAL_QMUL_DIR"] = str(work_dir)
+    env["TT_RQM_EXTERNAL_QMUL_MANIFEST"] = str(manifest_path)
+    completed = subprocess.run(
+        command,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    if completed.returncode != 0:
+        raise RuntimeError(
+            "external-qmul command failed\n"
+            f"command: {' '.join(command)}\n"
+            f"work_dir: {work_dir}\n"
+            f"stdout:\n{completed.stdout}\n"
+            f"stderr:\n{completed.stderr}"
+        )
+
+
+def _load_external_metrics(path: Path) -> dict[str, object]:
+    if not path.exists():
+        raise RuntimeError(f"external-qmul command did not write {path.name}")
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise TypeError("external-qmul metrics.json must contain a JSON object")
+    return payload
+
+
+def _external_elapsed_s(metrics: dict[str, object]) -> float:
+    if "elapsed_s" not in metrics:
+        raise ValueError("external-qmul metrics.json must include elapsed_s")
+    elapsed_s = float(metrics["elapsed_s"])
+    if not math.isfinite(elapsed_s) or elapsed_s <= 0.0:
+        raise ValueError("external-qmul elapsed_s must be a positive finite value")
+    return elapsed_s
+
+
+def _write_float32_binary(path: Path, value: torch.Tensor) -> None:
+    flat = value.detach().cpu().to(dtype=torch.float32).contiguous().reshape(-1)
+    payload = array("f", flat.tolist())
+    if sys.byteorder != "little":
+        payload.byteswap()
+    path.write_bytes(payload.tobytes())
+
+
+def _read_float32_binary(path: Path, shape: tuple[int, ...]) -> torch.Tensor:
+    if not path.exists():
+        raise RuntimeError(f"external-qmul command did not write {path.name}")
+
+    expected_values = math.prod(shape)
+    expected_bytes = expected_values * torch.empty((), dtype=torch.float32).element_size()
+    actual_bytes = path.stat().st_size
+    if actual_bytes != expected_bytes:
+        raise ValueError(
+            f"external-qmul output size mismatch for {path.name}: "
+            f"expected {expected_bytes} bytes, got {actual_bytes}"
+        )
+
+    payload = array("f")
+    payload.frombytes(path.read_bytes())
+    if sys.byteorder != "little":
+        payload.byteswap()
+    return torch.tensor(payload, dtype=torch.float32).reshape(shape)
 
 
 def _error_metrics(output: torch.Tensor, reference: torch.Tensor) -> dict[str, float]:
@@ -958,6 +1187,13 @@ def _backend_note(report: dict[str, object]) -> str:
             "- Current results use the TT-Lang functional simulator. They "
             "validate kernel logic and report shape, not hardware performance."
         )
+    if report.get("backend") == "external-qmul":
+        return (
+            "- Current results use the external-qmul candidate harness. "
+            "StructuredBench validates candidate output against CPU/PyTorch and "
+            "scalar references; hardware claims depend on the external command "
+            "and measurement environment."
+        )
     return "- Current results use the CPU/PyTorch reference backend."
 
 
@@ -966,6 +1202,12 @@ def _committed_report_note(report: dict[str, object]) -> str:
         return (
             "- This committed TT-Lang report is a simulator smoke output. It is "
             "included to show the report shape, not to claim stable hardware performance."
+        )
+    if report.get("backend") == "external-qmul":
+        return (
+            "- External-qmul reports are candidate-command outputs validated by "
+            "StructuredBench. They should not be read as Tenstorrent hardware "
+            "performance unless the command and device are explicitly documented."
         )
     return (
         "- Committed reports are sample CPU/PyTorch reference outputs. They are "

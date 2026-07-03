@@ -109,6 +109,33 @@ A first TT-Metalium result should compare against:
 
 The first useful comparison should include throughput, latency, numerical error, scaling across input sizes, effective GB/sec, and arithmetic intensity.
 
+## External qmul Candidate Harness
+
+StructuredBench includes an `external-qmul` backend for candidate executables
+that are not built into the Python package:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --suite qmul \
+  --backend external-qmul \
+  --external-command "python scripts/qmul_external_reference.py"
+```
+
+This backend is intentionally narrow. It supports only float32 `qmul` over
+`[N, 4] x [N, 4] -> [N, 4]`. StructuredBench generates deterministic `a.bin`,
+`b.bin`, and `manifest.json` files in a temporary work directory, exposes that
+directory through `TT_RQM_EXTERNAL_QMUL_DIR`, and expects the candidate command
+to write `out.bin` and `metrics.json`.
+
+`metrics.json` must include a positive finite `elapsed_s` value measured over the
+requested iteration loop. It may include `device` to label the candidate system
+in the StructuredBench report.
+
+The output is validated against the CPU/PyTorch `qmul` reference and scalar spot
+checks before it is reported through the normal `structuredbench.v1` fields.
+This provides a bridge for future TT-Metalium, TT-NN, or cloud-hosted candidate
+runs without adding fake Tenstorrent code to this repository.
+
 ## Successful First Tenstorrent Backend Result
 
 A successful first Tenstorrent backend result would:

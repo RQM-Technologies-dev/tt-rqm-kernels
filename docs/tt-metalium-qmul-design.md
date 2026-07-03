@@ -98,6 +98,13 @@ Recommended validation path:
 The TT-Lang simulator report is useful as a pre-hardware logic check, but it is
 not a substitute for TT-Metalium execution or hardware validation.
 
+For an external TT-Metalium executable, the intended bridge is the StructuredBench
+`external-qmul` backend. It writes deterministic `a.bin`, `b.bin`, and
+`manifest.json` files, runs a candidate command, then validates `out.bin` and
+`metrics.json` against the same CPU/PyTorch and scalar references. The included
+`scripts/qmul_external_reference.py` command is only a CPU/PyTorch protocol
+reference, not a hardware backend.
+
 ## StructuredBench Report Fields
 
 A future TT-Metalium report should emit `structuredbench.v1` fields where

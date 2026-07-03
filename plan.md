@@ -21,6 +21,8 @@ The repo is ready for a first handshake:
 - scalar reference checks for independent correctness spot checks
 - StructuredBench benchmark reports with latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
 - optional TT-Lang simulator `qmul` prototype with a StructuredBench-compatible simulator report
+- an `external-qmul` candidate harness for validating future standalone
+  `qmul` executables against CPU/PyTorch and scalar references
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
 - a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
 - scientific/HPC positioning that relates RQM structured kernels to
@@ -35,9 +37,9 @@ implementation path.
 
 ## Recommended Next Step
 
-Commit the scientific/HPC positioning wording, then create focused tracking
-issues for the remaining collaboration lanes, starting with `tt-awesome`
-approval tracking and TT-Metalium `qmul` placement guidance.
+Commit the external `qmul` benchmark harness, then create focused tracking
+issues for the remaining collaboration lanes, starting with TT-Metalium `qmul`
+placement and implementation.
 
 Why this is next:
 
@@ -50,6 +52,9 @@ Why this is next:
 - the scientific/HPC positioning now gives RQM a conservative way to reference
   adjacent Tenstorrent scientific workload activity without claiming that
   spectral element methods need quaternion kernels
+- the external `qmul` harness gives future TT-Metalium, TT-NN, or cloud-hosted
+  candidate executables a concrete way to emit comparable StructuredBench
+  reports
 
 ## Priority Lanes
 
@@ -71,7 +76,7 @@ Create issues in the `tt-rqm-kernels` repo:
 
 1. `Track tt-awesome submission approval`
 2. `Track TT-Metalium qmul placement guidance`
-3. `Implement minimal TT-Metalium qmul example after placement is confirmed`
+3. `Implement minimal TT-Metalium qmul example using the external-qmul harness`
 4. `Run StructuredBench on Tenstorrent Cloud`
 5. `Define TT-NN wrapper path after lower-stack qmul proof`
 6. `Draft structured-kernel tutorial for Tenstorrent developers`
@@ -112,6 +117,8 @@ Tasks:
 
 - follow maintainer guidance from the GitHub Discussion
 - use `docs/tt-metalium-qmul-design.md` as the implementation contract
+- use the `external-qmul` harness as the validation bridge for a standalone
+  candidate executable
 - start with `[N, 4]` layout
 - compare against CPU/PyTorch and scalar references
 - report latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity

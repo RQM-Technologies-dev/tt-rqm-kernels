@@ -93,6 +93,79 @@ def test_module_cli_json_smoke() -> None:
     assert {result["workload"] for result in report["results"]} == {"qmul"}
 
 
+def test_module_cli_external_qmul_reference_backend(tmp_path: Path) -> None:
+    markdown_output = tmp_path / "external-qmul.md"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "tt_rqm_kernels.structuredbench",
+            "--suite",
+            "qmul",
+            "--backend",
+            "external-qmul",
+            "--external-command",
+            f"{sys.executable} scripts/qmul_external_reference.py",
+            "--items",
+            "16",
+            "--iters",
+            "1",
+            "--warmup",
+            "0",
+            "--format",
+            "json",
+            "--markdown-output",
+            str(markdown_output),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    report = json.loads(completed.stdout)
+
+    assert report["schema"] == SCHEMA_VERSION
+    assert report["suite"] == "qmul"
+    assert report["backend"] == "external-qmul"
+    assert report["device"] == "cpu/pytorch-reference"
+    assert report["protocol"] == "tt-rqm-external-qmul.v1"
+    assert len(report["results"]) == 3
+    for result in report["results"]:
+        assert result["workload"] == "qmul"
+        assert result["structured_shape"] == "[16, 4]"
+        assert result["scalar_reference_max_abs_error"] is not None
+        assert result["max_abs_error"] < 1e-4
+    markdown = markdown_output.read_text(encoding="utf-8")
+    assert "external-qmul candidate harness" in markdown
+    assert "should not be read as Tenstorrent hardware performance" in markdown
+
+
+def test_external_qmul_rejects_non_qmul_suite() -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "tt_rqm_kernels.structuredbench",
+            "--suite",
+            "smoke",
+            "--backend",
+            "external-qmul",
+            "--external-command",
+            f"{sys.executable} scripts/qmul_external_reference.py",
+            "--items",
+            "16",
+            "--iters",
+            "1",
+            "--warmup",
+            "0",
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode != 0
+    assert "external-qmul backend currently supports --suite qmul only" in completed.stderr
+
+
 def test_module_cli_creates_json_and_markdown_outputs(tmp_path: Path) -> None:
     json_output = tmp_path / "nested" / "structuredbench.json"
     markdown_output = tmp_path / "nested" / "structuredbench.md"
