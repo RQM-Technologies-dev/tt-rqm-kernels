@@ -30,8 +30,8 @@ The next move should be broader than asking for help porting `qmul`. The repo sh
 
 ## Recommended Next Step
 
-Track the `tt-awesome` maintainer response and prepare the minimal TT-Metalium
-`qmul` design document.
+Track the `tt-awesome` maintainer response and create focused tracking issues
+for the remaining collaboration lanes.
 
 Why this is next:
 
@@ -39,8 +39,8 @@ Why this is next:
   point, and a public collaboration map
 - the `tt-awesome` submission is opened and waiting on maintainer-side
   labeling or approval
-- the next technical artifact should make the lower-stack TT-Metalium `qmul`
-  target concrete without opening a PR before placement guidance is clear
+- the minimal TT-Metalium `qmul` design document is present, so the next repo
+  step is issue tracking rather than more design prose
 
 ## Priority Lanes
 
@@ -56,24 +56,7 @@ Why this is next:
 
 ## Next Repo Work
 
-### 1. Add `docs/tt-metalium-qmul-design.md`
-
-Purpose:
-
-- define the minimal future TT-Metalium `qmul` example before writing code
-- keep the proposal aligned with maintainer placement guidance
-- make validation, report fields, and non-goals explicit
-
-Content outline:
-
-- input/output contract: `[N, 4] x [N, 4] -> [N, 4]`
-- Hamilton product lane equations
-- CPU/PyTorch and scalar reference comparison path
-- StructuredBench report fields
-- open placement questions for TT-Metalium maintainers
-- non-goals: no native quaternion hardware, no hardware-performance claim from simulator results
-
-### 2. Add Tracking Issues
+### 1. Add Tracking Issues
 
 Create issues in the `tt-rqm-kernels` repo:
 

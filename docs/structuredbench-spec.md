@@ -125,4 +125,4 @@ The proposed second target is `qrotate_vector`, because it builds on `qmul` and 
 
 Tenstorrent hardware should not only be evaluated on LLM inference and matmul-heavy neural networks. StructuredBench provides a compact, reproducible workload family for structured physical, geometric, signal, and simulation operators represented inside ordinary floating-point tensors.
 
-This gives Tenstorrent engineers a small public benchmark for a workload class that can matter across robotics, graphics, wireless, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream defense applications without making defense the primary framing.
+This gives Tenstorrent engineers a small public benchmark for a workload class that can matter across robotics, graphics, wireless, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream signals processing without making defense the primary framing.

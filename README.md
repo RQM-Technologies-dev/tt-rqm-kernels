@@ -31,7 +31,7 @@ Modern AI accelerators are optimized around dense tensor movement, tiling, and f
 - phase in wireless and signal processing
 - vector and wave state in imaging and simulation
 - geometric features in scientific computing and physical AI
-- downstream defense applications where these numerical patterns are relevant
+- downstream signals processing where these numerical patterns are relevant
 
 Representing these states as ordinary floating-point tensors makes them compatible with accelerator data paths. Implementing the right structured kernels then lets software keep the math meaningful without leaving the tensor runtime.
 
@@ -106,7 +106,7 @@ and acceptance criteria.
 
 ## Why Tenstorrent Developers Should Care
 
-This repo gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. Some workloads need to preserve structure inside the data: rotation, phase, orientation, direction, and geometric state. That shows up in robotics pose updates, graphics rotation streams, wireless phase tracking, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream defense applications.
+This repo gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. Some workloads need to preserve structure inside the data: rotation, phase, orientation, direction, and geometric state. That shows up in robotics pose updates, graphics rotation streams, wireless phase tracking, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream signals processing.
 
 The first benchmark target is `qmul` over `[N, 4]` floating-point tensors. `qmul` is small enough to validate, but structured enough to test cross-lane dependencies, fixed multiply/add/sign patterns, data movement, fusion, register reuse, and arithmetic intensity. This can help Tenstorrent show useful accelerator behavior beyond LLM inference and matmul-heavy neural networks.
 
