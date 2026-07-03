@@ -29,6 +29,8 @@ The repo is ready for a first handshake:
 - a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
 - scientific/HPC positioning that relates RQM structured kernels to
   Tenstorrent's broader non-LLM scientific workload direction
+- a developer tutorial for structured `[N, 4]` `qmul` kernels:
+  `docs/structured-qmul-tutorial.md`
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
 - `tt-awesome` submission issue #104 approved, with generated entry PR #106
   merged:
@@ -83,7 +85,7 @@ Active repo issues should now focus on the hardware-facing path:
 2. `Implement minimal TT-Metalium qmul example using the external-qmul harness` (#3)
 3. `Run StructuredBench on Tenstorrent Cloud` (#7)
 4. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
-5. `Draft structured-kernel tutorial for Tenstorrent developers` (#5)
+5. `Draft structured-kernel tutorial for Tenstorrent developers` (#5, complete)
 
 Each issue should include:
 

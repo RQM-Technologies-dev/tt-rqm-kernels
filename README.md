@@ -152,6 +152,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/tenstorrent-rfc.md](docs/tenstorrent-rfc.md)
 - [docs/collaboration-map.md](docs/collaboration-map.md)
 - [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
+- [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
