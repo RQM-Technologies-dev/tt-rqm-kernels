@@ -23,24 +23,30 @@ The repo is ready for a first handshake:
 - optional TT-Lang simulator `qmul` prototype with a StructuredBench-compatible simulator report
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
+- a `tt-awesome` submission issue opened:
+  https://github.com/tenstorrent/tt-awesome/issues/104
 
 The next move should be broader than asking for help porting `qmul`. The repo should become a structured-compute collaboration surface.
 
 ## Recommended Next Step
 
-Add `docs/collaboration-map.md`, then use it as the backbone for a `tt-awesome` submission.
+Track the `tt-awesome` maintainer response and prepare the minimal TT-Metalium
+`qmul` design document.
 
 Why this is next:
 
-- the repo now has CPU/PyTorch reference results and a TT-Lang simulator proof point
-- `tt-awesome` is the lowest-friction ecosystem visibility step
-- a collaboration map gives Tenstorrent engineers a clean way to understand where this project fits before asking for deeper TT-Metalium placement
+- the repo now has CPU/PyTorch reference results, a TT-Lang simulator proof
+  point, and a public collaboration map
+- the `tt-awesome` submission is opened and waiting on maintainer-side
+  labeling or approval
+- the next technical artifact should make the lower-stack TT-Metalium `qmul`
+  target concrete without opening a PR before placement guidance is clear
 
 ## Priority Lanes
 
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
-| 1 | `tt-awesome` entry | Low-friction ecosystem visibility | PR or submission adds `tt-rqm-kernels` as a structured-kernel benchmark project |
+| 1 | `tt-awesome` approval | Low-friction ecosystem visibility | Maintainers approve issue #104 and the generated entry PR is merged |
 | 2 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references |
 | 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, and future TT-Metalium reports share `structuredbench.v1` fields |
 | 4 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
@@ -50,27 +56,28 @@ Why this is next:
 
 ## Next Repo Work
 
-### 1. Add `docs/collaboration-map.md`
+### 1. Add `docs/tt-metalium-qmul-design.md`
 
 Purpose:
 
-- explain how RQM can collaborate across TT-Lang, TT-Metalium, TT-NN, TT-MLIR, `tt-awesome`, and Tenstorrent Cloud
-- keep the public frame as structured computation on open accelerators
-- avoid pitching native quaternion hardware or new silicon features
+- define the minimal future TT-Metalium `qmul` example before writing code
+- keep the proposal aligned with maintainer placement guidance
+- make validation, report fields, and non-goals explicit
 
 Content outline:
 
-- current repo assets
-- why StructuredBench is the reusable asset
-- collaboration lanes and sequence
-- what RQM is asking for now
-- what RQM is not asking for
+- input/output contract: `[N, 4] x [N, 4] -> [N, 4]`
+- Hamilton product lane equations
+- CPU/PyTorch and scalar reference comparison path
+- StructuredBench report fields
+- open placement questions for TT-Metalium maintainers
+- non-goals: no native quaternion hardware, no hardware-performance claim from simulator results
 
 ### 2. Add Tracking Issues
 
 Create issues in the `tt-rqm-kernels` repo:
 
-1. `Prepare tt-awesome submission`
+1. `Track tt-awesome submission approval`
 2. `Run StructuredBench on Tenstorrent Cloud`
 3. `Design minimal TT-Metalium qmul example`
 4. `Define TT-NN wrapper path after lower-stack qmul proof`
@@ -93,8 +100,8 @@ Goal:
 
 Tasks:
 
-- prepare a `tt-awesome` submission
-- categorize as structured tensor kernels, custom kernels, scientific/signal workloads, or low-level examples depending on repo taxonomy
+- track `tt-awesome` issue #104
+- respond to maintainer placement or metadata feedback
 - link to README, StructuredBench spec, operator contracts, and outreach packet
 
 Exit criteria:
