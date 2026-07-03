@@ -343,6 +343,7 @@ def render_markdown_report(report: dict[str, object]) -> str:
             "## Notes",
             "",
             "- Current results use the CPU/PyTorch reference backend.",
+            "- Committed reports are sample CPU/PyTorch reference outputs. They are included to show the report shape and outreach packet format, not to claim stable hardware performance.",
             "- Scalar reference checks are small deterministic spot checks used as an independent correctness contract.",
             "- FLOP and byte counts are simple documented estimates for backend comparison, not hardware-counter measurements.",
             "- Phase update includes transcendental-heavy sin/cos state generation; its FLOP estimate counts each transcendental call as one reported operation.",

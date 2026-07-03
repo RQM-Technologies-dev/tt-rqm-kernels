@@ -150,4 +150,4 @@ def test_tenstorrent_packet_generator(tmp_path: Path) -> None:
 
     packet = output_path.read_text(encoding="utf-8")
     assert "Proposed first TT-Metalium target: `qmul`" in packet
-    assert "Should this begin as a TT-Metalium programming example" in packet
+    assert "Where should a minimal TT-Metalium qmul example" in packet

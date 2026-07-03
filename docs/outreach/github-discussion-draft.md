@@ -21,9 +21,14 @@ The first layout is:
 
 [N, 4] = [real, i, j, k]
 
-The first proposed kernel is qmul, the Hamilton product for two [N, 4] inputs producing one [N, 4] output. The second proposed target is qrotate_vector, a streamed rotor/vector rotation built from two Hamilton products.
+The first proposed kernel is qmul, the Hamilton product for two [N, 4] inputs producing one [N, 4] output.
 
-We have a CPU/PyTorch reference benchmark and want guidance on the right first Tenstorrent integration point. Should this begin as a TT-Metalium programming example, a TT-NN custom operator, or another path?
+Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live?
+
+Secondary questions:
+
+- If a TT-Metalium programming example is not the right starting point, is there a preferred TT-NN custom-op path?
+- Would a TT-MLIR representation be useful later, after there is a concrete lower-stack qmul example?
 
 The benchmark now reports throughput, latency, numerical error, estimated FLOPs/sec, effective GB/sec, arithmetic intensity, and scalar-reference spot-check error. The intent is to make future TT-Metalium or TT-NN results directly comparable against the CPU/PyTorch reference.
 

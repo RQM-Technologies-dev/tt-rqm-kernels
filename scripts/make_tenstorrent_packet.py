@@ -77,6 +77,12 @@ def render_packet(report: dict[str, object]) -> str:
                 "compare future TT-Metalium and TT-NN backend implementations."
             ),
             "",
+            (
+                "Committed reports are sample CPU/PyTorch reference outputs. They "
+                "are included to show the report shape and outreach packet format, "
+                "not to claim stable hardware performance."
+            ),
+            "",
             "## Benchmark Table",
             "",
             _markdown_table(
@@ -126,9 +132,11 @@ def render_packet(report: dict[str, object]) -> str:
             "```text",
             "Hi Tenstorrent maintainers,",
             "",
-            "RQM Technologies has a CPU/PyTorch reference benchmark for structured quaternion and rotor tensor kernels, with qmul as the proposed first [N, 4] TT-Metalium target and qrotate_vector as the proposed second target.",
+            "RQM Technologies has a CPU/PyTorch reference benchmark for structured quaternion and rotor tensor kernels, with qmul as the proposed first [N, 4] TT-Metalium target.",
             "",
-            "We have a CPU/PyTorch reference benchmark and want guidance on the right first Tenstorrent integration point. Should this begin as a TT-Metalium programming example, a TT-NN custom operator, or another path?",
+            "Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live?",
+            "",
+            "Secondary questions: if a TT-Metalium programming example is not the right starting point, is there a preferred TT-NN custom-op path? Would a TT-MLIR representation be useful later, after there is a concrete lower-stack qmul example?",
             "",
             "The benchmark reports throughput, latency, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity, with scalar-reference spot checks for correctness.",
             "```",

@@ -14,6 +14,13 @@ The first convention is quaternion layout:
 
 The current backend is CPU/PyTorch. The report schema is designed so future TT-Metalium and TT-NN implementations can be compared against the same correctness and benchmark fields.
 
+## Current Status
+
+- current backend: CPU/PyTorch
+- current benchmark reports are sample reference outputs
+- Tenstorrent backend is not implemented yet
+- first requested maintainer guidance is placement for a minimal TT-Metalium `qmul` example
+
 ## Why Structured Tensor Kernels Matter
 
 Many accelerator benchmarks focus on scalar elementwise math or large matrix multiplication. Between those levels is a useful class of structured numerical operators:

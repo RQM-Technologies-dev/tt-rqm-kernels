@@ -2,6 +2,8 @@
 
 Structured quaternion and rotor kernels for Tenstorrent hardware
 
+[![CI](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml/badge.svg)](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml)
+
 `tt-rqm-kernels` is an independent open-source RQM Technologies LLC project for structured numerical kernels targeting the Tenstorrent ecosystem. The first release surface is a correctness-tested CPU/PyTorch reference library. Later work can move selected kernels down into TT-Metalium, TT-NN, and TT-Forge / TT-MLIR.
 
 This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
@@ -78,6 +80,8 @@ StructuredBench now reports hardware-relevant estimates alongside latency, throu
 - arithmetic intensity in FLOPs/byte
 
 The estimates are intentionally simple and documented. For example, `qmul` counts 28 FLOPs per Hamilton product, reads two 4-lane quaternion inputs, and writes one 4-lane quaternion output. These are comparison metrics for backend evaluation, not hardware-counter measurements.
+
+Committed reports are sample CPU/PyTorch reference outputs. They are included to show the report shape and outreach packet format, not to claim stable hardware performance.
 
 Generate JSON and Markdown reports:
 
