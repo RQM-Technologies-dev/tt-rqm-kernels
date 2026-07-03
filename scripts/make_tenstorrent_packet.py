@@ -83,6 +83,33 @@ def render_packet(report: dict[str, object]) -> str:
                 "not to claim stable hardware performance."
             ),
             "",
+            "## Why Tenstorrent Developers Should Care",
+            "",
+            (
+                "StructuredBench gives Tenstorrent a compact benchmark class between "
+                "scalar elementwise ops and large matmul. It focuses on structured "
+                "4-lane tensor values that carry rotation, phase, orientation, "
+                "direction, and geometric state inside ordinary floating-point tensors."
+            ),
+            "",
+            (
+                "The first target is `qmul` over `[N, 4]` tensors. It is small enough "
+                "to validate with CPU/PyTorch and scalar references, but structured "
+                "enough to exercise cross-lane dependencies, fixed multiply/add/sign "
+                "patterns, data movement, fusion, register reuse, and arithmetic "
+                "intensity. No native quaternion datatype, new silicon feature, or "
+                "hardware change is required."
+            ),
+            "",
+            "Proof path:",
+            "",
+            "```text",
+            "CPU/PyTorch qmul reference",
+            "-> scalar correctness check",
+            "-> TT-Metalium qmul for [N, 4]",
+            "-> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity",
+            "```",
+            "",
             "## Benchmark Table",
             "",
             _markdown_table(

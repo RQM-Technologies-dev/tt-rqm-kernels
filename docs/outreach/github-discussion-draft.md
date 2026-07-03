@@ -23,6 +23,8 @@ The first layout is:
 
 The first proposed kernel is qmul, the Hamilton product for two [N, 4] inputs producing one [N, 4] output.
 
+Quaternions are useful here because they give us a compact four-lane way to carry rotation, phase, orientation, and related geometric state inside ordinary floating-point tensors.
+
 Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live?
 
 Secondary questions:

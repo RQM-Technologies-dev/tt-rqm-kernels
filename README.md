@@ -69,6 +69,23 @@ python -m tt_rqm_kernels.structuredbench --suite full
 
 StructuredBench emits a versioned report schema intended to compare CPU/PyTorch reference results against later TT-Metalium and TT-NN backend implementations.
 
+## Why Tenstorrent Developers Should Care
+
+This repo gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. Some workloads need to preserve structure inside the data: rotation, phase, orientation, direction, and geometric state. That shows up in robotics pose updates, graphics rotation streams, wireless phase tracking, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream defense applications.
+
+The first benchmark target is `qmul` over `[N, 4]` floating-point tensors. `qmul` is small enough to validate, but structured enough to test cross-lane dependencies, fixed multiply/add/sign patterns, data movement, fusion, register reuse, and arithmetic intensity. This can help Tenstorrent show useful accelerator behavior beyond LLM inference and matmul-heavy neural networks.
+
+No native quaternion datatype, new silicon feature, or hardware change is required. The values stay inside ordinary floating-point tensors.
+
+Simple proof path:
+
+```text
+CPU/PyTorch qmul reference
+-> scalar correctness check
+-> TT-Metalium qmul for [N, 4]
+-> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
+```
+
 ## StructuredBench Hardware Metrics
 
 StructuredBench now reports hardware-relevant estimates alongside latency, throughput, and numerical error:

@@ -6,25 +6,40 @@
 
 Committed reports are sample CPU/PyTorch reference outputs. They are included to show the report shape and outreach packet format, not to claim stable hardware performance.
 
+## Why Tenstorrent Developers Should Care
+
+StructuredBench gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. It focuses on structured 4-lane tensor values that carry rotation, phase, orientation, direction, and geometric state inside ordinary floating-point tensors.
+
+The first target is `qmul` over `[N, 4]` tensors. It is small enough to validate with CPU/PyTorch and scalar references, but structured enough to exercise cross-lane dependencies, fixed multiply/add/sign patterns, data movement, fusion, register reuse, and arithmetic intensity. No native quaternion datatype, new silicon feature, or hardware change is required.
+
+Proof path:
+
+```text
+CPU/PyTorch qmul reference
+-> scalar correctness check
+-> TT-Metalium qmul for [N, 4]
+-> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
+```
+
 ## Benchmark Table
 
 | workload | items | iters | latency_ms | throughput | unit | max_abs_err |
 | --- | --- | --- | --- | --- | --- | --- |
-| qmul | 1024 | 5 | 0.1364 | 7504844.39 | qmul/s | 1.179e-07 |
-| qrotate | 1024 | 5 | 0.3249 | 3152113.46 | rotations/s | 4.148e-07 |
-| qnormalize | 1024 | 5 | 0.0335 | 30533259.06 | normalizations/s | 1.014e-07 |
-| qinverse | 1024 | 5 | 0.0878 | 11658727.40 | inverses/s | 1.486e-06 |
-| phase_update | 2048 | 5 | 0.0784 | 26129313.40 | phase-updates/s | 3.465e-07 |
+| qmul | 1024 | 5 | 0.1380 | 7419332.71 | qmul/s | 1.179e-07 |
+| qrotate | 1024 | 5 | 0.3232 | 3168148.24 | rotations/s | 4.148e-07 |
+| qnormalize | 1024 | 5 | 0.0366 | 28004615.88 | normalizations/s | 1.014e-07 |
+| qinverse | 1024 | 5 | 0.0887 | 11549688.28 | inverses/s | 1.486e-06 |
+| phase_update | 2048 | 5 | 0.0785 | 26085184.22 | phase-updates/s | 3.465e-07 |
 
 ## Hardware Metrics Table
 
 | workload | items | estimated_flops | estimated_flops_per_s | estimated_total_bytes | effective_gb_per_s | arithmetic_intensity |
 | --- | --- | --- | --- | --- | --- | --- |
-| qmul | 1024 | 143360 | 2.101e+08 | 245760 | 0.360 | 0.583 |
-| qrotate | 1024 | 327680 | 2.017e+08 | 204800 | 0.126 | 1.600 |
-| qnormalize | 1024 | 66560 | 3.969e+08 | 163840 | 0.977 | 0.406 |
-| qinverse | 1024 | 76800 | 1.749e+08 | 163840 | 0.373 | 0.469 |
-| phase_update | 2048 | 61440 | 1.568e+08 | 204800 | 0.523 | 0.300 |
+| qmul | 1024 | 143360 | 2.077e+08 | 245760 | 0.356 | 0.583 |
+| qrotate | 1024 | 327680 | 2.028e+08 | 204800 | 0.127 | 1.600 |
+| qnormalize | 1024 | 66560 | 3.641e+08 | 163840 | 0.896 | 0.406 |
+| qinverse | 1024 | 76800 | 1.732e+08 | 163840 | 0.370 | 0.469 |
+| phase_update | 2048 | 61440 | 1.565e+08 | 204800 | 0.522 | 0.300 |
 
 ## Proposed First TT-Metalium Target
 
