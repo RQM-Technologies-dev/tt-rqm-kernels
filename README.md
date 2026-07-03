@@ -153,9 +153,11 @@ The Tenstorrent-facing surfaces are:
 - [docs/collaboration-map.md](docs/collaboration-map.md)
 - [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
 - [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
+- [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
+- [reports/tenstorrent_hardware_report_template.md](reports/tenstorrent_hardware_report_template.md)
 
 Proposed backend path:
 

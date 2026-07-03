@@ -27,6 +27,8 @@ The repo is ready for a first handshake:
 - an external TT-Metalium candidate staging package under
   `experimental/tt_metalium_qmul/` with build/run/validation placeholders
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
+- a Tenstorrent execution runbook and hardware report template for future
+  StructuredBench `qmul` runs
 - a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
 - scientific/HPC positioning that relates RQM structured kernels to
   Tenstorrent's broader non-LLM scientific workload direction
@@ -42,6 +44,7 @@ The repo is ready for a first handshake:
 - local tracker issue #1 closed after the generated entry PR merged
 - local tracker issue #2 closed after hardening the TT-Lang simulator report
 - local tracker issue #3 started with an external TT-Metalium candidate scaffold
+- local tracker issue #7 started with execution runbook/report-template prework
 
 The completed setup work should now be treated as background. The active work is
 maintainer placement guidance and the first hardware-facing implementation path.
@@ -49,8 +52,9 @@ maintainer placement guidance and the first hardware-facing implementation path.
 ## Recommended Next Step
 
 Track TT-Metalium `qmul` placement guidance in the public Discussion and narrow
-`tt-metal` issue, then implement the first minimal TT-Metalium candidate through
-the `external-qmul` harness once the placement path is clear.
+`tt-metal` issue. In parallel, use the execution runbook to prepare a real
+Tenstorrent SDK or Cloud environment for the first hardware-facing
+StructuredBench `qmul` report.
 
 Why this is next:
 
@@ -70,6 +74,9 @@ Why this is next:
   TT-Metalium source until a real SDK/hardware environment is available
 - the candidate scaffold now has explicit build/run/validation commands, so the
   remaining #3 work is real TT-Metalium host/kernel implementation
+- the runbook now makes #7 actionable once Tenstorrent Cloud, a local
+  TT-Metalium SDK checkout, or maintainer-provided environment guidance is
+  available
 
 ## Priority Lanes
 
