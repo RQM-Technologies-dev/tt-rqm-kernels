@@ -11,7 +11,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol
 
-from tt_rqm_kernels.backends.tt_lang.availability import SETUP_HINT, check_tt_lang_sim
+from tt_rqm_kernels.backends.tt_lang.availability import (
+    TTLangSimulatorUnavailable,
+    check_tt_lang_sim,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 KERNEL_SCRIPT = REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "qmul_sim_kernel.py"
@@ -36,7 +39,7 @@ def run_qmul_cases(
 
     availability = check_tt_lang_sim(sim_cli=sim_cli)
     if not availability.available or availability.sim_cli is None:
-        raise RuntimeError(f"{availability.reason}\n\n{SETUP_HINT}")
+        raise TTLangSimulatorUnavailable(availability)
 
     reports = [
         _run_one_case(case, seed=seed + index, sim_cli=availability.sim_cli)
@@ -55,6 +58,11 @@ def run_qmul_cases(
         {
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "seed": seed,
+            "tt_lang_sim": _simulator_metadata(
+                first,
+                sim_cli=availability.sim_cli,
+                version=availability.version,
+            ),
             "results": [
                 result
                 for report in reports
@@ -63,6 +71,22 @@ def run_qmul_cases(
         }
     )
     return combined
+
+
+def _simulator_metadata(
+    report: dict[str, object],
+    *,
+    sim_cli: str,
+    version: str | None,
+) -> dict[str, object]:
+    metadata = report.get("tt_lang_sim", {})
+    if not isinstance(metadata, dict):
+        metadata = {}
+    return {
+        **metadata,
+        "sim_cli": Path(sim_cli).name,
+        "sim_version": version,
+    }
 
 
 def _run_one_case(

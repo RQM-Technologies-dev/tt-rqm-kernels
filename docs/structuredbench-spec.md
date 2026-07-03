@@ -25,7 +25,7 @@ The current backend is CPU/PyTorch. The report schema is designed so future TT-M
 
 StructuredBench gives Tenstorrent a small public workload for structured numerical kernels, not another LLM benchmark. It shows how ordinary floating-point tensors can carry rotation, phase, orientation, direction, and geometric state without a new datatype or hardware feature.
 
-The first path is intentionally narrow: CPU/PyTorch reference results, scalar correctness checks, then a future TT-Metalium `qmul` comparison for `[N, 4]` tensors. That lets Tenstorrent demonstrate a custom kernel path for 4-lane structured values with fixed cross-lane dependencies, then compare throughput, latency, numerical error, FLOPs/sec, effective GB/sec, and arithmetic intensity against the reference report.
+The first path is intentionally narrow: CPU/PyTorch reference results, scalar correctness checks, TT-Lang simulator validation, then a future TT-Metalium `qmul` comparison for `[N, 4]` tensors. That lets Tenstorrent demonstrate a custom kernel path for 4-lane structured values with fixed cross-lane dependencies, then compare throughput, latency, numerical error, FLOPs/sec, effective GB/sec, and arithmetic intensity against the reference report.
 
 ## Why Structured Tensor Kernels Matter
 

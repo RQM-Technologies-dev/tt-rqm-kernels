@@ -5,8 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import subprocess
 import sys
 from pathlib import Path
 
@@ -14,9 +12,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tt_rqm_kernels.backends.tt_lang import SETUP_HINT, check_tt_lang_sim
-
-KERNEL_SCRIPT = REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "qmul_sim_kernel.py"
+from tt_rqm_kernels.backends.tt_lang import check_tt_lang_sim
+from tt_rqm_kernels.backends.tt_lang.availability import TTLangSimulatorUnavailable
+from tt_rqm_kernels.backends.tt_lang.runner import run_qmul_cases
+from tt_rqm_kernels.structuredbench import BenchmarkCase, render_markdown_report
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -37,8 +36,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    availability = check_tt_lang_sim(sim_cli=args.sim_cli)
     if args.check:
+        availability = check_tt_lang_sim(sim_cli=args.sim_cli)
         print(
             json.dumps(
                 {
@@ -54,41 +53,23 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
 
-    if not availability.available or availability.sim_cli is None:
-        print(availability.reason, file=sys.stderr)
-        print(SETUP_HINT, file=sys.stderr)
+    case = BenchmarkCase(
+        workload="qmul",
+        items=args.items,
+        iterations=args.iters,
+        warmup=args.warmup,
+        throughput_unit="qmul/s",
+    )
+    try:
+        report = run_qmul_cases([case], seed=args.seed, sim_cli=args.sim_cli)
+    except TTLangSimulatorUnavailable as exc:
+        print(str(exc), file=sys.stderr)
         return 2
 
-    env = os.environ.copy()
-    env["PYTHONPATH"] = _pythonpath_with_repo(env.get("PYTHONPATH"))
-    command = [
-        availability.sim_cli,
-        str(KERNEL_SCRIPT),
-        "--items",
-        str(args.items),
-        "--iters",
-        str(args.iters),
-        "--warmup",
-        str(args.warmup),
-        "--seed",
-        str(args.seed),
-        "--json-output",
-        str(args.json_output),
-        "--markdown-output",
-        str(args.markdown_output),
-    ]
-    completed = subprocess.run(command, text=True, env=env)
-    return completed.returncode
-
-
-def _pythonpath_with_repo(existing: str | None) -> str:
-    repo = str(REPO_ROOT)
-    if not existing:
-        return repo
-    parts = existing.split(os.pathsep)
-    if repo in parts:
-        return existing
-    return os.pathsep.join([repo, existing])
+    _write_text(args.json_output, json.dumps(report, indent=2, sort_keys=True) + "\n")
+    _write_text(args.markdown_output, render_markdown_report(report))
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
 
 
 def _positive_int(value: str) -> int:
@@ -103,6 +84,11 @@ def _nonnegative_int(value: str) -> int:
     if parsed < 0:
         raise argparse.ArgumentTypeError("value must be nonnegative")
     return parsed
+
+
+def _write_text(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
 
 
 if __name__ == "__main__":

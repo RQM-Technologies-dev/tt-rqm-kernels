@@ -110,6 +110,15 @@ Each result includes:
 
 The current backend is `torch`. Future TT-Metalium and TT-NN benchmark paths should emit the same fields so reports can be compared directly.
 
+The current lower-stack proof path is:
+
+```text
+PyTorch reference
+-> scalar checks
+-> TT-Lang simulator
+-> future TT-Metalium candidate
+```
+
 The optional TT-Lang simulator qmul smoke also emits `structuredbench.v1` with
 `backend="tt-lang-sim"` and `simulation=true`. Those reports validate simulator
 logic and report shape; they are not hardware performance results.
@@ -123,7 +132,8 @@ python -m tt_rqm_kernels.structuredbench \
   --suite qmul \
   --items 128 \
   --iters 1 \
-  --warmup 0
+  --warmup 0 \
+  --seed 0
 ```
 
 ## Hardware Metric Estimates

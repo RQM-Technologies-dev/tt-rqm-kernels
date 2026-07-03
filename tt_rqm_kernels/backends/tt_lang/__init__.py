@@ -8,6 +8,7 @@ installation does not depend on TT-Lang; users opt in by installing
 from tt_rqm_kernels.backends.tt_lang.availability import (
     SETUP_HINT,
     TTLangAvailability,
+    TTLangSimulatorUnavailable,
     check_tt_lang_sim,
 )
 
@@ -16,6 +17,7 @@ name = "tt-lang-sim"
 __all__ = [
     "SETUP_HINT",
     "TTLangAvailability",
+    "TTLangSimulatorUnavailable",
     "check_tt_lang_sim",
     "name",
 ]

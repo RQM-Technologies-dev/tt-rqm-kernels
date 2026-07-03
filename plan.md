@@ -20,7 +20,8 @@ The repo is ready for a first handshake:
 - CPU/PyTorch reference kernels for quaternion and rotor operators
 - scalar reference checks for independent correctness spot checks
 - StructuredBench benchmark reports with latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
-- optional TT-Lang simulator `qmul` prototype with a StructuredBench-compatible simulator report
+- optional TT-Lang simulator `qmul` prototype with a hardened,
+  simulator-only StructuredBench-compatible report
 - an `external-qmul` candidate harness for validating future standalone
   `qmul` executables against CPU/PyTorch and scalar references
 - an external TT-Metalium candidate staging package under
@@ -39,6 +40,7 @@ The repo is ready for a first handshake:
   merged:
   https://github.com/tenstorrent/tt-awesome/pull/106
 - local tracker issue #1 closed after the generated entry PR merged
+- local tracker issue #2 closed after hardening the TT-Lang simulator report
 
 The completed setup work should now be treated as background. The active work is
 maintainer placement guidance and the first hardware-facing implementation path.

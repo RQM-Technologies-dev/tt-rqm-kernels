@@ -29,6 +29,17 @@ class TTLangAvailability:
     setup_hint: str = SETUP_HINT
 
 
+class TTLangSimulatorUnavailable(RuntimeError):
+    """Raised when an optional TT-Lang simulator run is requested but unavailable."""
+
+    def __init__(self, availability: TTLangAvailability) -> None:
+        self.availability = availability
+        super().__init__(
+            "TT-Lang simulator unavailable: "
+            f"{availability.reason}\n\n{availability.setup_hint}"
+        )
+
+
 def check_tt_lang_sim(*, sim_cli: str | None = None) -> TTLangAvailability:
     """Return whether the `tt-lang-sim` console command is available.
 
@@ -37,13 +48,13 @@ def check_tt_lang_sim(*, sim_cli: str | None = None) -> TTLangAvailability:
     would incorrectly reject valid simulator environments.
     """
 
-    resolved_cli = _resolve_cli(sim_cli)
+    resolved_cli, missing_reason = _resolve_cli(sim_cli)
     if resolved_cli is None:
         return TTLangAvailability(
             available=False,
             sim_cli=None,
             version=None,
-            reason="tt-lang-sim was not found on PATH.",
+            reason=missing_reason,
         )
 
     version = _read_version(resolved_cli)
@@ -71,10 +82,14 @@ def _read_version(sim_cli: str) -> str | None:
     return output or None
 
 
-def _resolve_cli(sim_cli: str | None) -> str | None:
+def _resolve_cli(sim_cli: str | None) -> tuple[str | None, str]:
     if sim_cli is None:
-        return shutil.which("tt-lang-sim")
+        resolved = shutil.which("tt-lang-sim")
+        return resolved, "tt-lang-sim was not found on PATH."
     if "/" in sim_cli:
         path = Path(sim_cli)
-        return str(path) if path.exists() and os.access(path, os.X_OK) else None
-    return shutil.which(sim_cli)
+        if path.exists() and os.access(path, os.X_OK):
+            return str(path), ""
+        return None, f"requested tt-lang-sim CLI is not executable: {sim_cli}"
+    resolved = shutil.which(sim_cli)
+    return resolved, f"requested tt-lang-sim CLI was not found on PATH: {sim_cli}"

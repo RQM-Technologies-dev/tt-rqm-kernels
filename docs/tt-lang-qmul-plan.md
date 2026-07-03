@@ -11,10 +11,13 @@ PyTorch qmul reference
 -> scalar correctness spot check
 -> TT-Lang simulated qmul
 -> StructuredBench-compatible simulation report
+-> future TT-Metalium candidate through external-qmul
 ```
 
 The simulator path is intentionally not a hardware result. It validates kernel
 logic, data layout, and report shape before any TT-Metalium or TT-NN work.
+The next backend step remains a future TT-Metalium candidate validated through
+the `external-qmul` harness, not fake TT-Metalium source in this repository.
 
 ## Operator Contract
 
@@ -66,6 +69,30 @@ tt-lang-setup
 python scripts/run_ttlang_qmul_smoke.py --items 128
 ```
 
+For the committed report artifact, use the deterministic smoke configuration:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --seed 0 \
+  --json-output reports/tt_lang_qmul_sim.json \
+  --markdown-output reports/tt_lang_qmul_sim.md
+```
+
+The same backend can be reached through StructuredBench:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --backend tt-lang-sim \
+  --suite qmul \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --seed 0
+```
+
 Successful runs write:
 
 ```text
@@ -74,7 +101,9 @@ reports/tt_lang_qmul_sim.md
 ```
 
 The report uses `structuredbench.v1`, `backend="tt-lang-sim"`, and
-`simulation=true`.
+`simulation=true`. It also records the deterministic seed, benchmark shape, and
+simulator metadata when the `tt-lang-sim` CLI reports it. Timing values remain
+environment-dependent simulator measurements.
 
 ## Acceptance Criteria
 

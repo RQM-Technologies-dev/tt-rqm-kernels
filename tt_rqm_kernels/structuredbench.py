@@ -21,6 +21,7 @@ from typing import Callable
 import torch
 
 from tt_rqm_kernels.backends import scalar_reference, torch_backend
+from tt_rqm_kernels.backends.tt_lang.availability import TTLangSimulatorUnavailable
 
 SCHEMA_VERSION = "structuredbench.v1"
 EXTERNAL_QMUL_PROTOCOL = "tt-rqm-external-qmul.v1"
@@ -167,6 +168,7 @@ def run_suite(
     iterations_override: int | None = None,
     warmup_override: int | None = None,
     external_command: str | None = None,
+    sim_cli: str | None = None,
 ) -> dict[str, object]:
     """Run a StructuredBench suite and return a JSON-serializable report."""
 
@@ -181,6 +183,7 @@ def run_suite(
             items_override=items_override,
             iterations_override=iterations_override,
             warmup_override=warmup_override,
+            sim_cli=sim_cli,
         )
     if backend == "external-qmul":
         return _run_external_qmul_suite(
@@ -372,6 +375,7 @@ def render_markdown_report(report: dict[str, object]) -> str:
             "",
             _backend_note(report),
             _committed_report_note(report),
+            *_backend_metadata_notes(report),
             "- Scalar reference checks are small deterministic spot checks used as an independent correctness contract.",
             "- FLOP and byte counts are simple documented estimates for backend comparison, not hardware-counter measurements.",
             "- Phase update includes transcendental-heavy sin/cos state generation; its FLOP estimate counts each transcendental call as one reported operation.",
@@ -405,22 +409,32 @@ def main(argv: list[str] | None = None) -> int:
             "TT_RQM_EXTERNAL_QMUL_DIR and TT_RQM_EXTERNAL_QMUL_MANIFEST."
         ),
     )
+    parser.add_argument(
+        "--sim-cli",
+        default=None,
+        help="Override the tt-lang-sim executable used by --backend tt-lang-sim.",
+    )
     args = parser.parse_args(argv)
 
     if args.threads is not None:
         torch.set_num_threads(args.threads)
 
-    report = run_suite(
-        args.suite,
-        backend=args.backend,
-        device_name=args.device,
-        dtype_name=args.dtype,
-        seed=args.seed,
-        items_override=args.items,
-        iterations_override=args.iters,
-        warmup_override=args.warmup,
-        external_command=args.external_command,
-    )
+    try:
+        report = run_suite(
+            args.suite,
+            backend=args.backend,
+            device_name=args.device,
+            dtype_name=args.dtype,
+            seed=args.seed,
+            items_override=args.items,
+            iterations_override=args.iters,
+            warmup_override=args.warmup,
+            external_command=args.external_command,
+            sim_cli=args.sim_cli,
+        )
+    except TTLangSimulatorUnavailable as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
     rendered = (
         json.dumps(report, indent=2, sort_keys=True)
         if args.format == "json"
@@ -453,6 +467,7 @@ def _run_tt_lang_sim_suite(
     items_override: int | None,
     iterations_override: int | None,
     warmup_override: int | None,
+    sim_cli: str | None,
 ) -> dict[str, object]:
     if suite != "qmul":
         raise ValueError("tt-lang-sim backend currently supports --suite qmul only")
@@ -469,7 +484,7 @@ def _run_tt_lang_sim_suite(
 
     from tt_rqm_kernels.backends.tt_lang.runner import run_qmul_cases
 
-    return run_qmul_cases([case], seed=seed)
+    return run_qmul_cases([case], seed=seed, sim_cli=sim_cli)
 
 
 def _run_external_qmul_suite(
@@ -1214,6 +1229,23 @@ def _committed_report_note(report: dict[str, object]) -> str:
         "included to show the report shape and outreach packet format, not to "
         "claim stable hardware performance."
     )
+
+
+def _backend_metadata_notes(report: dict[str, object]) -> list[str]:
+    if report.get("backend") != "tt-lang-sim":
+        return []
+    metadata = report.get("tt_lang_sim", {})
+    if not isinstance(metadata, dict):
+        return []
+    fields = [
+        f"seed={report.get('seed')}",
+        f"layout={metadata.get('layout')}",
+        f"block_items={metadata.get('block_items')}",
+        f"padded_items={metadata.get('padded_items')}",
+        f"sim_cli={metadata.get('sim_cli')}",
+        f"sim_version={metadata.get('sim_version')}",
+    ]
+    return ["- Simulator metadata: " + ", ".join(fields) + "."]
 
 
 def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:
