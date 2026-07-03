@@ -29,14 +29,12 @@ The repo is ready for a first handshake:
   Tenstorrent's broader non-LLM scientific workload direction
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
 - `tt-awesome` submission issue #104 approved, with generated entry PR #106
-  open and pending review:
+  merged:
   https://github.com/tenstorrent/tt-awesome/pull/106
-- local tracker issue #1 now watches the generated `tt-awesome` PR until merge
-  or requested changes
+- local tracker issue #1 closed after the generated entry PR merged
 
 The completed setup work should now be treated as background. The active work is
-response tracking, maintainer placement guidance, and the first hardware-facing
-implementation path.
+maintainer placement guidance and the first hardware-facing implementation path.
 
 ## Recommended Next Step
 
@@ -48,8 +46,8 @@ Why this is next:
 
 - the repo now has CPU/PyTorch reference results, a TT-Lang simulator proof
   point, and a public collaboration map
-- the `tt-awesome` submission has maintainer approval and a generated PR, so it
-  is no longer the active repo-building blocker
+- the `tt-awesome` submission has merged, so it is no longer an active
+  repo-building blocker
 - the minimal TT-Metalium `qmul` design document is present, so the next step is
   coordination and implementation planning rather than more design prose
 - the scientific/HPC positioning now gives RQM a conservative way to reference
@@ -98,11 +96,10 @@ Goal:
 
 - make `tt-rqm-kernels` discoverable inside the Tenstorrent ecosystem
 
-Tasks:
+Status:
 
-- watch `tt-awesome` PR #106 until it is merged or maintainers request changes
-- respond to maintainer placement or metadata feedback
-- link to README, StructuredBench spec, operator contracts, and outreach packet
+- complete: `tt-awesome` submission issue #104 was approved and generated PR
+  #106 merged
 
 Exit criteria:
 
@@ -192,19 +189,17 @@ Exit criteria:
 
 ## Outreach Sequence
 
-1. Monitor generated `tt-awesome` PR #106 for review, merge, or requested copy
-   changes.
-2. Continue the `tenstorrent/tt-metal` GitHub Discussion if maintainers reply.
-3. Post or refresh a short Discord note pointing to the Discussion only if it
+1. Continue the `tenstorrent/tt-metal` GitHub Discussion if maintainers reply.
+2. Post or refresh a short Discord note pointing to the Discussion only if it
    helps route maintainers to the narrow placement question.
-4. If there is still no Discussion reply after the waiting period, open a
+3. If there is still no Discussion reply after the waiting period, open a
    shorter `tt-metal` issue:
 
 ```text
 Feature proposal: minimal TT-Metalium qmul example for structured [N, 4] tensors
 ```
 
-5. Contact Tenstorrent OSPO only after the repo has a technical packet plus either a TT-Lang simulation or a clear maintainer response.
+4. Contact Tenstorrent OSPO only after the repo has a technical packet plus either a TT-Lang simulation or a clear maintainer response.
 
 ## Public Messaging Rules
 
