@@ -187,4 +187,4 @@ See [docs/structuredbench.md](docs/structuredbench.md) for benchmark suite detai
 
 ## License
 
-MIT License. See `LICENSE`.
+Apache License 2.0. See `LICENSE`.
