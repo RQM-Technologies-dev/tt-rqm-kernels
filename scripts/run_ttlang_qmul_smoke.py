@@ -30,6 +30,29 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--markdown-output", type=Path, default=Path("reports/tt_lang_qmul_sim.md"))
     parser.add_argument("--sim-cli", default=None)
     parser.add_argument(
+        "--trace",
+        action="store_true",
+        help=(
+            "Enable TT-Lang simulator trace capture. Uses a temporary trace file "
+            "unless --trace-output is provided."
+        ),
+    )
+    parser.add_argument(
+        "--trace-output",
+        type=Path,
+        default=None,
+        help="Write the TT-Lang simulator JSONL trace to this path.",
+    )
+    parser.add_argument(
+        "--stats-output",
+        type=Path,
+        default=None,
+        help=(
+            "Write tt-lang-sim-stats text output when trace capture is enabled. "
+            "Also enables trace capture."
+        ),
+    )
+    parser.add_argument(
         "--check",
         action="store_true",
         help="Check simulator availability without running the benchmark.",
@@ -44,6 +67,9 @@ def main(argv: list[str] | None = None) -> int:
                     "available": availability.available,
                     "sim_cli": availability.sim_cli,
                     "version": availability.version,
+                    "stats_cli": availability.stats_cli,
+                    "stats_available": availability.stats_available,
+                    "stats_reason": availability.stats_reason,
                     "reason": availability.reason,
                     "setup_hint": availability.setup_hint,
                 },
@@ -61,7 +87,14 @@ def main(argv: list[str] | None = None) -> int:
         throughput_unit="qmul/s",
     )
     try:
-        report = run_qmul_cases([case], seed=args.seed, sim_cli=args.sim_cli)
+        report = run_qmul_cases(
+            [case],
+            seed=args.seed,
+            sim_cli=args.sim_cli,
+            trace=args.trace,
+            trace_output=args.trace_output,
+            stats_output=args.stats_output,
+        )
     except TTLangSimulatorUnavailable as exc:
         print(str(exc), file=sys.stderr)
         return 2

@@ -81,11 +81,30 @@ Check whether the simulator is available:
 python scripts/run_ttlang_qmul_smoke.py --check
 ```
 
+The check output also reports whether `tt-lang-sim-stats` is available. Stats
+support is optional; missing stats tooling does not block simulator correctness
+runs.
+
 Run it in an environment with `tt-lang-sim` installed:
 
 ```bash
 python scripts/run_ttlang_qmul_smoke.py \
   --items 128 \
+  --json-output reports/tt_lang_qmul_sim.json \
+  --markdown-output reports/tt_lang_qmul_sim.md
+```
+
+Optionally capture a simulator trace and post-process it with
+`tt-lang-sim-stats` when that tool is installed:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --seed 0 \
+  --trace-output reports/tt_lang_qmul_trace.jsonl \
+  --stats-output reports/tt_lang_qmul_stats.txt \
   --json-output reports/tt_lang_qmul_sim.json \
   --markdown-output reports/tt_lang_qmul_sim.md
 ```
@@ -100,6 +119,24 @@ python -m tt_rqm_kernels.structuredbench \
   --iters 1 \
   --warmup 0
 ```
+
+StructuredBench exposes the same trace/stat capture through TT-Lang-specific
+flags:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --backend tt-lang-sim \
+  --suite qmul \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --tt-lang-trace-output reports/tt_lang_qmul_trace.jsonl \
+  --tt-lang-stats-output reports/tt_lang_qmul_stats.txt
+```
+
+Trace/stat output is simulator diagnostics only. It is useful for inspecting
+dataflow-buffer and copy activity before a hardware backend exists, but it is
+not hardware performance evidence.
 
 See [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md) for setup details
 and acceptance criteria.

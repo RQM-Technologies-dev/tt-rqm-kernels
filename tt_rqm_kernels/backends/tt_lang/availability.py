@@ -26,6 +26,9 @@ class TTLangAvailability:
     sim_cli: str | None
     version: str | None
     reason: str
+    stats_cli: str | None = None
+    stats_available: bool = False
+    stats_reason: str = "tt-lang-sim-stats was not checked."
     setup_hint: str = SETUP_HINT
 
 
@@ -49,12 +52,16 @@ def check_tt_lang_sim(*, sim_cli: str | None = None) -> TTLangAvailability:
     """
 
     resolved_cli, missing_reason = _resolve_cli(sim_cli)
+    stats_cli, stats_reason = _resolve_stats_cli(resolved_cli)
     if resolved_cli is None:
         return TTLangAvailability(
             available=False,
             sim_cli=None,
             version=None,
             reason=missing_reason,
+            stats_cli=stats_cli,
+            stats_available=stats_cli is not None,
+            stats_reason=stats_reason,
         )
 
     version = _read_version(resolved_cli)
@@ -63,6 +70,9 @@ def check_tt_lang_sim(*, sim_cli: str | None = None) -> TTLangAvailability:
         sim_cli=resolved_cli,
         version=version,
         reason="tt-lang-sim CLI is available.",
+        stats_cli=stats_cli,
+        stats_available=stats_cli is not None,
+        stats_reason=stats_reason,
     )
 
 
@@ -93,3 +103,15 @@ def _resolve_cli(sim_cli: str | None) -> tuple[str | None, str]:
         return None, f"requested tt-lang-sim CLI is not executable: {sim_cli}"
     resolved = shutil.which(sim_cli)
     return resolved, f"requested tt-lang-sim CLI was not found on PATH: {sim_cli}"
+
+
+def _resolve_stats_cli(resolved_sim_cli: str | None) -> tuple[str | None, str]:
+    if resolved_sim_cli is not None:
+        sibling = Path(resolved_sim_cli).with_name("tt-lang-sim-stats")
+        if sibling.exists() and os.access(sibling, os.X_OK):
+            return str(sibling), "tt-lang-sim-stats CLI is available next to tt-lang-sim."
+
+    resolved = shutil.which("tt-lang-sim-stats")
+    if resolved is not None:
+        return resolved, "tt-lang-sim-stats CLI is available."
+    return None, "tt-lang-sim-stats was not found on PATH."

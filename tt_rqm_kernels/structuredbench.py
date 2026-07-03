@@ -169,6 +169,9 @@ def run_suite(
     warmup_override: int | None = None,
     external_command: str | None = None,
     sim_cli: str | None = None,
+    tt_lang_trace: bool = False,
+    tt_lang_trace_output: Path | None = None,
+    tt_lang_stats_output: Path | None = None,
 ) -> dict[str, object]:
     """Run a StructuredBench suite and return a JSON-serializable report."""
 
@@ -184,6 +187,9 @@ def run_suite(
             iterations_override=iterations_override,
             warmup_override=warmup_override,
             sim_cli=sim_cli,
+            trace=tt_lang_trace,
+            trace_output=tt_lang_trace_output,
+            stats_output=tt_lang_stats_output,
         )
     if backend == "external-qmul":
         return _run_external_qmul_suite(
@@ -371,6 +377,7 @@ def render_markdown_report(report: dict[str, object]) -> str:
                 hardware_rows,
             ),
             "",
+            *_tt_lang_trace_stats_section(report),
             "## Notes",
             "",
             _backend_note(report),
@@ -414,7 +421,38 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Override the tt-lang-sim executable used by --backend tt-lang-sim.",
     )
+    parser.add_argument(
+        "--tt-lang-trace",
+        action="store_true",
+        help=(
+            "Enable TT-Lang simulator trace capture. Uses a temporary trace file "
+            "unless --tt-lang-trace-output is provided. Requires --backend tt-lang-sim."
+        ),
+    )
+    parser.add_argument(
+        "--tt-lang-trace-output",
+        type=Path,
+        default=None,
+        help="Write the TT-Lang simulator JSONL trace to this path.",
+    )
+    parser.add_argument(
+        "--tt-lang-stats-output",
+        type=Path,
+        default=None,
+        help=(
+            "Write tt-lang-sim-stats text output when trace capture is enabled. "
+            "Also enables trace capture. Requires --backend tt-lang-sim."
+        ),
+    )
     args = parser.parse_args(argv)
+
+    tt_lang_trace_args_used = (
+        args.tt_lang_trace
+        or args.tt_lang_trace_output is not None
+        or args.tt_lang_stats_output is not None
+    )
+    if tt_lang_trace_args_used and args.backend != "tt-lang-sim":
+        parser.error("TT-Lang trace/stat flags require --backend tt-lang-sim")
 
     if args.threads is not None:
         torch.set_num_threads(args.threads)
@@ -431,6 +469,9 @@ def main(argv: list[str] | None = None) -> int:
             warmup_override=args.warmup,
             external_command=args.external_command,
             sim_cli=args.sim_cli,
+            tt_lang_trace=args.tt_lang_trace,
+            tt_lang_trace_output=args.tt_lang_trace_output,
+            tt_lang_stats_output=args.tt_lang_stats_output,
         )
     except TTLangSimulatorUnavailable as exc:
         print(str(exc), file=sys.stderr)
@@ -468,6 +509,9 @@ def _run_tt_lang_sim_suite(
     iterations_override: int | None,
     warmup_override: int | None,
     sim_cli: str | None,
+    trace: bool,
+    trace_output: Path | None,
+    stats_output: Path | None,
 ) -> dict[str, object]:
     if suite != "qmul":
         raise ValueError("tt-lang-sim backend currently supports --suite qmul only")
@@ -484,7 +528,14 @@ def _run_tt_lang_sim_suite(
 
     from tt_rqm_kernels.backends.tt_lang.runner import run_qmul_cases
 
-    return run_qmul_cases([case], seed=seed, sim_cli=sim_cli)
+    return run_qmul_cases(
+        [case],
+        seed=seed,
+        sim_cli=sim_cli,
+        trace=trace,
+        trace_output=trace_output,
+        stats_output=stats_output,
+    )
 
 
 def _run_external_qmul_suite(
@@ -1244,8 +1295,71 @@ def _backend_metadata_notes(report: dict[str, object]) -> list[str]:
         f"padded_items={metadata.get('padded_items')}",
         f"sim_cli={metadata.get('sim_cli')}",
         f"sim_version={metadata.get('sim_version')}",
+        f"stats_cli={metadata.get('stats_cli')}",
+        f"trace_enabled={metadata.get('trace_enabled', False)}",
     ]
     return ["- Simulator metadata: " + ", ".join(fields) + "."]
+
+
+def _tt_lang_trace_stats_section(report: dict[str, object]) -> list[str]:
+    if report.get("backend") != "tt-lang-sim":
+        return []
+    metadata = report.get("tt_lang_sim", {})
+    if not isinstance(metadata, dict) or not metadata.get("trace_enabled"):
+        return []
+
+    stats_available = "yes" if metadata.get("stats_available") else "no"
+    lines = [
+        "## TT-Lang Simulator Trace/Stats",
+        "",
+        "- Trace capture: enabled.",
+        f"- Trace path: {_format_trace_path(metadata.get('trace_path'))}.",
+        f"- Stats CLI available: {stats_available}.",
+        "- These trace/stat outputs are simulator diagnostics, not hardware performance.",
+        "",
+    ]
+
+    stats_summary = metadata.get("stats_summary")
+    if stats_summary:
+        lines.extend(
+            [
+                "```text",
+                _clip_markdown_block(str(stats_summary)),
+                "```",
+                "",
+            ]
+        )
+        return lines
+
+    stats_error = metadata.get("stats_error")
+    if stats_error:
+        lines.extend(
+            [
+                "Stats summary unavailable:",
+                "",
+                "```text",
+                _clip_markdown_block(str(stats_error)),
+                "```",
+                "",
+            ]
+        )
+    return lines
+
+
+def _format_trace_path(value: object) -> str:
+    if value is None:
+        return "temporary trace file, not retained"
+    if isinstance(value, list):
+        if not value:
+            return "temporary trace file, not retained"
+        return ", ".join(f"`{item}`" for item in value)
+    return f"`{value}`"
+
+
+def _clip_markdown_block(value: str, *, limit: int = 4000) -> str:
+    if len(value) <= limit:
+        return value
+    return value[: limit - 32] + "\n... truncated for Markdown report ..."
 
 
 def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:

@@ -81,6 +81,26 @@ python scripts/run_ttlang_qmul_smoke.py \
   --markdown-output reports/tt_lang_qmul_sim.md
 ```
 
+Optional simulator trace/stat capture:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --seed 0 \
+  --trace-output reports/tt_lang_qmul_trace.jsonl \
+  --stats-output reports/tt_lang_qmul_stats.txt \
+  --json-output reports/tt_lang_qmul_sim.json \
+  --markdown-output reports/tt_lang_qmul_sim.md
+```
+
+Trace capture runs `tt-lang-sim` with `--trace`. When `tt-lang-sim-stats` is
+available, the runner post-processes the trace and records the text summary in
+the `tt_lang_sim` report metadata. If stats tooling is unavailable or fails,
+the simulator benchmark still succeeds and reports `stats_error` instead of
+turning the correctness run into a failure.
+
 The same backend can be reached through StructuredBench:
 
 ```bash
@@ -93,6 +113,20 @@ python -m tt_rqm_kernels.structuredbench \
   --seed 0
 ```
 
+StructuredBench trace/stat capture uses TT-Lang-specific flags:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --backend tt-lang-sim \
+  --suite qmul \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --seed 0 \
+  --tt-lang-trace-output reports/tt_lang_qmul_trace.jsonl \
+  --tt-lang-stats-output reports/tt_lang_qmul_stats.txt
+```
+
 Successful runs write:
 
 ```text
@@ -102,8 +136,20 @@ reports/tt_lang_qmul_sim.md
 
 The report uses `structuredbench.v1`, `backend="tt-lang-sim"`, and
 `simulation=true`. It also records the deterministic seed, benchmark shape, and
-simulator metadata when the `tt-lang-sim` CLI reports it. Timing values remain
-environment-dependent simulator measurements.
+simulator metadata when the `tt-lang-sim` CLI reports it. Trace/stat fields are
+stored under `tt_lang_sim` as simulator-only diagnostics:
+
+```text
+tt_lang_sim.trace_enabled
+tt_lang_sim.trace_path
+tt_lang_sim.stats_available
+tt_lang_sim.stats_summary
+tt_lang_sim.stats_error
+```
+
+Timing values remain environment-dependent simulator measurements. Trace and
+statistics output can help inspect functional simulator activity, but it is not
+hardware performance evidence.
 
 ## Acceptance Criteria
 
@@ -112,6 +158,7 @@ environment-dependent simulator measurements.
 - CPU/PyTorch comparison
 - independent scalar reference spot check
 - JSON and Markdown reports compatible with StructuredBench
+- optional trace/stat capture is recorded under simulator-only metadata
 - clear report language that these are simulator/reference outputs, not
   hardware performance claims
 
