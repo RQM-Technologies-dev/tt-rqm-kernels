@@ -14,7 +14,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from tt_rqm_kernels.backends.tt_lang import check_tt_lang_sim
 from tt_rqm_kernels.backends.tt_lang.availability import TTLangSimulatorUnavailable
-from tt_rqm_kernels.backends.tt_lang.runner import run_qmul_cases
+from tt_rqm_kernels.backends.tt_lang.runner import SUPPORTED_VARIANTS, run_qmul_cases
 from tt_rqm_kernels.structuredbench import BenchmarkCase, render_markdown_report
 
 
@@ -29,6 +29,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-output", type=Path, default=Path("reports/tt_lang_qmul_sim.json"))
     parser.add_argument("--markdown-output", type=Path, default=Path("reports/tt_lang_qmul_sim.md"))
     parser.add_argument("--sim-cli", default=None)
+    parser.add_argument(
+        "--variant",
+        choices=SUPPORTED_VARIANTS,
+        default="block",
+        help="TT-Lang qmul simulator variant to run.",
+    )
     parser.add_argument(
         "--trace",
         action="store_true",
@@ -91,6 +97,7 @@ def main(argv: list[str] | None = None) -> int:
             [case],
             seed=args.seed,
             sim_cli=args.sim_cli,
+            variant=args.variant,
             trace=args.trace,
             trace_output=args.trace_output,
             stats_output=args.stats_output,

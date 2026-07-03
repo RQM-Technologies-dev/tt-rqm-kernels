@@ -45,10 +45,16 @@ out.k    = a.real*b.k    + a.i*b.j    - a.j*b.i + a.k*b.real
 
 ## Simulator Layout
 
-The prototype uses row-major tensors and processes a fixed number of
+The default prototype uses row-major tensors and processes a fixed number of
 quaternions per block. Each lane is copied as a `[block, 1]` slice, which makes
 the cross-lane dependencies explicit in the compute kernel while keeping the
 public tensor contract as `[N, 4]`.
+
+The experimental raw-element variant uses row-major `[block, 4]` transfers and
+TT-Lang `raw_element_read` / `raw_element_write` calls inside a data-movement
+kernel. It is intended to expose the scalar lane equations directly in simulator
+traces and statistics. It is not a recommended hardware layout and it is not
+TT-Metalium source.
 
 This is a simulator-first shape, not a claim that this is the final best
 TT-Metalium or TT-NN layout.
@@ -81,6 +87,17 @@ python scripts/run_ttlang_qmul_smoke.py \
   --markdown-output reports/tt_lang_qmul_sim.md
 ```
 
+Run the experimental raw-element variant:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py \
+  --variant raw \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --seed 0
+```
+
 Optional simulator trace/stat capture:
 
 ```bash
@@ -107,6 +124,7 @@ The same backend can be reached through StructuredBench:
 python -m tt_rqm_kernels.structuredbench \
   --backend tt-lang-sim \
   --suite qmul \
+  --tt-lang-variant raw \
   --items 128 \
   --iters 1 \
   --warmup 0 \
@@ -140,6 +158,7 @@ simulator metadata when the `tt-lang-sim` CLI reports it. Trace/stat fields are
 stored under `tt_lang_sim` as simulator-only diagnostics:
 
 ```text
+tt_lang_sim.variant
 tt_lang_sim.trace_enabled
 tt_lang_sim.trace_path
 tt_lang_sim.stats_available
@@ -155,6 +174,8 @@ hardware performance evidence.
 
 - deterministic `[N, 4]` sample inputs
 - TT-Lang simulator execution
+- default block/slice variant and experimental raw-element variant are clearly
+  labeled in report metadata
 - CPU/PyTorch comparison
 - independent scalar reference spot check
 - JSON and Markdown reports compatible with StructuredBench

@@ -94,6 +94,22 @@ python scripts/run_ttlang_qmul_smoke.py \
   --markdown-output reports/tt_lang_qmul_sim.md
 ```
 
+The default TT-Lang simulator variant is `block`, which splits each `[N, 4]`
+quaternion into lane slices inside TT-Lang dataflow buffers. An experimental
+`raw` variant uses TT-Lang raw element reads and writes to make the four scalar
+lane equations explicit inside the simulator:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py \
+  --variant raw \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
+Both variants are simulator-only checks. They compare implementation shape and
+trace/stat diagnostics, not hardware performance.
+
 Optionally capture a simulator trace and post-process it with
 `tt-lang-sim-stats` when that tool is installed:
 
@@ -127,6 +143,7 @@ flags:
 python -m tt_rqm_kernels.structuredbench \
   --backend tt-lang-sim \
   --suite qmul \
+  --tt-lang-variant raw \
   --items 128 \
   --iters 1 \
   --warmup 0 \

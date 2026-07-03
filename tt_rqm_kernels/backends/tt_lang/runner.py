@@ -18,7 +18,12 @@ from tt_rqm_kernels.backends.tt_lang.availability import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-KERNEL_SCRIPT = REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "qmul_sim_kernel.py"
+KERNEL_DIR = REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang"
+KERNEL_SCRIPTS = {
+    "block": KERNEL_DIR / "qmul_sim_kernel.py",
+    "raw": KERNEL_DIR / "qmul_raw_sim_kernel.py",
+}
+SUPPORTED_VARIANTS = tuple(KERNEL_SCRIPTS)
 
 
 class QmulCase(Protocol):
@@ -35,11 +40,15 @@ def run_qmul_cases(
     *,
     seed: int,
     sim_cli: str | None = None,
+    variant: str = "block",
     trace: bool = False,
     trace_output: Path | None = None,
     stats_output: Path | None = None,
 ) -> dict[str, object]:
     """Run qmul cases through `tt-lang-sim` and combine their reports."""
+
+    if variant not in KERNEL_SCRIPTS:
+        raise ValueError(f"unsupported TT-Lang qmul variant: {variant}")
 
     availability = check_tt_lang_sim(sim_cli=sim_cli)
     if not availability.available or availability.sim_cli is None:
@@ -57,6 +66,7 @@ def run_qmul_cases(
             case,
             seed=seed + index,
             sim_cli=availability.sim_cli,
+            kernel_script=KERNEL_SCRIPTS[variant],
             availability=availability,
             trace_requested=trace_requested,
             trace_output=_case_output_path(trace_output, index, len(case_list)),
@@ -117,6 +127,7 @@ def _run_one_case(
     *,
     seed: int,
     sim_cli: str,
+    kernel_script: Path,
     availability: TTLangAvailability,
     trace_requested: bool,
     trace_output: Path | None,
@@ -132,7 +143,7 @@ def _run_one_case(
             trace_output.parent.mkdir(parents=True, exist_ok=True)
         command = [
             sim_cli,
-            str(KERNEL_SCRIPT),
+            str(kernel_script),
         ]
         if trace_requested:
             command.extend(["--trace", str(trace_path)])

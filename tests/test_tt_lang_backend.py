@@ -168,6 +168,28 @@ def test_structuredbench_tt_lang_missing_cli_exits_without_traceback() -> None:
     assert "Traceback" not in completed.stderr
 
 
+def test_structuredbench_rejects_tt_lang_variant_for_torch_backend() -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "tt_rqm_kernels.structuredbench",
+            "--suite",
+            "qmul",
+            "--backend",
+            "torch",
+            "--tt-lang-variant",
+            "raw",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 2
+    assert "TT-Lang variant/trace/stat flags require --backend tt-lang-sim" in completed.stderr
+
+
 def test_committed_tt_lang_report_schema_and_claims() -> None:
     report_path = Path("reports/tt_lang_qmul_sim.json")
     markdown_path = Path("reports/tt_lang_qmul_sim.md")
@@ -224,8 +246,60 @@ def test_tt_lang_runner_does_not_trace_by_default(
 
     assert len(commands) == 1
     assert "--trace" not in commands[0]
+    assert Path(commands[0][1]).name == "qmul_sim_kernel.py"
     assert report["tt_lang_sim"]["trace_enabled"] is False
     assert report["tt_lang_sim"]["stats_available"] is True
+    assert report["tt_lang_sim"]["variant"] == "block-slice"
+
+
+def test_tt_lang_runner_raw_variant_uses_raw_kernel(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    commands: list[list[str]] = []
+    _mock_tt_lang_runner(monkeypatch, commands, tmp_path)
+
+    case = BenchmarkCase("qmul", 32, 1, 0, "qmul/s")
+    report = run_qmul_cases([case], seed=0, variant="raw")
+
+    assert len(commands) == 1
+    assert Path(commands[0][1]).name == "qmul_raw_sim_kernel.py"
+    assert report["schema"] == SCHEMA_VERSION
+    assert report["backend"] == "tt-lang-sim"
+    assert report["device"] == "functional-simulator"
+    assert report["simulation"] is True
+    assert report["tt_lang_sim"]["variant"] == "raw-element"
+    result = report["results"][0]
+    required_result_fields = {
+        "arithmetic_intensity_flops_per_byte",
+        "checksum",
+        "effective_gb_per_s",
+        "elapsed_s",
+        "estimated_flops",
+        "estimated_flops_per_s",
+        "items",
+        "iterations",
+        "latency_ms",
+        "max_abs_error",
+        "max_rel_error",
+        "rms_error",
+        "scalar_reference_max_abs_error",
+        "structured_shape",
+        "throughput",
+        "warmup",
+        "workload",
+    }
+    assert required_result_fields <= set(result)
+    assert result["structured_shape"] == "[32, 4]"
+    markdown = render_markdown_report(report)
+    assert "variant=raw-element" in markdown
+    assert "not hardware performance" in markdown
+
+
+def test_tt_lang_runner_rejects_unknown_variant() -> None:
+    case = BenchmarkCase("qmul", 32, 1, 0, "qmul/s")
+    with pytest.raises(ValueError, match="unsupported TT-Lang qmul variant"):
+        run_qmul_cases([case], seed=0, variant="unknown")
 
 
 def test_tt_lang_runner_traces_when_requested_and_survives_stats_failure(
@@ -329,10 +403,7 @@ def _mock_tt_lang_runner(
             trace_path.write_text("{\"event\":\"copy_end\"}\n", encoding="utf-8")
 
         output_path = Path(command[command.index("--json-output") + 1])
-        output_path.write_text(
-            json.dumps(_fake_tt_lang_report(tmp_path)),
-            encoding="utf-8",
-        )
+        output_path.write_text(json.dumps(_fake_tt_lang_report(command, tmp_path)), encoding="utf-8")
         return subprocess.CompletedProcess(
             args=command,
             returncode=0,
@@ -350,7 +421,8 @@ def _mock_tt_lang_runner(
     )
 
 
-def _fake_tt_lang_report(tmp_path: Path) -> dict[str, object]:
+def _fake_tt_lang_report(command: list[str], tmp_path: Path) -> dict[str, object]:
+    variant = "raw-element" if Path(command[1]).name == "qmul_raw_sim_kernel.py" else "block-slice"
     return {
         "schema": SCHEMA_VERSION,
         "generated_at_utc": "2026-07-03T00:00:00+00:00",
@@ -364,6 +436,7 @@ def _fake_tt_lang_report(tmp_path: Path) -> dict[str, object]:
             "block_items": 32,
             "padded_items": 32,
             "layout": "row-major",
+            "variant": variant,
         },
         "results": [
             {

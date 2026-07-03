@@ -237,6 +237,7 @@ def run_qmul_report(
             "block_items": BLOCK_ITEMS,
             "padded_items": padded_items,
             "layout": "row-major",
+            "variant": "block-slice",
         },
         "torch_version": torch.__version__,
         "python_version": sys.version.split()[0],

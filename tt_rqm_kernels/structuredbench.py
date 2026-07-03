@@ -169,6 +169,7 @@ def run_suite(
     warmup_override: int | None = None,
     external_command: str | None = None,
     sim_cli: str | None = None,
+    tt_lang_variant: str = "block",
     tt_lang_trace: bool = False,
     tt_lang_trace_output: Path | None = None,
     tt_lang_stats_output: Path | None = None,
@@ -187,6 +188,7 @@ def run_suite(
             iterations_override=iterations_override,
             warmup_override=warmup_override,
             sim_cli=sim_cli,
+            variant=tt_lang_variant,
             trace=tt_lang_trace,
             trace_output=tt_lang_trace_output,
             stats_output=tt_lang_stats_output,
@@ -422,6 +424,12 @@ def main(argv: list[str] | None = None) -> int:
         help="Override the tt-lang-sim executable used by --backend tt-lang-sim.",
     )
     parser.add_argument(
+        "--tt-lang-variant",
+        choices=("block", "raw"),
+        default="block",
+        help="TT-Lang qmul simulator variant. Requires --backend tt-lang-sim.",
+    )
+    parser.add_argument(
         "--tt-lang-trace",
         action="store_true",
         help=(
@@ -447,12 +455,13 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     tt_lang_trace_args_used = (
-        args.tt_lang_trace
+        args.tt_lang_variant != "block"
+        or args.tt_lang_trace
         or args.tt_lang_trace_output is not None
         or args.tt_lang_stats_output is not None
     )
     if tt_lang_trace_args_used and args.backend != "tt-lang-sim":
-        parser.error("TT-Lang trace/stat flags require --backend tt-lang-sim")
+        parser.error("TT-Lang variant/trace/stat flags require --backend tt-lang-sim")
 
     if args.threads is not None:
         torch.set_num_threads(args.threads)
@@ -469,6 +478,7 @@ def main(argv: list[str] | None = None) -> int:
             warmup_override=args.warmup,
             external_command=args.external_command,
             sim_cli=args.sim_cli,
+            tt_lang_variant=args.tt_lang_variant,
             tt_lang_trace=args.tt_lang_trace,
             tt_lang_trace_output=args.tt_lang_trace_output,
             tt_lang_stats_output=args.tt_lang_stats_output,
@@ -509,6 +519,7 @@ def _run_tt_lang_sim_suite(
     iterations_override: int | None,
     warmup_override: int | None,
     sim_cli: str | None,
+    variant: str,
     trace: bool,
     trace_output: Path | None,
     stats_output: Path | None,
@@ -532,6 +543,7 @@ def _run_tt_lang_sim_suite(
         [case],
         seed=seed,
         sim_cli=sim_cli,
+        variant=variant,
         trace=trace,
         trace_output=trace_output,
         stats_output=stats_output,
@@ -1293,12 +1305,16 @@ def _backend_metadata_notes(report: dict[str, object]) -> list[str]:
         f"layout={metadata.get('layout')}",
         f"block_items={metadata.get('block_items')}",
         f"padded_items={metadata.get('padded_items')}",
+        f"variant={metadata.get('variant')}",
         f"sim_cli={metadata.get('sim_cli')}",
         f"sim_version={metadata.get('sim_version')}",
         f"stats_cli={metadata.get('stats_cli')}",
         f"trace_enabled={metadata.get('trace_enabled', False)}",
     ]
-    return ["- Simulator metadata: " + ", ".join(fields) + "."]
+    notes = ["- Simulator metadata: " + ", ".join(fields) + "."]
+    if metadata.get("variant_note"):
+        notes.append(f"- TT-Lang variant note: {metadata.get('variant_note')}.")
+    return notes
 
 
 def _tt_lang_trace_stats_section(report: dict[str, object]) -> list[str]:
