@@ -14,10 +14,21 @@ Current placement status:
   maintainer guidance.
 
 This package intentionally does not include unverified TT-Metalium source code.
-The local development environment does not currently provide a TT-Metalium
-checkout, `ttnn`, `tt_metal`, or Tenstorrent hardware. The purpose of this
-directory is to make the first real candidate contract explicit before hardware
-code is added.
+The purpose of this directory is to make the first real candidate contract,
+validation path, and failure behavior explicit before hardware code is added.
+
+Current scaffold commands:
+
+```text
+check_environment.py  checks for a local tt-metal / TT-Metalium checkout
+build_candidate.py    placeholder build command; emits no binary
+run_candidate.py      placeholder external-qmul command; writes no outputs
+validate_candidate.py wrapper around scripts/validate_qmul_candidate.py
+```
+
+The placeholder command is expected to fail until real TT-Metalium host/kernel
+source exists. That failure is intentional: it prevents CPU, simulator, or
+empty placeholder output from being mistaken for Tenstorrent hardware results.
 
 ## Candidate Contract
 
@@ -73,7 +84,7 @@ and real Tenstorrent hardware.
 
 ## Validation Command
 
-Use the candidate validation runner from the repository root:
+Use the known-good CPU/PyTorch protocol reference from the repository root:
 
 ```bash
 python scripts/validate_qmul_candidate.py \
@@ -83,7 +94,40 @@ python scripts/validate_qmul_candidate.py \
   --warmup 0
 ```
 
+Use the local wrapper to validate the same protocol reference through this
+candidate package:
+
+```bash
+python experimental/tt_metalium_qmul/validate_candidate.py \
+  --candidate-command "python scripts/qmul_external_reference.py" \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
+The placeholder candidate command can be invoked directly to verify failure
+behavior:
+
+```bash
+python experimental/tt_metalium_qmul/run_candidate.py
+```
+
+Without `TT_RQM_EXTERNAL_QMUL_DIR` and `TT_RQM_EXTERNAL_QMUL_MANIFEST`, it exits
+with an external-harness environment error. When run through StructuredBench
+without a TT-Metalium SDK, it exits with a TT-Metalium-unavailable error and
+writes no `out.bin` or `metrics.json`.
+
 For a future TT-Metalium binary, replace the command:
+
+```bash
+python experimental/tt_metalium_qmul/validate_candidate.py \
+  --candidate-command "/path/to/tt_metalium_qmul_candidate" \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
+For a larger report once the candidate is real:
 
 ```bash
 python scripts/validate_qmul_candidate.py \
@@ -111,11 +155,35 @@ spot checks before reporting:
 
 ## Implementation Notes
 
+Check for a local SDK checkout before attempting real candidate development:
+
+```bash
+python experimental/tt_metalium_qmul/check_environment.py
+```
+
+The build placeholder also checks the SDK environment and intentionally emits no
+binary until real TT-Metalium source is added:
+
+```bash
+python experimental/tt_metalium_qmul/build_candidate.py
+```
+
+The checker looks for `TT_METAL_HOME` or `TT_METALIUM_HOME`, or accepts:
+
+```bash
+python experimental/tt_metalium_qmul/check_environment.py \
+  --tt-metal-root /path/to/tt-metal
+```
+
 The future TT-Metalium implementation should start from the public programming
 example pattern used by `tt-metal`: a host program plus data-movement and compute
 kernels under a small example directory. The first version should prefer a
 single-core row-major `[N, 4]` contract and correctness clarity over tiling or
 peak performance.
+
+Until maintainers answer the placement question, keep real candidate work in
+this external package and validate it through `external-qmul`. Do not open an
+upstream `tt-metal` PR from this directory without maintainer guidance.
 
 The first hardware report must clearly state whether the result came from CPU,
 TT-Lang simulation, emulation, or real Tenstorrent hardware.

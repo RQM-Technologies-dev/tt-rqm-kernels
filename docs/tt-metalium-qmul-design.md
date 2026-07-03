@@ -110,6 +110,16 @@ area is `experimental/tt_metalium_qmul/`. That directory defines the candidate
 contract and validation command without adding unverified TT-Metalium source
 code.
 
+The current scaffold includes:
+
+- `check_environment.py` for detecting a local `tt-metal` checkout
+- `build_candidate.py` as a no-output build placeholder
+- `run_candidate.py` as a no-output external-qmul placeholder
+- `validate_candidate.py` as the wrapper around `scripts/validate_qmul_candidate.py`
+
+These commands exist to make SDK and harness boundaries explicit. They are not
+TT-Metalium kernel implementations.
+
 ## StructuredBench Report Fields
 
 A future TT-Metalium report should emit `structuredbench.v1` fields where

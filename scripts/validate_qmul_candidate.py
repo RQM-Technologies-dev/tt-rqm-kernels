@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
 from tt_rqm_kernels.structuredbench import (
     render_markdown_report,
@@ -35,16 +36,20 @@ def main() -> int:
     parser.add_argument("--format", choices=("table", "json"), default="table")
     args = parser.parse_args()
 
-    report = run_suite(
-        "qmul",
-        backend="external-qmul",
-        dtype_name="float32",
-        seed=args.seed,
-        items_override=args.items,
-        iterations_override=args.iters,
-        warmup_override=args.warmup,
-        external_command=args.command,
-    )
+    try:
+        report = run_suite(
+            "qmul",
+            backend="external-qmul",
+            dtype_name="float32",
+            seed=args.seed,
+            items_override=args.items,
+            iterations_override=args.iters,
+            warmup_override=args.warmup,
+            external_command=args.command,
+        )
+    except (RuntimeError, ValueError, TypeError, OSError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
 
     if args.json_output is not None:
         _write_text(args.json_output, json.dumps(report, indent=2, sort_keys=True) + "\n")

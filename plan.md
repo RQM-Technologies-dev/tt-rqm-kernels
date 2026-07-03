@@ -25,7 +25,7 @@ The repo is ready for a first handshake:
 - an `external-qmul` candidate harness for validating future standalone
   `qmul` executables against CPU/PyTorch and scalar references
 - an external TT-Metalium candidate staging package under
-  `experimental/tt_metalium_qmul/`
+  `experimental/tt_metalium_qmul/` with build/run/validation placeholders
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
 - a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
 - scientific/HPC positioning that relates RQM structured kernels to
@@ -41,6 +41,7 @@ The repo is ready for a first handshake:
   https://github.com/tenstorrent/tt-awesome/pull/106
 - local tracker issue #1 closed after the generated entry PR merged
 - local tracker issue #2 closed after hardening the TT-Lang simulator report
+- local tracker issue #3 started with an external TT-Metalium candidate scaffold
 
 The completed setup work should now be treated as background. The active work is
 maintainer placement guidance and the first hardware-facing implementation path.
@@ -67,6 +68,8 @@ Why this is next:
   reports
 - the TT-Metalium candidate package is staged externally and avoids unverified
   TT-Metalium source until a real SDK/hardware environment is available
+- the candidate scaffold now has explicit build/run/validation commands, so the
+  remaining #3 work is real TT-Metalium host/kernel implementation
 
 ## Priority Lanes
 
