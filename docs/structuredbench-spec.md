@@ -121,6 +121,17 @@ python -m tt_rqm_kernels.structuredbench \
   --external-command "python scripts/qmul_external_reference.py"
 ```
 
+The same path is wrapped by `scripts/validate_qmul_candidate.py` for candidate
+development:
+
+```bash
+python scripts/validate_qmul_candidate.py \
+  --command "python scripts/qmul_external_reference.py" \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
 This backend is intentionally narrow. It supports only float32 `qmul` over
 `[N, 4] x [N, 4] -> [N, 4]`. StructuredBench generates deterministic `a.bin`,
 `b.bin`, and `manifest.json` files in a temporary work directory, exposes that

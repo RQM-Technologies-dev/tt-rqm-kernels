@@ -23,6 +23,8 @@ The repo is ready for a first handshake:
 - optional TT-Lang simulator `qmul` prototype with a StructuredBench-compatible simulator report
 - an `external-qmul` candidate harness for validating future standalone
   `qmul` executables against CPU/PyTorch and scalar references
+- an external TT-Metalium candidate staging package under
+  `experimental/tt_metalium_qmul/`
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
 - a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
 - scientific/HPC positioning that relates RQM structured kernels to
@@ -56,6 +58,8 @@ Why this is next:
 - the external `qmul` harness gives future TT-Metalium, TT-NN, or cloud-hosted
   candidate executables a concrete way to emit comparable StructuredBench
   reports
+- the TT-Metalium candidate package is staged externally and avoids unverified
+  TT-Metalium source until a real SDK/hardware environment is available
 
 ## Priority Lanes
 
@@ -118,6 +122,8 @@ Tasks:
 - use `docs/tt-metalium-qmul-design.md` as the implementation contract
 - use the `external-qmul` harness as the validation bridge for a standalone
   candidate executable
+- use `experimental/tt_metalium_qmul/` as the external staging location until a
+  maintainer requests another placement
 - start with `[N, 4]` layout
 - compare against CPU/PyTorch and scalar references
 - report latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity

@@ -105,6 +105,11 @@ For an external TT-Metalium executable, the intended bridge is the StructuredBen
 `scripts/qmul_external_reference.py` command is only a CPU/PyTorch protocol
 reference, not a hardware backend.
 
+Until maintainers give explicit placement guidance, the implementation staging
+area is `experimental/tt_metalium_qmul/`. That directory defines the candidate
+contract and validation command without adding unverified TT-Metalium source
+code.
+
 ## StructuredBench Report Fields
 
 A future TT-Metalium report should emit `structuredbench.v1` fields where

@@ -13,6 +13,8 @@ from tt_rqm_kernels.structuredbench import (
     run_suite,
 )
 
+FAST_EXTERNAL_QMUL = f"{sys.executable} tests/fixtures/qmul_external_fast.py"
+
 
 def test_build_smoke_cases_cover_core_workloads() -> None:
     workloads = {case.workload for case in build_cases("smoke")}
@@ -105,7 +107,7 @@ def test_module_cli_external_qmul_reference_backend(tmp_path: Path) -> None:
             "--backend",
             "external-qmul",
             "--external-command",
-            f"{sys.executable} scripts/qmul_external_reference.py",
+            FAST_EXTERNAL_QMUL,
             "--items",
             "16",
             "--iters",
@@ -126,7 +128,7 @@ def test_module_cli_external_qmul_reference_backend(tmp_path: Path) -> None:
     assert report["schema"] == SCHEMA_VERSION
     assert report["suite"] == "qmul"
     assert report["backend"] == "external-qmul"
-    assert report["device"] == "cpu/pytorch-reference"
+    assert report["device"] == "cpu/python-test-fixture"
     assert report["protocol"] == "tt-rqm-external-qmul.v1"
     assert len(report["results"]) == 3
     for result in report["results"]:
@@ -150,7 +152,7 @@ def test_external_qmul_rejects_non_qmul_suite() -> None:
             "--backend",
             "external-qmul",
             "--external-command",
-            f"{sys.executable} scripts/qmul_external_reference.py",
+            FAST_EXTERNAL_QMUL,
             "--items",
             "16",
             "--iters",
@@ -164,6 +166,43 @@ def test_external_qmul_rejects_non_qmul_suite() -> None:
 
     assert completed.returncode != 0
     assert "external-qmul backend currently supports --suite qmul only" in completed.stderr
+
+
+def test_validate_qmul_candidate_script(tmp_path: Path) -> None:
+    json_output = tmp_path / "candidate.json"
+    markdown_output = tmp_path / "candidate.md"
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/validate_qmul_candidate.py",
+            "--command",
+            FAST_EXTERNAL_QMUL,
+            "--items",
+            "16",
+            "--iters",
+            "1",
+            "--warmup",
+            "0",
+            "--json-output",
+            str(json_output),
+            "--markdown-output",
+            str(markdown_output),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "schema=structuredbench.v1" in completed.stdout
+    report = json.loads(json_output.read_text(encoding="utf-8"))
+    assert report["backend"] == "external-qmul"
+    assert report["device"] == "cpu/python-test-fixture"
+    assert report["results"][0]["structured_shape"] == "[16, 4]"
+    assert report["results"][0]["scalar_reference_max_abs_error"] is not None
+    assert "external-qmul candidate harness" in markdown_output.read_text(
+        encoding="utf-8"
+    )
 
 
 def test_module_cli_creates_json_and_markdown_outputs(tmp_path: Path) -> None:
