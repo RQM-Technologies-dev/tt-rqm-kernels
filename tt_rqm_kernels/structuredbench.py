@@ -19,6 +19,7 @@ from tt_rqm_kernels.backends import scalar_reference, torch_backend
 
 SCHEMA_VERSION = "structuredbench.v1"
 SUPPORTED_SUITES = ("smoke", "full", "qmul", "qrotate")
+SUPPORTED_BACKENDS = ("torch", "tt-lang-sim")
 SUPPORTED_DTYPES = {
     "float32": torch.float32,
     "float64": torch.float64,
@@ -162,10 +163,20 @@ def run_suite(
 ) -> dict[str, object]:
     """Run a StructuredBench suite and return a JSON-serializable report."""
 
-    if backend != "torch":
-        raise ValueError("only the torch backend is implemented")
     if dtype_name not in SUPPORTED_DTYPES:
         raise ValueError(f"unsupported dtype: {dtype_name}")
+
+    if backend == "tt-lang-sim":
+        return _run_tt_lang_sim_suite(
+            suite,
+            dtype_name=dtype_name,
+            seed=seed,
+            items_override=items_override,
+            iterations_override=iterations_override,
+            warmup_override=warmup_override,
+        )
+    if backend != "torch":
+        raise ValueError(f"unsupported backend: {backend}")
 
     device = _resolve_device(device_name)
     dtype = SUPPORTED_DTYPES[dtype_name]
@@ -342,8 +353,8 @@ def render_markdown_report(report: dict[str, object]) -> str:
             "",
             "## Notes",
             "",
-            "- Current results use the CPU/PyTorch reference backend.",
-            "- Committed reports are sample CPU/PyTorch reference outputs. They are included to show the report shape and outreach packet format, not to claim stable hardware performance.",
+            _backend_note(report),
+            _committed_report_note(report),
             "- Scalar reference checks are small deterministic spot checks used as an independent correctness contract.",
             "- FLOP and byte counts are simple documented estimates for backend comparison, not hardware-counter measurements.",
             "- Phase update includes transcendental-heavy sin/cos state generation; its FLOP estimate counts each transcendental call as one reported operation.",
@@ -357,7 +368,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Run StructuredBench quaternion, rotor, and phase tensor benchmarks."
     )
     parser.add_argument("--suite", choices=SUPPORTED_SUITES, default="smoke")
-    parser.add_argument("--backend", choices=("torch",), default="torch")
+    parser.add_argument("--backend", choices=SUPPORTED_BACKENDS, default="torch")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--dtype", choices=tuple(SUPPORTED_DTYPES), default="float32")
     parser.add_argument("--seed", type=int, default=0)
@@ -406,6 +417,33 @@ def _resolve_device(device_name: str) -> torch.device:
     if device.type == "cuda" and not torch.cuda.is_available():
         raise ValueError("CUDA device requested but torch.cuda.is_available() is false")
     return device
+
+
+def _run_tt_lang_sim_suite(
+    suite: str,
+    *,
+    dtype_name: str,
+    seed: int,
+    items_override: int | None,
+    iterations_override: int | None,
+    warmup_override: int | None,
+) -> dict[str, object]:
+    if suite != "qmul":
+        raise ValueError("tt-lang-sim backend currently supports --suite qmul only")
+    if dtype_name != "float32":
+        raise ValueError("tt-lang-sim backend currently supports --dtype float32 only")
+
+    case = BenchmarkCase(
+        workload="qmul",
+        items=items_override or 128,
+        iterations=iterations_override or 1,
+        warmup=0 if warmup_override is None else warmup_override,
+        throughput_unit="qmul/s",
+    )
+
+    from tt_rqm_kernels.backends.tt_lang.runner import run_qmul_cases
+
+    return run_qmul_cases([case], seed=seed)
 
 
 def _run_case(
@@ -912,6 +950,28 @@ def _report_results(report: dict[str, object]) -> list[dict[str, object]]:
 
 def _optional_scientific(value: object) -> str:
     return "-" if value is None else f"{float(value):.3e}"
+
+
+def _backend_note(report: dict[str, object]) -> str:
+    if report.get("backend") == "tt-lang-sim":
+        return (
+            "- Current results use the TT-Lang functional simulator. They "
+            "validate kernel logic and report shape, not hardware performance."
+        )
+    return "- Current results use the CPU/PyTorch reference backend."
+
+
+def _committed_report_note(report: dict[str, object]) -> str:
+    if report.get("backend") == "tt-lang-sim":
+        return (
+            "- This committed TT-Lang report is a simulator smoke output. It is "
+            "included to show the report shape, not to claim stable hardware performance."
+        )
+    return (
+        "- Committed reports are sample CPU/PyTorch reference outputs. They are "
+        "included to show the report shape and outreach packet format, not to "
+        "claim stable hardware performance."
+    )
 
 
 def _markdown_table(headers: list[str], rows: list[list[str]]) -> str:

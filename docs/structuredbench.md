@@ -110,6 +110,22 @@ Each result includes:
 
 The current backend is `torch`. Future TT-Metalium and TT-NN benchmark paths should emit the same fields so reports can be compared directly.
 
+The optional TT-Lang simulator qmul smoke also emits `structuredbench.v1` with
+`backend="tt-lang-sim"` and `simulation=true`. Those reports validate simulator
+logic and report shape; they are not hardware performance results.
+
+Run the optional simulator backend through the StructuredBench CLI when
+`tt-lang-sim` is installed:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --backend tt-lang-sim \
+  --suite qmul \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
 ## Hardware Metric Estimates
 
 StructuredBench reports simple hardware-relevant estimates. These are not hardware-counter measurements; they are contract-level estimates for comparing CPU/PyTorch and future accelerator backend reports.
@@ -160,6 +176,7 @@ StructuredBench reports simple hardware-relevant estimates. These are not hardwa
 StructuredBench is intended to make future Tenstorrent backend work concrete:
 
 1. Keep CPU/PyTorch outputs as the correctness reference.
-2. Port selected workloads to TT-Metalium or TT-NN.
-3. Emit the same `structuredbench.v1` report fields.
-4. Compare throughput, latency, numerical error, and scaling across backends.
+2. Validate `qmul` in TT-Lang simulation.
+3. Port selected workloads to TT-Metalium or TT-NN.
+4. Emit the same `structuredbench.v1` report fields.
+5. Compare throughput, latency, numerical error, and scaling across backends.

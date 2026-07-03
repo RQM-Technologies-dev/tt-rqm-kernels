@@ -20,23 +20,33 @@ The repo is ready for a first handshake:
 - CPU/PyTorch reference kernels for quaternion and rotor operators
 - scalar reference checks for independent correctness spot checks
 - StructuredBench benchmark reports with latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
+- optional TT-Lang simulator `qmul` prototype with a StructuredBench-compatible simulator report
 - Tenstorrent-facing docs, operator contracts, outreach packet, and CI
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
 
 The next move should be broader than asking for help porting `qmul`. The repo should become a structured-compute collaboration surface.
 
+## Recommended Next Step
+
+Add `docs/collaboration-map.md`, then use it as the backbone for a `tt-awesome` submission.
+
+Why this is next:
+
+- the repo now has CPU/PyTorch reference results and a TT-Lang simulator proof point
+- `tt-awesome` is the lowest-friction ecosystem visibility step
+- a collaboration map gives Tenstorrent engineers a clean way to understand where this project fits before asking for deeper TT-Metalium placement
+
 ## Priority Lanes
 
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
-| 1 | TT-Lang `qmul` prototype | Fastest bridge from PyTorch reference to Tenstorrent-style custom operation logic | `qmul` runs in TT-Lang simulation and produces a StructuredBench-compatible report |
-| 2 | `tt-awesome` entry | Low-friction ecosystem visibility | PR or submission adds `tt-rqm-kernels` as a structured-kernel benchmark project |
-| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references |
-| 4 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, and future TT-Metalium reports share `structuredbench.v1` fields |
-| 5 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
-| 6 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
-| 7 | Developer tutorial or blog | Make RQM useful to the ecosystem | Public tutorial explains structured `[N, 4]` kernels and the benchmark path |
-| 8 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
+| 1 | `tt-awesome` entry | Low-friction ecosystem visibility | PR or submission adds `tt-rqm-kernels` as a structured-kernel benchmark project |
+| 2 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references |
+| 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, and future TT-Metalium reports share `structuredbench.v1` fields |
+| 4 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
+| 5 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
+| 6 | Developer tutorial or blog | Make RQM useful to the ecosystem | Public tutorial explains structured `[N, 4]` kernels and the benchmark path |
+| 7 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
 
 ## Next Repo Work
 
@@ -56,56 +66,15 @@ Content outline:
 - what RQM is asking for now
 - what RQM is not asking for
 
-### 2. Add `backends/tt_lang/README.md`
-
-Purpose:
-
-- document the planned TT-Lang backend without pretending it already exists
-- make simulator-first work explicit
-
-Content outline:
-
-- goal: implement `qmul` in TT-Lang simulation
-- input/output contract: `[N, 4] -> [N, 4]`
-- validation: compare against CPU/PyTorch and scalar reference
-- report target: `structuredbench.v1`
-- non-goals: no fake hardware results, no TT-Metalium replacement claim
-
-### 3. Add `docs/tt-lang-qmul-plan.md`
-
-Purpose:
-
-- turn the TT-Lang prototype into a concrete engineering task
-
-Planned sequence:
-
-```text
-PyTorch reference qmul
--> TT-Lang simulated qmul
--> TT-Metalium qmul
--> TT-NN wrapper
--> TT-MLIR lowering discussion
-```
-
-Minimum acceptance criteria:
-
-- deterministic sample inputs
-- TT-Lang simulation output
-- CPU/PyTorch comparison
-- scalar reference spot check
-- JSON report compatible with `structuredbench.v1`
-- clear note that results are simulation/reference outputs, not hardware claims
-
-### 4. Add Tracking Issues
+### 2. Add Tracking Issues
 
 Create issues in the `tt-rqm-kernels` repo:
 
-1. `Implement qmul in TT-Lang simulator`
-2. `Prepare tt-awesome submission`
-3. `Run StructuredBench on Tenstorrent Cloud`
-4. `Design minimal TT-Metalium qmul example`
-5. `Define TT-NN wrapper path after lower-stack qmul proof`
-6. `Draft structured-kernel tutorial for Tenstorrent developers`
+1. `Prepare tt-awesome submission`
+2. `Run StructuredBench on Tenstorrent Cloud`
+3. `Design minimal TT-Metalium qmul example`
+4. `Define TT-NN wrapper path after lower-stack qmul proof`
+5. `Draft structured-kernel tutorial for Tenstorrent developers`
 
 Each issue should include:
 
@@ -116,25 +85,7 @@ Each issue should include:
 
 ## Technical Roadmap
 
-### Phase 1: TT-Lang Simulation
-
-Goal:
-
-- prove that `qmul` can be expressed in a Tenstorrent-adjacent custom-operation flow without requiring hardware access first
-
-Tasks:
-
-- research TT-Lang install and simulator entrypoints
-- add a `backends/tt_lang/` planning folder
-- implement only after the simulator workflow is understood
-- emit a StructuredBench-compatible report
-
-Exit criteria:
-
-- `qmul` simulated output matches CPU/PyTorch and scalar reference within documented tolerance
-- report states clearly that it is TT-Lang simulation, not hardware performance
-
-### Phase 2: Ecosystem Visibility
+### Phase 1: Ecosystem Visibility
 
 Goal:
 
@@ -151,7 +102,7 @@ Exit criteria:
 - submission or PR opened
 - public description leads with structured-kernel benchmarking, not quaternion theory
 
-### Phase 3: TT-Metalium `qmul`
+### Phase 2: TT-Metalium `qmul`
 
 Goal:
 
@@ -170,7 +121,7 @@ Exit criteria:
 - result is reproducible
 - no unsupported claims about Tenstorrent performance
 
-### Phase 4: TT-NN Wrapper
+### Phase 3: TT-NN Wrapper
 
 Goal:
 
@@ -188,7 +139,7 @@ Exit criteria:
 - wrapper has a reference comparison and a clean example
 - docs explain when to use the wrapper versus raw benchmark scripts
 
-### Phase 5: TT-MLIR Lowering Discussion
+### Phase 4: TT-MLIR Lowering Discussion
 
 Goal:
 
@@ -208,7 +159,7 @@ Exit criteria:
 
 - compiler discussion is grounded in working backend evidence, not speculation
 
-### Phase 6: Hardware Report
+### Phase 5: Hardware Report
 
 Goal:
 

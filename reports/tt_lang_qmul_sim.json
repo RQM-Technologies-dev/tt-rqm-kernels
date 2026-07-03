@@ -1,0 +1,48 @@
+{
+  "backend": "tt-lang-sim",
+  "device": "functional-simulator",
+  "dtype": "float32",
+  "generated_at_utc": "2026-07-03T17:46:43.965353+00:00",
+  "platform": "macOS-26.5.1-x86_64-i386-64bit",
+  "python_version": "3.12.2",
+  "results": [
+    {
+      "arithmetic_intensity_flops_per_byte": 0.5833333333333334,
+      "backend": "tt-lang-sim",
+      "checksum": 3.6184366643428802,
+      "device": "functional-simulator",
+      "dtype": "float32",
+      "effective_gb_per_s": 0.000333762378764936,
+      "elapsed_s": 0.0184083060012199,
+      "estimated_bytes_read": 4096,
+      "estimated_bytes_written": 2048,
+      "estimated_flops": 3584,
+      "estimated_flops_per_s": 194694.72094621265,
+      "estimated_total_bytes": 6144,
+      "items": 128,
+      "iterations": 1,
+      "latency_ms": 18.4083060012199,
+      "max_abs_error": 1.0551953044668494e-07,
+      "max_rel_error": 0.00020060997158622337,
+      "rms_error": 2.8647925337700673e-08,
+      "scalar_reference_max_abs_error": 6.277943587207346e-08,
+      "stability_max_abs": null,
+      "structured_shape": "[128, 4]",
+      "suite": "qmul",
+      "throughput": 6953.382890936166,
+      "throughput_unit": "qmul/s",
+      "warmup": 0,
+      "workload": "qmul"
+    }
+  ],
+  "schema": "structuredbench.v1",
+  "seed": 0,
+  "simulation": true,
+  "suite": "qmul",
+  "torch_version": "2.2.2",
+  "tt_lang_sim": {
+    "block_items": 32,
+    "layout": "row-major",
+    "padded_items": 128
+  }
+}

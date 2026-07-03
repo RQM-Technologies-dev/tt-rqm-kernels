@@ -69,6 +69,41 @@ python -m tt_rqm_kernels.structuredbench --suite full
 
 StructuredBench emits a versioned report schema intended to compare CPU/PyTorch reference results against later TT-Metalium and TT-NN backend implementations.
 
+## Optional TT-Lang Simulator qmul Smoke
+
+The first Tenstorrent-adjacent prototype is an optional TT-Lang functional
+simulator smoke for `qmul` over `[N, 4]` row-major float32 tensors. It is not a
+hardware backend and does not claim hardware performance.
+
+Check whether the simulator is available:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py --check
+```
+
+Run it in an environment with `tt-lang-sim` installed:
+
+```bash
+python scripts/run_ttlang_qmul_smoke.py \
+  --items 128 \
+  --json-output reports/tt_lang_qmul_sim.json \
+  --markdown-output reports/tt_lang_qmul_sim.md
+```
+
+Or run the same optional backend through StructuredBench:
+
+```bash
+python -m tt_rqm_kernels.structuredbench \
+  --backend tt-lang-sim \
+  --suite qmul \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
+See [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md) for setup details
+and acceptance criteria.
+
 ## Why Tenstorrent Developers Should Care
 
 This repo gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. Some workloads need to preserve structure inside the data: rotation, phase, orientation, direction, and geometric state. That shows up in robotics pose updates, graphics rotation streams, wireless phase tracking, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream defense applications.
@@ -82,6 +117,7 @@ Simple proof path:
 ```text
 CPU/PyTorch qmul reference
 -> scalar correctness check
+-> TT-Lang simulator qmul for [N, 4]
 -> TT-Metalium qmul for [N, 4]
 -> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
 ```
@@ -114,12 +150,15 @@ python -m tt_rqm_kernels.structuredbench \
 The Tenstorrent-facing surfaces are:
 
 - [docs/tenstorrent-rfc.md](docs/tenstorrent-rfc.md)
+- [docs/collaboration-map.md](docs/collaboration-map.md)
 - [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
+- [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 
 Proposed backend path:
 
+- optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
 - future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
 - future `qrotate_vector` stream benchmark
 - future TT-NN wrapper once placement guidance is clear
