@@ -28,8 +28,11 @@ The repo is ready for a first handshake:
 - scientific/HPC positioning that relates RQM structured kernels to
   Tenstorrent's broader non-LLM scientific workload direction
 - a GitHub Discussion opened in `tenstorrent/tt-metal`
-- a `tt-awesome` submission issue opened:
-  https://github.com/tenstorrent/tt-awesome/issues/104
+- `tt-awesome` submission issue #104 approved, with generated entry PR #106
+  open and pending review:
+  https://github.com/tenstorrent/tt-awesome/pull/106
+- local tracker issue #1 now watches the generated `tt-awesome` PR until merge
+  or requested changes
 
 The completed setup work should now be treated as background. The active work is
 response tracking, maintainer placement guidance, and the first hardware-facing
@@ -37,16 +40,16 @@ implementation path.
 
 ## Recommended Next Step
 
-Commit the external `qmul` benchmark harness, then create focused tracking
-issues for the remaining collaboration lanes, starting with TT-Metalium `qmul`
-placement and implementation.
+Track TT-Metalium `qmul` placement guidance, then implement the first minimal
+TT-Metalium candidate through the `external-qmul` harness once the placement
+path is clear.
 
 Why this is next:
 
 - the repo now has CPU/PyTorch reference results, a TT-Lang simulator proof
   point, and a public collaboration map
-- the `tt-awesome` submission is opened and waiting on maintainer-side
-  labeling or approval
+- the `tt-awesome` submission has maintainer approval and a generated PR, so it
+  is no longer the active repo-building blocker
 - the minimal TT-Metalium `qmul` design document is present, so the next step is
   coordination and implementation planning rather than more design prose
 - the scientific/HPC positioning now gives RQM a conservative way to reference
@@ -60,8 +63,8 @@ Why this is next:
 
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
-| 1 | `tt-awesome` approval | Low-friction ecosystem visibility | Maintainers approve issue #104 and the generated entry PR is merged |
-| 2 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references |
+| 1 | TT-Metalium `qmul` placement | Choose the right lower-stack contribution path | Maintainers indicate whether the first candidate should live externally, as a TT-Metalium example, or another preferred route |
+| 2 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references through `external-qmul` |
 | 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, and future TT-Metalium reports share `structuredbench.v1` fields |
 | 4 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
 | 5 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
@@ -70,16 +73,15 @@ Why this is next:
 
 ## Next Repo Work
 
-### 1. Open Remaining Tracking Issues
+### 1. Track TT-Metalium Placement
 
-Create issues in the `tt-rqm-kernels` repo:
+Active repo issues should now focus on the hardware-facing path:
 
-1. `Track tt-awesome submission approval`
-2. `Track TT-Metalium qmul placement guidance`
-3. `Implement minimal TT-Metalium qmul example using the external-qmul harness`
-4. `Run StructuredBench on Tenstorrent Cloud`
-5. `Define TT-NN wrapper path after lower-stack qmul proof`
-6. `Draft structured-kernel tutorial for Tenstorrent developers`
+1. `Track TT-Metalium qmul placement guidance` (#6)
+2. `Implement minimal TT-Metalium qmul example using the external-qmul harness` (#3)
+3. `Run StructuredBench on Tenstorrent Cloud` (#7)
+4. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
+5. `Draft structured-kernel tutorial for Tenstorrent developers` (#5)
 
 Each issue should include:
 
@@ -98,13 +100,13 @@ Goal:
 
 Tasks:
 
-- track `tt-awesome` issue #104 and any generated entry PR
+- watch `tt-awesome` PR #106 until it is merged or maintainers request changes
 - respond to maintainer placement or metadata feedback
 - link to README, StructuredBench spec, operator contracts, and outreach packet
 
 Exit criteria:
 
-- `tt-awesome` approval or generated entry PR merged
+- generated `tt-awesome` entry PR #106 merged
 - public description leads with structured-kernel benchmarking, not quaternion theory
 
 ### Phase 2: TT-Metalium `qmul`
@@ -190,8 +192,8 @@ Exit criteria:
 
 ## Outreach Sequence
 
-1. Monitor `tt-awesome` issue #104 for maintainer labeling, approval, or entry
-   PR generation.
+1. Monitor generated `tt-awesome` PR #106 for review, merge, or requested copy
+   changes.
 2. Continue the `tenstorrent/tt-metal` GitHub Discussion if maintainers reply.
 3. Post or refresh a short Discord note pointing to the Discussion only if it
    helps route maintainers to the narrow placement question.
