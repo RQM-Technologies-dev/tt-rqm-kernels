@@ -19,6 +19,8 @@ The logged-in Console flow observed for RQM Technologies shows:
 - Resources visible, with no dedicated hardware allocation observed.
 - Instances blocked until access is granted.
 - Baremetal blocked until access is granted.
+- `Request Capacity` opens, but the `Resource Type` dropdown has no selectable
+  options, so `Submit Request` is disabled.
 
 The correct capacity request path for `tt-rqm-kernels` is:
 
@@ -32,6 +34,10 @@ surfaces:
 
 - managed VSCode/browser instance copy/paste run
 - SSH baremetal run
+
+If the Resource Type blocker remains, the preferred fallback is the
+Tenstorrent-maintainer-run path using
+[docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md).
 
 ## Route A: Local / Free Validation
 
@@ -76,6 +82,8 @@ Tenstorrent runs:
 - the hardware command in a Tenstorrent-controlled environment
 - `scripts/rqm_tt_quickstart.py --mode hardware`
 - report generation under `reports/`
+- the handoff in
+  [docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md)
 
 Tenstorrent returns:
 

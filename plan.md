@@ -111,6 +111,11 @@ The repo is ready for a first handshake:
   quantum-mechanics workloads into structured quaternion/SU(2) kernels, not an
   active replacement for the qmul, tt-emule, Cloud/hardware, or maintainer
   placement path.
+- Tenstorrent Console is accessible for the `RQM-Technologies-dev` organization:
+  Billing/Usage, Compute, and Resources are visible. However, `Compute ->
+  Resources -> Request Capacity` is currently blocked because the `Resource
+  Type` dropdown has no selectable options, so `Submit Request` remains
+  disabled.
 
 The completed setup work should now be treated as background. The active work is
 maintainer placement guidance and the first real lower-stack implementation path.
@@ -123,11 +128,12 @@ TT-Metalium `qmul` candidate now validates through `external-qmul` under
 `tt-emule`.
 
 The tt-emule evidence has been committed, pushed, and recorded in tracker issue
-#8. The active implementation pressure now moves to issue #7: running the same
-external-qmul report path in a real Tenstorrent Cloud or hardware environment.
-Placement issue #6 remains open in parallel, and issue #3 remains the external
-staging path for the minimal TT-Metalium `qmul` candidate until maintainers
-recommend another placement.
+#8. The active implementation pressure now remains issue #7, but the immediate
+blocker is Console allocation: ask Tenstorrent to enable a Resource Type for the
+`RQM-Technologies-dev` organization or run delegated validation using
+`docs/tenstorrent-engineer-copy-paste-packet.md`. Placement issue #6 remains
+open in parallel, and issue #3 remains the external staging path for the minimal
+TT-Metalium `qmul` candidate until maintainers recommend another placement.
 
 Known-good preflight commands:
 
@@ -250,6 +256,9 @@ Why this is next:
   available
 - the repo status command and report metadata now make the current gap explicit:
   there is still no real Tenstorrent hardware report
+- the Console account now confirms the next concrete blocker: capacity cannot be
+  requested until Tenstorrent enables at least one Resource Type for the org, or
+  a Tenstorrent engineer runs the candidate in a delegated hardware environment
 
 ## Priority Lanes
 
@@ -259,7 +268,7 @@ Why this is next:
 | 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | Complete: `build_emule` installs a TT-Metalium package and the candidate emits an emulation-labeled report |
 | 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Experimental `[N, 4]` `qmul` candidate compared against CPU/PyTorch and scalar references through `external-qmul`; upstream placement still open |
 | 4 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
-| 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
+| 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | Tenstorrent enables a Console Resource Type or runs delegated validation, producing the first real hardware report |
 | 6 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
 | 7 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
 
@@ -298,6 +307,17 @@ Active repo issues should now focus on the hardware-facing path:
 4. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
 5. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
    repo's implementation track)
+
+Current blocker for #7:
+
+- Console is accessible.
+- Billing/Usage is visible.
+- Compute/Resources is visible.
+- `Request Capacity` opens, but `Resource Type` has no options and `Submit
+  Request` is disabled.
+- Next action: ask Tenstorrent to enable a Resource Type for
+  `RQM-Technologies-dev`, or ask a Tenstorrent engineer to run the delegated
+  hardware packet and return reports.
 
 Each issue should include:
 

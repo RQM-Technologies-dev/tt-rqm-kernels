@@ -39,6 +39,7 @@ Start here:
 - `python scripts/rqm_tt_console_runner.py --check`
 - [docs/outreach/tenstorrent-console-access-request.md](docs/outreach/tenstorrent-console-access-request.md)
 - [docs/tenstorrent-cloud-access-plan.md](docs/tenstorrent-cloud-access-plan.md)
+- [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md)
 - `python scripts/rqm_tt_cloud_runner.py --check`
 - [examples/tenstorrent_qmul_quickstart.py](examples/tenstorrent_qmul_quickstart.py)
 - [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
@@ -53,7 +54,8 @@ visible; no dedicated hardware allocation is assumed; Instances and Baremetal
 are treated as blocked until access is granted. The hardware request path is
 `Compute -> Resources -> Request Capacity` for one small `[N, 4]`
 StructuredBench `qmul` report, then either a VSCode/browser instance run or SSH
-baremetal run.
+baremetal run. If the Console form has no selectable Resource Type, use the
+Tenstorrent engineer packet for delegated validation.
 
 ## Core Idea
 
@@ -282,6 +284,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/tenstorrent-console-access-plan.md](docs/tenstorrent-console-access-plan.md)
 - [docs/tenstorrent-console-copy-paste.md](docs/tenstorrent-console-copy-paste.md)
 - [docs/tenstorrent-cloud-access-plan.md](docs/tenstorrent-cloud-access-plan.md)
+- [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md)
 - [docs/tenstorrent-hardware-command-contract.md](docs/tenstorrent-hardware-command-contract.md)
 - [docs/tenstorrent-delegated-validation.md](docs/tenstorrent-delegated-validation.md)
 - [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)

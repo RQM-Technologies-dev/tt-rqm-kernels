@@ -19,6 +19,10 @@ The request should be for capacity to run one small `[N, 4]` StructuredBench
 `qmul` hardware report. After access is granted, either a managed VSCode/browser
 instance or SSH baremetal shell can run the same commands below.
 
+If Console capacity remains blocked because `Request Capacity` has no selectable
+Resource Type, use the more detailed engineer handoff:
+[docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md).
+
 ## Copy/Paste Sequence
 
 ```bash

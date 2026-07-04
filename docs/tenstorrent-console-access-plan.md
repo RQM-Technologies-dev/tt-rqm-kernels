@@ -39,6 +39,8 @@ The logged-in Console flow observed for the RQM organization is:
 - Resources is visible, but no dedicated hardware allocation was observed.
 - Instances is blocked until access is granted.
 - Baremetal is blocked until access is granted.
+- `Request Capacity` opens, but the `Resource Type` dropdown currently has no
+  selectable options, so `Submit Request` is disabled.
 
 For real `qmul` execution, the path is:
 
@@ -53,6 +55,9 @@ After capacity is granted, use one of two execution surfaces:
 
 The Models/API path is useful for hosted inference, but it is not the target for
 arbitrary StructuredBench `qmul` execution.
+
+If the Resource Type blocker remains, use the delegated engineer handoff in
+[docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md).
 
 ## No-Surprise-Billing Rules
 
@@ -123,6 +128,7 @@ Stop and record the blocker if:
 - no account access exists
 - no no-cost workspace is available
 - no browser shell or remote access is available
+- `Request Capacity` has no selectable Resource Type
 - Instances and Baremetal remain blocked after the capacity request
 - no TT-Metalium stack is available
 - no real hardware `qmul` command exists yet
