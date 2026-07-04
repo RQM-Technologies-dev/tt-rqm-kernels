@@ -56,6 +56,18 @@ The repo is ready for a first handshake:
   - `tt-metal` checkout: `/Users/home/Documents/tt-metal` at `fd810266`
   - `tt-emule` checkout: `/Users/home/Documents/tt-emule` at `abdc348`
   - Docker image: `python:3.12-slim` with `--platform linux/amd64`
+- experimental TT-Metalium scalar RISC-V `qmul` candidate source has been
+  added under `experimental/tt_metalium_qmul/`
+- the new build-prerequisite gate is
+  `experimental/tt_emule_qmul/check_build_prereqs.py`
+- current build blocker:
+  - `tt-emule` pins `tt-metal` commit
+    `dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4`
+  - local `/Users/home/Documents/tt-metal` is still at `fd810266`
+  - the pinned commit is not present in the shallow checkout
+  - required `tt-metal` submodules `umd` and `tracy` are not initialized
+  - `python:3.12-slim` does not include git, CMake, Ninja, or clang-20
+  - no `build_emule` TT-Metalium CMake package exists yet
 - local tracker issues #9 through #13 are closed after their design/demo
   deliverables landed
 - local tracker issue #14 is open for the external LWT/ILWT `tt-metal`
@@ -66,9 +78,10 @@ maintainer placement guidance and the first real lower-stack implementation path
 
 ## Recommended Next Step
 
-The x86-64 Linux Docker preflight is complete. The next step is to build the
-smallest possible real TT-Metalium `qmul` host/kernel candidate and validate it
-through `external-qmul`.
+The x86-64 Linux Docker preflight is complete and the smallest experimental
+TT-Metalium `qmul` source candidate now exists. The next step is to create a
+real tt-metal/tt-emule build environment and validate that candidate through
+`external-qmul`.
 
 Known-good preflight commands:
 
@@ -86,6 +99,18 @@ docker run --rm --platform linux/amd64 \
   -e TT_EMULE_HOME=/work/tt-emule \
   python:3.12-slim \
   python experimental/tt_emule_qmul/check_environment.py
+```
+
+Build-prerequisite command:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  python:3.12-slim \
+  python experimental/tt_emule_qmul/check_build_prereqs.py
 ```
 
 Preflight result:
@@ -110,10 +135,11 @@ Why this is next:
 - the external `qmul` harness gives future TT-Metalium, TT-NN, or cloud-hosted
   candidate executables a concrete way to emit comparable StructuredBench
   reports
-- the TT-Metalium candidate package is staged externally and avoids unverified
-  TT-Metalium source until a real SDK/hardware environment is available
-- the Linux/tt-emule preflight now passes, so the remaining #3/#8 work is real
-  TT-Metalium host/kernel implementation and emulation-labeled validation
+- the TT-Metalium candidate package now contains a real experimental scalar
+  RISC-V source candidate, but it has not yet been built or run
+- the Linux/tt-emule preflight now passes, so the remaining #3/#8 work is
+  pinned `tt-metal` setup, `build_emule`, candidate build, and
+  emulation-labeled validation
 - the runbook now makes #7 actionable once Tenstorrent Cloud, a local
   TT-Metalium SDK checkout, or maintainer-provided environment guidance is
   available
@@ -125,8 +151,8 @@ Why this is next:
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
 | 1 | TT-Metalium `qmul` placement | Choose the right lower-stack contribution path | Maintainers indicate whether the first candidate should live externally, as a TT-Metalium example, or another preferred route |
-| 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | x86-64 Linux preflight passes and a real TT-Metalium candidate emits an emulation-labeled report |
-| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references through `external-qmul` |
+| 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | Build prerequisites pass and the candidate emits an emulation-labeled report |
+| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Experimental `[N, 4]` `qmul` candidate compared against CPU/PyTorch and scalar references through `external-qmul` |
 | 4 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
 | 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
 | 6 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |

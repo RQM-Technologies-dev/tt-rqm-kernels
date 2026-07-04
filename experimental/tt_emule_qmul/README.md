@@ -3,19 +3,19 @@
 This directory tracks the near-term emulation path for minimal `[N, 4]`
 `qmul`.
 
-It does not contain TT-Metalium kernel source. It only defines the preflight and
-validation contract for a future candidate that builds with `tt-metal` using
-`tt-emule`.
+The TT-Metalium candidate source now lives in `experimental/tt_metalium_qmul`.
+This directory defines the preflight and build-prerequisite checks for compiling
+and running that candidate with `tt-metal` using `tt-emule`.
 
 ## Current Status
 
 - CPU/PyTorch reference: implemented.
 - TT-Lang simulator path: implemented and simulator-only.
 - `external-qmul` candidate harness: implemented.
-- TT-Metalium source for `qmul`: not implemented.
+- TT-Metalium source for `qmul`: experimental scalar RISC-V candidate present.
 - tt-emule qmul candidate: not implemented.
-- Local environment: this macOS checkout is not an x86-64 Linux tt-emule build
-  environment.
+- Local x86-64 Linux Docker source-tree preflight: passes.
+- Build prerequisites: not yet satisfied in the current container.
 
 ## Preflight
 
@@ -49,10 +49,19 @@ python experimental/tt_emule_qmul/check_environment.py \
 Passing this check only means the source tree layout is plausible. It does not
 compile or run a kernel.
 
+Check build prerequisites after the source-tree preflight:
+
+```bash
+python experimental/tt_emule_qmul/check_build_prereqs.py
+```
+
+This verifies the pinned `tt-metal` commit, required submodules, CMake/Ninja,
+clang-20, and a built TT-Metalium CMake package such as `build_emule`.
+
 ## Validation Contract
 
-The future emulated candidate should be a standalone command that can be passed
-to StructuredBench:
+The emulated candidate should be a standalone command that can be passed to
+StructuredBench:
 
 ```bash
 python scripts/validate_qmul_candidate.py \

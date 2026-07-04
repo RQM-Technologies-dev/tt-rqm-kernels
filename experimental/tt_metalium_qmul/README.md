@@ -13,22 +13,23 @@ Current placement status:
 - No upstream `tt-metal` PR should be opened from this directory without
   maintainer guidance.
 
-This package intentionally does not include unverified TT-Metalium source code.
-The purpose of this directory is to make the first real candidate contract,
-validation path, and failure behavior explicit before hardware code is added.
+This package now includes an experimental TT-Metalium source candidate. It is a
+minimal scalar RISC-V/data-movement implementation intended to prove the
+`external-qmul` contract before any optimized compute-kernel work. It has not
+yet been built under `tt-emule` or run on Tenstorrent hardware.
 
 Current scaffold commands:
 
 ```text
 check_environment.py  checks for a local tt-metal / TT-Metalium checkout
-build_candidate.py    placeholder build command; emits no binary
-run_candidate.py      placeholder external-qmul command; writes no outputs
+build_candidate.py    configures/builds the experimental CMake candidate
+run_candidate.py      external-qmul wrapper for the built candidate binary
 validate_candidate.py wrapper around scripts/validate_qmul_candidate.py
 ```
 
-The placeholder command is expected to fail until real TT-Metalium host/kernel
-source exists. That failure is intentional: it prevents CPU, simulator, or
-empty placeholder output from being mistaken for Tenstorrent hardware results.
+The run wrapper is expected to fail until the candidate binary is built in a
+real TT-Metalium environment. That failure is intentional: it prevents CPU,
+simulator, or empty output from being mistaken for Tenstorrent hardware results.
 
 ## Candidate Contract
 
@@ -105,8 +106,7 @@ python experimental/tt_metalium_qmul/validate_candidate.py \
   --warmup 0
 ```
 
-The placeholder candidate command can be invoked directly to verify failure
-behavior:
+The candidate wrapper can be invoked directly to verify failure behavior:
 
 ```bash
 python experimental/tt_metalium_qmul/run_candidate.py
@@ -114,8 +114,8 @@ python experimental/tt_metalium_qmul/run_candidate.py
 
 Without `TT_RQM_EXTERNAL_QMUL_DIR` and `TT_RQM_EXTERNAL_QMUL_MANIFEST`, it exits
 with an external-harness environment error. When run through StructuredBench
-without a TT-Metalium SDK, it exits with a TT-Metalium-unavailable error and
-writes no `out.bin` or `metrics.json`.
+without a TT-Metalium SDK or built candidate binary, it exits clearly and writes
+no `out.bin` or `metrics.json`.
 
 For a future TT-Metalium binary, replace the command:
 
@@ -161,12 +161,17 @@ Check for a local SDK checkout before attempting real candidate development:
 python experimental/tt_metalium_qmul/check_environment.py
 ```
 
-The build placeholder also checks the SDK environment and intentionally emits no
-binary until real TT-Metalium source is added:
+The build command checks the SDK environment and then requires a built or
+installed TT-Metalium CMake package:
 
 ```bash
-python experimental/tt_metalium_qmul/build_candidate.py
+python experimental/tt_metalium_qmul/build_candidate.py \
+  --tt-metal-root /path/to/tt-metal \
+  --cmake-prefix-path /path/to/tt-metal/build_emule
 ```
+
+For `tt-emule`, first build `tt-metal` with `TT_METAL_USE_EMULE=ON` following
+the `tt-emule` build guide, then pass the resulting `build_emule` prefix.
 
 The checker looks for `TT_METAL_HOME` or `TT_METALIUM_HOME`, or accepts:
 
@@ -175,11 +180,11 @@ python experimental/tt_metalium_qmul/check_environment.py \
   --tt-metal-root /path/to/tt-metal
 ```
 
-The future TT-Metalium implementation should start from the public programming
-example pattern used by `tt-metal`: a host program plus data-movement and compute
-kernels under a small example directory. The first version should prefer a
-single-core row-major `[N, 4]` contract and correctness clarity over tiling or
-peak performance.
+The current source starts from the public `add_2_integers_in_riscv` programming
+example pattern used by `tt-metal`: a host program plus a data-movement RISC-V
+kernel. It maps one quaternion to one 16-byte page and implements the Hamilton
+product lane equations directly. This is a correctness candidate, not an
+optimized kernel design.
 
 Until maintainers answer the placement question, keep real candidate work in
 this external package and validate it through `external-qmul`. Do not open an

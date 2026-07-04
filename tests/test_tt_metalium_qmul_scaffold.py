@@ -58,7 +58,7 @@ def test_tt_metalium_build_placeholder_missing_sdk_is_clear() -> None:
 
     assert completed.returncode == 2
     assert "TT-Metalium SDK unavailable" in completed.stderr
-    assert "Build stopped before emitting a candidate binary" in completed.stderr
+    assert "Build stopped before configuring the candidate" in completed.stderr
     assert "Traceback" not in completed.stderr
 
 
@@ -115,6 +115,12 @@ def test_tt_metalium_validation_wrapper_placeholder_fails_without_sdk() -> None:
     assert "Traceback" not in completed.stderr
     assert "No out.bin or metrics.json was written" not in completed.stdout
     assert "hardware performance" not in completed.stdout.lower()
+
+
+def test_tt_metalium_source_candidate_files_exist() -> None:
+    assert os.path.exists("experimental/tt_metalium_qmul/CMakeLists.txt")
+    assert os.path.exists("experimental/tt_metalium_qmul/src/qmul_candidate.cpp")
+    assert os.path.exists("experimental/tt_metalium_qmul/kernels/qmul_riscv.cpp")
 
 
 def _without_tt_metal_env() -> dict[str, str]:

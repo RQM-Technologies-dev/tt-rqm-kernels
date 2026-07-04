@@ -57,13 +57,13 @@ def build_status() -> dict[str, Any]:
             ),
             _item(
                 "TT-Metalium candidate",
-                "not implemented",
-                "Issue #3 remains the real host/kernel implementation gap.",
+                "source candidate present / not built",
+                "experimental/tt_metalium_qmul contains a scalar RISC-V qmul candidate; no build/run report exists yet.",
             ),
             _item(
                 "TT-Metalium scaffold",
                 "implemented" if tt_metalium_dir.exists() else "missing",
-                "experimental/tt_metalium_qmul contains preflight and validation wrappers.",
+                "experimental/tt_metalium_qmul contains source, preflight, build, run, and validation wrappers.",
             ),
             _item(
                 "tt-emule preflight",
@@ -73,7 +73,7 @@ def build_status() -> dict[str, Any]:
             _item(
                 "tt-emule candidate",
                 "not implemented",
-                "Issue #8 remains open for a real emulated TT-Metalium qmul run.",
+                "Issue #8 remains open until the TT-Metalium candidate builds and runs under tt-emule.",
             ),
             _item(
                 "hardware report",

@@ -16,9 +16,10 @@ This is not an official Tenstorrent repository unless and until accepted or co-d
 4. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 5. Current status command: `python scripts/repo_status.py`
 
-Current blocker: no real TT-Metalium `qmul` candidate has been built yet. The
-next implementation step is an x86-64 Linux environment with `tt-metal`,
-`tt-emule`, and this repo checked out together.
+Current blocker: an experimental TT-Metalium scalar RISC-V `qmul` source
+candidate exists, but it has not been built or run yet. The next implementation
+step is a pinned x86-64 Linux `tt-metal` + `tt-emule` build environment that can
+produce an emulation-labeled StructuredBench report.
 
 ## Core Idea
 

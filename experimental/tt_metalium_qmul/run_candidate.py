@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Placeholder external-qmul command for a future TT-Metalium qmul candidate.
+"""Run the experimental TT-Metalium qmul candidate binary.
 
-This file intentionally does not implement qmul. It exists so the candidate
-package has a concrete command boundary that fails safely until real
-TT-Metalium host/kernel source is added in an SDK environment.
+The binary is built by build_candidate.py when a real TT-Metalium package is
+available. This wrapper preserves the external-qmul command boundary and fails
+cleanly when the binary has not been built yet.
 """
 
 from __future__ import annotations
@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -21,6 +22,7 @@ from experimental.tt_metalium_qmul.check_environment import _root_from_env
 
 
 PROTOCOL = "tt-rqm-external-qmul.v1"
+DEFAULT_BINARY = Path(__file__).resolve().parent / "build" / "tt_rqm_metalium_qmul_candidate"
 
 
 def main() -> int:
@@ -48,20 +50,26 @@ def main() -> int:
     root = _root_from_env()
     if root is None:
         print(
-            "TT-Metalium SDK unavailable: this placeholder wrote no output. "
+            "TT-Metalium SDK unavailable: the candidate wrote no output. "
             "Set TT_METAL_HOME or TT_METALIUM_HOME to a real tt-metal checkout "
-            "before replacing this placeholder with a real candidate command.",
+            "before building the experimental candidate.",
             file=sys.stderr,
         )
         return 2
 
-    print(
-        "TT-Metalium SDK root was provided, but no TT-Metalium qmul "
-        "implementation is present in this scaffold yet. No out.bin or "
-        "metrics.json was written; no hardware performance is claimed.",
-        file=sys.stderr,
-    )
-    return 2
+    binary = Path(os.environ.get("TT_RQM_METALIUM_QMUL_BINARY", DEFAULT_BINARY))
+    if not binary.exists():
+        print(
+            "TT-Metalium qmul candidate binary not found: "
+            f"{binary}. Run experimental/tt_metalium_qmul/build_candidate.py "
+            "in a built TT-Metalium environment first. No out.bin or "
+            "metrics.json was written.",
+            file=sys.stderr,
+        )
+        return 2
+
+    completed = subprocess.run([str(binary)], check=False)
+    return completed.returncode
 
 
 def _load_manifest(path: Path) -> dict[str, object]:

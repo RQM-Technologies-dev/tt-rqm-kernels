@@ -23,12 +23,15 @@ Implemented:
   `experimental/tt_emule_qmul/check_environment.py`
 - x86-64 Linux Docker preflight with sibling `tt-metal` and `tt-emule`
   checkouts
+- experimental TT-Metalium scalar RISC-V `qmul` candidate source:
+  `experimental/tt_metalium_qmul/src/qmul_candidate.cpp`
+- build-prerequisite checker:
+  `experimental/tt_emule_qmul/check_build_prereqs.py`
 - tracker issue:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
 
 Not implemented:
 
-- TT-Metalium `qmul` host/kernel source
 - tt-emule build of a `qmul` candidate
 - emulation report artifact
 - hardware report artifact
@@ -36,8 +39,12 @@ Not implemented:
 Current blocker:
 
 ```text
-The Linux/tt-emule source-tree preflight now passes. The remaining blocker is
-the real TT-Metalium qmul host/kernel candidate.
+The Linux/tt-emule source-tree preflight now passes and an experimental
+TT-Metalium qmul source candidate exists. The remaining blocker is a real
+tt-metal/tt-emule build environment: the local tt-metal checkout is not on the
+tt-emule pinned commit, required submodules are not initialized, clang-20 /
+git / CMake / Ninja are not present in the python:3.12-slim container, and no
+build_emule TT-Metalium CMake package exists yet.
 ```
 
 Verified preflight environment:
@@ -49,6 +56,7 @@ Mounted workspace: /Users/home/Documents -> /work
 tt-metal checkout: /Users/home/Documents/tt-metal @ fd810266
 tt-emule checkout: /Users/home/Documents/tt-emule @ abdc348
 tt-rqm-kernels checkout: /Users/home/Documents/tt-rqm-kernels
+tt-emule pinned tt-metal commit: dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4
 ```
 
 ## Expected Checkout Layout
@@ -93,11 +101,29 @@ tt-emule qmul preflight passed. This does not run a kernel.
 This check only validates platform and source-tree layout. It does not prove the
 candidate builds, runs, or produces correct output.
 
+Build-prerequisite check:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  python:3.12-slim \
+  python experimental/tt_emule_qmul/check_build_prereqs.py
+```
+
+Current expected result is exit code 2 with concrete setup blockers. This is
+not a candidate failure; it means the Linux container still lacks the toolchain,
+the pinned `tt-metal` checkout, initialized submodules, and a built
+TT-Metalium package.
+
 ## Build Direction
 
-The next implementation step is to inspect current `tt-metal` example patterns
-and create the smallest external TT-Metalium `qmul` host/kernel candidate that
-can satisfy the `external-qmul` protocol. The future candidate should follow the
+The candidate source now follows the `add_2_integers_in_riscv` public
+programming example pattern: a host program plus a RISC-V data-movement kernel.
+It maps one quaternion to one 16-byte page and implements the Hamilton product
+lane equations directly for correctness validation. The build should follow the
 `tt-emule` integration pattern from the `tt-emule` README:
 
 ```bash
@@ -107,8 +133,10 @@ cmake -S "$TT_METAL_HOME" -B "$TT_METAL_HOME/build_emule" \
 cmake --build "$TT_METAL_HOME/build_emule" -j"$(nproc)"
 ```
 
-Exact flags, compiler versions, and target names should be confirmed in the
-Linux environment before publishing any build claim.
+Before building, align `tt-metal` to the commit pinned by
+`tt-emule/tt-metal-pin.txt`, initialize required submodules, and use an image or
+host environment with clang-20, CMake, and Ninja. Exact flags and target names
+should be confirmed in the Linux environment before publishing any build claim.
 
 ## external-qmul Mapping
 
