@@ -50,6 +50,8 @@ The repo already has the right handshake:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/11>
 - physical-AI pose stream demo and tracker issue #12:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/12>
+- StructuredBench-HPC expansion roadmap and tracker issue #13:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/13>
 - public `tt-metal` placement Discussion and narrow placement issue
 - `tt-awesome` ecosystem visibility
 
@@ -69,25 +71,7 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-### 1. StructuredBench-HPC Expansion
-
-Goal: broaden the benchmark family beyond quaternions while preserving the repo
-identity.
-
-Candidate future workloads:
-
-- small wave/stencil update kernels
-- compact N-body-like vector state updates
-- complex/quaternion bridge kernels
-- phase/magnitude update streams
-- orientation/pose-update streams
-
-Exit condition:
-
-- a staged roadmap that adds one workload at a time with CPU/PyTorch reference,
-  scalar or independent checks where possible, and backend-comparable reports
-
-### 2. TT-MLIR Fused Lowering RFC
+### 1. TT-MLIR Fused Lowering RFC
 
 Goal: ask the compiler question only after backend evidence exists.
 
@@ -106,11 +90,8 @@ Exit condition:
 
 ## Recommended Issues To Add
 
-Add these tracker issues when ready:
-
-1. `Draft StructuredBench-HPC expansion roadmap`
-
-The first issue should be the next concrete technical move.
+Do not add a tracker issue for this until the repo has tt-emule,
+TT-Metalium, or hardware evidence that makes the compiler question concrete.
 
 ## Non-Goals
 

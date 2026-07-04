@@ -213,6 +213,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/phase-update-tenstorrent-plan.md](docs/phase-update-tenstorrent-plan.md)
 - [docs/external-tenstorrent-contribution-selection.md](docs/external-tenstorrent-contribution-selection.md)
 - [docs/physical-ai-pose-stream-demo.md](docs/physical-ai-pose-stream-demo.md)
+- [docs/structuredbench-hpc-expansion-roadmap.md](docs/structuredbench-hpc-expansion-roadmap.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
