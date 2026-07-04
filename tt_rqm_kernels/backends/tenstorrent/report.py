@@ -41,10 +41,35 @@ def validate_external_qmul_label(
     return execution_label  # type: ignore[return-value]
 
 
-def methodology_note_for_label(execution_label: ExecutionLabel) -> str:
+def validate_stable_benchmark(
+    execution_label: ExecutionLabel,
+    *,
+    stable_benchmark: bool,
+) -> None:
+    """Reject stable benchmark labels for non-hardware external candidates."""
+
+    if stable_benchmark and execution_label != "hardware":
+        raise ReportLabelError(
+            "stable benchmark reports are only allowed for real hardware runs; "
+            f"execution_label={execution_label} must use stable_benchmark=false"
+        )
+
+
+def methodology_note_for_label(
+    execution_label: ExecutionLabel,
+    *,
+    stable_benchmark: bool = False,
+) -> str:
     """Return a conservative default methodology note."""
 
     if execution_label == "hardware":
+        if stable_benchmark:
+            return (
+                "Configured Tenstorrent hardware external-qmul run marked "
+                "stable_benchmark=true by the operator; verify hardware, SDK, "
+                "clocking, command, input sizes, and methodology before treating "
+                "this as a stable benchmark."
+            )
         return (
             "Configured Tenstorrent hardware external-qmul run; first samples "
             "should not be treated as stable benchmark results unless separately "

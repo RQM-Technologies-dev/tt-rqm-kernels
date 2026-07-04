@@ -24,6 +24,7 @@ from tt_rqm_kernels.backends.tenstorrent.report import (
     ExecutionLabel,
     methodology_note_for_label,
     validate_external_qmul_label,
+    validate_stable_benchmark,
 )
 from tt_rqm_kernels.structuredbench import EXTERNAL_QMUL_PROTOCOL, run_suite
 
@@ -64,6 +65,11 @@ def run_configured_qmul(
     path = resolve_execution_path(mode, command=command)
     if not path.available or not path.command:
         raise TenstorrentAdapterError(path.reason)
+    if stable_benchmark and path.execution_label == "emulation":
+        raise TenstorrentAdapterError(
+            "stable benchmark reports are not allowed for --mode emule; "
+            "tt-emule output must use stable_benchmark=false"
+        )
     return run_structuredbench_qmul(
         command=path.command,
         execution_label=path.execution_label,
@@ -90,6 +96,7 @@ def run_structuredbench_qmul(
     """Run StructuredBench qmul through an external Tenstorrent candidate."""
 
     label = validate_external_qmul_label(execution_label, command=command)
+    validate_stable_benchmark(label, stable_benchmark=stable_benchmark)
     return run_suite(
         "qmul",
         backend="external-qmul",
@@ -101,7 +108,8 @@ def run_structuredbench_qmul(
         external_command=command,
         execution_label=label,
         stable_benchmark=stable_benchmark,
-        methodology_note=methodology_note or methodology_note_for_label(label),
+        methodology_note=methodology_note
+        or methodology_note_for_label(label, stable_benchmark=stable_benchmark),
     )
 
 

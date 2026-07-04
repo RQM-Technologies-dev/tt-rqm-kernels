@@ -72,6 +72,13 @@ def main() -> int:
 
     if args.mode is None:
         parser.error("--mode is required unless --check is set")
+    if args.mode == "emule" and args.stable_benchmark:
+        print(
+            "stable benchmark reports are not allowed for --mode emule; "
+            "tt-emule output must use stable_benchmark=false.",
+            file=sys.stderr,
+        )
+        return 2
 
     path = resolve_execution_path(args.mode, command=args.command)
     if not path.available:

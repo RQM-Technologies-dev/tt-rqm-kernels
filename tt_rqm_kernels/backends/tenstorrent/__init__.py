@@ -8,8 +8,10 @@ and does not claim hardware availability by itself.
 from tt_rqm_kernels.backends.tenstorrent.availability import (
     DEFAULT_HARDWARE_COMMAND_ENV,
     ExecutionPath,
+    HardwareCommandPreflight,
     TenstorrentReadiness,
     check_readiness,
+    inspect_hardware_command,
     resolve_execution_path,
 )
 from tt_rqm_kernels.backends.tenstorrent.qmul_external import (
@@ -21,6 +23,8 @@ from tt_rqm_kernels.backends.tenstorrent.qmul_external import (
 )
 from tt_rqm_kernels.backends.tenstorrent.report import (
     ReportLabelError,
+    methodology_note_for_label,
+    validate_stable_benchmark,
     validate_external_qmul_label,
     write_structuredbench_report,
 )
@@ -29,14 +33,18 @@ __all__ = [
     "DEFAULT_HARDWARE_COMMAND_ENV",
     "ExecutionPath",
     "ExternalQmulRun",
+    "HardwareCommandPreflight",
     "ReportLabelError",
     "TenstorrentAdapterError",
     "TenstorrentReadiness",
     "check_readiness",
+    "inspect_hardware_command",
+    "methodology_note_for_label",
     "resolve_execution_path",
     "run_configured_qmul",
     "run_external_qmul_inputs",
     "run_structuredbench_qmul",
     "validate_external_qmul_label",
+    "validate_stable_benchmark",
     "write_structuredbench_report",
 ]

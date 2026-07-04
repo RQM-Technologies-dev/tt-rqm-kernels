@@ -6,6 +6,7 @@ from dataclasses import asdict, dataclass
 import importlib.util
 import os
 from pathlib import Path
+import shlex
 import shutil
 from typing import Literal, Mapping
 
@@ -49,6 +50,8 @@ class TenstorrentReadiness:
     emule_candidate_binary_present: bool
     emule_ready: bool
     hardware_command: str | None
+    hardware_command_executable: str | None
+    hardware_command_reason: str
     hardware_ready: bool
     checks: tuple[ReadinessItem, ...]
 
@@ -67,6 +70,16 @@ class ExecutionPath:
     execution_label: Literal["emulation", "hardware"]
     available: bool
     reason: str
+
+
+@dataclass(frozen=True)
+class HardwareCommandPreflight:
+    """Static validation for a configured hardware command."""
+
+    command: str | None
+    available: bool
+    reason: str
+    executable: str | None = None
 
 
 def check_readiness(
@@ -89,6 +102,10 @@ def check_readiness(
     resolved_hardware_command = hardware_command or environment.get(
         DEFAULT_HARDWARE_COMMAND_ENV
     )
+    hardware_preflight = inspect_hardware_command(
+        resolved_hardware_command,
+        env=environment,
+    )
 
     package_available = importlib.util.find_spec("tt_rqm_kernels") is not None
     torch_available = importlib.util.find_spec("torch") is not None
@@ -104,7 +121,7 @@ def check_readiness(
             docker_available,
         ]
     )
-    hardware_ready = bool(resolved_hardware_command)
+    hardware_ready = hardware_preflight.available
 
     checks = (
         ReadinessItem(
@@ -159,11 +176,8 @@ def check_readiness(
         ReadinessItem(
             "hardware command",
             hardware_ready,
-            (
-                f"configured via command or {DEFAULT_HARDWARE_COMMAND_ENV}"
-                if hardware_ready
-                else f"not configured; set {DEFAULT_HARDWARE_COMMAND_ENV} or pass --command"
-            ),
+            hardware_preflight.reason,
+            hardware_preflight.executable,
         ),
     )
 
@@ -181,6 +195,8 @@ def check_readiness(
         emule_candidate_binary_present=binary_present,
         emule_ready=emule_ready,
         hardware_command=resolved_hardware_command,
+        hardware_command_executable=hardware_preflight.executable,
+        hardware_command_reason=hardware_preflight.reason,
         hardware_ready=hardware_ready,
         checks=checks,
     )
@@ -228,16 +244,14 @@ def resolve_execution_path(
 
     environment = env or os.environ
     resolved_command = command or environment.get(DEFAULT_HARDWARE_COMMAND_ENV)
-    if not resolved_command:
+    preflight = inspect_hardware_command(resolved_command, env=environment)
+    if not preflight.available:
         return ExecutionPath(
             mode=mode,
-            command=None,
+            command=resolved_command,
             execution_label="hardware",
             available=False,
-            reason=(
-                "hardware command is not configured; pass --command or set "
-                f"{DEFAULT_HARDWARE_COMMAND_ENV}"
-            ),
+            reason=preflight.reason,
         )
     return ExecutionPath(
         mode=mode,
@@ -245,6 +259,66 @@ def resolve_execution_path(
         execution_label="hardware",
         available=True,
         reason="hardware command configured",
+    )
+
+
+def inspect_hardware_command(
+    command: str | None,
+    *,
+    env: Mapping[str, str] | None = None,
+) -> HardwareCommandPreflight:
+    """Statically inspect a hardware command without executing it."""
+
+    if command is None or not command.strip():
+        return HardwareCommandPreflight(
+            command=command,
+            available=False,
+            reason=(
+                "hardware command is not configured; pass --command or set "
+                f"{DEFAULT_HARDWARE_COMMAND_ENV}"
+            ),
+        )
+
+    try:
+        tokens = shlex.split(command)
+    except ValueError as exc:
+        return HardwareCommandPreflight(
+            command=command,
+            available=False,
+            reason=f"hardware command could not be parsed: {exc}",
+        )
+    if not tokens:
+        return HardwareCommandPreflight(
+            command=command,
+            available=False,
+            reason="hardware command is empty after shell parsing",
+        )
+
+    lowered = " ".join(tokens).lower()
+    if "run_candidate_docker" in lowered or "tt-emule" in lowered or "emule" in lowered:
+        return HardwareCommandPreflight(
+            command=command,
+            available=False,
+            reason=(
+                "hardware command appears to reference tt-emule/emulation; "
+                "use --mode emule for emulation and reserve --mode hardware "
+                "for real Tenstorrent Cloud or hardware commands"
+            ),
+        )
+
+    executable = tokens[0]
+    resolved = _resolve_executable(executable, env or os.environ)
+    if resolved is None:
+        return HardwareCommandPreflight(
+            command=command,
+            available=False,
+            reason=f"hardware command executable not found: {executable}",
+        )
+    return HardwareCommandPreflight(
+        command=command,
+        available=True,
+        reason=f"hardware command executable found: {resolved}",
+        executable=resolved,
     )
 
 
@@ -282,3 +356,11 @@ def _env_or_sibling_detail(
     if path is not None:
         return f"{env_names[0]} unset; sibling {sibling_name} checkout found at {path}"
     return f"{env_names[0]} unset and sibling {sibling_name} checkout not found"
+
+
+def _resolve_executable(executable: str, env: Mapping[str, str]) -> str | None:
+    path = Path(executable).expanduser()
+    if "/" in executable or "\\" in executable:
+        return str(path.resolve()) if path.exists() else None
+    resolved = shutil.which(executable, path=env.get("PATH"))
+    return resolved

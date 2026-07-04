@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Direct qmul quickstart for CPU reference and optional Tenstorrent candidates."""
+"""Direct qmul quickstart for CPU reference and optional Tenstorrent candidates.
+
+The JSON/Markdown files from this example are lightweight quickstart reports.
+For canonical StructuredBench reports, use scripts/rqm_tt_quickstart.py with
+--mode emule or --mode hardware.
+"""
 
 from __future__ import annotations
 
@@ -35,8 +40,24 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--mode", choices=("cpu", "emule", "hardware"), default="cpu")
     parser.add_argument("--command", default=None)
-    parser.add_argument("--json-output", type=Path, default=None)
-    parser.add_argument("--markdown-output", type=Path, default=None)
+    parser.add_argument(
+        "--json-output",
+        type=Path,
+        default=None,
+        help=(
+            "Write a lightweight quickstart JSON report. For canonical "
+            "StructuredBench reports, use scripts/rqm_tt_quickstart.py."
+        ),
+    )
+    parser.add_argument(
+        "--markdown-output",
+        type=Path,
+        default=None,
+        help=(
+            "Write a lightweight quickstart Markdown report. For canonical "
+            "StructuredBench reports, use scripts/rqm_tt_quickstart.py."
+        ),
+    )
     args = parser.parse_args()
 
     a, b = _inputs(args.items, args.seed)
@@ -47,6 +68,10 @@ def main() -> int:
         "iterations": args.iters,
         "warmup": args.warmup,
         "seed": args.seed,
+        "report_note": (
+            "Lightweight quickstart report. Use scripts/rqm_tt_quickstart.py "
+            "--mode emule or --mode hardware for canonical StructuredBench reports."
+        ),
         "cpu": cpu,
         "tenstorrent": None,
     }
@@ -149,6 +174,13 @@ def _render_markdown(report: dict[str, object]) -> str:
         f"iterations: `{report['iterations']}`  ",
         f"warmup: `{report['warmup']}`  ",
         f"seed: `{report['seed']}`",
+        "",
+        (
+            "This is a lightweight quickstart report. Use "
+            "`scripts/rqm_tt_quickstart.py --mode emule` or "
+            "`scripts/rqm_tt_quickstart.py --mode hardware` for canonical "
+            "StructuredBench reports."
+        ),
         "",
         "## CPU/PyTorch",
         "",
