@@ -191,6 +191,27 @@ CPU/PyTorch qmul reference
 -> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
 ```
 
+## Long-Term QuantumIR Direction
+
+The long-term top layer for this project is a conservative QuantumIR direction:
+lower selected quantum-mechanics workloads into the structured quaternion,
+rotor, phase, and tensor kernels already defined here. The near-term target is
+not a new backend or a claim about replacing quantum hardware. It is a
+documentation and validation path for representing small SU(2)-style operations
+as ordinary floating-point tensor kernels.
+
+The first proposed QuantumIR target is a single-qubit SU(2) gate represented as
+a unit quaternion rotor and validated against a standard 2x2 complex matrix
+reference. That layer should lower into the existing `[N, 4]` kernel foundation
+and StructuredBench report path rather than displacing the active qmul,
+tt-emule, Cloud/hardware, or maintainer-placement work.
+
+See:
+
+- [docs/quantum-ir.md](docs/quantum-ir.md)
+- [docs/quantum-ir-roadmap.md](docs/quantum-ir-roadmap.md)
+- [docs/quantum-ir-operator-mapping.md](docs/quantum-ir-operator-mapping.md)
+
 ## StructuredBench Hardware Metrics
 
 StructuredBench now reports hardware-relevant estimates alongside latency, throughput, and numerical error:
@@ -229,6 +250,9 @@ The Tenstorrent-facing surfaces are:
 - [docs/external-tenstorrent-contribution-selection.md](docs/external-tenstorrent-contribution-selection.md)
 - [docs/physical-ai-pose-stream-demo.md](docs/physical-ai-pose-stream-demo.md)
 - [docs/structuredbench-hpc-expansion-roadmap.md](docs/structuredbench-hpc-expansion-roadmap.md)
+- [docs/quantum-ir.md](docs/quantum-ir.md)
+- [docs/quantum-ir-roadmap.md](docs/quantum-ir-roadmap.md)
+- [docs/quantum-ir-operator-mapping.md](docs/quantum-ir-operator-mapping.md)
 - [docs/tt-mlir-fused-lowering-prerequisites.md](docs/tt-mlir-fused-lowering-prerequisites.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)

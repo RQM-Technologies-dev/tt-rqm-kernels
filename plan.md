@@ -106,6 +106,11 @@ The repo is ready for a first handshake:
   deliverables landed
 - local tracker issue #14 is open for the external LWT/ILWT `tt-metal`
   worktree path, which should stay outside this repo
+- QuantumIR is now tracked as a strategic documentation layer above the
+  existing kernel foundation. It is a future lowering direction for selected
+  quantum-mechanics workloads into structured quaternion/SU(2) kernels, not an
+  active replacement for the qmul, tt-emule, Cloud/hardware, or maintainer
+  placement path.
 
 The completed setup work should now be treated as background. The active work is
 maintainer placement guidance and the first real lower-stack implementation path.
@@ -117,10 +122,12 @@ installed/exported TT-Metalium package, and the experimental scalar RISC-V
 TT-Metalium `qmul` candidate now validates through `external-qmul` under
 `tt-emule`.
 
-The next step is to commit/push this evidence, update/close tracker issue #8
-with the exact emulation report, then move the active implementation pressure to
-issue #7: running the same external-qmul report path in a real Tenstorrent Cloud
-or hardware environment. Placement issue #6 remains open in parallel.
+The tt-emule evidence has been committed, pushed, and recorded in tracker issue
+#8. The active implementation pressure now moves to issue #7: running the same
+external-qmul report path in a real Tenstorrent Cloud or hardware environment.
+Placement issue #6 remains open in parallel, and issue #3 remains the external
+staging path for the minimal TT-Metalium `qmul` candidate until maintainers
+recommend another placement.
 
 Known-good preflight commands:
 
@@ -255,6 +262,29 @@ Why this is next:
 | 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
 | 6 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
 | 7 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
+
+## Strategic Top Layer: QuantumIR
+
+QuantumIR is a future top layer above the current kernel and benchmark stack:
+
+```text
+OpenQASM / Qiskit / RQM DSL
+-> QuantumIR / RQM-IR
+-> SU(2), quaternion, rotor, phase, spectral, and tensor lowering
+-> StructuredBench and tt-rqm-kernels operator contracts
+-> TT-MLIR / TT-NN / TT-Metalium / TT-Lang / tt-emule paths
+```
+
+Current status:
+
+- documentation-only direction is recorded in `docs/quantum-ir.md`
+- roadmap is recorded in `docs/quantum-ir-roadmap.md`
+- initial operator mapping is recorded in
+  `docs/quantum-ir-operator-mapping.md`
+
+This is not active backend work. It should not displace the qmul hardware path,
+and it must not claim that RQM replaces quantum hardware or that arbitrary
+quantum computation is efficiently classically simulable.
 
 ## Next Repo Work
 
