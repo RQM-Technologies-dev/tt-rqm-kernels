@@ -209,6 +209,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
 - [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
 - [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
+- [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
@@ -221,6 +222,8 @@ Proposed backend path:
 - future tt-emule validation for a TT-Metalium `qmul` candidate
 - future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
 - future `qrotate_vector` stream benchmark
+- future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
+  evidence is clearer
 - future TT-NN wrapper once placement guidance is clear
 - future TT-MLIR lowering discussion after an explicit lower-stack kernel exists
 

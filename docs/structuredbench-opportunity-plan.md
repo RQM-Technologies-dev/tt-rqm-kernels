@@ -42,6 +42,8 @@ The repo already has the right handshake:
 - tt-emule qmul validation plan and local preflight scaffold
 - tt-emule tracker issue #8:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
+- ComplexTensor-to-QuaternionTensor bridge design and tracker issue #9:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/9>
 - public `tt-metal` placement Discussion and narrow placement issue
 - `tt-awesome` ecosystem visibility
 
@@ -61,31 +63,7 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-### 1. ComplexTensor to QuaternionTensor Bridge
-
-Goal: make quaternion tensors feel like a conservative extension of existing
-structured tensor practice.
-
-Draft a design doc that frames:
-
-```text
-ComplexTensor: [real, imag]
-QuaternionTensor: [real, i, j, k]
-StructuredTensor: lane-packed physical/geometric/signal state
-```
-
-This should not ask for a native quaternion datatype. It should explain two
-possible software representations:
-
-- lane-packed tensor: `[N, 4]`
-- aligned-lane tensors: four tensors representing real/i/j/k lanes
-
-Exit condition:
-
-- a concise TT-NN-adjacent design note that a maintainer can understand without
-  accepting any RQM-specific theory
-
-### 2. Phase-Update Signal Kernel Plan
+### 1. Phase-Update Signal Kernel Plan
 
 Goal: make `phase_update` a serious signal/wave benchmark lane, not a side
 utility.
@@ -106,7 +84,7 @@ Exit condition:
 - a `phase_update` Tenstorrent backend plan with the same report discipline as
   `qmul`
 
-### 3. One Tenstorrent Contribution Outside RQM
+### 2. One Tenstorrent Contribution Outside RQM
 
 Goal: become a known contributor, not only an outside proposer.
 
@@ -125,7 +103,7 @@ Exit condition:
 - one narrow external contribution path is selected, scoped, and tracked
   separately from `tt-rqm-kernels`
 
-### 4. Physical-AI Pose Stream Demo
+### 3. Physical-AI Pose Stream Demo
 
 Goal: give `qrotate_vector` a practical robotics/sensing story.
 
@@ -145,7 +123,7 @@ Exit condition:
 - a reproducible example that shows why rotor/vector kernels matter for
   physical AI and pose/orientation streams
 
-### 5. StructuredBench-HPC Expansion
+### 4. StructuredBench-HPC Expansion
 
 Goal: broaden the benchmark family beyond quaternions while preserving the repo
 identity.
@@ -163,7 +141,7 @@ Exit condition:
 - a staged roadmap that adds one workload at a time with CPU/PyTorch reference,
   scalar or independent checks where possible, and backend-comparable reports
 
-### 6. TT-MLIR Fused Lowering RFC
+### 5. TT-MLIR Fused Lowering RFC
 
 Goal: ask the compiler question only after backend evidence exists.
 
@@ -184,11 +162,10 @@ Exit condition:
 
 Add these tracker issues when ready:
 
-1. `Prototype ComplexTensor-to-QuaternionTensor bridge design`
-2. `Add phase_update Tenstorrent backend plan`
-3. `Select one Tenstorrent contribution for RQM`
-4. `Draft physical-AI pose stream demo using qrotate_vector`
-5. `Draft StructuredBench-HPC expansion roadmap`
+1. `Add phase_update Tenstorrent backend plan`
+2. `Select one Tenstorrent contribution for RQM`
+3. `Draft physical-AI pose stream demo using qrotate_vector`
+4. `Draft StructuredBench-HPC expansion roadmap`
 
 The first issue should be the next concrete technical move.
 
