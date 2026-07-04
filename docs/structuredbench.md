@@ -124,7 +124,8 @@ The current lower-stack proof path is:
 PyTorch reference
 -> scalar checks
 -> TT-Lang simulator
--> future TT-Metalium candidate
+-> tt-emule run of the experimental TT-Metalium candidate
+-> future Tenstorrent hardware run
 ```
 
 The optional TT-Lang simulator qmul smoke also emits `structuredbench.v1` with
@@ -195,6 +196,7 @@ StructuredBench is intended to make future Tenstorrent backend work concrete:
 
 1. Keep CPU/PyTorch outputs as the correctness reference.
 2. Validate `qmul` in TT-Lang simulation.
-3. Port selected workloads to TT-Metalium or TT-NN.
-4. Emit the same `structuredbench.v1` report fields.
-5. Compare throughput, latency, numerical error, and scaling across backends.
+3. Validate the experimental TT-Metalium `qmul` candidate under tt-emule.
+4. Port selected workloads to hardware-backed TT-Metalium or TT-NN paths.
+5. Emit the same `structuredbench.v1` report fields.
+6. Compare throughput, latency, numerical error, and scaling across backends.

@@ -86,7 +86,7 @@ def main(argv: list[str] | None = None) -> int:
             checks.append(
                 _error(
                     "TT-Metalium CMake package",
-                    "not found; build tt-metal with TT_METAL_USE_EMULE=ON and pass build_emule to build_candidate.py",
+                    "usable package export not found; build/install tt-metal with TT_METAL_USE_EMULE=ON before passing build_emule to build_candidate.py",
                 )
             )
         else:
@@ -177,14 +177,25 @@ def _find_metalium_package(tt_metal_root: Path) -> Path | None:
         tt_metal_root / "build_RelWithDebInfo",
         tt_metal_root / ".build" / "default",
     ):
-        for config in (
-            prefix / "lib" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
-            prefix / "lib64" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
-            prefix / "tt_metal" / "cmake" / "TT-MetaliumConfig.cmake",
-        ):
-            if config.exists():
+        for config in _metalium_config_paths(prefix):
+            if _is_usable_metalium_config(config):
                 return prefix
     return None
+
+
+def _is_usable_metalium_config(config: Path) -> bool:
+    return config.exists() and (config.parent / "Metalium.cmake").exists()
+
+
+def _metalium_config_paths(prefix: Path) -> tuple[Path, ...]:
+    return (
+        prefix / "tt-metalium-config.cmake",
+        prefix / "lib" / "cmake" / "tt-metalium" / "tt-metalium-config.cmake",
+        prefix / "lib64" / "cmake" / "tt-metalium" / "tt-metalium-config.cmake",
+        prefix / "lib" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
+        prefix / "lib64" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
+        prefix / "tt_metal" / "cmake" / "TT-MetaliumConfig.cmake",
+    )
 
 
 def _read_pin(path: Path) -> str | None:

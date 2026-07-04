@@ -75,9 +75,18 @@ def main(argv: list[str] | None = None) -> int:
     prefix = args.cmake_prefix_path or _default_prefix(tt_metal_root)
     if prefix is None:
         print(
-            "Build unavailable: no built TT-Metalium CMake package was found. "
-            "Build tt-metal first, for example with build_emule and "
-            "TT_METAL_USE_EMULE=ON, then pass --cmake-prefix-path.",
+            "Build unavailable: no usable built/installed TT-Metalium CMake "
+            "package export was found. Build/install tt-metal first, for "
+            "example with build_emule and TT_METAL_USE_EMULE=ON, then pass "
+            "--cmake-prefix-path.",
+            file=sys.stderr,
+        )
+        return 2
+    metalium_dir = _metalium_package_dir(prefix)
+    if metalium_dir is None:
+        print(
+            "Build unavailable: no usable TT-Metalium CMake package directory "
+            f"was found under {prefix}.",
             file=sys.stderr,
         )
         return 2
@@ -88,8 +97,12 @@ def main(argv: list[str] | None = None) -> int:
         str(PACKAGE_DIR),
         "-B",
         str(args.build_dir),
-        f"-DCMAKE_PREFIX_PATH={prefix}",
+        f"-DCMAKE_PREFIX_PATH={';'.join(str(path) for path in _cmake_prefix_paths(prefix))}",
+        f"-DTT-Metalium_DIR={metalium_dir}",
     ]
+    module_paths = _cmake_module_paths(prefix)
+    if module_paths:
+        configure.append(f"-DCMAKE_MODULE_PATH={';'.join(str(path) for path in module_paths)}")
     generator = args.generator or ("Ninja" if shutil.which("ninja") else None)
     if generator is not None:
         configure.extend(["-G", generator])
@@ -155,14 +168,60 @@ def _default_prefix(tt_metal_root: Path | None) -> Path | None:
 
 
 def _has_metalium_package(prefix: Path) -> bool:
-    return any(
-        path.exists()
-        for path in (
-            prefix / "lib" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
-            prefix / "lib64" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
-            prefix / "tt_metal" / "cmake" / "TT-MetaliumConfig.cmake",
-        )
+    return _metalium_package_dir(prefix) is not None
+
+
+def _metalium_package_dir(prefix: Path) -> Path | None:
+    for config in _metalium_config_paths(prefix):
+        if _is_usable_metalium_config(config):
+            return config.parent.expanduser().resolve()
+    return None
+
+
+def _is_usable_metalium_config(config: Path) -> bool:
+    return config.exists() and (config.parent / "Metalium.cmake").exists()
+
+
+def _cmake_prefix_paths(prefix: Path) -> list[Path]:
+    candidates = [
+        prefix,
+        prefix / "_deps" / "fmt-build",
+        prefix / "_deps" / "nlohmann_json-build",
+        prefix / "_deps" / "spdlog-build",
+        prefix / "_deps" / "tt-logger-build",
+        prefix / "_deps" / "tt-logger-build" / "cmake",
+        prefix / "_deps" / "enchantum-build",
+        prefix / "_deps" / "reflect-build",
+        prefix / "tt_metal" / "third_party" / "umd",
+        prefix / "tt_metal" / "third_party" / "tracy",
+    ]
+    return _dedupe_existing(candidates)
+
+
+def _cmake_module_paths(prefix: Path) -> list[Path]:
+    return _dedupe_existing([prefix / "CPM_modules"])
+
+
+def _metalium_config_paths(prefix: Path) -> tuple[Path, ...]:
+    return (
+        prefix / "lib" / "cmake" / "tt-metalium" / "tt-metalium-config.cmake",
+        prefix / "lib64" / "cmake" / "tt-metalium" / "tt-metalium-config.cmake",
+        prefix / "lib" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
+        prefix / "lib64" / "cmake" / "tt-metalium" / "TT-MetaliumConfig.cmake",
+        prefix / "tt_metal" / "cmake" / "TT-MetaliumConfig.cmake",
+        prefix / "tt-metalium-config.cmake",
     )
+
+
+def _dedupe_existing(paths: list[Path]) -> list[Path]:
+    seen: set[Path] = set()
+    existing: list[Path] = []
+    for path in paths:
+        resolved = path.expanduser().resolve()
+        if resolved.exists() and resolved not in seen:
+            existing.append(resolved)
+            seen.add(resolved)
+    return existing
 
 
 if __name__ == "__main__":

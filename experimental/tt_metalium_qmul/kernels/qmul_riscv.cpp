@@ -2,6 +2,29 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+#include "api/dataflow/dataflow_api.h"
+
+namespace {
+
+union FloatWord {
+    uint32_t word;
+    float value;
+};
+
+float word_to_float(uint32_t word) {
+    FloatWord converted;
+    converted.word = word;
+    return converted.value;
+}
+
+uint32_t float_to_word(float value) {
+    FloatWord converted;
+    converted.value = value;
+    return converted.word;
+}
+
+}  // namespace
+
 void kernel_main() {
     uint32_t a_dram = get_arg_val<uint32_t>(0);
     uint32_t b_dram = get_arg_val<uint32_t>(1);
@@ -21,23 +44,23 @@ void kernel_main() {
         noc_async_read(b.get_noc_addr(index), b_l1, qbytes);
         noc_async_read_barrier();
 
-        float* av = reinterpret_cast<float*>(a_l1);
-        float* bv = reinterpret_cast<float*>(b_l1);
-        float* ov = reinterpret_cast<float*>(out_l1);
+        volatile tt_l1_ptr uint32_t* av = reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_arg_val<uint32_t>(3));
+        volatile tt_l1_ptr uint32_t* bv = reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_arg_val<uint32_t>(4));
+        volatile tt_l1_ptr uint32_t* ov = reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_arg_val<uint32_t>(5));
 
-        const float ar = av[0];
-        const float ai = av[1];
-        const float aj = av[2];
-        const float ak = av[3];
-        const float br = bv[0];
-        const float bi = bv[1];
-        const float bj = bv[2];
-        const float bk = bv[3];
+        const float ar = word_to_float(av[0]);
+        const float ai = word_to_float(av[1]);
+        const float aj = word_to_float(av[2]);
+        const float ak = word_to_float(av[3]);
+        const float br = word_to_float(bv[0]);
+        const float bi = word_to_float(bv[1]);
+        const float bj = word_to_float(bv[2]);
+        const float bk = word_to_float(bv[3]);
 
-        ov[0] = ar * br - ai * bi - aj * bj - ak * bk;
-        ov[1] = ar * bi + ai * br + aj * bk - ak * bj;
-        ov[2] = ar * bj - ai * bk + aj * br + ak * bi;
-        ov[3] = ar * bk + ai * bj - aj * bi + ak * br;
+        ov[0] = float_to_word(ar * br - ai * bi - aj * bj - ak * bk);
+        ov[1] = float_to_word(ar * bi + ai * br + aj * bk - ak * bj);
+        ov[2] = float_to_word(ar * bj - ai * bk + aj * br + ak * bi);
+        ov[3] = float_to_word(ar * bk + ai * bj - aj * bi + ak * br);
 
         noc_async_write(out_l1, out.get_noc_addr(index), qbytes);
         noc_async_write_barrier();

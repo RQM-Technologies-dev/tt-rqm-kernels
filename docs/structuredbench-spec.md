@@ -12,20 +12,32 @@ The first convention is quaternion layout:
 [N, 4] = [real, i, j, k]
 ```
 
-The current backend is CPU/PyTorch. The report schema is designed so future TT-Metalium and TT-NN implementations can be compared against the same correctness and benchmark fields.
+The default backend is CPU/PyTorch. The report schema is designed so TT-Lang,
+tt-emule, TT-Metalium, TT-NN, and future hardware implementations can be
+compared against the same correctness and benchmark fields when they are clearly
+labeled.
 
 ## Current Status
 
-- current backend: CPU/PyTorch
+- default backend: CPU/PyTorch
 - current benchmark reports are sample reference outputs
-- Tenstorrent backend is not implemented yet
+- optional TT-Lang simulator reports are simulator-only
+- experimental TT-Metalium `qmul` candidate has an emulation-labeled tt-emule
+  sample report
+- Tenstorrent hardware backend is not implemented yet
 - first requested maintainer guidance is placement for a minimal TT-Metalium `qmul` example
 
 ## What This Lets Tenstorrent Demonstrate
 
 StructuredBench gives Tenstorrent a small public workload for structured numerical kernels, not another LLM benchmark. It shows how ordinary floating-point tensors can carry rotation, phase, orientation, direction, and geometric state without a new datatype or hardware feature.
 
-The first path is intentionally narrow: CPU/PyTorch reference results, scalar correctness checks, TT-Lang simulator validation, then a future TT-Metalium `qmul` comparison for `[N, 4]` tensors. That lets Tenstorrent demonstrate a custom kernel path for 4-lane structured values with fixed cross-lane dependencies, then compare throughput, latency, numerical error, FLOPs/sec, effective GB/sec, and arithmetic intensity against the reference report.
+The first path is intentionally narrow: CPU/PyTorch reference results, scalar
+correctness checks, TT-Lang simulator validation, tt-emule validation of an
+experimental TT-Metalium candidate, then a future hardware-backed TT-Metalium
+`qmul` comparison for `[N, 4]` tensors. That lets Tenstorrent demonstrate a
+custom kernel path for 4-lane structured values with fixed cross-lane
+dependencies, then compare throughput, latency, numerical error, FLOPs/sec,
+effective GB/sec, and arithmetic intensity against the reference report.
 
 ## Why Structured Tensor Kernels Matter
 

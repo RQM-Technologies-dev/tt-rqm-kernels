@@ -12,14 +12,15 @@ This is not an official Tenstorrent repository unless and until accepted or co-d
 
 1. Start here: [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
 2. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
-3. Backend blocker detail: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
+3. Emulation evidence: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 4. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 5. Current status command: `python scripts/repo_status.py`
 
-Current blocker: an experimental TT-Metalium scalar RISC-V `qmul` source
-candidate exists, but it has not been built or run yet. The next implementation
-step is a pinned x86-64 Linux `tt-metal` + `tt-emule` build environment that can
-produce an emulation-labeled StructuredBench report.
+Current blocker: the experimental TT-Metalium scalar RISC-V `qmul` candidate
+has now built and produced an emulation-labeled StructuredBench report through
+`tt-emule`. It is not a hardware result. The next implementation step is a real
+Tenstorrent Cloud or hardware run, plus maintainer guidance on upstream
+placement for the minimal `qmul` example.
 
 ## Core Idea
 
@@ -234,11 +235,12 @@ The Tenstorrent-facing surfaces are:
 - [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
 - [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 - [reports/tenstorrent_hardware_report_template.md](reports/tenstorrent_hardware_report_template.md)
+- [reports/tt_emule_qmul_candidate.md](reports/tt_emule_qmul_candidate.md)
 
 Proposed backend path:
 
 - optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
-- future tt-emule validation for a TT-Metalium `qmul` candidate
+- tt-emule validation for the experimental TT-Metalium `qmul` candidate
 - future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
 - CPU/PyTorch physical-AI pose stream demo using `qrotate_vector`
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack

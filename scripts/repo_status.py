@@ -30,6 +30,7 @@ def build_status() -> dict[str, Any]:
     tt_lang = check_tt_lang_sim()
     tt_metalium_dir = REPO_ROOT / "experimental" / "tt_metalium_qmul"
     tt_emule_dir = REPO_ROOT / "experimental" / "tt_emule_qmul"
+    tt_emule_report = REPO_ROOT / "reports" / "tt_emule_qmul_candidate.json"
 
     return {
         "schema": "tt-rqm-repo-status.v1",
@@ -57,8 +58,8 @@ def build_status() -> dict[str, Any]:
             ),
             _item(
                 "TT-Metalium candidate",
-                "source candidate present / not built",
-                "experimental/tt_metalium_qmul contains a scalar RISC-V qmul candidate; no build/run report exists yet.",
+                "experimental source candidate present",
+                "experimental/tt_metalium_qmul contains a scalar RISC-V qmul candidate staged outside upstream tt-metal.",
             ),
             _item(
                 "TT-Metalium scaffold",
@@ -72,8 +73,12 @@ def build_status() -> dict[str, Any]:
             ),
             _item(
                 "tt-emule candidate",
-                "not implemented",
-                "Issue #8 remains open until the TT-Metalium candidate builds and runs under tt-emule.",
+                "emulation report present" if tt_emule_report.exists() else "not implemented",
+                (
+                    "reports/tt_emule_qmul_candidate.json is an emulation-labeled sample, not hardware performance."
+                    if tt_emule_report.exists()
+                    else "Issue #8 remains open until the TT-Metalium candidate builds and runs under tt-emule."
+                ),
             ),
             _item(
                 "hardware report",

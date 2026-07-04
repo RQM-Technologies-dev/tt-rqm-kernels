@@ -2,7 +2,7 @@
 
 This runbook prepares `tt-rqm-kernels` for a future real Tenstorrent execution
 of the StructuredBench `qmul` workload. It does not claim hardware performance
-and it does not add TT-Metalium source code.
+and it separates CPU, simulator, emulation, and hardware labels.
 
 Use this when a Tenstorrent Cloud or local TT-Metalium environment is available
 and a real `qmul` candidate executable exists.
@@ -15,9 +15,11 @@ Current local status:
 - Scalar spot checks are implemented.
 - TT-Lang simulator `qmul` report is available and labeled simulator-only.
 - External `qmul` candidate harness is implemented.
-- TT-Metalium candidate package exists as a scaffold only.
-- tt-emule validation preflight exists as a scaffold only.
-- Real TT-Metalium host/kernel source is not implemented yet.
+- Experimental TT-Metalium scalar RISC-V `qmul` candidate source is present.
+- tt-emule validation preflight and build-prerequisite checks are implemented.
+- The experimental candidate has produced an emulation-labeled StructuredBench
+  sample report under `reports/tt_emule_qmul_candidate.*`.
+- Real Tenstorrent hardware execution is not implemented yet.
 
 Placement guidance is tracked separately in the public `tt-metal` issue and the
 repo-local tracker. Do not open an upstream Tenstorrent PR from this repo until
@@ -174,13 +176,14 @@ export TT_EMULE_HOME=/path/to/tt-emule
 python experimental/tt_emule_qmul/check_environment.py
 ```
 
-The detailed emulation plan is in
-`docs/tt-emule-qmul-validation-plan.md`. Passing this preflight does not prove
-that a candidate builds or runs.
+The detailed emulation plan and current report command are in
+`docs/tt-emule-qmul-validation-plan.md`. Passing the preflight alone does not
+prove that a candidate builds or runs; the committed emulation sample is the
+separate `external-qmul` validation artifact.
 
-## Future TT-Metalium Candidate
+## TT-Metalium Candidate
 
-The future TT-Metalium executable must satisfy the `external-qmul` protocol:
+The TT-Metalium executable must satisfy the `external-qmul` protocol:
 
 ```text
 [N, 4] x [N, 4] -> [N, 4]
@@ -203,22 +206,21 @@ out.bin
 metrics.json
 ```
 
-Run the validation wrapper:
+Current Docker-backed tt-emule validation command from the macOS host:
 
 ```bash
-python experimental/tt_metalium_qmul/validate_candidate.py \
-  --candidate-command "/path/to/tt_metalium_qmul_candidate" \
-  --items 128 \
+python scripts/validate_qmul_candidate.py \
+  --command "bash experimental/tt_metalium_qmul/run_candidate_docker.sh" \
+  --execution-label emulation \
+  --methodology-note "Experimental TT-Metalium qmul candidate run through tt-emule Docker wrapper; first validation sample, not a stable hardware benchmark." \
+  --items 32 \
   --iters 1 \
   --warmup 0 \
-  --seed 0 \
-  --execution-label emulation \
-  --methodology-note "tt-emule candidate run; not hardware performance" \
-  --json-output reports/tt_metalium_qmul_candidate.json \
-  --markdown-output reports/tt_metalium_qmul_candidate.md
+  --json-output reports/tt_emule_qmul_candidate.json \
+  --markdown-output reports/tt_emule_qmul_candidate.md
 ```
 
-For a larger report after the small run passes:
+For a future larger emulation or hardware report after the small run passes:
 
 ```bash
 python experimental/tt_metalium_qmul/validate_candidate.py \

@@ -31,6 +31,15 @@ TT-Lang simulator results are useful lower-stack evidence, but they should not
 be treated as hardware performance or as proof that TT-MLIR should add a fused
 operation.
 
+## Current Status
+
+The repo now has a tt-emule run of the experimental TT-Metalium `qmul`
+candidate, labeled as emulation and not hardware performance. That satisfies
+one evidence prerequisite for future compiler discussion, but it is still not a
+reason to open a TT-MLIR proposal by itself. The next useful inputs are
+maintainer placement guidance, a real hardware run, or a concrete comparison
+against scalar-expanded lowering.
+
 ## Minimum RFC Inputs
 
 A future RFC should include:

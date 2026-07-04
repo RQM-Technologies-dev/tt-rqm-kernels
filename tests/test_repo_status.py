@@ -19,8 +19,8 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["CPU/PyTorch reference"] == "implemented"
     assert statuses["StructuredBench smoke"] == "implemented"
     assert statuses["external-qmul harness"] == "implemented"
-    assert statuses["TT-Metalium candidate"] == "source candidate present / not built"
-    assert statuses["tt-emule candidate"] == "not implemented"
+    assert statuses["TT-Metalium candidate"] == "experimental source candidate present"
+    assert statuses["tt-emule candidate"] == "emulation report present"
     assert statuses["hardware report"] == "not implemented"
 
 
@@ -33,5 +33,6 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
     )
 
     assert "CPU/PyTorch reference: implemented" in completed.stdout
-    assert "TT-Metalium candidate: source candidate present / not built" in completed.stdout
+    assert "TT-Metalium candidate: experimental source candidate present" in completed.stdout
+    assert "tt-emule candidate: emulation report present" in completed.stdout
     assert "hardware report: not implemented" in completed.stdout

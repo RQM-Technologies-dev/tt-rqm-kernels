@@ -49,8 +49,9 @@ The repo is ready for a first handshake:
 - local tracker issue #2 closed after hardening the TT-Lang simulator report
 - local tracker issue #3 started with an external TT-Metalium candidate scaffold
 - local tracker issue #7 started with execution runbook/report-template prework
-- local tracker issue #8 is open for tt-emule validation of a real
-  TT-Metalium `qmul` candidate
+- local tracker issue #8 now has its core technical evidence: a real
+  experimental TT-Metalium `qmul` candidate built against `tt-metal/build_emule`
+  and produced an emulation-labeled StructuredBench report
 - x86-64 Linux preflight has passed inside Docker Desktop using sibling
   `tt-metal` and `tt-emule` checkouts:
   - `tt-metal` checkout: `/Users/home/Documents/tt-metal` at `fd810266`
@@ -60,14 +61,47 @@ The repo is ready for a first handshake:
   added under `experimental/tt_metalium_qmul/`
 - the new build-prerequisite gate is
   `experimental/tt_emule_qmul/check_build_prereqs.py`
-- current build blocker:
+- `tt-metal/build_emule` configure and install helpers now live under
+  `experimental/tt_emule_qmul/`
+- tt-emule candidate state:
   - `tt-emule` pins `tt-metal` commit
     `dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4`
-  - local `/Users/home/Documents/tt-metal` is still at `fd810266`
-  - the pinned commit is not present in the shallow checkout
-  - required `tt-metal` submodules `umd` and `tracy` are not initialized
-  - `python:3.12-slim` does not include git, CMake, Ninja, or clang-20
-  - no `build_emule` TT-Metalium CMake package exists yet
+  - completed now: local `/Users/home/Documents/tt-metal` is detached at the
+    pinned commit
+  - completed now: required `tt-metal` submodules `umd` and `tracy` are
+    initialized
+  - completed now: `tt-metal/build_emule` configures successfully inside an
+    Ubuntu 24.04 container with `TT_METAL_USE_EMULE=ON`
+  - completed now: the build-prerequisite checker accepts both current
+    lowercase `tt-metalium-config.cmake` package naming and installed-style
+    `TT-MetaliumConfig.cmake` package naming
+  - completed now: the experimental candidate builder expands uninstalled
+    `build_emule` dependency prefixes so dependency lookup reaches `fmt`,
+    `nlohmann_json`, `spdlog`, `tt-logger`, and UMD build outputs
+  - completed now: `cmake --build build_emule --target install -j2` completed
+    enough to install a usable TT-Metalium CMake package under
+    `/Users/home/Documents/tt-metal/build_emule/lib/cmake/tt-metalium`
+  - completed now: the build-prerequisite checker passes inside Ubuntu 24.04
+    with the installed TT-Metalium package and required UMD/tracy submodules
+  - completed now: the experimental candidate builder prefers the installed
+    package directory over stale root-level generated config files
+  - completed now: the candidate links against the current exported Metalium
+    package plus explicit MPI, hwloc, and numa runtime dependencies needed by
+    the installed `libtt_metal.so` / UMD exports
+  - completed now: `experimental/tt_metalium_qmul/run_candidate_docker.sh`
+    runs the built Linux candidate from the macOS StructuredBench harness
+    through Docker and `tt-emule`
+  - completed now: the candidate kernel uses the tt-emule-supported direct
+    `reinterpret_cast<T*>(get_arg_val<uint32_t>(N))` L1 pointer pattern so the
+    JIT can translate L1 scratch addresses
+  - emulation report artifact:
+    `reports/tt_emule_qmul_candidate.json` and
+    `reports/tt_emule_qmul_candidate.md`
+  - report label: `backend=external-qmul`,
+    `device=tt-emule/tt-metalium-riscv-qmul-candidate`,
+    `execution_label=emulation`, `stable_benchmark=false`
+  - sample report scope: three 32-item `qmul` cases, `iters=1`, `warmup=0`;
+    this is correctness/emulation evidence, not a stable performance benchmark
 - local tracker issues #9 through #13 are closed after their design/demo
   deliverables landed
 - local tracker issue #14 is open for the external LWT/ILWT `tt-metal`
@@ -78,10 +112,15 @@ maintainer placement guidance and the first real lower-stack implementation path
 
 ## Recommended Next Step
 
-The x86-64 Linux Docker preflight is complete and the smallest experimental
-TT-Metalium `qmul` source candidate now exists. The next step is to create a
-real tt-metal/tt-emule build environment and validate that candidate through
-`external-qmul`.
+The x86-64 Linux Docker preflight is complete, `tt-metal/build_emule` has an
+installed/exported TT-Metalium package, and the experimental scalar RISC-V
+TT-Metalium `qmul` candidate now validates through `external-qmul` under
+`tt-emule`.
+
+The next step is to commit/push this evidence, update/close tracker issue #8
+with the exact emulation report, then move the active implementation pressure to
+issue #7: running the same external-qmul report path in a real Tenstorrent Cloud
+or hardware environment. Placement issue #6 remains open in parallel.
 
 Known-good preflight commands:
 
@@ -113,6 +152,64 @@ docker run --rm --platform linux/amd64 \
   python experimental/tt_emule_qmul/check_build_prereqs.py
 ```
 
+Configure command:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-metal \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  ubuntu:24.04 \
+  bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/configure_build_emule.sh
+```
+
+Build/install command:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-metal \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  -e JOBS=2 \
+  ubuntu:24.04 \
+  bash -lc 'bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/configure_build_emule.sh && \
+            bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/build_install_emule.sh'
+```
+
+Candidate build command:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  ubuntu:24.04 \
+  bash -lc 'apt-get update >/tmp/apt-update.log 2>&1 && \
+            apt-get install -y --no-install-recommends ca-certificates cmake ninja-build g++ git python3 libopenmpi-dev openmpi-bin libhwloc-dev libnuma-dev >/tmp/apt-install.log 2>&1 && \
+            python3 experimental/tt_metalium_qmul/build_candidate.py \
+              --tt-metal-root /work/tt-metal \
+              --cmake-prefix-path /work/tt-metal/build_emule \
+              --build-dir /work/tt-rqm-kernels/experimental/tt_metalium_qmul/build_emule_candidate \
+              --generator Ninja'
+```
+
+Emulation validation command:
+
+```bash
+python scripts/validate_qmul_candidate.py \
+  --command "bash experimental/tt_metalium_qmul/run_candidate_docker.sh" \
+  --execution-label emulation \
+  --methodology-note "Experimental TT-Metalium qmul candidate run through tt-emule Docker wrapper; first validation sample, not a stable hardware benchmark." \
+  --items 32 \
+  --iters 1 \
+  --warmup 0 \
+  --json-output reports/tt_emule_qmul_candidate.json \
+  --markdown-output reports/tt_emule_qmul_candidate.md
+```
+
 Preflight result:
 
 ```text
@@ -136,23 +233,24 @@ Why this is next:
   candidate executables a concrete way to emit comparable StructuredBench
   reports
 - the TT-Metalium candidate package now contains a real experimental scalar
-  RISC-V source candidate, but it has not yet been built or run
-- the Linux/tt-emule preflight now passes, so the remaining #3/#8 work is
-  pinned `tt-metal` setup, `build_emule`, candidate build, and
-  emulation-labeled validation
+  RISC-V source candidate that has built and run under tt-emule through
+  `external-qmul`
+- the Linux/tt-emule preflight now passes, `build_emule` has installed usable
+  TT-Metalium exports, and the candidate has produced an emulation-labeled
+  StructuredBench report through `external-qmul`
 - the runbook now makes #7 actionable once Tenstorrent Cloud, a local
   TT-Metalium SDK checkout, or maintainer-provided environment guidance is
   available
 - the repo status command and report metadata now make the current gap explicit:
-  there is no real TT-Metalium `qmul` candidate yet
+  there is still no real Tenstorrent hardware report
 
 ## Priority Lanes
 
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
 | 1 | TT-Metalium `qmul` placement | Choose the right lower-stack contribution path | Maintainers indicate whether the first candidate should live externally, as a TT-Metalium example, or another preferred route |
-| 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | Build prerequisites pass and the candidate emits an emulation-labeled report |
-| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Experimental `[N, 4]` `qmul` candidate compared against CPU/PyTorch and scalar references through `external-qmul` |
+| 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | Complete: `build_emule` installs a TT-Metalium package and the candidate emits an emulation-labeled report |
+| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Experimental `[N, 4]` `qmul` candidate compared against CPU/PyTorch and scalar references through `external-qmul`; upstream placement still open |
 | 4 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
 | 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
 | 6 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
@@ -166,10 +264,9 @@ Active repo issues should now focus on the hardware-facing path:
 
 1. `Track TT-Metalium qmul placement guidance` (#6)
 2. `Implement minimal TT-Metalium qmul example using the external-qmul harness` (#3)
-3. `Add tt-emule validation milestone for qmul` (#8)
-4. `Run StructuredBench on Tenstorrent Cloud` (#7)
-5. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
-6. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
+3. `Run StructuredBench on Tenstorrent Cloud` (#7)
+4. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
+5. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
    repo's implementation track)
 
 Each issue should include:
@@ -205,18 +302,19 @@ Goal:
 
 Tasks:
 
-- follow maintainer guidance from the GitHub Discussion
+- follow maintainer guidance from the GitHub Discussion when it arrives
 - use `docs/tt-metalium-qmul-design.md` as the implementation contract
 - use the `external-qmul` harness as the validation bridge for a standalone
   candidate executable
 - use `experimental/tt_metalium_qmul/` as the external staging location until a
   maintainer requests another placement
-- use `docs/tt-emule-qmul-validation-plan.md` and
-  `experimental/tt_emule_qmul/check_environment.py` before claiming emulation
-  readiness
+- completed: use `docs/tt-emule-qmul-validation-plan.md`,
+  `experimental/tt_emule_qmul/check_environment.py`, and the Docker wrapper
+  before claiming emulation readiness
 - start with `[N, 4]` layout
-- compare against CPU/PyTorch and scalar references
-- report latency, throughput, numerical error, estimated FLOPs/sec, effective
+- completed for tt-emule: compare against CPU/PyTorch and scalar references
+- completed for tt-emule: report latency, throughput, numerical error, estimated
+  FLOPs/sec, effective
   GB/sec, arithmetic intensity, `execution_label`, `stable_benchmark`, and
   `methodology_note`
 

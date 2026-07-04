@@ -38,9 +38,10 @@ The repo already has the right handshake:
   FLOPs/sec, effective GB/sec, and arithmetic intensity
 - TT-Lang simulator `qmul`, including simulator-only trace/stat support
 - external `qmul` harness for future candidate executables
-- TT-Metalium staging package without fake TT-Metalium source
-- tt-emule qmul validation plan, local preflight scaffold, and Docker/Linux
-  source-tree preflight success
+- experimental TT-Metalium scalar RISC-V `qmul` candidate staged externally
+  until maintainers give placement guidance
+- tt-emule qmul validation plan, local preflight scaffold, Docker/Linux
+  source-tree preflight success, and emulation-labeled StructuredBench report
 - tt-emule tracker issue #8:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
 - ComplexTensor-to-QuaternionTensor bridge design and closed tracker issue #9:
@@ -78,14 +79,14 @@ physical-AI pose streams
 
 No active opportunity-plan prose items remain.
 
-The active work is implementation pressure: build a real TT-Metalium `qmul`
-candidate, validate it through `external-qmul`, and produce an emulation-labeled
-report once it runs under tt-emule.
+The active work is implementation pressure beyond emulation: keep the
+experimental TT-Metalium `qmul` candidate externally staged, track maintainer
+placement guidance, and run the same `external-qmul` report path in a real
+Tenstorrent Cloud or hardware environment.
 
-The TT-MLIR fused lowering question is deferred by design. Do not add a tracker
-issue or open a compiler-facing discussion until the repo has tt-emule,
-TT-Metalium, maintainer guidance, or hardware evidence that makes the compiler
-question concrete.
+The TT-MLIR fused lowering question remains deferred by design. The repo now has
+tt-emule evidence, but the compiler question should still wait for maintainer
+placement guidance, a hardware run, or a concrete scalar-expanded comparison.
 
 ## Non-Goals
 

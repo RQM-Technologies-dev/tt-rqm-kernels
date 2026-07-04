@@ -27,24 +27,37 @@ Implemented:
   `experimental/tt_metalium_qmul/src/qmul_candidate.cpp`
 - build-prerequisite checker:
   `experimental/tt_emule_qmul/check_build_prereqs.py`
+- `tt-metal/build_emule` configure helper:
+  `experimental/tt_emule_qmul/configure_build_emule.sh`
+- `tt-metal/build_emule` build/install helper:
+  `experimental/tt_emule_qmul/build_install_emule.sh`
 - tracker issue:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
+- installed TT-Metalium package under
+  `/Users/home/Documents/tt-metal/build_emule/lib/cmake/tt-metalium`
+- experimental candidate build against the installed `build_emule` prefix
+- Docker wrapper for running the Linux candidate from the macOS
+  StructuredBench `external-qmul` harness:
+  `experimental/tt_metalium_qmul/run_candidate_docker.sh`
+- emulation-labeled StructuredBench report:
+  `reports/tt_emule_qmul_candidate.json` and
+  `reports/tt_emule_qmul_candidate.md`
 
 Not implemented:
 
-- tt-emule build of a `qmul` candidate
-- emulation report artifact
 - hardware report artifact
 
-Current blocker:
+Current result:
 
 ```text
-The Linux/tt-emule source-tree preflight now passes and an experimental
-TT-Metalium qmul source candidate exists. The remaining blocker is a real
-tt-metal/tt-emule build environment: the local tt-metal checkout is not on the
-tt-emule pinned commit, required submodules are not initialized, clang-20 /
-git / CMake / Ninja are not present in the python:3.12-slim container, and no
-build_emule TT-Metalium CMake package exists yet.
+The Linux/tt-emule source-tree preflight passes, the local `tt-metal` checkout
+is aligned to the `tt-emule` pin, required submodules are initialized,
+`tt-metal/build_emule` configures with `TT_METAL_USE_EMULE=ON`, the build/install
+step has produced usable installed TT-Metalium exports, and the experimental
+TT-Metalium qmul source candidate now validates through `external-qmul` under
+tt-emule.
+
+This is emulation evidence only. It is not Tenstorrent hardware performance.
 ```
 
 Verified preflight environment:
@@ -57,6 +70,20 @@ tt-metal checkout: /Users/home/Documents/tt-metal @ fd810266
 tt-emule checkout: /Users/home/Documents/tt-emule @ abdc348
 tt-rqm-kernels checkout: /Users/home/Documents/tt-rqm-kernels
 tt-emule pinned tt-metal commit: dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4
+```
+
+Updated local build state:
+
+```text
+tt-metal checkout: /Users/home/Documents/tt-metal @ dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4
+tt-metal submodule tt_metal/third_party/umd: initialized @ 12e28af324fe65223b8f10ff70fc060f4f184214
+tt-metal submodule tt_metal/third_party/tracy: initialized @ 27221a69789f24d492135093e096b978b4ca3a68
+build_emule configure: completed with TT_METAL_USE_EMULE=ON
+build-prerequisite gate: source/toolchain/pin/submodule checks pass inside Ubuntu 24.04
+TT-Metalium package install/export: completed under build_emule/lib/cmake/tt-metalium
+candidate build: completed against the installed build_emule prefix
+candidate validation: completed through external-qmul under tt-emule
+emulation report: reports/tt_emule_qmul_candidate.json and reports/tt_emule_qmul_candidate.md
 ```
 
 ## Expected Checkout Layout
@@ -113,10 +140,36 @@ docker run --rm --platform linux/amd64 \
   python experimental/tt_emule_qmul/check_build_prereqs.py
 ```
 
-Current expected result is exit code 2 with concrete setup blockers. This is
-not a candidate failure; it means the Linux container still lacks the toolchain,
-the pinned `tt-metal` checkout, initialized submodules, and a built
-TT-Metalium package.
+Current expected result in the prepared Docker/Linux environment is success once
+`tt-metal/build_emule` has been configured and installed. A configured
+build-tree config file alone is not enough unless the companion exported targets
+are present.
+
+Configure `build_emule`:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-metal \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  ubuntu:24.04 \
+  bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/configure_build_emule.sh
+```
+
+Build/install `build_emule`:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-metal \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  -e JOBS=2 \
+  ubuntu:24.04 \
+  bash -lc 'bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/configure_build_emule.sh && \
+            bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/build_install_emule.sh'
+```
 
 ## Build Direction
 
@@ -133,10 +186,28 @@ cmake -S "$TT_METAL_HOME" -B "$TT_METAL_HOME/build_emule" \
 cmake --build "$TT_METAL_HOME/build_emule" -j"$(nproc)"
 ```
 
-Before building, align `tt-metal` to the commit pinned by
-`tt-emule/tt-metal-pin.txt`, initialize required submodules, and use an image or
-host environment with clang-20, CMake, and Ninja. Exact flags and target names
-should be confirmed in the Linux environment before publishing any build claim.
+Before rebuilding, confirm `tt-metal` remains aligned to the commit pinned by
+`tt-emule/tt-metal-pin.txt` and required submodules remain initialized. The
+candidate should be built against the installed/exported `build_emule` prefix so
+the TT-Metalium package config can find its companion target files.
+
+Candidate build command used for the current emulation evidence:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  ubuntu:24.04 \
+  bash -lc 'apt-get update >/tmp/apt-update.log 2>&1 && \
+            apt-get install -y --no-install-recommends ca-certificates cmake ninja-build g++ git python3 libopenmpi-dev openmpi-bin libhwloc-dev libnuma-dev >/tmp/apt-install.log 2>&1 && \
+            python3 experimental/tt_metalium_qmul/build_candidate.py \
+              --tt-metal-root /work/tt-metal \
+              --cmake-prefix-path /work/tt-metal/build_emule \
+              --build-dir /work/tt-rqm-kernels/experimental/tt_metalium_qmul/build_emule_candidate \
+              --generator Ninja'
+```
 
 ## external-qmul Mapping
 
@@ -173,17 +244,24 @@ that clearly says emulation:
 }
 ```
 
-The validation command should remain:
+The current validation command is:
 
 ```bash
 python scripts/validate_qmul_candidate.py \
-  --command "/path/to/tt_emule_qmul_candidate" \
-  --items 128 \
+  --command "bash experimental/tt_metalium_qmul/run_candidate_docker.sh" \
+  --execution-label emulation \
+  --methodology-note "Experimental TT-Metalium qmul candidate run through tt-emule Docker wrapper; first validation sample, not a stable hardware benchmark." \
+  --items 32 \
   --iters 1 \
   --warmup 0 \
   --json-output reports/tt_emule_qmul_candidate.json \
   --markdown-output reports/tt_emule_qmul_candidate.md
 ```
+
+The generated report contains three 32-item `qmul` cases because the `qmul`
+suite has three case slots and `--items 32` overrides each slot. This report is
+intended to prove correctness and report shape under emulation, not stable
+performance.
 
 ## Required Report Labels
 
@@ -212,7 +290,9 @@ Reports must include the normal `structuredbench.v1` fields:
 The tt-emule milestone is ready to close when either:
 
 1. A `qmul` candidate runs through `external-qmul` under tt-emule and produces
-   JSON/Markdown reports labeled as emulation.
+   JSON/Markdown reports labeled as emulation. This criterion has been met by
+   `reports/tt_emule_qmul_candidate.json` and
+   `reports/tt_emule_qmul_candidate.md`.
 2. The blocker is documented with exact failing commands, platform, checkout
    SHAs, and logs precise enough for a Tenstorrent maintainer or collaborator to
    reproduce.

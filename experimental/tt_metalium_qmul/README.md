@@ -15,8 +15,9 @@ Current placement status:
 
 This package now includes an experimental TT-Metalium source candidate. It is a
 minimal scalar RISC-V/data-movement implementation intended to prove the
-`external-qmul` contract before any optimized compute-kernel work. It has not
-yet been built under `tt-emule` or run on Tenstorrent hardware.
+`external-qmul` contract before any optimized compute-kernel work. It has now
+been built against a local `tt-metal/build_emule` install and validated under
+`tt-emule`. It has not been run on Tenstorrent hardware.
 
 Current scaffold commands:
 
@@ -24,6 +25,8 @@ Current scaffold commands:
 check_environment.py  checks for a local tt-metal / TT-Metalium checkout
 build_candidate.py    configures/builds the experimental CMake candidate
 run_candidate.py      external-qmul wrapper for the built candidate binary
+run_candidate_docker.sh
+                      Docker wrapper that runs the Linux candidate from a macOS host
 validate_candidate.py wrapper around scripts/validate_qmul_candidate.py
 ```
 
@@ -127,6 +130,23 @@ python experimental/tt_metalium_qmul/validate_candidate.py \
   --warmup 0
 ```
 
+For the current Docker-backed tt-emule validation path from a macOS host, use:
+
+```bash
+python scripts/validate_qmul_candidate.py \
+  --command "bash experimental/tt_metalium_qmul/run_candidate_docker.sh" \
+  --execution-label emulation \
+  --methodology-note "Experimental TT-Metalium qmul candidate run through tt-emule Docker wrapper; first validation sample, not a stable hardware benchmark." \
+  --items 32 \
+  --iters 1 \
+  --warmup 0 \
+  --json-output reports/tt_emule_qmul_candidate.json \
+  --markdown-output reports/tt_emule_qmul_candidate.md
+```
+
+This produces an emulation-labeled StructuredBench report. It is not a hardware
+performance result.
+
 For a larger report once the candidate is real:
 
 ```bash
@@ -170,8 +190,9 @@ python experimental/tt_metalium_qmul/build_candidate.py \
   --cmake-prefix-path /path/to/tt-metal/build_emule
 ```
 
-For `tt-emule`, first build `tt-metal` with `TT_METAL_USE_EMULE=ON` following
-the `tt-emule` build guide, then pass the resulting `build_emule` prefix.
+For `tt-emule`, first build/install `tt-metal` with `TT_METAL_USE_EMULE=ON`
+following the `tt-emule` build guide, then pass the resulting `build_emule`
+prefix.
 
 The checker looks for `TT_METAL_HOME` or `TT_METALIUM_HOME`, or accepts:
 
@@ -185,6 +206,11 @@ example pattern used by `tt-metal`: a host program plus a data-movement RISC-V
 kernel. It maps one quaternion to one 16-byte page and implements the Hamilton
 product lane equations directly. This is a correctness candidate, not an
 optimized kernel design.
+
+Under tt-emule, raw L1 scratch pointer casts must use the direct
+`reinterpret_cast<T*>(get_arg_val<uint32_t>(N))` source pattern so the JIT can
+translate firmware L1 offsets to host pointers. The current kernel follows that
+pattern for its scratch buffers.
 
 Until maintainers answer the placement question, keep real candidate work in
 this external package and validate it through `external-qmul`. Do not open an
