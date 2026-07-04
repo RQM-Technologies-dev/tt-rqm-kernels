@@ -52,6 +52,8 @@ The repo already has the right handshake:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/12>
 - StructuredBench-HPC expansion roadmap and tracker issue #13:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/13>
+- TT-MLIR fused lowering prerequisites documented:
+  `docs/tt-mlir-fused-lowering-prerequisites.md`
 - public `tt-metal` placement Discussion and narrow placement issue
 - `tt-awesome` ecosystem visibility
 
@@ -71,27 +73,12 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-### 1. TT-MLIR Fused Lowering RFC
+No active opportunity-plan items remain.
 
-Goal: ask the compiler question only after backend evidence exists.
-
-The future question:
-
-```text
-Should qmul lower as a fused structured operator rather than scalar expansion?
-```
-
-Do not lead with this. Prepare the story now, but only open a compiler-facing
-discussion after there is tt-emule, TT-Metalium, or hardware evidence.
-
-Exit condition:
-
-- a short RFC grounded in measured backend behavior, not speculation
-
-## Recommended Issues To Add
-
-Do not add a tracker issue for this until the repo has tt-emule,
-TT-Metalium, or hardware evidence that makes the compiler question concrete.
+The TT-MLIR fused lowering question is deferred by design. Do not add a tracker
+issue or open a compiler-facing discussion until the repo has tt-emule,
+TT-Metalium, maintainer guidance, or hardware evidence that makes the compiler
+question concrete.
 
 ## Non-Goals
 
