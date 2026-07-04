@@ -22,6 +22,20 @@ has now built and produced an emulation-labeled StructuredBench report through
 Tenstorrent Cloud or hardware run, plus maintainer guidance on upstream
 placement for the minimal `qmul` example.
 
+## Functional Tenstorrent Path
+
+The current functional path is the StructuredBench `external-qmul` protocol:
+CPU/PyTorch reference validation, optional tt-emule execution through the
+experimental TT-Metalium candidate wrapper, and a hardware mode that requires a
+real Tenstorrent Cloud or device command before it can run.
+
+Start here:
+
+- [docs/tenstorrent-functional-quickstart.md](docs/tenstorrent-functional-quickstart.md)
+- `python scripts/rqm_tt_quickstart.py --check`
+- [examples/tenstorrent_qmul_quickstart.py](examples/tenstorrent_qmul_quickstart.py)
+- [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
+
 ## Core Idea
 
 RQM Technologies develops structured numerical kernels where quaternions, rotors, phase, orientation, and wave states are represented inside ordinary floating-point tensors.
@@ -245,6 +259,8 @@ The Tenstorrent-facing surfaces are:
 - [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
 - [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
 - [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
+- [docs/tenstorrent-functional-quickstart.md](docs/tenstorrent-functional-quickstart.md)
+- [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
 - [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 - [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)
 - [docs/phase-update-tenstorrent-plan.md](docs/phase-update-tenstorrent-plan.md)
