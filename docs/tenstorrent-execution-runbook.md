@@ -20,10 +20,33 @@ Current local status:
 - The experimental candidate has produced an emulation-labeled StructuredBench
   sample report under `reports/tt_emule_qmul_candidate.*`.
 - Real Tenstorrent hardware execution is not implemented yet.
+- Tenstorrent Console shows API inference, Usage, Billing, Compute, and
+  Resources for the RQM organization; no dedicated hardware allocation is
+  assumed.
+- Instances and Baremetal are treated as blocked until access is granted.
 
 Placement guidance is tracked separately in the public `tt-metal` issue and the
 repo-local tracker. Do not open an upstream Tenstorrent PR from this repo until
 that guidance is clear.
+
+## Tenstorrent Console Capacity Path
+
+For the first real hardware report, start in Console at:
+
+```text
+Compute -> Resources -> Request Capacity
+```
+
+Request capacity for one small `[N, 4]` StructuredBench `qmul` hardware report.
+After access is granted, use one of two surfaces:
+
+- `Instances`: managed VSCode/browser shell, using the copy/paste commands in
+  `docs/tenstorrent-console-copy-paste.md`.
+- `Baremetal`: SSH shell, using `scripts/rqm_tt_cloud_runner.py --mode ssh`
+  dry-run commands first.
+
+The Console Models/API pages are useful for hosted inference, but they are not
+the target for arbitrary external-qmul candidate execution.
 
 ## Official Setup References
 

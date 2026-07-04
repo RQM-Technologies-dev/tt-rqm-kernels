@@ -33,8 +33,27 @@ Start here:
 
 - [docs/tenstorrent-functional-quickstart.md](docs/tenstorrent-functional-quickstart.md)
 - `python scripts/rqm_tt_quickstart.py --check`
+- Browser silicon target: Tenstorrent Cloud Console
+- [docs/tenstorrent-console-access-plan.md](docs/tenstorrent-console-access-plan.md)
+- [docs/tenstorrent-console-copy-paste.md](docs/tenstorrent-console-copy-paste.md)
+- `python scripts/rqm_tt_console_runner.py --check`
+- [docs/outreach/tenstorrent-console-access-request.md](docs/outreach/tenstorrent-console-access-request.md)
+- [docs/tenstorrent-cloud-access-plan.md](docs/tenstorrent-cloud-access-plan.md)
+- `python scripts/rqm_tt_cloud_runner.py --check`
 - [examples/tenstorrent_qmul_quickstart.py](examples/tenstorrent_qmul_quickstart.py)
 - [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
+
+For no-cost hardware validation, prefer delegated Tenstorrent-run validation or
+explicitly granted no-cost Tenstorrent Cloud access. This repo does not
+implement payment-backed cloud provisioning, cloud billing integration, or
+credential storage.
+
+Observed Console fit: API inference, Usage, Billing, Compute, and Resources are
+visible; no dedicated hardware allocation is assumed; Instances and Baremetal
+are treated as blocked until access is granted. The hardware request path is
+`Compute -> Resources -> Request Capacity` for one small `[N, 4]`
+StructuredBench `qmul` report, then either a VSCode/browser instance run or SSH
+baremetal run.
 
 ## Core Idea
 
@@ -260,6 +279,11 @@ The Tenstorrent-facing surfaces are:
 - [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
 - [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
 - [docs/tenstorrent-functional-quickstart.md](docs/tenstorrent-functional-quickstart.md)
+- [docs/tenstorrent-console-access-plan.md](docs/tenstorrent-console-access-plan.md)
+- [docs/tenstorrent-console-copy-paste.md](docs/tenstorrent-console-copy-paste.md)
+- [docs/tenstorrent-cloud-access-plan.md](docs/tenstorrent-cloud-access-plan.md)
+- [docs/tenstorrent-hardware-command-contract.md](docs/tenstorrent-hardware-command-contract.md)
+- [docs/tenstorrent-delegated-validation.md](docs/tenstorrent-delegated-validation.md)
 - [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
 - [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 - [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)

@@ -136,6 +136,16 @@ This path must use `execution_label=emulation`. It is not hardware performance.
 Hardware mode requires a real Tenstorrent Cloud or hardware command that
 implements the external-qmul protocol.
 
+In Tenstorrent Console, the observed custom-code path starts at:
+
+```text
+Compute -> Resources -> Request Capacity
+```
+
+Request capacity for one small `[N, 4]` StructuredBench `qmul` hardware report.
+After access is granted, run either in a managed VSCode/browser instance or an
+SSH baremetal shell.
+
 Configure it with either:
 
 ```bash

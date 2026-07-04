@@ -11,6 +11,7 @@ import torch
 from tt_rqm_kernels.backends.tenstorrent.availability import (
     DEFAULT_HARDWARE_COMMAND_ENV,
     check_readiness,
+    inspect_hardware_command,
     resolve_execution_path,
 )
 from tt_rqm_kernels.backends.tenstorrent.qmul_external import (
@@ -50,6 +51,30 @@ def test_resolve_hardware_path_requires_configured_command() -> None:
     assert path.command is None
     assert path.execution_label == "hardware"
     assert DEFAULT_HARDWARE_COMMAND_ENV in path.reason
+
+
+def test_hardware_command_preflight_rejects_missing_executable() -> None:
+    preflight = inspect_hardware_command("/definitely/missing/rqm_qmul_hw")
+
+    assert preflight.available is False
+    assert "executable not found" in preflight.reason
+
+
+def test_hardware_command_preflight_accepts_safe_fixture_command() -> None:
+    preflight = inspect_hardware_command(f"{sys.executable} --version")
+
+    assert preflight.available is True
+    assert preflight.executable is not None
+    assert "hardware command executable found" in preflight.reason
+
+
+def test_hardware_command_preflight_rejects_emule_command() -> None:
+    preflight = inspect_hardware_command(
+        "bash experimental/tt_metalium_qmul/run_candidate_docker.sh"
+    )
+
+    assert preflight.available is False
+    assert "tt-emule/emulation" in preflight.reason
 
 
 def test_report_label_validation_keeps_emulation_out_of_hardware() -> None:
@@ -117,4 +142,23 @@ def test_quickstart_hardware_mode_without_command_fails_cleanly() -> None:
 
     assert completed.returncode == 2
     assert "hardware command is not configured" in completed.stderr
+    assert "Traceback" not in completed.stderr
+
+
+def test_quickstart_emule_stable_benchmark_fails_cleanly() -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "scripts/rqm_tt_quickstart.py",
+            "--mode",
+            "emule",
+            "--stable-benchmark",
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 2
+    assert "stable benchmark reports are not allowed for --mode emule" in completed.stderr
     assert "Traceback" not in completed.stderr
