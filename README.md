@@ -12,9 +12,13 @@ This is not an official Tenstorrent repository unless and until accepted or co-d
 
 1. Start here: [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
 2. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
-3. Current blocker: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
+3. Backend blocker detail: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 4. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 5. Current status command: `python scripts/repo_status.py`
+
+Current blocker: no real TT-Metalium `qmul` candidate has been built yet. The
+next implementation step is an x86-64 Linux environment with `tt-metal`,
+`tt-emule`, and this repo checked out together.
 
 ## Core Idea
 
@@ -180,7 +184,8 @@ Simple proof path:
 CPU/PyTorch qmul reference
 -> scalar correctness check
 -> TT-Lang simulator qmul for [N, 4]
--> TT-Metalium qmul for [N, 4]
+-> tt-emule run of real TT-Metalium qmul candidate
+-> real TT-Metalium / Tenstorrent hardware report
 -> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
 ```
 

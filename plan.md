@@ -20,6 +20,10 @@ The repo is ready for a first handshake:
 - CPU/PyTorch reference kernels for quaternion and rotor operators
 - scalar reference checks for independent correctness spot checks
 - StructuredBench benchmark reports with latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
+- StructuredBench reports now include explicit `execution_label`,
+  `stable_benchmark`, and `methodology_note` fields so CPU, simulator,
+  emulation, and hardware samples are labeled directly
+- `python scripts/repo_status.py` gives a one-command current status summary
 - optional TT-Lang simulator `qmul` prototype with a hardened,
   simulator-only StructuredBench-compatible report
 - an `external-qmul` candidate harness for validating future standalone
@@ -45,16 +49,29 @@ The repo is ready for a first handshake:
 - local tracker issue #2 closed after hardening the TT-Lang simulator report
 - local tracker issue #3 started with an external TT-Metalium candidate scaffold
 - local tracker issue #7 started with execution runbook/report-template prework
+- local tracker issue #8 is open for tt-emule validation of a real
+  TT-Metalium `qmul` candidate
+- local tracker issues #9 through #13 are closed after their design/demo
+  deliverables landed
+- local tracker issue #14 is open for the external LWT/ILWT `tt-metal`
+  worktree path, which should stay outside this repo
 
 The completed setup work should now be treated as background. The active work is
-maintainer placement guidance and the first hardware-facing implementation path.
+maintainer placement guidance and the first real lower-stack implementation path.
 
 ## Recommended Next Step
 
-Track TT-Metalium `qmul` placement guidance in the public Discussion and narrow
-`tt-metal` issue. In parallel, use the execution runbook to prepare a real
-Tenstorrent SDK or Cloud environment for the first hardware-facing
-StructuredBench `qmul` report.
+Provision an x86-64 Linux environment with `tt-metal`, `tt-emule`, and
+`tt-rqm-kernels` checked out together, then run:
+
+```bash
+python scripts/repo_status.py
+python experimental/tt_emule_qmul/check_environment.py
+```
+
+Record the exact blocker or success in issue #8. After that, build the smallest
+possible real TT-Metalium `qmul` host/kernel candidate and validate it through
+`external-qmul`.
 
 Why this is next:
 
@@ -77,18 +94,20 @@ Why this is next:
 - the runbook now makes #7 actionable once Tenstorrent Cloud, a local
   TT-Metalium SDK checkout, or maintainer-provided environment guidance is
   available
+- the repo status command and report metadata now make the current gap explicit:
+  there is no real TT-Metalium `qmul` candidate yet
 
 ## Priority Lanes
 
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
 | 1 | TT-Metalium `qmul` placement | Choose the right lower-stack contribution path | Maintainers indicate whether the first candidate should live externally, as a TT-Metalium example, or another preferred route |
-| 2 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references through `external-qmul` |
-| 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, and future TT-Metalium reports share `structuredbench.v1` fields |
-| 4 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
-| 5 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
-| 6 | Developer tutorial or blog | Make RQM useful to the ecosystem | Public tutorial explains structured `[N, 4]` kernels and the benchmark path |
-| 7 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
+| 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | x86-64 Linux preflight passes and a real TT-Metalium candidate emits an emulation-labeled report |
+| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Minimal `[N, 4]` `qmul` kernel compared against CPU/PyTorch and scalar references through `external-qmul` |
+| 4 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
+| 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | First Tenstorrent hardware report compares CPU/PyTorch vs Tenstorrent backend |
+| 6 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
+| 7 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
 
 ## Next Repo Work
 
@@ -98,9 +117,11 @@ Active repo issues should now focus on the hardware-facing path:
 
 1. `Track TT-Metalium qmul placement guidance` (#6)
 2. `Implement minimal TT-Metalium qmul example using the external-qmul harness` (#3)
-3. `Run StructuredBench on Tenstorrent Cloud` (#7)
-4. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
-5. `Draft structured-kernel tutorial for Tenstorrent developers` (#5, complete)
+3. `Add tt-emule validation milestone for qmul` (#8)
+4. `Run StructuredBench on Tenstorrent Cloud` (#7)
+5. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
+6. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
+   repo's implementation track)
 
 Each issue should include:
 
@@ -141,14 +162,20 @@ Tasks:
   candidate executable
 - use `experimental/tt_metalium_qmul/` as the external staging location until a
   maintainer requests another placement
+- use `docs/tt-emule-qmul-validation-plan.md` and
+  `experimental/tt_emule_qmul/check_environment.py` before claiming emulation
+  readiness
 - start with `[N, 4]` layout
 - compare against CPU/PyTorch and scalar references
-- report latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
+- report latency, throughput, numerical error, estimated FLOPs/sec, effective
+  GB/sec, arithmetic intensity, `execution_label`, `stable_benchmark`, and
+  `methodology_note`
 
 Exit criteria:
 
 - minimal example or external prototype runs
 - result is reproducible
+- emulation reports are labeled `execution_label=emulation`
 - no unsupported claims about Tenstorrent performance
 
 ### Phase 3: TT-NN Wrapper
