@@ -1,8 +1,10 @@
-# QuantumIR Direction
+# QuantumIR For Classical AI Compute
 
-QuantumIR is a long-term direction for `tt-rqm-kernels`: a domain-facing layer
-that lowers selected quantum-mechanics workloads into the structured quaternion,
-rotor, phase, and tensor kernels already defined by this repository.
+QuantumIR here means a classical/AI accelerator front end for selected
+quantum-mechanics workloads, not a quantum-hardware proposal. It is a long-term
+direction for `tt-rqm-kernels`: a domain-facing layer that lowers selected
+workloads into the structured quaternion, rotor, phase, and tensor kernels
+already defined by this repository.
 
 This is not a replacement for the current lower-stack work. The immediate
 engineering path remains:

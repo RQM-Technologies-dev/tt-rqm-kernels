@@ -25,9 +25,19 @@ Proof path:
 ```text
 CPU/PyTorch qmul reference
 -> scalar correctness check
--> TT-Metalium qmul for [N, 4]
+-> TT-Lang simulator qmul for [N, 4]
+-> tt-emule run of real TT-Metalium qmul candidate
+-> real TT-Metalium / Tenstorrent hardware report
 -> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
 ```
+
+## Long-Term Direction: QuantumIR for Classical AI Compute
+
+QuantumIR here means a classical/AI accelerator front end for selected quantum-mechanics workloads, not a quantum-hardware proposal. The immediate ask remains narrow: placement guidance for a minimal `[N, 4]` structured `qmul` kernel path.
+
+Longer term, RQM Technologies is exploring QuantumIR as a domain-facing layer above these kernels. It would lower selected quantum-mechanics workloads on classical Tenstorrent/AI accelerators, including SU(2) rotations, unitary composition, Hamiltonian evolution, phase/coherence updates, and AI augmentation use cases, into the same structured quaternion, rotor, phase, and tensor operators used by StructuredBench.
+
+This does not claim that arbitrary quantum computation is efficiently classically simulable, does not ask Tenstorrent for native quaternion hardware, and does not replace the signal processing, physical AI, imaging, wave simulation, and scientific computing kernel story. It is a future front end built on the same kernel foundation.
 
 ## Benchmark Table
 
@@ -62,6 +72,9 @@ Proposed second target: `qrotate_vector` for streamed unit-rotor/vector rotation
 - [docs/operator-contracts.md](../docs/operator-contracts.md)
 - [docs/structuredbench-spec.md](../docs/structuredbench-spec.md)
 - [docs/tenstorrent-rfc.md](../docs/tenstorrent-rfc.md)
+- [docs/quantum-ir.md](../docs/quantum-ir.md)
+- [docs/quantum-ir-roadmap.md](../docs/quantum-ir-roadmap.md)
+- [docs/quantum-ir-operator-mapping.md](../docs/quantum-ir-operator-mapping.md)
 
 ## Suggested GitHub Discussion Text
 

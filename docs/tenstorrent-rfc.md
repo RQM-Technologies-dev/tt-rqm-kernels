@@ -105,6 +105,26 @@ If Tenstorrent has preferred benchmark formats, this project should adopt those 
 
 The current repository includes StructuredBench as the CPU/PyTorch report generator. Future Tenstorrent backend examples should aim to emit the same `structuredbench.v1` fields when practical.
 
+## Long-Term Direction: QuantumIR for Classical AI Compute
+
+QuantumIR here means a classical/AI accelerator front end for selected
+quantum-mechanics workloads, not a quantum-hardware proposal. The immediate ask
+in this RFC remains narrow: placement guidance for a minimal `[N, 4]` structured
+`qmul` kernel path.
+
+Longer term, RQM Technologies is exploring QuantumIR as a domain-facing layer
+above these kernels. It would lower selected quantum-mechanics workloads on
+classical Tenstorrent/AI accelerators, including SU(2) rotations, unitary
+composition, Hamiltonian evolution, phase/coherence updates, and AI
+augmentation use cases, into the same structured quaternion, rotor, phase, and
+tensor operators used by StructuredBench.
+
+This does not claim that arbitrary quantum computation is efficiently
+classically simulable, does not ask Tenstorrent for native quaternion hardware,
+and does not replace the signal processing, physical AI, imaging, wave
+simulation, and scientific computing kernel story. It is a future front end built
+on the same kernel foundation.
+
 ## Questions for Tenstorrent Maintainers
 
 1. Should this first live as a TT-Metalium programming example?

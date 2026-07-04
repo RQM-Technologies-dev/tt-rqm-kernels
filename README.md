@@ -191,14 +191,15 @@ CPU/PyTorch qmul reference
 -> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
 ```
 
-## Long-Term QuantumIR Direction
+## Long-Term QuantumIR Direction For Classical AI Compute
 
-The long-term top layer for this project is a conservative QuantumIR direction:
-lower selected quantum-mechanics workloads into the structured quaternion,
-rotor, phase, and tensor kernels already defined here. The near-term target is
-not a new backend or a claim about replacing quantum hardware. It is a
-documentation and validation path for representing small SU(2)-style operations
-as ordinary floating-point tensor kernels.
+QuantumIR here means a classical/AI accelerator front end for selected
+quantum-mechanics workloads, not a quantum-hardware proposal. The long-term
+direction is to lower selected workloads into the structured quaternion, rotor,
+phase, and tensor kernels already defined here. The near-term target is not a
+new backend or a claim about replacing quantum hardware. It is a documentation
+and validation path for representing small SU(2)-style operations as ordinary
+floating-point tensor kernels.
 
 The first proposed QuantumIR target is a single-qubit SU(2) gate represented as
 a unit quaternion rotor and validated against a standard 2x2 complex matrix
