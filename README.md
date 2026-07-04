@@ -211,6 +211,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 - [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)
 - [docs/phase-update-tenstorrent-plan.md](docs/phase-update-tenstorrent-plan.md)
+- [docs/external-tenstorrent-contribution-selection.md](docs/external-tenstorrent-contribution-selection.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)

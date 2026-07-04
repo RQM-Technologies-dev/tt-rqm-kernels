@@ -46,6 +46,8 @@ The repo already has the right handshake:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/9>
 - `phase_update` Tenstorrent backend plan and tracker issue #10:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/10>
+- selected external Tenstorrent contribution path and tracker issue #11:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/11>
 - public `tt-metal` placement Discussion and narrow placement issue
 - `tt-awesome` ecosystem visibility
 
@@ -65,26 +67,7 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-### 1. One Tenstorrent Contribution Outside RQM
-
-Goal: become a known contributor, not only an outside proposer.
-
-Review the current Tenstorrent bounty or contribution list at execution time
-and choose one contribution that aligns with RQM:
-
-- time-series or signal workloads
-- audio/wave workloads
-- physical-AI perception workloads
-- compiler/tooling work if it helps lower-stack credibility
-
-Do not choose based on bounty amount. Choose based on credibility and relevance.
-
-Exit condition:
-
-- one narrow external contribution path is selected, scoped, and tracked
-  separately from `tt-rqm-kernels`
-
-### 2. Physical-AI Pose Stream Demo
+### 1. Physical-AI Pose Stream Demo
 
 Goal: give `qrotate_vector` a practical robotics/sensing story.
 
@@ -104,7 +87,7 @@ Exit condition:
 - a reproducible example that shows why rotor/vector kernels matter for
   physical AI and pose/orientation streams
 
-### 3. StructuredBench-HPC Expansion
+### 2. StructuredBench-HPC Expansion
 
 Goal: broaden the benchmark family beyond quaternions while preserving the repo
 identity.
@@ -122,7 +105,7 @@ Exit condition:
 - a staged roadmap that adds one workload at a time with CPU/PyTorch reference,
   scalar or independent checks where possible, and backend-comparable reports
 
-### 4. TT-MLIR Fused Lowering RFC
+### 3. TT-MLIR Fused Lowering RFC
 
 Goal: ask the compiler question only after backend evidence exists.
 
@@ -143,9 +126,8 @@ Exit condition:
 
 Add these tracker issues when ready:
 
-1. `Select one Tenstorrent contribution for RQM`
-2. `Draft physical-AI pose stream demo using qrotate_vector`
-3. `Draft StructuredBench-HPC expansion roadmap`
+1. `Draft physical-AI pose stream demo using qrotate_vector`
+2. `Draft StructuredBench-HPC expansion roadmap`
 
 The first issue should be the next concrete technical move.
 
