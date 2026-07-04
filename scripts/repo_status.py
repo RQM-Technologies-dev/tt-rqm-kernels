@@ -3,14 +3,27 @@
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import platform
 from pathlib import Path
+import sys
 from typing import Any
 
-from tt_rqm_kernels.backends.tt_lang.availability import check_tt_lang_sim
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
+TT_LANG_AVAILABILITY_PATH = (
+    REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "availability.py"
+)
+_spec = importlib.util.spec_from_file_location(
+    "_tt_rqm_tt_lang_availability",
+    TT_LANG_AVAILABILITY_PATH,
+)
+if _spec is None or _spec.loader is None:
+    raise RuntimeError(f"cannot load {TT_LANG_AVAILABILITY_PATH}")
+_tt_lang_availability = importlib.util.module_from_spec(_spec)
+sys.modules[_spec.name] = _tt_lang_availability
+_spec.loader.exec_module(_tt_lang_availability)
+check_tt_lang_sim = _tt_lang_availability.check_tt_lang_sim
 
 
 def build_status() -> dict[str, Any]:
