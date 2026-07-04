@@ -48,6 +48,8 @@ The repo already has the right handshake:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/10>
 - selected external Tenstorrent contribution path and tracker issue #11:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/11>
+- physical-AI pose stream demo and tracker issue #12:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/12>
 - public `tt-metal` placement Discussion and narrow placement issue
 - `tt-awesome` ecosystem visibility
 
@@ -67,27 +69,7 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-### 1. Physical-AI Pose Stream Demo
-
-Goal: give `qrotate_vector` a practical robotics/sensing story.
-
-Build a small demo path:
-
-```text
-model/vector stream
--> qrotate_vector / rotor update
--> structured physical state
--> StructuredBench-style report
-```
-
-This should remain a benchmark/demo, not a full robotics application.
-
-Exit condition:
-
-- a reproducible example that shows why rotor/vector kernels matter for
-  physical AI and pose/orientation streams
-
-### 2. StructuredBench-HPC Expansion
+### 1. StructuredBench-HPC Expansion
 
 Goal: broaden the benchmark family beyond quaternions while preserving the repo
 identity.
@@ -105,7 +87,7 @@ Exit condition:
 - a staged roadmap that adds one workload at a time with CPU/PyTorch reference,
   scalar or independent checks where possible, and backend-comparable reports
 
-### 3. TT-MLIR Fused Lowering RFC
+### 2. TT-MLIR Fused Lowering RFC
 
 Goal: ask the compiler question only after backend evidence exists.
 
@@ -126,8 +108,7 @@ Exit condition:
 
 Add these tracker issues when ready:
 
-1. `Draft physical-AI pose stream demo using qrotate_vector`
-2. `Draft StructuredBench-HPC expansion roadmap`
+1. `Draft StructuredBench-HPC expansion roadmap`
 
 The first issue should be the next concrete technical move.
 

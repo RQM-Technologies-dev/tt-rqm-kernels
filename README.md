@@ -212,6 +212,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)
 - [docs/phase-update-tenstorrent-plan.md](docs/phase-update-tenstorrent-plan.md)
 - [docs/external-tenstorrent-contribution-selection.md](docs/external-tenstorrent-contribution-selection.md)
+- [docs/physical-ai-pose-stream-demo.md](docs/physical-ai-pose-stream-demo.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
@@ -223,7 +224,7 @@ Proposed backend path:
 - optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
 - future tt-emule validation for a TT-Metalium `qmul` candidate
 - future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
-- future `qrotate_vector` stream benchmark
+- CPU/PyTorch physical-AI pose stream demo using `qrotate_vector`
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
   evidence is clearer
 - future `phase_update` backend plan after the `qmul` candidate path is stable
