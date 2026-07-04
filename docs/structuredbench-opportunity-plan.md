@@ -44,6 +44,8 @@ The repo already has the right handshake:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
 - ComplexTensor-to-QuaternionTensor bridge design and tracker issue #9:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/9>
+- `phase_update` Tenstorrent backend plan and tracker issue #10:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/10>
 - public `tt-metal` placement Discussion and narrow placement issue
 - `tt-awesome` ecosystem visibility
 
@@ -63,28 +65,7 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-### 1. Phase-Update Signal Kernel Plan
-
-Goal: make `phase_update` a serious signal/wave benchmark lane, not a side
-utility.
-
-Start from:
-
-```text
-phase[t+1] = wrap(phase[t] + omega * dt)
-state[t+1] = amplitude * [cos(phase), sin(phase)]
-```
-
-Frame this around wireless, radar/sonar-like signal processing, imaging,
-optical phase, audio, wave simulation, and sensing. Keep claims engineering
-focused.
-
-Exit condition:
-
-- a `phase_update` Tenstorrent backend plan with the same report discipline as
-  `qmul`
-
-### 2. One Tenstorrent Contribution Outside RQM
+### 1. One Tenstorrent Contribution Outside RQM
 
 Goal: become a known contributor, not only an outside proposer.
 
@@ -103,7 +84,7 @@ Exit condition:
 - one narrow external contribution path is selected, scoped, and tracked
   separately from `tt-rqm-kernels`
 
-### 3. Physical-AI Pose Stream Demo
+### 2. Physical-AI Pose Stream Demo
 
 Goal: give `qrotate_vector` a practical robotics/sensing story.
 
@@ -123,7 +104,7 @@ Exit condition:
 - a reproducible example that shows why rotor/vector kernels matter for
   physical AI and pose/orientation streams
 
-### 4. StructuredBench-HPC Expansion
+### 3. StructuredBench-HPC Expansion
 
 Goal: broaden the benchmark family beyond quaternions while preserving the repo
 identity.
@@ -141,7 +122,7 @@ Exit condition:
 - a staged roadmap that adds one workload at a time with CPU/PyTorch reference,
   scalar or independent checks where possible, and backend-comparable reports
 
-### 5. TT-MLIR Fused Lowering RFC
+### 4. TT-MLIR Fused Lowering RFC
 
 Goal: ask the compiler question only after backend evidence exists.
 
@@ -162,10 +143,9 @@ Exit condition:
 
 Add these tracker issues when ready:
 
-1. `Add phase_update Tenstorrent backend plan`
-2. `Select one Tenstorrent contribution for RQM`
-3. `Draft physical-AI pose stream demo using qrotate_vector`
-4. `Draft StructuredBench-HPC expansion roadmap`
+1. `Select one Tenstorrent contribution for RQM`
+2. `Draft physical-AI pose stream demo using qrotate_vector`
+3. `Draft StructuredBench-HPC expansion roadmap`
 
 The first issue should be the next concrete technical move.
 

@@ -210,6 +210,7 @@ The Tenstorrent-facing surfaces are:
 - [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
 - [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 - [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)
+- [docs/phase-update-tenstorrent-plan.md](docs/phase-update-tenstorrent-plan.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
 - [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
@@ -224,6 +225,7 @@ Proposed backend path:
 - future `qrotate_vector` stream benchmark
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
   evidence is clearer
+- future `phase_update` backend plan after the `qmul` candidate path is stable
 - future TT-NN wrapper once placement guidance is clear
 - future TT-MLIR lowering discussion after an explicit lower-stack kernel exists
 
