@@ -39,19 +39,22 @@ The repo already has the right handshake:
 - TT-Lang simulator `qmul`, including simulator-only trace/stat support
 - external `qmul` harness for future candidate executables
 - TT-Metalium staging package without fake TT-Metalium source
-- tt-emule qmul validation plan and local preflight scaffold
+- tt-emule qmul validation plan, local preflight scaffold, and Docker/Linux
+  source-tree preflight success
 - tt-emule tracker issue #8:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
-- ComplexTensor-to-QuaternionTensor bridge design and tracker issue #9:
+- ComplexTensor-to-QuaternionTensor bridge design and closed tracker issue #9:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/9>
-- `phase_update` Tenstorrent backend plan and tracker issue #10:
+- `phase_update` Tenstorrent backend plan and closed tracker issue #10:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/10>
-- selected external Tenstorrent contribution path and tracker issue #11:
+- selected external Tenstorrent contribution path and closed tracker issue #11:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/11>
-- physical-AI pose stream demo and tracker issue #12:
+- physical-AI pose stream demo and closed tracker issue #12:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/12>
-- StructuredBench-HPC expansion roadmap and tracker issue #13:
+- StructuredBench-HPC expansion roadmap and closed tracker issue #13:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/13>
+- external LWT/ILWT `tt-metal` worktree tracker issue #14:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/14>
 - TT-MLIR fused lowering prerequisites documented:
   `docs/tt-mlir-fused-lowering-prerequisites.md`
 - public `tt-metal` placement Discussion and narrow placement issue
@@ -73,7 +76,11 @@ physical-AI pose streams
 
 ## Priority Roadmap
 
-No active opportunity-plan items remain.
+No active opportunity-plan prose items remain.
+
+The active work is implementation pressure: build a real TT-Metalium `qmul`
+candidate, validate it through `external-qmul`, and produce an emulation-labeled
+report once it runs under tt-emule.
 
 The TT-MLIR fused lowering question is deferred by design. Do not add a tracker
 issue or open a compiler-facing discussion until the repo has tt-emule,

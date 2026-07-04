@@ -21,6 +21,8 @@ Implemented:
 - TT-Metalium candidate scaffold
 - tt-emule environment preflight:
   `experimental/tt_emule_qmul/check_environment.py`
+- x86-64 Linux Docker preflight with sibling `tt-metal` and `tt-emule`
+  checkouts
 - tracker issue:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
 
@@ -31,11 +33,22 @@ Not implemented:
 - emulation report artifact
 - hardware report artifact
 
-Local blocker:
+Current blocker:
 
 ```text
-This checkout is on macOS, not an x86-64 Linux tt-emule build environment.
-No tt-metal and tt-emule checkouts are configured locally.
+The Linux/tt-emule source-tree preflight now passes. The remaining blocker is
+the real TT-Metalium qmul host/kernel candidate.
+```
+
+Verified preflight environment:
+
+```text
+Docker Desktop daemon: linux x86_64, server 29.2.1
+Container image: python:3.12-slim with --platform linux/amd64
+Mounted workspace: /Users/home/Documents -> /work
+tt-metal checkout: /Users/home/Documents/tt-metal @ fd810266
+tt-emule checkout: /Users/home/Documents/tt-emule @ abdc348
+tt-rqm-kernels checkout: /Users/home/Documents/tt-rqm-kernels
 ```
 
 ## Expected Checkout Layout
@@ -60,16 +73,32 @@ export TT_EMULE_HOME=$ROOT/tt-emule
 Preflight:
 
 ```bash
-python experimental/tt_emule_qmul/check_environment.py
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  python:3.12-slim \
+  python experimental/tt_emule_qmul/check_environment.py
 ```
 
-This check only validates platform and source-tree layout. It does not prove
-the candidate builds, runs, or produces correct output.
+Current result:
+
+```text
+tt-metal root detected: /work/tt-metal
+tt-emule root detected: /work/tt-emule
+tt-emule qmul preflight passed. This does not run a kernel.
+```
+
+This check only validates platform and source-tree layout. It does not prove the
+candidate builds, runs, or produces correct output.
 
 ## Build Direction
 
-The future candidate should follow the `tt-emule` integration pattern from the
-`tt-emule` README:
+The next implementation step is to inspect current `tt-metal` example patterns
+and create the smallest external TT-Metalium `qmul` host/kernel candidate that
+can satisfy the `external-qmul` protocol. The future candidate should follow the
+`tt-emule` integration pattern from the `tt-emule` README:
 
 ```bash
 cmake -S "$TT_METAL_HOME" -B "$TT_METAL_HOME/build_emule" \

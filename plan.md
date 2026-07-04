@@ -51,6 +51,11 @@ The repo is ready for a first handshake:
 - local tracker issue #7 started with execution runbook/report-template prework
 - local tracker issue #8 is open for tt-emule validation of a real
   TT-Metalium `qmul` candidate
+- x86-64 Linux preflight has passed inside Docker Desktop using sibling
+  `tt-metal` and `tt-emule` checkouts:
+  - `tt-metal` checkout: `/Users/home/Documents/tt-metal` at `fd810266`
+  - `tt-emule` checkout: `/Users/home/Documents/tt-emule` at `abdc348`
+  - Docker image: `python:3.12-slim` with `--platform linux/amd64`
 - local tracker issues #9 through #13 are closed after their design/demo
   deliverables landed
 - local tracker issue #14 is open for the external LWT/ILWT `tt-metal`
@@ -61,17 +66,35 @@ maintainer placement guidance and the first real lower-stack implementation path
 
 ## Recommended Next Step
 
-Provision an x86-64 Linux environment with `tt-metal`, `tt-emule`, and
-`tt-rqm-kernels` checked out together, then run:
+The x86-64 Linux Docker preflight is complete. The next step is to build the
+smallest possible real TT-Metalium `qmul` host/kernel candidate and validate it
+through `external-qmul`.
+
+Known-good preflight commands:
 
 ```bash
-python scripts/repo_status.py
-python experimental/tt_emule_qmul/check_environment.py
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  python:3.12-slim \
+  python scripts/repo_status.py
+
+docker run --rm --platform linux/amd64 \
+  -v /Users/home/Documents:/work \
+  -w /work/tt-rqm-kernels \
+  -e TT_METAL_HOME=/work/tt-metal \
+  -e TT_EMULE_HOME=/work/tt-emule \
+  python:3.12-slim \
+  python experimental/tt_emule_qmul/check_environment.py
 ```
 
-Record the exact blocker or success in issue #8. After that, build the smallest
-possible real TT-Metalium `qmul` host/kernel candidate and validate it through
-`external-qmul`.
+Preflight result:
+
+```text
+tt-metal root detected: /work/tt-metal
+tt-emule root detected: /work/tt-emule
+tt-emule qmul preflight passed. This does not run a kernel.
+```
 
 Why this is next:
 
@@ -89,8 +112,8 @@ Why this is next:
   reports
 - the TT-Metalium candidate package is staged externally and avoids unverified
   TT-Metalium source until a real SDK/hardware environment is available
-- the candidate scaffold now has explicit build/run/validation commands, so the
-  remaining #3 work is real TT-Metalium host/kernel implementation
+- the Linux/tt-emule preflight now passes, so the remaining #3/#8 work is real
+  TT-Metalium host/kernel implementation and emulation-labeled validation
 - the runbook now makes #7 actionable once Tenstorrent Cloud, a local
   TT-Metalium SDK checkout, or maintainer-provided environment guidance is
   available
