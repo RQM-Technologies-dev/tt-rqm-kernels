@@ -16,6 +16,7 @@ Current local status:
 - TT-Lang simulator `qmul` report is available and labeled simulator-only.
 - External `qmul` candidate harness is implemented.
 - TT-Metalium candidate package exists as a scaffold only.
+- tt-emule validation preflight exists as a scaffold only.
 - Real TT-Metalium host/kernel source is not implemented yet.
 
 Placement guidance is tracked separately in the public `tt-metal` issue and the
@@ -34,6 +35,8 @@ Use the current Tenstorrent documentation as the setup source of truth:
   <https://docs.tenstorrent.com/tt-metal/latest/tt-metalium/resources/support.html>
 - Tenstorrent Cloud:
   <https://tenstorrent.com/en/hardware/cloud>
+- tt-emule:
+  <https://github.com/tenstorrent/tt-emule>
 
 This repo only records the StructuredBench-side commands and reporting
 requirements.
@@ -137,6 +140,36 @@ device = functional-simulator
 
 Simulator output validates kernel logic and report shape. It is not Tenstorrent
 hardware execution.
+
+## tt-emule Preflight
+
+`tt-emule` is the intended emulation step before a real Tenstorrent Cloud or
+hardware run. It must be labeled as emulation, not hardware.
+
+Check whether the local environment has a plausible x86-64 Linux tt-metal plus
+tt-emule checkout:
+
+```bash
+python experimental/tt_emule_qmul/check_environment.py
+```
+
+Expected local result on unsupported platforms or without checkouts:
+
+```text
+tt-emule environment unavailable: ...
+```
+
+When the source trees exist:
+
+```bash
+export TT_METAL_HOME=/path/to/tt-metal
+export TT_EMULE_HOME=/path/to/tt-emule
+python experimental/tt_emule_qmul/check_environment.py
+```
+
+The detailed emulation plan is in
+`docs/tt-emule-qmul-validation-plan.md`. Passing this preflight does not prove
+that a candidate builds or runs.
 
 ## Future TT-Metalium Candidate
 

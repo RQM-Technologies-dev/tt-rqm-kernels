@@ -1,0 +1,216 @@
+# StructuredBench Opportunity Plan
+
+## Summary
+
+`tt-rqm-kernels` should treat `qmul` as the wedge and StructuredBench as the
+main asset.
+
+The repo is no longer only a quaternion reference demo. It is becoming RQM
+Technologies' entry point into structured scientific, geometric, signal, and
+simulation kernels on open AI accelerators. The public Tenstorrent ask should
+remain narrow for now:
+
+```text
+Where should a minimal [N, 4] TT-Metalium qmul example live?
+```
+
+The broader repo direction is:
+
+```text
+CPU/PyTorch reference
+-> scalar correctness checks
+-> TT-Lang simulator
+-> tt-emule-compatible TT-Metalium qmul
+-> Tenstorrent Cloud / hardware report
+-> TT-NN and TT-MLIR discussions after backend evidence
+```
+
+This keeps the project useful to Tenstorrent without asking for native
+quaternion hardware, new silicon features, or endorsement.
+
+## Current Position
+
+The repo already has the right handshake:
+
+- CPU/PyTorch quaternion, rotor, and phase reference kernels
+- scalar spot checks for independent correctness
+- StructuredBench reports with latency, throughput, numerical error, estimated
+  FLOPs/sec, effective GB/sec, and arithmetic intensity
+- TT-Lang simulator `qmul`, including simulator-only trace/stat support
+- external `qmul` harness for future candidate executables
+- TT-Metalium staging package without fake TT-Metalium source
+- tt-emule qmul validation plan and local preflight scaffold
+- tt-emule tracker issue #8:
+  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/8>
+- public `tt-metal` placement Discussion and narrow placement issue
+- `tt-awesome` ecosystem visibility
+
+The missing opportunity is to make StructuredBench the reusable benchmark
+family:
+
+```text
+structured 4-lane values
+quaternion multiply
+rotor/vector rotation
+normalization and inverse stability
+phase/orientation update
+small wave/stencil-style updates
+complex/quaternion bridge patterns
+physical-AI pose streams
+```
+
+## Priority Roadmap
+
+### 1. ComplexTensor to QuaternionTensor Bridge
+
+Goal: make quaternion tensors feel like a conservative extension of existing
+structured tensor practice.
+
+Draft a design doc that frames:
+
+```text
+ComplexTensor: [real, imag]
+QuaternionTensor: [real, i, j, k]
+StructuredTensor: lane-packed physical/geometric/signal state
+```
+
+This should not ask for a native quaternion datatype. It should explain two
+possible software representations:
+
+- lane-packed tensor: `[N, 4]`
+- aligned-lane tensors: four tensors representing real/i/j/k lanes
+
+Exit condition:
+
+- a concise TT-NN-adjacent design note that a maintainer can understand without
+  accepting any RQM-specific theory
+
+### 2. Phase-Update Signal Kernel Plan
+
+Goal: make `phase_update` a serious signal/wave benchmark lane, not a side
+utility.
+
+Start from:
+
+```text
+phase[t+1] = wrap(phase[t] + omega * dt)
+state[t+1] = amplitude * [cos(phase), sin(phase)]
+```
+
+Frame this around wireless, radar/sonar-like signal processing, imaging,
+optical phase, audio, wave simulation, and sensing. Keep claims engineering
+focused.
+
+Exit condition:
+
+- a `phase_update` Tenstorrent backend plan with the same report discipline as
+  `qmul`
+
+### 3. One Tenstorrent Contribution Outside RQM
+
+Goal: become a known contributor, not only an outside proposer.
+
+Review the current Tenstorrent bounty or contribution list at execution time
+and choose one contribution that aligns with RQM:
+
+- time-series or signal workloads
+- audio/wave workloads
+- physical-AI perception workloads
+- compiler/tooling work if it helps lower-stack credibility
+
+Do not choose based on bounty amount. Choose based on credibility and relevance.
+
+Exit condition:
+
+- one narrow external contribution path is selected, scoped, and tracked
+  separately from `tt-rqm-kernels`
+
+### 4. Physical-AI Pose Stream Demo
+
+Goal: give `qrotate_vector` a practical robotics/sensing story.
+
+Build a small demo path:
+
+```text
+model/vector stream
+-> qrotate_vector / rotor update
+-> structured physical state
+-> StructuredBench-style report
+```
+
+This should remain a benchmark/demo, not a full robotics application.
+
+Exit condition:
+
+- a reproducible example that shows why rotor/vector kernels matter for
+  physical AI and pose/orientation streams
+
+### 5. StructuredBench-HPC Expansion
+
+Goal: broaden the benchmark family beyond quaternions while preserving the repo
+identity.
+
+Candidate future workloads:
+
+- small wave/stencil update kernels
+- compact N-body-like vector state updates
+- complex/quaternion bridge kernels
+- phase/magnitude update streams
+- orientation/pose-update streams
+
+Exit condition:
+
+- a staged roadmap that adds one workload at a time with CPU/PyTorch reference,
+  scalar or independent checks where possible, and backend-comparable reports
+
+### 6. TT-MLIR Fused Lowering RFC
+
+Goal: ask the compiler question only after backend evidence exists.
+
+The future question:
+
+```text
+Should qmul lower as a fused structured operator rather than scalar expansion?
+```
+
+Do not lead with this. Prepare the story now, but only open a compiler-facing
+discussion after there is tt-emule, TT-Metalium, or hardware evidence.
+
+Exit condition:
+
+- a short RFC grounded in measured backend behavior, not speculation
+
+## Recommended Issues To Add
+
+Add these tracker issues when ready:
+
+1. `Prototype ComplexTensor-to-QuaternionTensor bridge design`
+2. `Add phase_update Tenstorrent backend plan`
+3. `Select one Tenstorrent contribution for RQM`
+4. `Draft physical-AI pose stream demo using qrotate_vector`
+5. `Draft StructuredBench-HPC expansion roadmap`
+
+The first issue should be the next concrete technical move.
+
+## Non-Goals
+
+- Do not broaden the public Tenstorrent ask before placement issue feedback.
+- Do not ask for native quaternion hardware.
+- Do not ask for new chip features.
+- Do not imply Tenstorrent endorsement.
+- Do not claim CPU, simulator, or emulation results as hardware performance.
+- Do not lead with defense; keep it as a downstream application area.
+- Do not open TT-MLIR or TT-NN asks before lower-stack evidence exists.
+
+## References
+
+- Tenstorrent software stack:
+  <https://docs.tenstorrent.com/getting-started/tt-software-stack.html>
+- TT-Metalium documentation:
+  <https://docs.tenstorrent.com/tt-metal/latest/tt-metalium/>
+- tt-emule:
+  <https://github.com/tenstorrent/tt-emule>
+- tt-awesome:
+  <https://github.com/tenstorrent/tt-awesome>
+- TT-MLIR:
+  <https://github.com/tenstorrent/tt-mlir>

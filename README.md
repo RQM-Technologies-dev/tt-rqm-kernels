@@ -208,14 +208,17 @@ The Tenstorrent-facing surfaces are:
 - [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
 - [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
 - [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
+- [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 - [docs/operator-contracts.md](docs/operator-contracts.md)
 - [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
+- [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
 - [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 - [reports/tenstorrent_hardware_report_template.md](reports/tenstorrent_hardware_report_template.md)
 
 Proposed backend path:
 
 - optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
+- future tt-emule validation for a TT-Metalium `qmul` candidate
 - future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
 - future `qrotate_vector` stream benchmark
 - future TT-NN wrapper once placement guidance is clear
