@@ -16,7 +16,7 @@ import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Literal
 
 import torch
 
@@ -27,6 +27,13 @@ SCHEMA_VERSION = "structuredbench.v1"
 EXTERNAL_QMUL_PROTOCOL = "tt-rqm-external-qmul.v1"
 SUPPORTED_SUITES = ("smoke", "full", "qmul", "qrotate")
 SUPPORTED_BACKENDS = ("torch", "tt-lang-sim", "external-qmul")
+ExecutionLabel = Literal["cpu", "simulator", "emulation", "hardware"]
+EXECUTION_LABELS: tuple[ExecutionLabel, ...] = (
+    "cpu",
+    "simulator",
+    "emulation",
+    "hardware",
+)
 SUPPORTED_DTYPES = {
     "float32": torch.float32,
     "float64": torch.float64,
@@ -79,6 +86,9 @@ class BenchmarkResult:
     effective_gb_per_s: float
     arithmetic_intensity_flops_per_byte: float
     checksum: float
+    execution_label: ExecutionLabel = "cpu"
+    stable_benchmark: bool = False
+    methodology_note: str | None = None
 
 
 def positive_int(value: str) -> int:
@@ -173,11 +183,20 @@ def run_suite(
     tt_lang_trace: bool = False,
     tt_lang_trace_output: Path | None = None,
     tt_lang_stats_output: Path | None = None,
+    execution_label: ExecutionLabel | None = None,
+    stable_benchmark: bool = False,
+    methodology_note: str | None = None,
 ) -> dict[str, object]:
     """Run a StructuredBench suite and return a JSON-serializable report."""
 
     if dtype_name not in SUPPORTED_DTYPES:
         raise ValueError(f"unsupported dtype: {dtype_name}")
+    resolved_execution_label = _resolve_execution_label(backend, execution_label)
+    resolved_methodology_note = _methodology_note(
+        backend,
+        resolved_execution_label,
+        methodology_note,
+    )
 
     if backend == "tt-lang-sim":
         return _run_tt_lang_sim_suite(
@@ -192,6 +211,9 @@ def run_suite(
             trace=tt_lang_trace,
             trace_output=tt_lang_trace_output,
             stats_output=tt_lang_stats_output,
+            execution_label=resolved_execution_label,
+            stable_benchmark=stable_benchmark,
+            methodology_note=resolved_methodology_note,
         )
     if backend == "external-qmul":
         return _run_external_qmul_suite(
@@ -202,6 +224,9 @@ def run_suite(
             iterations_override=iterations_override,
             warmup_override=warmup_override,
             external_command=external_command,
+            execution_label=resolved_execution_label,
+            stable_benchmark=stable_benchmark,
+            methodology_note=resolved_methodology_note,
         )
     if backend != "torch":
         raise ValueError(f"unsupported backend: {backend}")
@@ -224,6 +249,9 @@ def run_suite(
             dtype=dtype,
             dtype_name=dtype_name,
             seed=seed + index,
+            execution_label=resolved_execution_label,
+            stable_benchmark=stable_benchmark,
+            methodology_note=resolved_methodology_note,
         )
         for index, case in enumerate(cases)
     ]
@@ -234,6 +262,9 @@ def run_suite(
         "suite": suite,
         "backend": backend,
         "device": str(device),
+        "execution_label": resolved_execution_label,
+        "stable_benchmark": stable_benchmark,
+        "methodology_note": resolved_methodology_note,
         "dtype": dtype_name,
         "seed": seed,
         "torch_version": torch.__version__,
@@ -254,7 +285,10 @@ def render_table(report: dict[str, object]) -> str:
         "StructuredBench",
         (
             f"schema={report['schema']} suite={report['suite']} "
-            f"backend={report['backend']} device={report['device']} dtype={report['dtype']}"
+            f"backend={report['backend']} device={report['device']} "
+            f"execution={report.get('execution_label', 'unknown')} "
+            f"stable={str(report.get('stable_benchmark', False)).lower()} "
+            f"dtype={report['dtype']}"
         ),
         "",
     ]
@@ -342,6 +376,8 @@ def render_markdown_report(report: dict[str, object]) -> str:
             (
                 f"Backend: `{report['backend']}`  "
                 f"Device: `{report['device']}`  "
+                f"Execution: `{report.get('execution_label', 'unknown')}`  "
+                f"Stable benchmark: `{str(report.get('stable_benchmark', False)).lower()}`  "
                 f"Dtype: `{report['dtype']}`  "
                 f"Suite: `{report['suite']}`"
             ),
@@ -382,6 +418,7 @@ def render_markdown_report(report: dict[str, object]) -> str:
             *_tt_lang_trace_stats_section(report),
             "## Notes",
             "",
+            _methodology_note_line(report),
             _backend_note(report),
             _committed_report_note(report),
             *_backend_metadata_notes(report),
@@ -410,6 +447,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", type=Path, default=None)
     parser.add_argument("--json-output", type=Path, default=None)
     parser.add_argument("--markdown-output", type=Path, default=None)
+    parser.add_argument(
+        "--execution-label",
+        choices=EXECUTION_LABELS,
+        default=None,
+        help=(
+            "Execution environment label for report metadata. Torch defaults to "
+            "cpu, tt-lang-sim defaults to simulator, and external-qmul can be "
+            "labeled cpu, emulation, or hardware by the caller."
+        ),
+    )
+    parser.add_argument(
+        "--stable-benchmark",
+        action="store_true",
+        help=(
+            "Mark the report as a stable benchmark. Default is false because "
+            "reference, simulator, emulation, and first hardware samples are "
+            "usually methodology checks."
+        ),
+    )
+    parser.add_argument(
+        "--methodology-note",
+        default=None,
+        help="Optional short note describing the measurement methodology.",
+    )
     parser.add_argument(
         "--external-command",
         default=None,
@@ -482,6 +543,9 @@ def main(argv: list[str] | None = None) -> int:
             tt_lang_trace=args.tt_lang_trace,
             tt_lang_trace_output=args.tt_lang_trace_output,
             tt_lang_stats_output=args.tt_lang_stats_output,
+            execution_label=args.execution_label,
+            stable_benchmark=args.stable_benchmark,
+            methodology_note=args.methodology_note,
         )
     except TTLangSimulatorUnavailable as exc:
         print(str(exc), file=sys.stderr)
@@ -501,6 +565,50 @@ def main(argv: list[str] | None = None) -> int:
 
     print(rendered)
     return 0
+
+
+def _resolve_execution_label(
+    backend: str,
+    requested: ExecutionLabel | None,
+) -> ExecutionLabel:
+    default = _default_execution_label(backend)
+    if requested is None:
+        return default
+    if backend == "torch" and requested != "cpu":
+        raise ValueError("torch backend reports must use execution_label=cpu")
+    if backend == "tt-lang-sim" and requested != "simulator":
+        raise ValueError(
+            "tt-lang-sim backend reports must use execution_label=simulator"
+        )
+    if backend == "external-qmul" and requested == "simulator":
+        raise ValueError(
+            "external-qmul reports should use cpu, emulation, or hardware; "
+            "use tt-lang-sim for simulator reports"
+        )
+    return requested
+
+
+def _default_execution_label(backend: str) -> ExecutionLabel:
+    if backend == "tt-lang-sim":
+        return "simulator"
+    return "cpu"
+
+
+def _methodology_note(
+    backend: str,
+    execution_label: ExecutionLabel,
+    requested: str | None,
+) -> str:
+    if requested:
+        return requested
+    if backend == "tt-lang-sim":
+        return "TT-Lang functional simulator run; not hardware performance."
+    if backend == "external-qmul":
+        return (
+            f"external-qmul candidate run labeled {execution_label}; "
+            "hardware claims depend on the external command and environment."
+        )
+    return "CPU/PyTorch reference run; not a hardware performance result."
 
 
 def _resolve_device(device_name: str) -> torch.device:
@@ -523,6 +631,9 @@ def _run_tt_lang_sim_suite(
     trace: bool,
     trace_output: Path | None,
     stats_output: Path | None,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> dict[str, object]:
     if suite != "qmul":
         raise ValueError("tt-lang-sim backend currently supports --suite qmul only")
@@ -547,6 +658,9 @@ def _run_tt_lang_sim_suite(
         trace=trace,
         trace_output=trace_output,
         stats_output=stats_output,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -559,6 +673,9 @@ def _run_external_qmul_suite(
     iterations_override: int | None,
     warmup_override: int | None,
     external_command: str | None,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> dict[str, object]:
     if suite != "qmul":
         raise ValueError("external-qmul backend currently supports --suite qmul only")
@@ -579,6 +696,9 @@ def _run_external_qmul_suite(
             case=case,
             external_command=external_command,
             seed=seed + index,
+            execution_label=execution_label,
+            stable_benchmark=stable_benchmark,
+            methodology_note=methodology_note,
         )
         for index, case in enumerate(cases)
     ]
@@ -589,6 +709,9 @@ def _run_external_qmul_suite(
         "suite": suite,
         "backend": "external-qmul",
         "device": device,
+        "execution_label": execution_label,
+        "stable_benchmark": stable_benchmark,
+        "methodology_note": methodology_note,
         "dtype": dtype_name,
         "seed": seed,
         "protocol": EXTERNAL_QMUL_PROTOCOL,
@@ -606,6 +729,9 @@ def _run_external_qmul_case(
     case: BenchmarkCase,
     external_command: str,
     seed: int,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     generator = torch.Generator(device="cpu").manual_seed(seed)
     a64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
@@ -675,6 +801,9 @@ def _run_external_qmul_case(
         reference,
         elapsed_s,
         scalar_reference_max_abs_error=scalar_error,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -687,18 +816,76 @@ def _run_case(
     dtype: torch.dtype,
     dtype_name: str,
     seed: int,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     generator = torch.Generator(device="cpu").manual_seed(seed)
     if case.workload == "qmul":
-        return _run_qmul(suite, case, backend, device, dtype, dtype_name, generator)
+        return _run_qmul(
+            suite,
+            case,
+            backend,
+            device,
+            dtype,
+            dtype_name,
+            generator,
+            execution_label,
+            stable_benchmark,
+            methodology_note,
+        )
     if case.workload == "qrotate":
-        return _run_qrotate(suite, case, backend, device, dtype, dtype_name, generator)
+        return _run_qrotate(
+            suite,
+            case,
+            backend,
+            device,
+            dtype,
+            dtype_name,
+            generator,
+            execution_label,
+            stable_benchmark,
+            methodology_note,
+        )
     if case.workload == "qnormalize":
-        return _run_qnormalize(suite, case, backend, device, dtype, dtype_name, generator)
+        return _run_qnormalize(
+            suite,
+            case,
+            backend,
+            device,
+            dtype,
+            dtype_name,
+            generator,
+            execution_label,
+            stable_benchmark,
+            methodology_note,
+        )
     if case.workload == "qinverse":
-        return _run_qinverse(suite, case, backend, device, dtype, dtype_name, generator)
+        return _run_qinverse(
+            suite,
+            case,
+            backend,
+            device,
+            dtype,
+            dtype_name,
+            generator,
+            execution_label,
+            stable_benchmark,
+            methodology_note,
+        )
     if case.workload == "phase_update":
-        return _run_phase_update(suite, case, backend, device, dtype, dtype_name, generator)
+        return _run_phase_update(
+            suite,
+            case,
+            backend,
+            device,
+            dtype,
+            dtype_name,
+            generator,
+            execution_label,
+            stable_benchmark,
+            methodology_note,
+        )
     raise ValueError(f"unsupported workload: {case.workload}")
 
 
@@ -710,6 +897,9 @@ def _run_qmul(
     dtype: torch.dtype,
     dtype_name: str,
     generator: torch.Generator,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     a64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
     b64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
@@ -735,6 +925,9 @@ def _run_qmul(
         reference,
         elapsed_s,
         scalar_reference_max_abs_error=scalar_error,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -746,6 +939,9 @@ def _run_qrotate(
     dtype: torch.dtype,
     dtype_name: str,
     generator: torch.Generator,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     rotors64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
     vectors64 = _randn((case.items, 3), generator)
@@ -776,6 +972,9 @@ def _run_qrotate(
         elapsed_s,
         stability_max_abs=stability,
         scalar_reference_max_abs_error=scalar_error,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -787,6 +986,9 @@ def _run_qnormalize(
     dtype: torch.dtype,
     dtype_name: str,
     generator: torch.Generator,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     values64 = _scaled_quaternions(case.items, generator, min_scale=1e-3, max_scale=1e3)
     values = _to_device_dtype(values64, device, dtype)
@@ -812,6 +1014,9 @@ def _run_qnormalize(
         elapsed_s,
         stability_max_abs=stability,
         scalar_reference_max_abs_error=scalar_error,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -823,6 +1028,9 @@ def _run_qinverse(
     dtype: torch.dtype,
     dtype_name: str,
     generator: torch.Generator,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     values64 = _scaled_quaternions(case.items, generator, min_scale=1e-1, max_scale=1e1)
     values = _to_device_dtype(values64, device, dtype)
@@ -850,6 +1058,9 @@ def _run_qinverse(
         elapsed_s,
         stability_max_abs=stability,
         scalar_reference_max_abs_error=scalar_error,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -861,6 +1072,9 @@ def _run_phase_update(
     dtype: torch.dtype,
     dtype_name: str,
     generator: torch.Generator,
+    execution_label: ExecutionLabel,
+    stable_benchmark: bool,
+    methodology_note: str,
 ) -> BenchmarkResult:
     phase64 = _rand((case.items,), generator) * (2.0 * math.pi) - math.pi
     rate64 = _randn((case.items,), generator)
@@ -886,6 +1100,9 @@ def _run_phase_update(
         reference,
         elapsed_s,
         scalar_reference_max_abs_error=None,
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note,
     )
 
 
@@ -902,6 +1119,9 @@ def _result_from_output(
     *,
     stability_max_abs: float | None = None,
     scalar_reference_max_abs_error: float | None,
+    execution_label: ExecutionLabel | None = None,
+    stable_benchmark: bool = False,
+    methodology_note: str | None = None,
 ) -> BenchmarkResult:
     errors = _error_metrics(output, reference)
     hardware = _hardware_estimate(case, dtype, elapsed_s)
@@ -937,6 +1157,14 @@ def _result_from_output(
             "arithmetic_intensity_flops_per_byte"
         ],
         checksum=checksum,
+        execution_label=execution_label or _default_execution_label(backend),
+        stable_benchmark=stable_benchmark,
+        methodology_note=methodology_note
+        or _methodology_note(
+            backend,
+            execution_label or _default_execution_label(backend),
+            None,
+        ),
     )
 
 
@@ -1273,6 +1501,13 @@ def _backend_note(report: dict[str, object]) -> str:
             "and measurement environment."
         )
     return "- Current results use the CPU/PyTorch reference backend."
+
+
+def _methodology_note_line(report: dict[str, object]) -> str:
+    note = report.get("methodology_note")
+    if not note:
+        return "- Methodology note: not provided."
+    return f"- Methodology note: {note}"
 
 
 def _committed_report_note(report: dict[str, object]) -> str:

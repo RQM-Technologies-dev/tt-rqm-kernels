@@ -33,8 +33,16 @@ def test_run_suite_smoke_with_small_overrides() -> None:
     assert report["schema"] == SCHEMA_VERSION
     assert report["suite"] == "smoke"
     assert report["backend"] == "torch"
+    assert report["execution_label"] == "cpu"
+    assert report["stable_benchmark"] is False
+    assert report["methodology_note"] == (
+        "CPU/PyTorch reference run; not a hardware performance result."
+    )
     assert len(report["results"]) == 5
     for result in report["results"]:
+        assert result["execution_label"] == "cpu"
+        assert result["stable_benchmark"] is False
+        assert result["methodology_note"] == report["methodology_note"]
         assert result["items"] == 32
         assert result["iterations"] == 1
         assert result["throughput"] > 0.0
@@ -114,6 +122,10 @@ def test_module_cli_external_qmul_reference_backend(tmp_path: Path) -> None:
             "1",
             "--warmup",
             "0",
+            "--execution-label",
+            "emulation",
+            "--methodology-note",
+            "test fixture emulation label",
             "--format",
             "json",
             "--markdown-output",
@@ -129,16 +141,54 @@ def test_module_cli_external_qmul_reference_backend(tmp_path: Path) -> None:
     assert report["suite"] == "qmul"
     assert report["backend"] == "external-qmul"
     assert report["device"] == "cpu/python-test-fixture"
+    assert report["execution_label"] == "emulation"
+    assert report["stable_benchmark"] is False
+    assert report["methodology_note"] == "test fixture emulation label"
     assert report["protocol"] == "tt-rqm-external-qmul.v1"
     assert len(report["results"]) == 3
     for result in report["results"]:
         assert result["workload"] == "qmul"
+        assert result["execution_label"] == "emulation"
+        assert result["stable_benchmark"] is False
+        assert result["methodology_note"] == "test fixture emulation label"
         assert result["structured_shape"] == "[16, 4]"
         assert result["scalar_reference_max_abs_error"] is not None
         assert result["max_abs_error"] < 1e-4
     markdown = markdown_output.read_text(encoding="utf-8")
     assert "external-qmul candidate harness" in markdown
+    assert "Execution: `emulation`" in markdown
+    assert "Stable benchmark: `false`" in markdown
+    assert "test fixture emulation label" in markdown
     assert "should not be read as Tenstorrent hardware performance" in markdown
+
+
+def test_external_qmul_rejects_simulator_execution_label() -> None:
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "tt_rqm_kernels.structuredbench",
+            "--suite",
+            "qmul",
+            "--backend",
+            "external-qmul",
+            "--external-command",
+            FAST_EXTERNAL_QMUL,
+            "--execution-label",
+            "simulator",
+            "--items",
+            "16",
+            "--iters",
+            "1",
+            "--warmup",
+            "0",
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode != 0
+    assert "external-qmul reports should use cpu, emulation, or hardware" in completed.stderr
 
 
 def test_external_qmul_rejects_non_qmul_suite() -> None:
@@ -184,6 +234,10 @@ def test_validate_qmul_candidate_script(tmp_path: Path) -> None:
             "1",
             "--warmup",
             "0",
+            "--execution-label",
+            "emulation",
+            "--methodology-note",
+            "wrapper label pass-through test",
             "--json-output",
             str(json_output),
             "--markdown-output",
@@ -198,7 +252,11 @@ def test_validate_qmul_candidate_script(tmp_path: Path) -> None:
     report = json.loads(json_output.read_text(encoding="utf-8"))
     assert report["backend"] == "external-qmul"
     assert report["device"] == "cpu/python-test-fixture"
+    assert report["execution_label"] == "emulation"
+    assert report["stable_benchmark"] is False
+    assert report["methodology_note"] == "wrapper label pass-through test"
     assert report["results"][0]["structured_shape"] == "[16, 4]"
+    assert report["results"][0]["execution_label"] == "emulation"
     assert report["results"][0]["scalar_reference_max_abs_error"] is not None
     assert "external-qmul candidate harness" in markdown_output.read_text(
         encoding="utf-8"

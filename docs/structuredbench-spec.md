@@ -83,6 +83,9 @@ StructuredBench reports:
 
 - throughput
 - latency
+- execution label: `cpu`, `simulator`, `emulation`, or `hardware`
+- stable benchmark flag
+- methodology note
 - max absolute error
 - max relative error
 - RMS error
@@ -97,6 +100,13 @@ StructuredBench reports:
 - arithmetic intensity in FLOPs/byte
 
 The hardware metrics are estimates. They are intended for comparison and placement discussion, not as hardware-counter measurements.
+
+The execution label is part of the report contract. CPU/PyTorch reference runs
+use `execution_label=cpu`, TT-Lang reports use `execution_label=simulator`, and
+future external `qmul` candidates must label themselves as `cpu`, `emulation`,
+or `hardware` according to the real environment. First emulation or hardware
+samples should use `stable_benchmark=false` unless the methodology has been
+repeated and documented.
 
 ## What A TT-Metalium Result Should Compare Against
 
@@ -129,7 +139,9 @@ python scripts/validate_qmul_candidate.py \
   --command "python scripts/qmul_external_reference.py" \
   --items 128 \
   --iters 1 \
-  --warmup 0
+  --warmup 0 \
+  --execution-label cpu \
+  --methodology-note "CPU/PyTorch external protocol reference"
 ```
 
 This backend is intentionally narrow. It supports only float32 `qmul` over
@@ -141,6 +153,9 @@ to write `out.bin` and `metrics.json`.
 `metrics.json` must include a positive finite `elapsed_s` value measured over the
 requested iteration loop. It may include `device` to label the candidate system
 in the StructuredBench report.
+
+Use `--execution-label emulation` for a real tt-emule candidate run and
+`--execution-label hardware` only for a real Tenstorrent hardware or cloud run.
 
 The output is validated against the CPU/PyTorch `qmul` reference and scalar spot
 checks before it is reported through the normal `structuredbench.v1` fields.

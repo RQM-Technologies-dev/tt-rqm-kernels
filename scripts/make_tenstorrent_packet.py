@@ -83,6 +83,14 @@ def render_packet(report: dict[str, object]) -> str:
                 "not to claim stable hardware performance."
             ),
             "",
+            "Report labels:",
+            "",
+            "```text",
+            f"execution_label: {report.get('execution_label', 'unknown')}",
+            f"stable_benchmark: {str(report.get('stable_benchmark', False)).lower()}",
+            f"methodology_note: {report.get('methodology_note', 'not provided')}",
+            "```",
+            "",
             "## Why Tenstorrent Developers Should Care",
             "",
             (

@@ -9,6 +9,7 @@ from pathlib import Path
 import sys
 
 from tt_rqm_kernels.structuredbench import (
+    EXECUTION_LABELS,
     render_markdown_report,
     render_table,
     run_suite,
@@ -31,6 +32,25 @@ def main() -> int:
     parser.add_argument("--iters", type=_positive_int, default=1)
     parser.add_argument("--warmup", type=_nonnegative_int, default=0)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--execution-label",
+        choices=EXECUTION_LABELS,
+        default=None,
+        help=(
+            "Execution environment label for the external candidate. Use "
+            "emulation or hardware only when the command really runs there."
+        ),
+    )
+    parser.add_argument(
+        "--stable-benchmark",
+        action="store_true",
+        help="Mark the candidate report as a stable benchmark.",
+    )
+    parser.add_argument(
+        "--methodology-note",
+        default=None,
+        help="Optional short note describing the candidate measurement methodology.",
+    )
     parser.add_argument("--json-output", type=Path, default=None)
     parser.add_argument("--markdown-output", type=Path, default=None)
     parser.add_argument("--format", choices=("table", "json"), default="table")
@@ -46,6 +66,9 @@ def main() -> int:
             iterations_override=args.iters,
             warmup_override=args.warmup,
             external_command=args.command,
+            execution_label=args.execution_label,
+            stable_benchmark=args.stable_benchmark,
+            methodology_note=args.methodology_note,
         )
     except (RuntimeError, ValueError, TypeError, OSError) as exc:
         print(str(exc), file=sys.stderr)

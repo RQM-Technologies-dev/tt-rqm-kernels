@@ -44,11 +44,16 @@ def run_qmul_cases(
     trace: bool = False,
     trace_output: Path | None = None,
     stats_output: Path | None = None,
+    execution_label: str = "simulator",
+    stable_benchmark: bool = False,
+    methodology_note: str = "TT-Lang functional simulator run; not hardware performance.",
 ) -> dict[str, object]:
     """Run qmul cases through `tt-lang-sim` and combine their reports."""
 
     if variant not in KERNEL_SCRIPTS:
         raise ValueError(f"unsupported TT-Lang qmul variant: {variant}")
+    if execution_label != "simulator":
+        raise ValueError("TT-Lang simulator reports must use execution_label=simulator")
 
     availability = check_tt_lang_sim(sim_cli=sim_cli)
     if not availability.available or availability.sim_cli is None:
@@ -85,13 +90,21 @@ def run_qmul_cases(
         {
             "generated_at_utc": datetime.now(timezone.utc).isoformat(),
             "seed": seed,
+            "execution_label": execution_label,
+            "stable_benchmark": stable_benchmark,
+            "methodology_note": methodology_note,
             "tt_lang_sim": _simulator_metadata(
                 first,
                 availability=availability,
                 trace_reports=trace_reports,
             ),
             "results": [
-                result
+                {
+                    **result,
+                    "execution_label": execution_label,
+                    "stable_benchmark": stable_benchmark,
+                    "methodology_note": methodology_note,
+                }
                 for report in reports
                 for result in _report_results(report)
             ],

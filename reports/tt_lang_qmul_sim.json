@@ -32,7 +32,10 @@
       "throughput": 6707.844441266191,
       "throughput_unit": "qmul/s",
       "warmup": 0,
-      "workload": "qmul"
+      "workload": "qmul",
+      "execution_label": "simulator",
+      "stable_benchmark": false,
+      "methodology_note": "TT-Lang functional simulator run; not hardware performance."
     }
   ],
   "schema": "structuredbench.v1",
@@ -45,6 +48,16 @@
     "layout": "row-major",
     "padded_items": 128,
     "sim_cli": "tt-lang-sim",
-    "sim_version": "tt-lang-sim 1.1.3"
-  }
+    "sim_version": "tt-lang-sim 1.1.3",
+    "variant": "block-slice",
+    "stats_cli": null,
+    "trace_enabled": false,
+    "trace_path": null,
+    "stats_available": false,
+    "stats_summary": null,
+    "stats_error": null
+  },
+  "execution_label": "simulator",
+  "stable_benchmark": false,
+  "methodology_note": "TT-Lang functional simulator run; not hardware performance."
 }

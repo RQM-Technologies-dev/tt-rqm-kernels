@@ -9,6 +9,9 @@ and `qmul` placement.
 Tracker issue:
 <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/11>
 
+Follow-on external worktree tracker:
+<https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/14>
+
 Reviewed upstream context on July 4, 2026.
 
 ## Selected Path

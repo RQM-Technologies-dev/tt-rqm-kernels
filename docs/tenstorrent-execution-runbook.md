@@ -47,6 +47,8 @@ Before publishing any result, record:
 
 ```text
 execution_label: cpu | simulator | emulation | hardware
+stable_benchmark: false
+methodology_note: <short text explaining what was run>
 repo_commit: <git rev-parse HEAD>
 tt_metal_commit: <git rev-parse HEAD inside tt-metal checkout, if applicable>
 tt_metal_home: <TT_METAL_HOME or TT_METALIUM_HOME>
@@ -66,6 +68,11 @@ dtype: float32
 If a tool such as `tt-smi` is available in the environment, include its device
 summary output in notes. Do not require that tool for CPU-only or simulator-only
 runs.
+
+StructuredBench emits `execution_label`, `stable_benchmark`, and
+`methodology_note` at the top level and per result. Use `--execution-label`,
+`--stable-benchmark`, and `--methodology-note` for future external candidate
+runs when the default label is not precise enough.
 
 ## Local Preflight
 
@@ -205,6 +212,8 @@ python experimental/tt_metalium_qmul/validate_candidate.py \
   --iters 1 \
   --warmup 0 \
   --seed 0 \
+  --execution-label emulation \
+  --methodology-note "tt-emule candidate run; not hardware performance" \
   --json-output reports/tt_metalium_qmul_candidate.json \
   --markdown-output reports/tt_metalium_qmul_candidate.md
 ```
@@ -218,6 +227,8 @@ python experimental/tt_metalium_qmul/validate_candidate.py \
   --iters 10 \
   --warmup 2 \
   --seed 0 \
+  --execution-label emulation \
+  --methodology-note "tt-emule candidate run; not hardware performance" \
   --json-output reports/tt_metalium_qmul_candidate_4096.json \
   --markdown-output reports/tt_metalium_qmul_candidate_4096.md
 ```

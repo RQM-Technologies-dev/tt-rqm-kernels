@@ -6,6 +6,14 @@
 
 Committed reports are sample CPU/PyTorch reference outputs. They are included to show the report shape and outreach packet format, not to claim stable hardware performance.
 
+Report labels:
+
+```text
+execution_label: cpu
+stable_benchmark: false
+methodology_note: CPU/PyTorch reference run; not a hardware performance result.
+```
+
 ## Why Tenstorrent Developers Should Care
 
 StructuredBench gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. It focuses on structured 4-lane tensor values that carry rotation, phase, orientation, direction, and geometric state inside ordinary floating-point tensors.
@@ -25,21 +33,21 @@ CPU/PyTorch qmul reference
 
 | workload | items | iters | latency_ms | throughput | unit | max_abs_err |
 | --- | --- | --- | --- | --- | --- | --- |
-| qmul | 1024 | 5 | 0.1380 | 7419332.71 | qmul/s | 1.179e-07 |
-| qrotate | 1024 | 5 | 0.3232 | 3168148.24 | rotations/s | 4.148e-07 |
-| qnormalize | 1024 | 5 | 0.0366 | 28004615.88 | normalizations/s | 1.014e-07 |
-| qinverse | 1024 | 5 | 0.0887 | 11549688.28 | inverses/s | 1.486e-06 |
-| phase_update | 2048 | 5 | 0.0785 | 26085184.22 | phase-updates/s | 3.465e-07 |
+| qmul | 1024 | 5 | 0.1719 | 5955884.68 | qmul/s | 1.179e-07 |
+| qrotate | 1024 | 5 | 0.4109 | 2491841.90 | rotations/s | 4.148e-07 |
+| qnormalize | 1024 | 5 | 0.0432 | 23694159.54 | normalizations/s | 1.014e-07 |
+| qinverse | 1024 | 5 | 0.2534 | 4040758.04 | inverses/s | 1.486e-06 |
+| phase_update | 2048 | 5 | 0.1506 | 13595218.36 | phase-updates/s | 3.465e-07 |
 
 ## Hardware Metrics Table
 
 | workload | items | estimated_flops | estimated_flops_per_s | estimated_total_bytes | effective_gb_per_s | arithmetic_intensity |
 | --- | --- | --- | --- | --- | --- | --- |
-| qmul | 1024 | 143360 | 2.077e+08 | 245760 | 0.356 | 0.583 |
-| qrotate | 1024 | 327680 | 2.028e+08 | 204800 | 0.127 | 1.600 |
-| qnormalize | 1024 | 66560 | 3.641e+08 | 163840 | 0.896 | 0.406 |
-| qinverse | 1024 | 76800 | 1.732e+08 | 163840 | 0.370 | 0.469 |
-| phase_update | 2048 | 61440 | 1.565e+08 | 204800 | 0.522 | 0.300 |
+| qmul | 1024 | 143360 | 1.668e+08 | 245760 | 0.286 | 0.583 |
+| qrotate | 1024 | 327680 | 1.595e+08 | 204800 | 0.100 | 1.600 |
+| qnormalize | 1024 | 66560 | 3.080e+08 | 163840 | 0.758 | 0.406 |
+| qinverse | 1024 | 76800 | 6.061e+07 | 163840 | 0.129 | 0.469 |
+| phase_update | 2048 | 61440 | 8.157e+07 | 204800 | 0.272 | 0.300 |
 
 ## Proposed First TT-Metalium Target
 

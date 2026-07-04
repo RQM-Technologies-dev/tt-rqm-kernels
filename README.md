@@ -8,6 +8,14 @@ Structured quaternion and rotor kernels for Tenstorrent hardware
 
 This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
 
+## For Tenstorrent Reviewers
+
+1. Start here: [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
+2. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
+3. Current blocker: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
+4. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
+5. Current status command: `python scripts/repo_status.py`
+
 ## Core Idea
 
 RQM Technologies develops structured numerical kernels where quaternions, rotors, phase, orientation, and wave states are represented inside ordinary floating-point tensors.

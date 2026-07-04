@@ -87,6 +87,9 @@ Each result includes:
 - workload
 - backend
 - device
+- execution label: `cpu`, `simulator`, `emulation`, or `hardware`
+- stable benchmark flag
+- methodology note
 - dtype
 - item count
 - iterations and warmup
@@ -109,6 +112,11 @@ Each result includes:
 - checksum
 
 The current backend is `torch`. Future TT-Metalium and TT-NN benchmark paths should emit the same fields so reports can be compared directly.
+
+Top-level reports also include `execution_label`, `stable_benchmark`, and
+`methodology_note` so a reader can distinguish CPU reference runs, functional
+simulation, emulation, and hardware samples without inferring from backend
+names. First samples should normally keep `stable_benchmark=false`.
 
 The current lower-stack proof path is:
 

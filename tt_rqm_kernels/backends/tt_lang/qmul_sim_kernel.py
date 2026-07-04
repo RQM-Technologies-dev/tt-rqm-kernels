@@ -230,6 +230,9 @@ def run_qmul_report(
         "suite": "qmul",
         "backend": BACKEND_NAME,
         "device": "functional-simulator",
+        "execution_label": "simulator",
+        "stable_benchmark": False,
+        "methodology_note": "TT-Lang functional simulator run; not hardware performance.",
         "dtype": "float32",
         "seed": seed,
         "simulation": True,
@@ -295,6 +298,9 @@ def _result_from_output(
             "arithmetic_intensity_flops_per_byte"
         ],
         checksum=float(output.detach().cpu().to(torch.float64).sum().item()),
+        execution_label="simulator",
+        stable_benchmark=False,
+        methodology_note="TT-Lang functional simulator run; not hardware performance.",
     )
 
 

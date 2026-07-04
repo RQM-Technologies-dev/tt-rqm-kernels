@@ -198,6 +198,8 @@ def test_committed_tt_lang_report_schema_and_claims() -> None:
     assert report["schema"] == SCHEMA_VERSION
     assert report["backend"] == "tt-lang-sim"
     assert report["device"] == "functional-simulator"
+    assert report["execution_label"] == "simulator"
+    assert report["stable_benchmark"] is False
     assert report["simulation"] is True
     assert report["suite"] == "qmul"
     assert report["dtype"] == "float32"
@@ -223,8 +225,13 @@ def test_committed_tt_lang_report_schema_and_claims() -> None:
         "throughput",
         "warmup",
         "workload",
+        "execution_label",
+        "stable_benchmark",
+        "methodology_note",
     }
     assert required_result_fields <= set(result)
+    assert result["execution_label"] == "simulator"
+    assert result["stable_benchmark"] is False
     assert result["structured_shape"] == "[128, 4]"
     assert result["scalar_reference_max_abs_error"] < 1e-4
 
@@ -267,6 +274,8 @@ def test_tt_lang_runner_raw_variant_uses_raw_kernel(
     assert report["schema"] == SCHEMA_VERSION
     assert report["backend"] == "tt-lang-sim"
     assert report["device"] == "functional-simulator"
+    assert report["execution_label"] == "simulator"
+    assert report["stable_benchmark"] is False
     assert report["simulation"] is True
     assert report["tt_lang_sim"]["variant"] == "raw-element"
     result = report["results"][0]
@@ -288,8 +297,13 @@ def test_tt_lang_runner_raw_variant_uses_raw_kernel(
         "throughput",
         "warmup",
         "workload",
+        "execution_label",
+        "stable_benchmark",
+        "methodology_note",
     }
     assert required_result_fields <= set(result)
+    assert result["execution_label"] == "simulator"
+    assert result["stable_benchmark"] is False
     assert result["structured_shape"] == "[32, 4]"
     markdown = render_markdown_report(report)
     assert "variant=raw-element" in markdown

@@ -8,6 +8,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+from tt_rqm_kernels.structuredbench import EXECUTION_LABELS
+
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PLACEHOLDER = (
@@ -35,6 +37,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--iters", type=_positive_int, default=1)
     parser.add_argument("--warmup", type=_nonnegative_int, default=0)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--execution-label",
+        choices=EXECUTION_LABELS,
+        default=None,
+        help=(
+            "Execution environment label for the candidate. Use emulation for "
+            "tt-emule runs and hardware only for real Tenstorrent hardware."
+        ),
+    )
+    parser.add_argument(
+        "--stable-benchmark",
+        action="store_true",
+        help="Mark the candidate report as a stable benchmark.",
+    )
+    parser.add_argument(
+        "--methodology-note",
+        default=None,
+        help="Optional short note describing the candidate measurement methodology.",
+    )
     parser.add_argument("--format", choices=("table", "json"), default="table")
     parser.add_argument("--json-output", type=Path, default=None)
     parser.add_argument("--markdown-output", type=Path, default=None)
@@ -56,6 +77,12 @@ def main(argv: list[str] | None = None) -> int:
         "--format",
         args.format,
     ]
+    if args.execution_label is not None:
+        command.extend(["--execution-label", args.execution_label])
+    if args.stable_benchmark:
+        command.append("--stable-benchmark")
+    if args.methodology_note is not None:
+        command.extend(["--methodology-note", args.methodology_note])
     if args.json_output is not None:
         command.extend(["--json-output", str(args.json_output)])
     if args.markdown_output is not None:
