@@ -8,13 +8,27 @@ Structured quaternion and rotor kernels for Tenstorrent hardware
 
 This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
 
+## Tenstorrent Quick Read
+
+For Tenstorrent engineers:
+
+1. What this is: structured `[N, 4]` float tensor kernels, starting with `qmul`.
+2. Why it matters: compact benchmark between scalar elementwise ops and matmul.
+3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, and tt-emule candidate.
+4. Current ask: enable one hardware run or advise placement.
+5. Best next link: [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md).
+
+The single next action is to help produce one hardware-labeled StructuredBench
+`qmul` report, or tell us where the minimal TT-Metalium example should live.
+
 ## For Tenstorrent Reviewers
 
-1. Start here: [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
-2. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
-3. Emulation evidence: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
-4. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
-5. Current status command: `python scripts/repo_status.py`
+1. Start here: [docs/tenstorrent-landing.md](docs/tenstorrent-landing.md)
+2. Technical spec: [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
+3. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
+4. Emulation evidence: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
+5. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
+6. Current status command: `python scripts/repo_status.py`
 
 Current blocker: the experimental TT-Metalium scalar RISC-V `qmul` candidate
 has now built and produced an emulation-labeled StructuredBench report through
@@ -275,6 +289,7 @@ python -m tt_rqm_kernels.structuredbench \
 
 The Tenstorrent-facing surfaces are:
 
+- [docs/tenstorrent-landing.md](docs/tenstorrent-landing.md)
 - [docs/tenstorrent-rfc.md](docs/tenstorrent-rfc.md)
 - [docs/collaboration-map.md](docs/collaboration-map.md)
 - [docs/structuredbench-spec.md](docs/structuredbench-spec.md)

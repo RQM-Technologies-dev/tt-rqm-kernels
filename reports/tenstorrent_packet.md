@@ -69,9 +69,12 @@ Proposed second target: `qrotate_vector` for streamed unit-rotor/vector rotation
 
 ## Relevant Docs
 
+- [docs/tenstorrent-landing.md](../docs/tenstorrent-landing.md)
+- [docs/tenstorrent-engineer-copy-paste-packet.md](../docs/tenstorrent-engineer-copy-paste-packet.md)
 - [docs/operator-contracts.md](../docs/operator-contracts.md)
 - [docs/structuredbench-spec.md](../docs/structuredbench-spec.md)
 - [docs/tenstorrent-rfc.md](../docs/tenstorrent-rfc.md)
+- [reports/tt_emule_qmul_candidate.md](tt_emule_qmul_candidate.md)
 - [docs/quantum-ir.md](../docs/quantum-ir.md)
 - [docs/quantum-ir-roadmap.md](../docs/quantum-ir-roadmap.md)
 - [docs/quantum-ir-operator-mapping.md](../docs/quantum-ir-operator-mapping.md)
@@ -83,7 +86,9 @@ Hi Tenstorrent maintainers,
 
 RQM Technologies has a CPU/PyTorch reference benchmark for structured quaternion and rotor tensor kernels, with qmul as the proposed first [N, 4] TT-Metalium target.
 
-Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live?
+The repo now has a one-command readiness check (`python scripts/rqm_tt_quickstart.py --check`), an external-qmul protocol for candidate commands, and tt-emule evidence for the experimental TT-Metalium candidate. The tt-emule report is emulation-only and is not hardware performance.
+
+Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live? If possible, could Tenstorrent also enable or run one hardware-labeled StructuredBench qmul report?
 
 Secondary questions: if a TT-Metalium programming example is not the right starting point, is there a preferred TT-NN custom-op path? Would a TT-MLIR representation be useful later, after there is a concrete lower-stack qmul example?
 

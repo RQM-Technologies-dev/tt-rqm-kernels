@@ -236,6 +236,7 @@ def test_committed_tt_lang_report_schema_and_claims() -> None:
     assert result["scalar_reference_max_abs_error"] < 1e-4
 
     markdown = markdown_path.read_text(encoding="utf-8")
+    assert "This report demonstrates that the `[N, 4]` `qmul` contract" in markdown
     assert "TT-Lang functional simulator" in markdown
     assert "not hardware performance" in markdown
     assert "simulator smoke output" in markdown

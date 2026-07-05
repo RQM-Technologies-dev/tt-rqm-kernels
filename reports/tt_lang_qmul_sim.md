@@ -4,6 +4,11 @@ Generated: `2026-07-03T19:43:44.015086+00:00`
 
 Backend: `tt-lang-sim`  Device: `functional-simulator`  Execution: `simulator`  Stable benchmark: `false`  Dtype: `float32`  Suite: `qmul`
 
+This report demonstrates that the `[N, 4]` `qmul` contract can be exercised through the TT-Lang functional simulator and validated against CPU/PyTorch plus scalar references. It is a logic and report-shape artifact, not hardware performance evidence.
+
+Next evidence target: `reports/tt_emule_qmul_candidate.md`.
+Final target: `reports/tt_hardware_qmul_quickstart.md`.
+
 ## Benchmark Results
 
 | workload | items | iters | latency_ms | throughput | unit | max_abs_err | rms_err | stability | scalar_ref |

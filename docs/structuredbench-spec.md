@@ -17,6 +17,32 @@ tt-emule, TT-Metalium, TT-NN, and future hardware implementations can be
 compared against the same correctness and benchmark fields when they are clearly
 labeled.
 
+## What To Do With This Repo In 10 Minutes
+
+Run the current local checks:
+
+```bash
+python -m pip install -e ".[dev]"
+python -m pytest
+python -m tt_rqm_kernels.structuredbench --suite smoke --items 128 --iters 1 --warmup 0
+python scripts/validate_qmul_candidate.py \
+  --command "python scripts/qmul_external_reference.py" \
+  --items 128 \
+  --iters 1 \
+  --warmup 0
+```
+
+Current evidence ladder:
+
+```text
+CPU reference: implemented
+scalar reference checks: implemented
+TT-Lang simulator: implemented, simulator-only
+tt-emule TT-Metalium candidate: implemented, emulation-only
+Tenstorrent hardware report: not implemented yet
+Current ask: placement guidance plus one hardware validation run
+```
+
 ## Current Status
 
 - default backend: CPU/PyTorch

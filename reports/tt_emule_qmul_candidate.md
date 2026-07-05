@@ -4,6 +4,10 @@ Generated: `2026-07-04T13:04:06.189296+00:00`
 
 Backend: `external-qmul`  Device: `tt-emule/tt-metalium-riscv-qmul-candidate`  Execution: `emulation`  Stable benchmark: `false`  Dtype: `float32`  Suite: `qmul`
 
+This report demonstrates the `external-qmul` candidate protocol with an emulation-labeled run. StructuredBench validates the candidate output against CPU/PyTorch plus scalar references. It is not hardware performance evidence.
+
+Final target: `reports/tt_hardware_qmul_quickstart.md`.
+
 ## Benchmark Results
 
 | workload | items | iters | latency_ms | throughput | unit | max_abs_err | rms_err | stability | scalar_ref |

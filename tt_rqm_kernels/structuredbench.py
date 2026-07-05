@@ -382,6 +382,7 @@ def render_markdown_report(report: dict[str, object]) -> str:
                 f"Suite: `{report['suite']}`"
             ),
             "",
+            *_report_intro(report),
             "## Benchmark Results",
             "",
             _markdown_table(
@@ -1501,6 +1502,36 @@ def _backend_note(report: dict[str, object]) -> str:
             "and measurement environment."
         )
     return "- Current results use the CPU/PyTorch reference backend."
+
+
+def _report_intro(report: dict[str, object]) -> list[str]:
+    execution_label = report.get("execution_label")
+    if report.get("backend") == "tt-lang-sim":
+        return [
+            (
+                "This report demonstrates that the `[N, 4]` `qmul` contract can "
+                "be exercised through the TT-Lang functional simulator and "
+                "validated against CPU/PyTorch plus scalar references. It is a "
+                "logic and report-shape artifact, not hardware performance evidence."
+            ),
+            "",
+            "Next evidence target: `reports/tt_emule_qmul_candidate.md`.",
+            "Final target: `reports/tt_hardware_qmul_quickstart.md`.",
+            "",
+        ]
+    if report.get("backend") == "external-qmul" and execution_label == "emulation":
+        return [
+            (
+                "This report demonstrates the `external-qmul` candidate protocol "
+                "with an emulation-labeled run. StructuredBench validates the "
+                "candidate output against CPU/PyTorch plus scalar references. It "
+                "is not hardware performance evidence."
+            ),
+            "",
+            "Final target: `reports/tt_hardware_qmul_quickstart.md`.",
+            "",
+        ]
+    return []
 
 
 def _methodology_note_line(report: dict[str, object]) -> str:

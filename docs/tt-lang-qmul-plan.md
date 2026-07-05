@@ -1,5 +1,11 @@
 # TT-Lang qmul Prototype Plan
 
+Status update: TT-Lang simulation is a completed simulator milestone, not the
+latest validation stage. This page documents the simulator path for `qmul`.
+For the current lower-stack evidence, see
+[docs/tt-emule-qmul-validation-plan.md](tt-emule-qmul-validation-plan.md) and
+[reports/tt_emule_qmul_candidate.md](../reports/tt_emule_qmul_candidate.md).
+
 This milestone creates the first Tenstorrent-adjacent implementation path for
 `tt-rqm-kernels`: quaternion multiply over ordinary `[N, 4]` float tensors in
 the TT-Lang functional simulator.
@@ -11,13 +17,15 @@ PyTorch qmul reference
 -> scalar correctness spot check
 -> TT-Lang simulated qmul
 -> StructuredBench-compatible simulation report
--> future TT-Metalium candidate through external-qmul
+-> tt-emule validation of the experimental TT-Metalium candidate
+-> future Tenstorrent hardware report through external-qmul
 ```
 
 The simulator path is intentionally not a hardware result. It validates kernel
 logic, data layout, and report shape before any TT-Metalium or TT-NN work.
-The next backend step remains a future TT-Metalium candidate validated through
-the `external-qmul` harness, not fake TT-Metalium source in this repository.
+The next backend evidence target is a real Tenstorrent hardware run of the
+existing `external-qmul` candidate path, not a simulator or emulation result
+presented as hardware.
 
 ## Operator Contract
 

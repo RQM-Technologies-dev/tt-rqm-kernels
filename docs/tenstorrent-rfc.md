@@ -14,6 +14,30 @@ The tensor remains a standard floating-point tensor. The structure comes from th
 
 This RFC is intended for Tenstorrent maintainers and engineers as an early placement and integration discussion.
 
+## Decision Requested
+
+Where should a minimal `[N, 4]` structured `qmul` example live?
+
+Preferred maintainer guidance would be one of:
+
+- keep it as an external community example
+- place it as a TT-Metalium programming example
+- treat it as a TT-NN custom-op precursor after the lower-stack path is proven
+- defer TT-MLIR discussion until a real backend comparison exists
+- not a fit for upstream, but useful as a community benchmark
+
+The immediate ask is narrow: placement guidance and, if possible, one real
+hardware validation run for the existing StructuredBench `qmul` path.
+
+## What We Are Not Asking For
+
+- no native quaternion hardware
+- no new datatype
+- no new silicon feature
+- no Tenstorrent endorsement of RQM theory
+- no defense-first framing
+- no hardware-performance claim without real hardware
+
 ## Motivation
 
 Quaternion, rotor, phase, and orientation operations appear in several numerical workloads:
@@ -140,9 +164,11 @@ This RFC is intentionally narrow.
 Non-goals:
 
 - not asking for native quaternion hardware
+- not asking for a new datatype
 - not proposing a new chip feature
 - not defense-first
 - not asking Tenstorrent to endorse RQM theory
+- not claiming hardware performance without a real Tenstorrent hardware run
 
 The proposal is about ordinary floating-point tensor kernels with structured numerical semantics.
 

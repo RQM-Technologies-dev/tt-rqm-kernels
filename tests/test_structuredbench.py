@@ -156,6 +156,7 @@ def test_module_cli_external_qmul_reference_backend(tmp_path: Path) -> None:
         assert result["max_abs_error"] < 1e-4
     markdown = markdown_output.read_text(encoding="utf-8")
     assert "external-qmul candidate harness" in markdown
+    assert "This report demonstrates the `external-qmul` candidate protocol" in markdown
     assert "Execution: `emulation`" in markdown
     assert "Stable benchmark: `false`" in markdown
     assert "test fixture emulation label" in markdown
@@ -321,5 +322,10 @@ def test_tenstorrent_packet_generator(tmp_path: Path) -> None:
     packet = output_path.read_text(encoding="utf-8")
     assert "Proposed first TT-Metalium target: `qmul`" in packet
     assert "Where should a minimal TT-Metalium qmul example" in packet
+    assert "one hardware-labeled StructuredBench qmul report" in packet
+    assert "docs/tenstorrent-landing.md" in packet
+    assert "docs/tenstorrent-engineer-copy-paste-packet.md" in packet
+    assert "reports/tt_emule_qmul_candidate.md" in packet
+    assert "tt-emule evidence" in packet
     assert "QuantumIR for Classical AI Compute" in packet
     assert "AI augmentation" in packet
