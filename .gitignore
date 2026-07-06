@@ -10,4 +10,5 @@ build/
 dist/
 experimental/tt_metalium_qmul/build/
 experimental/tt_metalium_qmul/build_emule_candidate/
+generated/
 .DS_Store
