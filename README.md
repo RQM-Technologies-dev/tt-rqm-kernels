@@ -4,7 +4,7 @@ Structured quaternion and rotor kernels for Tenstorrent hardware
 
 [![CI](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml/badge.svg)](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml)
 
-`tt-rqm-kernels` is an independent open-source RQM Technologies LLC project for structured numerical kernels targeting the Tenstorrent ecosystem. The first release surface is a correctness-tested CPU/PyTorch reference library. Later work can move selected kernels down into TT-Metalium, TT-NN, and TT-Forge / TT-MLIR.
+`tt-rqm-kernels` is an independent open-source "RQM Technologies" project for structured numerical kernels targeting the Tenstorrent ecosystem. The first release surface is a correctness-tested CPU/PyTorch reference library. Later work can move selected kernels down into TT-Metalium, TT-NN, and TT-Forge / TT-MLIR.
 
 This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
 
