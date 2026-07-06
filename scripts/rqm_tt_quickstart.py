@@ -23,6 +23,22 @@ from tt_rqm_kernels.backends.tenstorrent.report import (
 )
 from tt_rqm_kernels.structuredbench import render_table
 
+EMULE_REFRESH_COMMAND = """python scripts/rqm_tt_quickstart.py \\
+  --mode emule \\
+  --items 32 \\
+  --iters 1 \\
+  --warmup 0 \\
+  --json-output reports/tt_emule_qmul_candidate.json \\
+  --markdown-output reports/tt_emule_qmul_candidate.md"""
+
+HARDWARE_REFRESH_COMMAND = """python scripts/rqm_tt_quickstart.py \\
+  --mode hardware \\
+  --items 128 \\
+  --iters 1 \\
+  --warmup 0 \\
+  --json-output reports/tt_hardware_qmul_quickstart.json \\
+  --markdown-output reports/tt_hardware_qmul_quickstart.md"""
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(
@@ -138,10 +154,50 @@ def _print_readiness(readiness) -> None:
     print("")
     print(f"emule mode ready: {str(readiness.emule_ready).lower()}")
     print(f"hardware mode ready: {str(readiness.hardware_ready).lower()}")
-    if not readiness.hardware_ready:
+    _print_next_actions(readiness)
+
+
+def _print_next_actions(readiness) -> None:
+    print("")
+    print("Next actions")
+    print("")
+    if readiness.emule_ready:
+        print("Emulation refresh:")
+        _print_indented_command(EMULE_REFRESH_COMMAND)
+    else:
         print(
-            f"hardware command: set {DEFAULT_HARDWARE_COMMAND_ENV} or pass --command"
+            "Emulation refresh: fix the missing emule readiness checks above "
+            "before running --mode emule."
         )
+
+    print("")
+    print("Hardware validation:")
+    if readiness.hardware_ready:
+        _print_indented_command(HARDWARE_REFRESH_COMMAND)
+    else:
+        print(
+            f"Set {DEFAULT_HARDWARE_COMMAND_ENV}=<real Tenstorrent hardware "
+            "qmul command> or pass --command."
+        )
+        print(
+            "The command must implement "
+            "docs/tenstorrent-hardware-command-contract.md."
+        )
+        print(
+            "Delegated hardware packet: "
+            "docs/tenstorrent-engineer-copy-paste-packet.md."
+        )
+        print(
+            "Do not use tt-emule, run_candidate_docker.sh, Docker emulation, "
+            "or CPU reference commands for hardware-labeled reports."
+        )
+        print("After a real hardware command is configured:")
+        _print_indented_command(HARDWARE_REFRESH_COMMAND)
+
+
+def _print_indented_command(command: str) -> None:
+    for line in command.splitlines():
+        print(f"  {line}")
 
 
 def _default_outputs(

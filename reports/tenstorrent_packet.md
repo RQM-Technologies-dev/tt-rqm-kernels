@@ -31,9 +31,26 @@ CPU/PyTorch qmul reference
 -> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
 ```
 
+## Immediate Ask
+
+The current request is one real hardware-labeled StructuredBench `qmul` run,
+using the delegated engineer packet:
+[docs/tenstorrent-engineer-copy-paste-packet.md](../docs/tenstorrent-engineer-copy-paste-packet.md).
+
+The returned artifacts should be:
+
+```text
+reports/tt_hardware_qmul_quickstart.json
+reports/tt_hardware_qmul_quickstart.md
+reports/tt_hardware_qmul_environment.txt
+```
+
+Use `execution_label=hardware` only for real Tenstorrent hardware execution.
+First samples should keep `stable_benchmark=false`.
+
 ## Long-Term Direction: QuantumIR for Classical AI Compute
 
-QuantumIR here means a classical/AI accelerator front end for selected quantum-mechanics workloads, not a quantum-hardware proposal. The immediate ask remains narrow: placement guidance for a minimal `[N, 4]` structured `qmul` kernel path.
+QuantumIR here means a classical/AI accelerator front end for selected quantum-mechanics workloads, not a quantum-hardware proposal. The immediate ask remains narrow: a real hardware validation run for the minimal `[N, 4]` structured `qmul` kernel path.
 
 Longer term, RQM Technologies is exploring QuantumIR as a domain-facing layer above these kernels. It would lower selected quantum-mechanics workloads on classical Tenstorrent/AI accelerators, including SU(2) rotations, unitary composition, Hamiltonian evolution, phase/coherence updates, and AI augmentation use cases, into the same structured quaternion, rotor, phase, and tensor operators used by StructuredBench.
 
@@ -88,9 +105,9 @@ RQM Technologies has a CPU/PyTorch reference benchmark for structured quaternion
 
 The repo now has a one-command readiness check (`python scripts/rqm_tt_quickstart.py --check`), an external-qmul protocol for candidate commands, and tt-emule evidence for the experimental TT-Metalium candidate. The tt-emule report is emulation-only and is not hardware performance.
 
-Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live? If possible, could Tenstorrent also enable or run one hardware-labeled StructuredBench qmul report?
+Could Tenstorrent enable capacity or run the delegated engineer packet to produce one hardware-labeled StructuredBench qmul report? The first hardware sample should keep execution_label=hardware and stable_benchmark=false.
 
-Secondary questions: if a TT-Metalium programming example is not the right starting point, is there a preferred TT-NN custom-op path? Would a TT-MLIR representation be useful later, after there is a concrete lower-stack qmul example?
+Secondary questions, only if there is actionable guidance: where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live, and is there a preferred TT-NN custom-op path after hardware evidence exists?
 
 The benchmark reports throughput, latency, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity, with scalar-reference spot checks for correctness.
 ```
@@ -100,7 +117,7 @@ The benchmark reports throughput, latency, numerical error, estimated FLOPs/sec,
 ```text
 Hi Tenstorrent community, RQM Technologies is building an independent structured-kernel benchmark for quaternion and rotor tensor operators represented inside ordinary floating-point tensors.
 
-For a first external structured-kernel contribution, should we target a TT-Metalium programming example or a TT-NN custom-op path?
+The immediate ask is delegated hardware validation for one qmul report, not a new hardware feature or a placement decision. If someone has access to a real Tenstorrent hardware environment, the copy/paste packet is in docs/tenstorrent-engineer-copy-paste-packet.md.
 
 Repo: https://github.com/RQM-Technologies-dev/tt-rqm-kernels
 ```

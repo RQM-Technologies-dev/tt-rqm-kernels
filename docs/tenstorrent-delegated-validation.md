@@ -8,6 +8,9 @@ This is the preferred no-billing-exposure path for RQM Technologies. RQM does
 not provision cloud resources, does not provide payment-backed access, and does
 not store credentials in this repo.
 
+The immediate ask is one real hardware-labeled StructuredBench `qmul` report,
+not placement guidance.
+
 If the validation uses the RQM Tenstorrent Console organization, the observed
 path is:
 
@@ -17,73 +20,42 @@ Compute -> Resources -> Request Capacity
 
 The request should be for capacity to run one small `[N, 4]` StructuredBench
 `qmul` hardware report. After access is granted, either a managed VSCode/browser
-instance or SSH baremetal shell can run the same commands below.
+instance or SSH baremetal shell can run the same commands.
 
 If Console capacity remains blocked because `Request Capacity` has no selectable
-Resource Type, use the more detailed engineer handoff:
+Resource Type, use the engineer handoff:
 [docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md).
 
 ## Copy/Paste Sequence
 
-```bash
-git clone https://github.com/RQM-Technologies-dev/tt-rqm-kernels.git
-cd tt-rqm-kernels
-python -m pip install -e ".[dev]"
-python -m pytest
+Use the one-block sequence in:
+
+```text
+docs/tenstorrent-engineer-copy-paste-packet.md
 ```
 
-Run CPU smoke:
+That sequence covers:
 
-```bash
-python -m tt_rqm_kernels.structuredbench \
-  --suite smoke \
-  --items 128 \
-  --iters 1 \
-  --warmup 0
-```
+- clone and editable install
+- readiness check
+- focused CPU/adapter checks
+- CPU StructuredBench smoke
+- `external-qmul` CPU reference validation
+- experimental TT-Metalium candidate build
+- hardware-labeled StructuredBench validation
+- returned JSON, Markdown, and environment notes
 
-Run external-qmul CPU reference:
-
-```bash
-python scripts/validate_qmul_candidate.py \
-  --command "python scripts/qmul_external_reference.py" \
-  --items 128 \
-  --iters 1 \
-  --warmup 0
-```
-
-Run the real hardware command:
-
-```bash
-python scripts/rqm_tt_quickstart.py \
-  --mode hardware \
-  --command "<real Tenstorrent hardware qmul command>" \
-  --items 128 \
-  --iters 1 \
-  --warmup 0 \
-  --json-output reports/tt_hardware_qmul_quickstart.json \
-  --markdown-output reports/tt_hardware_qmul_quickstart.md
-```
-
-The hardware command must implement the contract in
-[docs/tenstorrent-hardware-command-contract.md](tenstorrent-hardware-command-contract.md).
-
-## Return Artifacts
+## Required Outputs
 
 Please return:
 
 - `reports/tt_hardware_qmul_quickstart.json`
 - `reports/tt_hardware_qmul_quickstart.md`
-- environment notes
+- `reports/tt_hardware_qmul_environment.txt`
+- any build/runtime log if the sequence fails
 
-Environment notes should include:
-
-- hardware kind
-- host or environment label
-- TT-Metalium / SDK version
-- `tt-metal` commit if applicable
-- exact hardware command
-- any relevant runtime notes
+The hardware command must implement:
+[docs/tenstorrent-hardware-command-contract.md](tenstorrent-hardware-command-contract.md).
 
 ## Label Requirements
 
@@ -91,15 +63,12 @@ Real hardware results must use:
 
 ```text
 execution_label=hardware
-```
-
-Do not return TT-Lang simulator, CPU, or tt-emule output as hardware.
-
-First hardware samples should normally keep:
-
-```text
 stable_benchmark=false
 ```
 
-Only mark a result stable if the hardware, software stack, clocking, input
-sizes, command, and methodology have been separately validated.
+Use `execution_label=hardware` only when the candidate actually ran on real
+Tenstorrent hardware. Do not return TT-Lang simulator, CPU, Docker, or tt-emule
+output as hardware.
+
+Only mark a future result stable if the hardware, software stack, clocking,
+input sizes, command, and methodology have been separately validated.

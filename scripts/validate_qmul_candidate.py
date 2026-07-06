@@ -14,6 +14,13 @@ from tt_rqm_kernels.structuredbench import (
     render_table,
     run_suite,
 )
+from tt_rqm_kernels.backends.tenstorrent.report import (
+    validate_external_qmul_label,
+    validate_stable_benchmark,
+)
+
+EXPECTED_HARDWARE_JSON_OUTPUT = Path("reports/tt_hardware_qmul_quickstart.json")
+EXPECTED_HARDWARE_MARKDOWN_OUTPUT = Path("reports/tt_hardware_qmul_quickstart.md")
 
 
 def main() -> int:
@@ -57,6 +64,14 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
+        _validate_report_args(
+            command=args.command,
+            execution_label=args.execution_label,
+            stable_benchmark=args.stable_benchmark,
+            methodology_note=args.methodology_note,
+            json_output=args.json_output,
+            markdown_output=args.markdown_output,
+        )
         report = run_suite(
             "qmul",
             backend="external-qmul",
@@ -84,6 +99,53 @@ def main() -> int:
     else:
         print(render_table(report))
     return 0
+
+
+def _validate_report_args(
+    *,
+    command: str,
+    execution_label: str | None,
+    stable_benchmark: bool,
+    methodology_note: str | None,
+    json_output: Path | None,
+    markdown_output: Path | None,
+) -> None:
+    if execution_label is None:
+        return
+    label = validate_external_qmul_label(execution_label, command=command)
+    validate_stable_benchmark(label, stable_benchmark=stable_benchmark)
+    if label != "hardware":
+        return
+    if not methodology_note or not methodology_note.strip():
+        raise ValueError(
+            "hardware-labeled external-qmul reports require --methodology-note "
+            "describing the real Tenstorrent hardware environment; first "
+            "samples should keep stable_benchmark=false."
+        )
+    _require_hardware_output_path(
+        json_output,
+        expected=EXPECTED_HARDWARE_JSON_OUTPUT,
+        flag="--json-output",
+    )
+    _require_hardware_output_path(
+        markdown_output,
+        expected=EXPECTED_HARDWARE_MARKDOWN_OUTPUT,
+        flag="--markdown-output",
+    )
+
+
+def _require_hardware_output_path(
+    path: Path | None,
+    *,
+    expected: Path,
+    flag: str,
+) -> None:
+    if path is None:
+        raise ValueError(f"hardware-labeled reports require {flag} {expected}")
+    if tuple(path.parts[-2:]) != tuple(expected.parts):
+        raise ValueError(
+            f"hardware-labeled reports require {flag} ending in {expected}"
+        )
 
 
 def _positive_int(value: str) -> int:

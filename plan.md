@@ -47,7 +47,8 @@ The repo is ready for a first handshake:
   https://github.com/tenstorrent/tt-awesome/pull/106
 - local tracker issue #1 closed after the generated entry PR merged
 - local tracker issue #2 closed after hardening the TT-Lang simulator report
-- local tracker issue #3 started with an external TT-Metalium candidate scaffold
+- local tracker issue #3 is closed/background after the external TT-Metalium
+  `qmul` candidate rebuild path and tt-emule validation report were restored
 - local tracker issue #6 closed after deciding not to wait on upstream
   placement guidance as an active planning lane
 - local tracker issue #7 started with execution runbook/report-template prework
@@ -122,8 +123,8 @@ The repo is ready for a first handshake:
   request is pending Tenstorrent action and is shared with John Van Geem.
 
 The completed setup work should now be treated as background. The active work is
-self-directed hardware validation and keeping the external lower-stack `qmul`
-candidate reproducible.
+self-directed hardware validation, delegated hardware handoff quality, and
+keeping the external lower-stack `qmul` candidate reproducible.
 
 ## Recommended Next Step
 
@@ -273,9 +274,9 @@ Why this is next:
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
 | 1 | Cloud/hardware validation | Turn the benchmark into real hardware evidence | Tenstorrent enables a Console Resource Type or runs delegated validation, producing the first hardware-labeled report |
-| 2 | External TT-Metalium `qmul` candidate | Keep the lower-stack candidate self-contained and reproducible | Experimental `[N, 4]` `qmul` candidate rebuilds and validates through `external-qmul` with `execution_label=emulation` |
+| 2 | External TT-Metalium `qmul` candidate | Keep the completed lower-stack candidate self-contained and reproducible in the background | Experimental `[N, 4]` `qmul` candidate rebuilds and validates through `external-qmul` with `execution_label=emulation` |
 | 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
-| 4 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
+| 4 | TT-NN wrapper | Deferred until lower-stack hardware evidence exists | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after real hardware proof |
 | 5 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
 
 ## Strategic Top Layer: QuantumIR
@@ -307,11 +308,12 @@ quantum computation is efficiently classically simulable.
 
 Active repo issues should now focus on the hardware-facing path:
 
-1. `Run StructuredBench on Tenstorrent Cloud` (#7)
-2. `Implement minimal TT-Metalium qmul example using the external-qmul harness` (#3)
-3. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
-4. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
-   repo's implementation track)
+1. `Run StructuredBench on Tenstorrent Cloud` (#7, active)
+2. `Implement minimal TT-Metalium qmul example using the external-qmul harness`
+   (#3, completed/background; do not reopen for hardware follow-through)
+3. `Define TT-NN wrapper path after lower-stack hardware proof` (#4, deferred)
+4. `Set up external tt-metal LWT/ILWT worktree path` (#14, external-only;
+   no LWT/ILWT implementation goes into this repo)
 
 Current blocker for #7:
 
@@ -327,10 +329,11 @@ Current blocker for #7:
   hardware packet and return reports. Do not treat the acknowledgement as
   hardware access.
 
-If hardware access remains blocked, the next self-contained repo task is to
-refresh the local emulation path: rebuild the external TT-Metalium candidate,
-make `python scripts/rqm_tt_quickstart.py --check` report emule readiness, and
-regenerate the emulation-labeled `reports/tt_emule_qmul_candidate.*` artifacts.
+If hardware access remains blocked, the repo should stay focused on #7:
+maintain the delegated hardware packet, keep `python scripts/rqm_tt_quickstart.py
+--check` actionable, and preserve emulation reproducibility. Do not start TT-NN
+wrappers, QuantumIR/HPC expansion, or in-repo LWT/ILWT implementation while
+`CUST-812` is pending.
 
 Each issue should include:
 
@@ -396,10 +399,11 @@ Goal:
 
 Tasks:
 
-- wait until TT-Lang or TT-Metalium proof exists
+- wait until lower-stack hardware evidence exists
 - follow Tenstorrent's custom-op conventions
 - define a golden/reference function
-- expose a Python-facing path only after lower-stack proof is reproducible
+- expose a Python-facing path only after lower-stack hardware proof is
+  reproducible
 
 Exit criteria:
 

@@ -306,6 +306,17 @@ def inspect_hardware_command(
             ),
         )
 
+    if "docker" in lowered or "podman" in lowered:
+        return HardwareCommandPreflight(
+            command=command,
+            available=False,
+            reason=(
+                "hardware command appears to use Docker/container execution; "
+                "reserve --mode hardware for a real Tenstorrent hardware "
+                "candidate command"
+            ),
+        )
+
     executable = tokens[0]
     resolved = _resolve_executable(executable, env or os.environ)
     if resolved is None:

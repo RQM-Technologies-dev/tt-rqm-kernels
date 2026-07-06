@@ -4,10 +4,17 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import torch
 
+from scripts.rqm_tt_quickstart import _print_next_actions
+from scripts.validate_qmul_candidate import (
+    EXPECTED_HARDWARE_JSON_OUTPUT,
+    EXPECTED_HARDWARE_MARKDOWN_OUTPUT,
+    _validate_report_args,
+)
 from tt_rqm_kernels.backends.tenstorrent.availability import (
     DEFAULT_HARDWARE_COMMAND_ENV,
     check_readiness,
@@ -20,7 +27,9 @@ from tt_rqm_kernels.backends.tenstorrent.qmul_external import (
 )
 from tt_rqm_kernels.backends.tenstorrent.report import (
     ReportLabelError,
+    methodology_note_for_label,
     validate_external_qmul_label,
+    validate_stable_benchmark,
 )
 
 
@@ -77,14 +86,93 @@ def test_hardware_command_preflight_rejects_emule_command() -> None:
     assert "tt-emule/emulation" in preflight.reason
 
 
+def test_hardware_command_preflight_rejects_container_command() -> None:
+    preflight = inspect_hardware_command("docker run --rm ubuntu true")
+    wrapped = inspect_hardware_command("bash -lc 'docker run --rm ubuntu true'")
+
+    assert preflight.available is False
+    assert "Docker/container execution" in preflight.reason
+    assert wrapped.available is False
+    assert "Docker/container execution" in wrapped.reason
+
+
 def test_report_label_validation_keeps_emulation_out_of_hardware() -> None:
-    assert validate_external_qmul_label("emulation", command="bash run_candidate_docker.sh") == "emulation"
-    assert validate_external_qmul_label("hardware", command="/opt/tt/qmul_hw") == "hardware"
+    assert (
+        validate_external_qmul_label(
+            "emulation",
+            command="bash run_candidate_docker.sh",
+        )
+        == "emulation"
+    )
+    assert (
+        validate_external_qmul_label("hardware", command="/opt/tt/qmul_hw")
+        == "hardware"
+    )
 
     with pytest.raises(ReportLabelError, match="tt-emule"):
-        validate_external_qmul_label("hardware", command="bash experimental/tt_metalium_qmul/run_candidate_docker.sh")
+        validate_external_qmul_label(
+            "hardware",
+            command="bash experimental/tt_metalium_qmul/run_candidate_docker.sh",
+        )
+    with pytest.raises(ReportLabelError, match="Docker/container"):
+        validate_external_qmul_label("hardware", command="docker run image qmul")
     with pytest.raises(ReportLabelError, match="tt-lang-sim"):
         validate_external_qmul_label("simulator")
+
+
+def test_report_label_validation_rejects_stable_non_hardware() -> None:
+    with pytest.raises(ReportLabelError, match="stable benchmark"):
+        validate_stable_benchmark("emulation", stable_benchmark=True)
+
+    note = methodology_note_for_label("hardware", stable_benchmark=False)
+    assert "first samples" in note
+    assert "stable benchmark" in note
+
+
+def test_hardware_labeled_report_path_requires_safe_handoff_metadata(
+    tmp_path: Path,
+) -> None:
+    json_output = tmp_path / EXPECTED_HARDWARE_JSON_OUTPUT
+    markdown_output = tmp_path / EXPECTED_HARDWARE_MARKDOWN_OUTPUT
+
+    with pytest.raises(ReportLabelError, match="tt-emule"):
+        _validate_report_args(
+            command="bash experimental/tt_metalium_qmul/run_candidate_docker.sh",
+            execution_label="hardware",
+            stable_benchmark=False,
+            methodology_note="real hardware sample",
+            json_output=json_output,
+            markdown_output=markdown_output,
+        )
+
+    with pytest.raises(ValueError, match="methodology-note"):
+        _validate_report_args(
+            command="/opt/tt/qmul_hw",
+            execution_label="hardware",
+            stable_benchmark=False,
+            methodology_note=None,
+            json_output=json_output,
+            markdown_output=markdown_output,
+        )
+
+    with pytest.raises(ValueError, match="tt_hardware_qmul_quickstart.json"):
+        _validate_report_args(
+            command="/opt/tt/qmul_hw",
+            execution_label="hardware",
+            stable_benchmark=False,
+            methodology_note="initial real hardware validation sample",
+            json_output=tmp_path / "reports" / "wrong.json",
+            markdown_output=markdown_output,
+        )
+
+    _validate_report_args(
+        command="/opt/tt/qmul_hw",
+        execution_label="hardware",
+        stable_benchmark=False,
+        methodology_note="initial real hardware validation sample",
+        json_output=json_output,
+        markdown_output=markdown_output,
+    )
 
 
 def test_qmul_external_adapter_requires_command() -> None:
@@ -126,7 +214,31 @@ def test_quickstart_check_path_is_ci_safe() -> None:
 
     assert "RQM Tenstorrent qmul quickstart readiness" in completed.stdout
     assert "hardware mode ready:" in completed.stdout
+    assert "Next actions" in completed.stdout
+    assert "Hardware validation:" in completed.stdout
+    assert DEFAULT_HARDWARE_COMMAND_ENV in completed.stdout
+    assert "docs/tenstorrent-engineer-copy-paste-packet.md" in completed.stdout
+    assert "Do not use tt-emule" in completed.stdout
+    assert "--mode hardware" in completed.stdout
     assert "Traceback" not in completed.stderr
+
+
+def test_quickstart_next_actions_include_emule_command_when_ready(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _print_next_actions(
+        SimpleNamespace(
+            emule_ready=True,
+            hardware_ready=False,
+        )
+    )
+
+    output = capsys.readouterr().out
+    assert "Emulation refresh:" in output
+    assert "python scripts/rqm_tt_quickstart.py" in output
+    assert "--mode emule" in output
+    assert "reports/tt_emule_qmul_candidate.json" in output
+    assert "TT_RQM_HARDWARE_QMUL_COMMAND" in output
 
 
 def test_quickstart_hardware_mode_without_command_fails_cleanly() -> None:

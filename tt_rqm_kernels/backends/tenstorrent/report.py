@@ -38,6 +38,11 @@ def validate_external_qmul_label(
                 "hardware reports require a real Tenstorrent hardware command; "
                 "tt-emule or Docker emulation commands must use execution_label=emulation"
             )
+        if "docker" in lowered or "podman" in lowered:
+            raise ReportLabelError(
+                "hardware reports require a real Tenstorrent hardware command; "
+                "Docker/container commands must not be labeled as hardware"
+            )
     return execution_label  # type: ignore[return-value]
 
 
