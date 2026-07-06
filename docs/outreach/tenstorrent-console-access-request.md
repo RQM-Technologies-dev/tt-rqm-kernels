@@ -1,5 +1,13 @@
 # Tenstorrent Console Access Request
 
+Status update:
+
+- Request `CUST-812` was acknowledged by Tenstorrent support for RQM
+  Technologies TT-Cloud access for StructuredBench `qmul` hardware validation.
+- The acknowledgement confirms receipt only. The repo should still wait for an
+  enabled Resource Type, explicit no-cost access, or delegated hardware-run
+  instructions before attempting hardware execution.
+
 Hi Tenstorrent team,
 
 RQM Technologies maintains `tt-rqm-kernels`, an independent open-source

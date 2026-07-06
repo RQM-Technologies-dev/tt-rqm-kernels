@@ -40,7 +40,7 @@ scalar reference checks: implemented
 TT-Lang simulator: implemented, simulator-only
 tt-emule TT-Metalium candidate: implemented, emulation-only
 Tenstorrent hardware report: not implemented yet
-Current ask: placement guidance plus one hardware validation run
+Current ask: one hardware validation run
 ```
 
 ## Current Status
@@ -51,7 +51,8 @@ Current ask: placement guidance plus one hardware validation run
 - experimental TT-Metalium `qmul` candidate has an emulation-labeled tt-emule
   sample report
 - Tenstorrent hardware backend is not implemented yet
-- first requested maintainer guidance is placement for a minimal TT-Metalium `qmul` example
+- active validation path uses the external `qmul` candidate without waiting for
+  upstream placement guidance
 
 ## What This Lets Tenstorrent Demonstrate
 

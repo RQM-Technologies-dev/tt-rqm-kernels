@@ -139,7 +139,7 @@ Potential path:
 
 - add a Python-facing wrapper with a clear golden/reference comparison
 - keep CPU/PyTorch as the correctness source
-- avoid adding a TT-NN wrapper before placement guidance is clear
+- avoid adding a TT-NN wrapper before lower-stack evidence is reproducible
 
 ### TT-MLIR / TT-Forge
 

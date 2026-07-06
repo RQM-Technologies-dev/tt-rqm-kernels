@@ -21,6 +21,9 @@ The logged-in Console flow observed for RQM Technologies shows:
 - Baremetal blocked until access is granted.
 - `Request Capacity` opens, but the `Resource Type` dropdown has no selectable
   options, so `Submit Request` is disabled.
+- Tenstorrent support acknowledged request `CUST-812` for TT-Cloud access for
+  StructuredBench `qmul` hardware validation. The acknowledgement is not
+  hardware access; wait for enabled capacity or delegated run instructions.
 
 The correct capacity request path for `tt-rqm-kernels` is:
 
@@ -35,8 +38,8 @@ surfaces:
 - managed VSCode/browser instance copy/paste run
 - SSH baremetal run
 
-If the Resource Type blocker remains, the preferred fallback is the
-Tenstorrent-maintainer-run path using
+If the Resource Type blocker remains after `CUST-812`, the preferred fallback is
+the Tenstorrent-maintainer-run path using
 [docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md).
 
 ## Route A: Local / Free Validation
@@ -104,7 +107,7 @@ Acceptable contact routes:
 
 - Tenstorrent Console, after confirming no payment-backed provisioning is
   required
-- Tenstorrent support
+- Tenstorrent support request `CUST-812`
 - a focused GitHub issue or Discussion reply
 - Tenstorrent community Discord
 

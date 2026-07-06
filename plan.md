@@ -48,6 +48,8 @@ The repo is ready for a first handshake:
 - local tracker issue #1 closed after the generated entry PR merged
 - local tracker issue #2 closed after hardening the TT-Lang simulator report
 - local tracker issue #3 started with an external TT-Metalium candidate scaffold
+- local tracker issue #6 closed after deciding not to wait on upstream
+  placement guidance as an active planning lane
 - local tracker issue #7 started with execution runbook/report-template prework
 - local tracker issue #8 now has its core technical evidence: a real
   experimental TT-Metalium `qmul` candidate built against `tt-metal/build_emule`
@@ -109,16 +111,19 @@ The repo is ready for a first handshake:
 - QuantumIR is now tracked as a strategic documentation layer above the
   existing kernel foundation. It is a future lowering direction for selected
   quantum-mechanics workloads into structured quaternion/SU(2) kernels, not an
-  active replacement for the qmul, tt-emule, Cloud/hardware, or maintainer
-  placement path.
+  active replacement for the qmul, tt-emule, Cloud/hardware path.
 - Tenstorrent Console is accessible for the `RQM-Technologies-dev` organization:
   Billing/Usage, Compute, and Resources are visible. However, `Compute ->
   Resources -> Request Capacity` is currently blocked because the `Resource
   Type` dropdown has no selectable options, so `Submit Request` remains
   disabled.
+- Tenstorrent support has acknowledged `CUST-812`, the RQM Technologies
+  TT-Cloud access request for StructuredBench `qmul` hardware validation. The
+  request is pending Tenstorrent action and is shared with John Van Geem.
 
 The completed setup work should now be treated as background. The active work is
-maintainer placement guidance and the first real lower-stack implementation path.
+self-directed hardware validation and keeping the external lower-stack `qmul`
+candidate reproducible.
 
 ## Recommended Next Step
 
@@ -128,12 +133,16 @@ TT-Metalium `qmul` candidate now validates through `external-qmul` under
 `tt-emule`.
 
 The tt-emule evidence has been committed, pushed, and recorded in tracker issue
-#8. The active implementation pressure now remains issue #7, but the immediate
-blocker is Console allocation: ask Tenstorrent to enable a Resource Type for the
-`RQM-Technologies-dev` organization or run delegated validation using
-`docs/tenstorrent-engineer-copy-paste-packet.md`. Placement issue #6 remains
-open in parallel, and issue #3 remains the external staging path for the minimal
-TT-Metalium `qmul` candidate until maintainers recommend another placement.
+#8. The active implementation pressure now remains issue #7. Tenstorrent
+support has acknowledged request `CUST-812`; the immediate blocker is now the
+pending response that enables a Resource Type for the `RQM-Technologies-dev`
+organization or offers delegated validation using
+`docs/tenstorrent-engineer-copy-paste-packet.md`.
+
+Do not wait on upstream placement guidance. The default path is to keep the
+minimal TT-Metalium `qmul` candidate externally staged in this repo, keep its
+tt-emule report reproducible, and use the same `external-qmul` protocol for a
+real hardware run when access is available.
 
 Known-good preflight commands:
 
@@ -252,25 +261,22 @@ Why this is next:
   TT-Metalium exports, and the candidate has produced an emulation-labeled
   StructuredBench report through `external-qmul`
 - the runbook now makes #7 actionable once Tenstorrent Cloud, a local
-  TT-Metalium SDK checkout, or maintainer-provided environment guidance is
-  available
+  TT-Metalium SDK checkout, or delegated hardware environment is available
 - the repo status command and report metadata now make the current gap explicit:
   there is still no real Tenstorrent hardware report
-- the Console account now confirms the next concrete blocker: capacity cannot be
-  requested until Tenstorrent enables at least one Resource Type for the org, or
-  a Tenstorrent engineer runs the candidate in a delegated hardware environment
+- the Console account now confirms the next concrete blocker: Tenstorrent has
+  acknowledged `CUST-812`, but hardware validation still waits for an enabled
+  Resource Type or a delegated hardware run
 
 ## Priority Lanes
 
 | Priority | Lane | Goal | Success condition |
 | ---: | --- | --- | --- |
-| 1 | TT-Metalium `qmul` placement | Choose the right lower-stack contribution path | Maintainers indicate whether the first candidate should live externally, as a TT-Metalium example, or another preferred route |
-| 2 | tt-emule environment and candidate validation | Prove the candidate can build/run without hardware first | Complete: `build_emule` installs a TT-Metalium package and the candidate emits an emulation-labeled report |
-| 3 | TT-Metalium `qmul` example | Prove RQM can operate at the lower stack | Experimental `[N, 4]` `qmul` candidate compared against CPU/PyTorch and scalar references through `external-qmul`; upstream placement still open |
-| 4 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
-| 5 | Cloud/hardware validation | Turn the benchmark into performance evidence | Tenstorrent enables a Console Resource Type or runs delegated validation, producing the first real hardware report |
-| 6 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
-| 7 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
+| 1 | Cloud/hardware validation | Turn the benchmark into real hardware evidence | Tenstorrent enables a Console Resource Type or runs delegated validation, producing the first hardware-labeled report |
+| 2 | External TT-Metalium `qmul` candidate | Keep the lower-stack candidate self-contained and reproducible | Experimental `[N, 4]` `qmul` candidate rebuilds and validates through `external-qmul` with `execution_label=emulation` |
+| 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
+| 4 | TT-NN wrapper | Make kernels usable by ordinary Tenstorrent developers | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after lower-stack proof |
+| 5 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
 
 ## Strategic Top Layer: QuantumIR
 
@@ -297,15 +303,14 @@ quantum computation is efficiently classically simulable.
 
 ## Next Repo Work
 
-### 1. Track TT-Metalium Placement
+### 1. Hardware Validation And External Candidate Reproducibility
 
 Active repo issues should now focus on the hardware-facing path:
 
-1. `Track TT-Metalium qmul placement guidance` (#6)
+1. `Run StructuredBench on Tenstorrent Cloud` (#7)
 2. `Implement minimal TT-Metalium qmul example using the external-qmul harness` (#3)
-3. `Run StructuredBench on Tenstorrent Cloud` (#7)
-4. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
-5. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
+3. `Define TT-NN wrapper path after lower-stack qmul proof` (#4)
+4. `Set up external tt-metal LWT/ILWT worktree path` (#14, separate from this
    repo's implementation track)
 
 Current blocker for #7:
@@ -315,9 +320,17 @@ Current blocker for #7:
 - Compute/Resources is visible.
 - `Request Capacity` opens, but `Resource Type` has no options and `Submit
   Request` is disabled.
-- Next action: ask Tenstorrent to enable a Resource Type for
-  `RQM-Technologies-dev`, or ask a Tenstorrent engineer to run the delegated
-  hardware packet and return reports.
+- Tenstorrent support acknowledged `CUST-812` for TT-Cloud access for
+  StructuredBench `qmul` hardware validation.
+- Next action: wait for Tenstorrent to enable a Resource Type for
+  `RQM-Technologies-dev`, or for a Tenstorrent engineer to run the delegated
+  hardware packet and return reports. Do not treat the acknowledgement as
+  hardware access.
+
+If hardware access remains blocked, the next self-contained repo task is to
+refresh the local emulation path: rebuild the external TT-Metalium candidate,
+make `python scripts/rqm_tt_quickstart.py --check` report emule readiness, and
+regenerate the emulation-labeled `reports/tt_emule_qmul_candidate.*` artifacts.
 
 Each issue should include:
 
@@ -352,12 +365,12 @@ Goal:
 
 Tasks:
 
-- follow maintainer guidance from the GitHub Discussion when it arrives
+- treat upstream placement guidance as optional if it ever arrives
 - use `docs/tt-metalium-qmul-design.md` as the implementation contract
 - use the `external-qmul` harness as the validation bridge for a standalone
   candidate executable
-- use `experimental/tt_metalium_qmul/` as the external staging location until a
-  maintainer requests another placement
+- use `experimental/tt_metalium_qmul/` as the external staging location by
+  default
 - completed: use `docs/tt-emule-qmul-validation-plan.md`,
   `experimental/tt_emule_qmul/check_environment.py`, and the Docker wrapper
   before claiming emulation readiness
@@ -386,7 +399,7 @@ Tasks:
 - wait until TT-Lang or TT-Metalium proof exists
 - follow Tenstorrent's custom-op conventions
 - define a golden/reference function
-- expose a Python-facing path only if maintainers agree with placement
+- expose a Python-facing path only after lower-stack proof is reproducible
 
 Exit criteria:
 
@@ -439,18 +452,21 @@ Exit criteria:
 Current outreach state:
 
 - Discussion #48871 is open in `tenstorrent/tt-metal` with no maintainer
-  comments as of July 3, 2026:
+  comments as of July 6, 2026:
   https://github.com/tenstorrent/tt-metal/discussions/48871
 - Narrow placement issue #48944 is open in `tenstorrent/tt-metal`:
   https://github.com/tenstorrent/tt-metal/issues/48944
+- Local tracker issue #6 is closed because waiting for that answer is no
+  longer part of the active plan.
 
 Next outreach actions:
 
-1. Continue the Discussion or issue if Tenstorrent maintainers reply.
-2. Post or refresh a short Discord note pointing to the narrow placement issue
-   only if it helps route maintainers to the question.
-3. Contact Tenstorrent OSPO only after the repo has a technical packet plus
-   either a TT-Lang simulation or a clear maintainer response.
+1. Do not spend active roadmap time waiting for placement replies.
+2. Use outreach only for the concrete hardware run: follow up on `CUST-812`,
+   Console capacity, delegated validation, or an authorized no-cost hardware
+   environment.
+3. Continue the Discussion or issue only if Tenstorrent maintainers reply with
+   actionable placement guidance.
 
 ## Public Messaging Rules
 

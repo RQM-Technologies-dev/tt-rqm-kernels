@@ -38,8 +38,8 @@ The repo already has the right handshake:
   FLOPs/sec, effective GB/sec, and arithmetic intensity
 - TT-Lang simulator `qmul`, including simulator-only trace/stat support
 - external `qmul` harness for future candidate executables
-- experimental TT-Metalium scalar RISC-V `qmul` candidate staged externally
-  until maintainers give placement guidance
+- experimental TT-Metalium scalar RISC-V `qmul` candidate staged externally by
+  default
 - tt-emule qmul validation plan, local preflight scaffold, Docker/Linux
   source-tree preflight success, and emulation-labeled StructuredBench report
 - tt-emule tracker issue #8:
@@ -80,17 +80,19 @@ physical-AI pose streams
 No active opportunity-plan prose items remain.
 
 The active work is implementation pressure beyond emulation: keep the
-experimental TT-Metalium `qmul` candidate externally staged, track maintainer
-placement guidance, and run the same `external-qmul` report path in a real
+experimental TT-Metalium `qmul` candidate externally staged, keep its tt-emule
+validation reproducible, and run the same `external-qmul` report path in a real
 Tenstorrent Cloud or hardware environment.
 
 The TT-MLIR fused lowering question remains deferred by design. The repo now has
-tt-emule evidence, but the compiler question should still wait for maintainer
-placement guidance, a hardware run, or a concrete scalar-expanded comparison.
+tt-emule evidence, but the compiler question should still wait for a hardware
+run, a concrete scalar-expanded comparison, or actionable maintainer guidance if
+it happens to arrive.
 
 ## Non-Goals
 
-- Do not broaden the public Tenstorrent ask before placement issue feedback.
+- Do not broaden the public Tenstorrent ask while hardware validation is still
+  missing.
 - Do not ask for native quaternion hardware.
 - Do not ask for new chip features.
 - Do not imply Tenstorrent endorsement.

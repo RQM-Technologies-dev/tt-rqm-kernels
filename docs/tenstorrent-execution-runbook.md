@@ -320,4 +320,5 @@ Before publishing a hardware report:
 - Do not claim hardware performance from CPU, simulator, or emulation output.
 - Do not compare simulator output as if it were hardware.
 - Do not frame this as defense-first.
-- Do not open an upstream `tt-metal` PR until placement guidance is clear.
+- Do not open an upstream `tt-metal` PR unless actionable placement guidance
+  arrives.

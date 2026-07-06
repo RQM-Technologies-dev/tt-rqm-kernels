@@ -15,11 +15,12 @@ For Tenstorrent engineers:
 1. What this is: structured `[N, 4]` float tensor kernels, starting with `qmul`.
 2. Why it matters: compact benchmark between scalar elementwise ops and matmul.
 3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, and tt-emule candidate.
-4. Current ask: enable one hardware run or advise placement.
+4. Current ask: enable or run one hardware-labeled `qmul` report.
 5. Best next link: [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md).
 
 The single next action is to help produce one hardware-labeled StructuredBench
-`qmul` report, or tell us where the minimal TT-Metalium example should live.
+`qmul` report. Placement guidance is welcome if it arrives, but the active plan
+no longer waits on it.
 
 ## For Tenstorrent Reviewers
 
@@ -33,8 +34,7 @@ The single next action is to help produce one hardware-labeled StructuredBench
 Current blocker: the experimental TT-Metalium scalar RISC-V `qmul` candidate
 has now built and produced an emulation-labeled StructuredBench report through
 `tt-emule`. It is not a hardware result. The next implementation step is a real
-Tenstorrent Cloud or hardware run, plus maintainer guidance on upstream
-placement for the minimal `qmul` example.
+Tenstorrent Cloud or hardware run through the existing external candidate path.
 
 ## Functional Tenstorrent Path
 
@@ -69,7 +69,9 @@ are treated as blocked until access is granted. The hardware request path is
 `Compute -> Resources -> Request Capacity` for one small `[N, 4]`
 StructuredBench `qmul` report, then either a VSCode/browser instance run or SSH
 baremetal run. If the Console form has no selectable Resource Type, use the
-Tenstorrent engineer packet for delegated validation.
+Tenstorrent engineer packet for delegated validation. Tenstorrent support has
+acknowledged request `CUST-812` for TT-Cloud access for this StructuredBench
+`qmul` hardware validation.
 
 ## Core Idea
 
@@ -329,7 +331,7 @@ Proposed backend path:
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
   evidence is clearer
 - future `phase_update` backend plan after the `qmul` candidate path is stable
-- future TT-NN wrapper once placement guidance is clear
+- future TT-NN wrapper once lower-stack evidence is reproducible
 - future TT-MLIR lowering discussion after an explicit lower-stack kernel exists
 
 ## Install for Development

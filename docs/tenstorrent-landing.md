@@ -71,11 +71,10 @@ Observed Console state for RQM Technologies:
 
 ## How A Tenstorrent Engineer Can Help
 
-The narrow ask is one of:
-
-1. advise where a minimal `[N, 4]` TT-Metalium `qmul` example should live, or
-2. run the existing candidate in a real Tenstorrent environment and return one
-   hardware-labeled StructuredBench report.
+The narrow ask is to run the existing candidate in a real Tenstorrent
+environment and return one hardware-labeled StructuredBench report. Placement
+guidance is welcome if offered, but the active validation plan does not depend
+on it.
 
 The copy/paste handoff is:
 

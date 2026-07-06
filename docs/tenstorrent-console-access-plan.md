@@ -41,6 +41,10 @@ The logged-in Console flow observed for the RQM organization is:
 - Baremetal is blocked until access is granted.
 - `Request Capacity` opens, but the `Resource Type` dropdown currently has no
   selectable options, so `Submit Request` is disabled.
+- Tenstorrent support acknowledged `CUST-812` for TT-Cloud access for
+  StructuredBench `qmul` hardware validation. This records that the request was
+  received; it does not yet indicate that capacity or hardware access is
+  available.
 
 For real `qmul` execution, the path is:
 
@@ -56,7 +60,8 @@ After capacity is granted, use one of two execution surfaces:
 The Models/API path is useful for hosted inference, but it is not the target for
 arbitrary StructuredBench `qmul` execution.
 
-If the Resource Type blocker remains, use the delegated engineer handoff in
+If the Resource Type blocker remains after `CUST-812`, use the delegated
+engineer handoff in
 [docs/tenstorrent-engineer-copy-paste-packet.md](tenstorrent-engineer-copy-paste-packet.md).
 
 ## No-Surprise-Billing Rules

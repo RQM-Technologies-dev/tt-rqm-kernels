@@ -13,7 +13,7 @@ import sys
 from check_environment import main as check_environment_main
 
 PACKAGE_DIR = Path(__file__).resolve().parent
-DEFAULT_BUILD_DIR = PACKAGE_DIR / "build"
+DEFAULT_BUILD_DIR = PACKAGE_DIR / "build_emule_candidate"
 DEFAULT_BINARY_NAME = "tt_rqm_metalium_qmul_candidate"
 
 

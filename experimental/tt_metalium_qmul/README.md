@@ -7,11 +7,11 @@ Current placement status:
 
 - The Tenstorrent placement Discussion is open:
   https://github.com/tenstorrent/tt-metal/discussions/48871
-- No maintainer placement answer has been received yet.
-- Until placement guidance is received, the candidate should live externally in
-  `tt-rqm-kernels` and run through the `external-qmul` StructuredBench harness.
-- No upstream `tt-metal` PR should be opened from this directory without
-  maintainer guidance.
+- The active plan no longer waits on placement guidance.
+- The candidate lives externally in `tt-rqm-kernels` by default and runs through
+  the `external-qmul` StructuredBench harness.
+- No upstream `tt-metal` PR should be opened from this directory unless
+  actionable placement guidance arrives.
 
 This package now includes an experimental TT-Metalium source candidate. It is a
 minimal scalar RISC-V/data-movement implementation intended to prove the
@@ -190,6 +190,16 @@ python experimental/tt_metalium_qmul/build_candidate.py \
   --cmake-prefix-path /path/to/tt-metal/build_emule
 ```
 
+By default, the candidate binary is built under:
+
+```text
+experimental/tt_metalium_qmul/build_emule_candidate/tt_rqm_metalium_qmul_candidate
+```
+
+That path is intentionally aligned with `python scripts/rqm_tt_quickstart.py
+--check` and with `run_candidate_docker.sh`. Use
+`TT_RQM_METALIUM_QMUL_BINARY` only for a non-default local binary.
+
 For `tt-emule`, first build/install `tt-metal` with `TT_METAL_USE_EMULE=ON`
 following the `tt-emule` build guide, then pass the resulting `build_emule`
 prefix.
@@ -212,9 +222,9 @@ Under tt-emule, raw L1 scratch pointer casts must use the direct
 translate firmware L1 offsets to host pointers. The current kernel follows that
 pattern for its scratch buffers.
 
-Until maintainers answer the placement question, keep real candidate work in
-this external package and validate it through `external-qmul`. Do not open an
-upstream `tt-metal` PR from this directory without maintainer guidance.
+Keep real candidate work in this external package and validate it through
+`external-qmul`. Do not open an upstream `tt-metal` PR from this directory
+unless actionable placement guidance arrives.
 
 The first hardware report must clearly state whether the result came from CPU,
 TT-Lang simulation, emulation, or real Tenstorrent hardware.

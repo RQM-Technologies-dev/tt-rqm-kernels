@@ -36,9 +36,9 @@ operation.
 The repo now has a tt-emule run of the experimental TT-Metalium `qmul`
 candidate, labeled as emulation and not hardware performance. That satisfies
 one evidence prerequisite for future compiler discussion, but it is still not a
-reason to open a TT-MLIR proposal by itself. The next useful inputs are
-maintainer placement guidance, a real hardware run, or a concrete comparison
-against scalar-expanded lowering.
+reason to open a TT-MLIR proposal by itself. The next useful inputs are a real
+hardware run, a concrete comparison against scalar-expanded lowering, or
+actionable maintainer guidance if it arrives.
 
 ## Minimum RFC Inputs
 

@@ -22,7 +22,11 @@ from experimental.tt_metalium_qmul.check_environment import _root_from_env
 
 
 PROTOCOL = "tt-rqm-external-qmul.v1"
-DEFAULT_BINARY = Path(__file__).resolve().parent / "build" / "tt_rqm_metalium_qmul_candidate"
+DEFAULT_BINARY = (
+    Path(__file__).resolve().parent
+    / "build_emule_candidate"
+    / "tt_rqm_metalium_qmul_candidate"
+)
 
 
 def main() -> int:
