@@ -243,17 +243,20 @@ python scripts/validate_qmul_candidate.py \
   --markdown-output reports/tt_emule_qmul_candidate.md
 ```
 
-For a future larger emulation or hardware report after the small run passes:
+Do not use the scalar RISC-V correctness baseline for a larger performance
+report. After a multicore/SFPU candidate declares `performance_eligible=true`,
+run the hardware-only Stage B sweep with at least ten repetitions:
 
 ```bash
 python experimental/tt_metalium_qmul/validate_candidate.py \
   --candidate-command "/path/to/tt_metalium_qmul_candidate" \
-  --items 4096 \
-  --iters 10 \
-  --warmup 2 \
+  --benchmark-stage performance \
+  --repetitions 10 \
+  --iters 30 \
+  --warmup 5 \
   --seed 0 \
-  --execution-label emulation \
-  --methodology-note "tt-emule candidate run; not hardware performance" \
+  --execution-label hardware \
+  --methodology-note "Performance-eligible real hardware Stage B sweep" \
   --json-output reports/tt_metalium_qmul_candidate_4096.json \
   --markdown-output reports/tt_metalium_qmul_candidate_4096.md
 ```

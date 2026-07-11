@@ -44,8 +44,10 @@ def main() -> int:
     out_path = work_dir / str(manifest["outputs"]["out"])
     metrics_path = work_dir / str(manifest["outputs"]["metrics"])
 
+    setup_start = time.perf_counter()
     a = _read_float32_binary(a_path, shape)
     b = _read_float32_binary(b_path, shape)
+    setup_s = time.perf_counter() - setup_start
 
     output = None
     with torch.no_grad():
@@ -63,7 +65,7 @@ def main() -> int:
     metrics_path.write_text(
         json.dumps(
             {
-                "schema": "tt-rqm-external-qmul-metrics.v1",
+                "schema": "tt-rqm-external-qmul-metrics.v2",
                 "protocol": PROTOCOL,
                 "backend": "external-qmul-reference",
                 "device": "cpu/pytorch-reference",
@@ -71,7 +73,10 @@ def main() -> int:
                 "items": int(manifest["items"]),
                 "iterations": iterations,
                 "warmup": warmup,
-                "elapsed_s": elapsed_s,
+                "execution_kind": "cpu",
+                "implementation_class": "cpu_pytorch_reference",
+                "performance_eligible": False,
+                "timings_s": {"setup": setup_s, "device": elapsed_s},
                 "note": (
                     "CPU/PyTorch reference command for validating the "
                     "external-qmul harness; not a hardware performance result."

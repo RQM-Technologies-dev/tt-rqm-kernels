@@ -38,6 +38,12 @@ def main() -> int:
     parser.add_argument("--items", type=_positive_int, default=128)
     parser.add_argument("--iters", type=_positive_int, default=1)
     parser.add_argument("--warmup", type=_nonnegative_int, default=0)
+    parser.add_argument("--repetitions", type=_positive_int, default=1)
+    parser.add_argument(
+        "--benchmark-stage",
+        choices=("conformance", "performance"),
+        default=None,
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--execution-label",
@@ -77,13 +83,19 @@ def main() -> int:
             backend="external-qmul",
             dtype_name="float32",
             seed=args.seed,
-            items_override=args.items,
-            iterations_override=args.iters,
-            warmup_override=args.warmup,
+            items_override=None if args.benchmark_stage == "performance" else args.items,
+            iterations_override=None
+            if args.benchmark_stage == "performance"
+            else args.iters,
+            warmup_override=None
+            if args.benchmark_stage == "performance"
+            else args.warmup,
             external_command=args.command,
             execution_label=args.execution_label,
             stable_benchmark=args.stable_benchmark,
             methodology_note=args.methodology_note,
+            repetitions=args.repetitions,
+            benchmark_stage=args.benchmark_stage,
         )
     except (RuntimeError, ValueError, TypeError, OSError) as exc:
         print(str(exc), file=sys.stderr)

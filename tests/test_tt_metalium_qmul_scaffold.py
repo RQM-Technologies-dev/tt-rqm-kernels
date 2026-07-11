@@ -125,6 +125,18 @@ def test_tt_metalium_source_candidate_files_exist() -> None:
     assert os.path.exists("experimental/tt_metalium_qmul/kernels/qmul_riscv.cpp")
 
 
+def test_tt_metalium_candidate_is_stage_a_baseline_with_split_timing() -> None:
+    source = Path("experimental/tt_metalium_qmul/src/qmul_candidate.cpp").read_text()
+
+    assert "tt-rqm-external-qmul-metrics.v2" in source
+    assert "scalar_riscv_correctness_baseline" in source
+    assert '"performance_eligible\\\": false' in source
+    assert '"timings_s\\\"' in source
+    assert "build_workload(" in source
+    assert "auto workload = build_workload(" in source
+    assert "run_program_once(" not in source
+
+
 def test_tt_metalium_build_accepts_lowercase_metalium_config(tmp_path: Path) -> None:
     module = _load_script("experimental/tt_metalium_qmul/build_candidate.py")
     prefix = tmp_path / "build_emule"

@@ -189,15 +189,18 @@ This backend is intentionally narrow. It supports only float32 `qmul` over
 directory through `TT_RQM_EXTERNAL_QMUL_DIR`, and expects the candidate command
 to write `out.bin` and `metrics.json`.
 
-`metrics.json` must include a positive finite `elapsed_s` value measured over the
-requested iteration loop. It may include `device` to label the candidate system
-in the StructuredBench report.
+`metrics.json` uses `tt-rqm-external-qmul-metrics.v2`, including manifest-matching
+metadata, setup/device timing, implementation class, performance eligibility,
+and conditional hardware provenance. StructuredBench measures subprocess
+end-to-end time independently and supports repeated median/p95 aggregation.
 
 Use `--execution-label emulation` for a real tt-emule candidate run and
 `--execution-label hardware` only for a real Tenstorrent hardware or cloud run.
 
-The output is validated against the CPU/PyTorch `qmul` reference and scalar spot
-checks before it is reported through the normal `structuredbench.v1` fields.
+The output is validated over every value against an independent float64 Hamilton
+product computed from the exact serialized float32 inputs. Non-finite values and
+any `atol=1e-4, rtol=1e-4` failure stop report creation. The first-eight scalar
+check remains a diagnostic, not the acceptance gate.
 This provides a bridge for future TT-Metalium, TT-NN, or cloud-hosted candidate
 runs without adding fake Tenstorrent code to this repository.
 

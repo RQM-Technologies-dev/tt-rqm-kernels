@@ -8,6 +8,7 @@ This template is for a future real Tenstorrent execution of StructuredBench
 ```text
 status: template
 execution_label: cpu | simulator | emulation | hardware
+benchmark_stage: conformance | performance
 stable_benchmark: false
 ```
 
@@ -30,6 +31,11 @@ software_stack_version:
 python_version:
 torch_version:
 candidate_command:
+candidate_sha256:
+compiler_version:
+runtime_version:
+build_id:
+timer_scope:
 ```
 
 ## Workload
@@ -73,11 +79,13 @@ python scripts/run_ttlang_qmul_smoke.py \
   --markdown-output reports/tt_lang_qmul_sim.md
 ```
 
-Future TT-Metalium candidate:
+Stage A TT-Metalium candidate:
 
 ```bash
 python experimental/tt_metalium_qmul/validate_candidate.py \
   --candidate-command "/path/to/tt_metalium_qmul_candidate" \
+  --execution-label hardware \
+  --benchmark-stage conformance \
   --items 128 \
   --iters 1 \
   --warmup 0 \
@@ -106,6 +114,13 @@ Copy the relevant `structuredbench.v1` fields here:
 | max_rel_error |  |
 | rms_error |  |
 | scalar_reference_max_abs_error |  |
+| correctness.passed |  |
+| correctness.validated_values |  |
+| timing.setup_s |  |
+| timing.device_s |  |
+| timing.end_to_end_s |  |
+| implementation_class |  |
+| performance_eligible | false |
 | estimated_flops_per_s |  |
 | effective_gb_per_s |  |
 | arithmetic_intensity_flops_per_byte |  |

@@ -15,7 +15,12 @@ import time
 
 import torch
 
-from tt_rqm_kernels.backends import torch_backend
+from tt_rqm_kernels.benchmark_integrity import (
+    command_sha256,
+    independent_qmul_golden,
+    validate_external_metrics,
+    validate_qmul_output,
+)
 from tt_rqm_kernels.backends.tenstorrent.availability import (
     Mode,
     resolve_execution_path,
@@ -59,6 +64,8 @@ def run_configured_qmul(
     seed: int = 0,
     stable_benchmark: bool = False,
     methodology_note: str | None = None,
+    repetitions: int = 1,
+    benchmark_stage: str | None = None,
 ) -> dict[str, object]:
     """Run the StructuredBench qmul suite through a configured Tenstorrent path."""
 
@@ -79,6 +86,8 @@ def run_configured_qmul(
         seed=seed,
         stable_benchmark=stable_benchmark,
         methodology_note=methodology_note,
+        repetitions=repetitions,
+        benchmark_stage=benchmark_stage,
     )
 
 
@@ -92,6 +101,8 @@ def run_structuredbench_qmul(
     seed: int = 0,
     stable_benchmark: bool = False,
     methodology_note: str | None = None,
+    repetitions: int = 1,
+    benchmark_stage: str | None = None,
 ) -> dict[str, object]:
     """Run StructuredBench qmul through an external Tenstorrent candidate."""
 
@@ -102,14 +113,16 @@ def run_structuredbench_qmul(
         backend="external-qmul",
         dtype_name="float32",
         seed=seed,
-        items_override=items,
-        iterations_override=iterations,
-        warmup_override=warmup,
+        items_override=None if benchmark_stage == "performance" else items,
+        iterations_override=None if benchmark_stage == "performance" else iterations,
+        warmup_override=None if benchmark_stage == "performance" else warmup,
         external_command=command,
         execution_label=label,
         stable_benchmark=stable_benchmark,
         methodology_note=methodology_note
         or methodology_note_for_label(label, stable_benchmark=stable_benchmark),
+        repetitions=repetitions,
+        benchmark_stage=benchmark_stage,  # type: ignore[arg-type]
     )
 
 
@@ -141,10 +154,7 @@ def run_external_qmul_inputs(
     if warmup < 0:
         raise TenstorrentAdapterError("warmup must be nonnegative")
 
-    reference = torch_backend.qmul(
-        a32.to(dtype=torch.float64),
-        b32.to(dtype=torch.float64),
-    ).to(dtype=torch.float32)
+    reference = independent_qmul_golden(a32, b32)
 
     with tempfile.TemporaryDirectory(prefix="tt-rqm-direct-qmul-") as tmp_dir:
         work_dir = Path(tmp_dir)
@@ -174,14 +184,22 @@ def run_external_qmul_inputs(
             + "\n",
             encoding="utf-8",
         )
-        _run_external_command(command, work_dir=work_dir, manifest_path=manifest_path)
+        host_elapsed_s = _run_external_command(
+            command, work_dir=work_dir, manifest_path=manifest_path
+        )
         metrics = _load_metrics(work_dir / "metrics.json")
         output = _read_float32_binary(work_dir / "out.bin", (items, 4))
+        timing = validate_external_metrics(
+            metrics,
+            json.loads(manifest_path.read_text(encoding="utf-8")),
+            execution_label="cpu",
+            host_end_to_end_s=host_elapsed_s,
+            candidate_sha256=command_sha256(command, Path.cwd()),
+            stage=None,
+        )
+        validate_qmul_output(output, a32, b32)
 
-    elapsed_s = float(metrics.get("elapsed_s", 0.0))
-    if elapsed_s <= 0.0:
-        # Keep direct example output usable if a candidate only writes out.bin.
-        elapsed_s = float(metrics.get("latency_s", 0.0)) or 1e-12
+    elapsed_s = float(timing["device_s"])
     diff = output.to(dtype=torch.float64) - reference.to(dtype=torch.float64)
     max_abs_error = float(diff.abs().max().item())
     rms_error = float(torch.sqrt(torch.mean(diff * diff)).item())
@@ -206,7 +224,7 @@ def _as_float32_qtensor(value: torch.Tensor, name: str) -> torch.Tensor:
     return value.detach().cpu().to(dtype=torch.float32).contiguous()
 
 
-def _run_external_command(command_text: str, *, work_dir: Path, manifest_path: Path) -> None:
+def _run_external_command(command_text: str, *, work_dir: Path, manifest_path: Path) -> float:
     command = shlex.split(command_text)
     if not command:
         raise TenstorrentAdapterError("external qmul command must not be empty")
@@ -225,6 +243,7 @@ def _run_external_command(command_text: str, *, work_dir: Path, manifest_path: P
             f"stdout:\n{completed.stdout}\n"
             f"stderr:\n{completed.stderr}"
         )
+    return elapsed
 
 
 def _load_metrics(path: Path) -> dict[str, object]:

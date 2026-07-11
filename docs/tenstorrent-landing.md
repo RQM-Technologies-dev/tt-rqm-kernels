@@ -30,6 +30,8 @@ StructuredBench report schema: implemented
 TT-Lang simulator qmul: implemented, simulator-only
 tt-emule TT-Metalium candidate: implemented, emulation-only
 Tenstorrent hardware report: not implemented yet
+qmul integrity gate: whole-output float64 conformance and strict metrics v2
+current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 ```
 
 The committed TT-Lang and tt-emule reports are validation artifacts. They are

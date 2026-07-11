@@ -3,7 +3,8 @@
 ## Purpose
 
 This plan defines the next lower-stack validation step for StructuredBench
-`qmul`: a future TT-Metalium candidate compiled and run through `tt-emule`.
+`qmul`: the implemented scalar RISC-V TT-Metalium correctness candidate compiled
+and run through `tt-emule`.
 
 The goal is executable emulation evidence, not hardware performance. `tt-emule`
 is useful here because it can run `tt-metal` host/kernel code on an x86-64 Linux
@@ -234,13 +235,17 @@ out.bin
 metrics.json
 ```
 
-`metrics.json` must include a positive finite `elapsed_s` and a device label
-that clearly says emulation:
+`metrics.json` must satisfy `tt-rqm-external-qmul-metrics.v2` and clearly label
+the execution as emulation:
 
 ```json
 {
-  "elapsed_s": 0.001,
-  "device": "tt-emule/wormhole"
+  "schema": "tt-rqm-external-qmul-metrics.v2",
+  "execution_kind": "emulation",
+  "device": "tt-emule/wormhole",
+  "implementation_class": "scalar_riscv_correctness_baseline",
+  "performance_eligible": false,
+  "timings_s": {"setup": 0.1, "device": 0.001}
 }
 ```
 

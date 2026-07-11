@@ -31,15 +31,14 @@ except ModuleNotFoundError as exc:  # pragma: no cover - exercised by CLI use.
         "`ttl` and `ttnn` are injected."
     ) from exc
 
-from tt_rqm_kernels.backends import scalar_reference
-from tt_rqm_kernels.quaternion_ops import qmul, qnormalize
+from tt_rqm_kernels.benchmark_integrity import validate_qmul_output, validate_report
+from tt_rqm_kernels.quaternion_ops import qnormalize
 from tt_rqm_kernels.structuredbench import (
     BenchmarkCase,
     BenchmarkResult,
     SCHEMA_VERSION,
     _error_metrics,
     _hardware_estimate,
-    _max_abs,
     render_markdown_report,
 )
 
@@ -208,8 +207,10 @@ def run_qmul_report(
     finally:
         ttnn.close_device(device)
 
-    reference = qmul(a64, b64)
-    scalar_error = _scalar_qmul_error(output, a64, b64)
+    reference, correctness = validate_qmul_output(
+        output, a_padded[:items], b_padded[:items]
+    )
+    scalar_error = float(correctness["scalar_first_eight_max_abs_error"])
     case = BenchmarkCase(
         workload="qmul",
         items=items,
@@ -223,8 +224,9 @@ def run_qmul_report(
         reference=reference,
         elapsed_s=elapsed_s,
         scalar_reference_max_abs_error=scalar_error,
+        correctness=correctness,
     )
-    return {
+    report = {
         "schema": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "suite": "qmul",
@@ -246,7 +248,11 @@ def run_qmul_report(
         "python_version": sys.version.split()[0],
         "platform": platform.platform(),
         "results": [asdict(result)],
+        "repetitions": 1,
+        "case_items": [items],
     }
+    validate_report(report)
+    return report
 
 
 def _from_torch(tensor: torch.Tensor, device: object) -> ttnn.Tensor:
@@ -266,6 +272,7 @@ def _result_from_output(
     reference: torch.Tensor,
     elapsed_s: float,
     scalar_reference_max_abs_error: float,
+    correctness: dict[str, object],
 ) -> BenchmarkResult:
     errors = _error_metrics(output, reference)
     hardware = _hardware_estimate(case, torch.float32, elapsed_s)
@@ -301,24 +308,17 @@ def _result_from_output(
         execution_label="simulator",
         stable_benchmark=False,
         methodology_note="TT-Lang functional simulator run; not hardware performance.",
+        correctness=correctness,
+        timing={
+            "repetitions": 1,
+            "device_s": {
+                "samples": [elapsed_s],
+                "median": elapsed_s,
+                "p95": elapsed_s,
+            },
+            "primary_elapsed": "device_s.median",
+        },
     )
-
-
-def _scalar_qmul_error(
-    output: torch.Tensor,
-    a64: torch.Tensor,
-    b64: torch.Tensor,
-) -> float:
-    sample_count = min(8, output.shape[0])
-    expected = torch.tensor(
-        [
-            scalar_reference.qmul_scalar(a64[index].tolist(), b64[index].tolist())
-            for index in range(sample_count)
-        ],
-        dtype=torch.float64,
-    )
-    actual = output[:sample_count].detach().cpu().to(torch.float64)
-    return _max_abs(actual - expected)
 
 
 def _pad_rows(values: torch.Tensor, target_rows: int) -> torch.Tensor:

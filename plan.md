@@ -107,8 +107,8 @@ The repo is ready for a first handshake:
     this is correctness/emulation evidence, not a stable performance benchmark
 - local tracker issues #9 through #13 are closed after their design/demo
   deliverables landed
-- local tracker issue #14 is open for the external LWT/ILWT `tt-metal`
-  worktree path, which should stay outside this repo
+- local tracker issue #14 is closed because upstream LWT/ILWT issue #40494 is
+  assigned and active; it is not a local planning lane
 - QuantumIR is now tracked as a strategic documentation layer above the
   existing kernel foundation. It is a future lowering direction for selected
   quantum-mechanics workloads into structured quaternion/SU(2) kernels, not an
@@ -312,8 +312,8 @@ Active repo issues should now focus on the hardware-facing path:
 2. `Implement minimal TT-Metalium qmul example using the external-qmul harness`
    (#3, completed/background; do not reopen for hardware follow-through)
 3. `Define TT-NN wrapper path after lower-stack hardware proof` (#4, deferred)
-4. `Set up external tt-metal LWT/ILWT worktree path` (#14, external-only;
-   no LWT/ILWT implementation goes into this repo)
+4. External LWT/ILWT work is removed from this repo's active plan; upstream
+   issue #40494 is already assigned and active
 
 Current blocker for #7:
 

@@ -26,6 +26,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 import torch
+from tt_rqm_kernels.benchmark_integrity import validate_qmul_output, validate_report
 
 try:
     import ttl
@@ -45,10 +46,9 @@ from tt_rqm_kernels.backends.tt_lang.qmul_sim_kernel import (
     _positive_int,
     _result_from_output,
     _round_up,
-    _scalar_qmul_error,
     _write_text,
 )
-from tt_rqm_kernels.quaternion_ops import qmul, qnormalize
+from tt_rqm_kernels.quaternion_ops import qnormalize
 from tt_rqm_kernels.structuredbench import (
     BenchmarkCase,
     SCHEMA_VERSION,
@@ -167,8 +167,10 @@ def run_qmul_report(
     finally:
         ttnn.close_device(device)
 
-    reference = qmul(a64, b64)
-    scalar_error = _scalar_qmul_error(output, a64, b64)
+    reference, correctness = validate_qmul_output(
+        output, a_padded[:items], b_padded[:items]
+    )
+    scalar_error = float(correctness["scalar_first_eight_max_abs_error"])
     case = BenchmarkCase(
         workload="qmul",
         items=items,
@@ -182,8 +184,9 @@ def run_qmul_report(
         reference=reference,
         elapsed_s=elapsed_s,
         scalar_reference_max_abs_error=scalar_error,
+        correctness=correctness,
     )
-    return {
+    report = {
         "schema": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "suite": "qmul",
@@ -208,7 +211,11 @@ def run_qmul_report(
         "python_version": sys.version.split()[0],
         "platform": platform.platform(),
         "results": [asdict(result)],
+        "repetitions": 1,
+        "case_items": [items],
     }
+    validate_report(report)
+    return report
 
 
 if __name__ == "__main__":

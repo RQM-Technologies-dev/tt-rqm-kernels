@@ -36,6 +36,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--items", type=_positive_int, default=128)
     parser.add_argument("--iters", type=_positive_int, default=1)
     parser.add_argument("--warmup", type=_nonnegative_int, default=0)
+    parser.add_argument("--repetitions", type=_positive_int, default=1)
+    parser.add_argument(
+        "--benchmark-stage",
+        choices=("conformance", "performance"),
+        default=None,
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--execution-label",
@@ -74,11 +80,15 @@ def main(argv: list[str] | None = None) -> int:
         str(args.warmup),
         "--seed",
         str(args.seed),
+        "--repetitions",
+        str(args.repetitions),
         "--format",
         args.format,
     ]
     if args.execution_label is not None:
         command.extend(["--execution-label", args.execution_label])
+    if args.benchmark_stage is not None:
+        command.extend(["--benchmark-stage", args.benchmark_stage])
     if args.stable_benchmark:
         command.append("--stable-benchmark")
     if args.methodology_note is not None:

@@ -16,7 +16,9 @@ For Tenstorrent engineers:
 2. Why it matters: compact benchmark between scalar elementwise ops and matmul.
 3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, and tt-emule candidate.
 4. Current ask: enable or run one hardware-labeled `qmul` report.
-5. Best next link: [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md).
+5. Stage A proves silicon conformance; acceleration claims require a later
+   performance-eligible multicore/SFPU Stage B implementation.
+6. Best next link: [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md).
 
 The single next action is to help produce one hardware-labeled StructuredBench
 `qmul` report. Placement guidance is welcome if it arrives, but the active plan
@@ -326,7 +328,8 @@ Proposed backend path:
 
 - optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
 - tt-emule validation for the experimental TT-Metalium `qmul` candidate
-- future TT-Metalium `qmul` for `[N, 4]` quaternion tensors
+- implemented scalar RISC-V TT-Metalium `qmul` Stage A correctness baseline for
+  `[N, 4]` quaternion tensors; a later multicore/SFPU kernel is required for Stage B
 - CPU/PyTorch physical-AI pose stream demo using `qrotate_vector`
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
   evidence is clearer

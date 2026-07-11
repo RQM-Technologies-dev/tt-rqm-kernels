@@ -22,6 +22,17 @@ import torch
 
 from tt_rqm_kernels.backends import scalar_reference, torch_backend
 from tt_rqm_kernels.backends.tt_lang.availability import TTLangSimulatorUnavailable
+from tt_rqm_kernels.benchmark_integrity import (
+    BenchmarkStage,
+    command_sha256,
+    independent_qmul_golden,
+    repository_commit,
+    timing_summary,
+    validate_execution_policy,
+    validate_external_metrics,
+    validate_qmul_output,
+    validate_report,
+)
 
 SCHEMA_VERSION = "structuredbench.v1"
 EXTERNAL_QMUL_PROTOCOL = "tt-rqm-external-qmul.v1"
@@ -89,6 +100,11 @@ class BenchmarkResult:
     execution_label: ExecutionLabel = "cpu"
     stable_benchmark: bool = False
     methodology_note: str | None = None
+    correctness: dict[str, object] | None = None
+    timing: dict[str, object] | None = None
+    provenance: dict[str, object] | None = None
+    implementation_class: str | None = None
+    performance_eligible: bool = False
 
 
 def positive_int(value: str) -> int:
@@ -186,6 +202,8 @@ def run_suite(
     execution_label: ExecutionLabel | None = None,
     stable_benchmark: bool = False,
     methodology_note: str | None = None,
+    repetitions: int = 1,
+    benchmark_stage: BenchmarkStage | None = None,
 ) -> dict[str, object]:
     """Run a StructuredBench suite and return a JSON-serializable report."""
 
@@ -199,7 +217,13 @@ def run_suite(
     )
 
     if backend == "tt-lang-sim":
-        return _run_tt_lang_sim_suite(
+        validate_execution_policy(
+            backend=backend,
+            execution_label=resolved_execution_label,
+            stable_benchmark=stable_benchmark,
+            items=[items_override or 128],
+        )
+        report = _run_tt_lang_sim_suite(
             suite,
             dtype_name=dtype_name,
             seed=seed,
@@ -215,8 +239,10 @@ def run_suite(
             stable_benchmark=stable_benchmark,
             methodology_note=resolved_methodology_note,
         )
+        validate_report(report)
+        return report
     if backend == "external-qmul":
-        return _run_external_qmul_suite(
+        report = _run_external_qmul_suite(
             suite,
             dtype_name=dtype_name,
             seed=seed,
@@ -227,9 +253,19 @@ def run_suite(
             execution_label=resolved_execution_label,
             stable_benchmark=stable_benchmark,
             methodology_note=resolved_methodology_note,
+            repetitions=repetitions,
+            benchmark_stage=benchmark_stage,
         )
+        validate_report(report)
+        return report
     if backend != "torch":
         raise ValueError(f"unsupported backend: {backend}")
+
+    validate_execution_policy(
+        backend=backend,
+        execution_label=resolved_execution_label,
+        stable_benchmark=stable_benchmark,
+    )
 
     device = _resolve_device(device_name)
     dtype = SUPPORTED_DTYPES[dtype_name]
@@ -256,7 +292,7 @@ def run_suite(
         for index, case in enumerate(cases)
     ]
 
-    return {
+    report = {
         "schema": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "suite": suite,
@@ -271,7 +307,11 @@ def run_suite(
         "python_version": sys.version.split()[0],
         "platform": platform.platform(),
         "results": [asdict(result) for result in results],
+        "repetitions": 1,
+        "case_items": [case.items for case in cases],
     }
+    validate_report(report)
+    return report
 
 
 def render_table(report: dict[str, object]) -> str:
@@ -366,6 +406,26 @@ def render_markdown_report(report: dict[str, object]) -> str:
         ]
         for result in results
     ]
+    integrity_rows = []
+    for result in results:
+        correctness = result.get("correctness") or {}
+        timing = result.get("timing") or {}
+        device_timing = timing.get("device_s", {}) if isinstance(timing, dict) else {}
+        end_to_end = timing.get("end_to_end_s", {}) if isinstance(timing, dict) else {}
+        integrity_rows.append(
+            [
+                str(result["workload"]),
+                str(result.get("implementation_class") or "-"),
+                str(bool(result.get("performance_eligible", False))).lower(),
+                str(correctness.get("passed", False)).lower(),
+                str(correctness.get("validated_values", "-")),
+                f"{float(correctness.get('whole_output_max_abs_error', 0.0)):.3e}",
+                str(timing.get("repetitions", 1)) if isinstance(timing, dict) else "1",
+                _optional_scientific(device_timing.get("median")),
+                _optional_scientific(device_timing.get("p95")),
+                _optional_scientific(end_to_end.get("median")),
+            ]
+        )
 
     return "\n".join(
         [
@@ -399,6 +459,24 @@ def render_markdown_report(report: dict[str, object]) -> str:
                     "scalar_ref",
                 ],
                 benchmark_rows,
+            ),
+            "",
+            "## Conformance and Timing Integrity",
+            "",
+            _markdown_table(
+                [
+                    "workload",
+                    "implementation_class",
+                    "performance_eligible",
+                    "correctness_passed",
+                    "validated_values",
+                    "whole_output_max_abs_err",
+                    "repetitions",
+                    "device_median_s",
+                    "device_p95_s",
+                    "end_to_end_median_s",
+                ],
+                integrity_rows,
             ),
             "",
             "## Hardware-Relevant Metrics",
@@ -443,6 +521,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--items", type=positive_int, default=None)
     parser.add_argument("--iters", type=positive_int, default=None)
     parser.add_argument("--warmup", type=nonnegative_int, default=None)
+    parser.add_argument("--repetitions", type=positive_int, default=1)
+    parser.add_argument(
+        "--benchmark-stage",
+        choices=("conformance", "performance"),
+        default=None,
+    )
     parser.add_argument("--threads", type=positive_int, default=None)
     parser.add_argument("--format", choices=("table", "json"), default="table")
     parser.add_argument("--output", type=Path, default=None)
@@ -547,6 +631,8 @@ def main(argv: list[str] | None = None) -> int:
             execution_label=args.execution_label,
             stable_benchmark=args.stable_benchmark,
             methodology_note=args.methodology_note,
+            repetitions=args.repetitions,
+            benchmark_stage=args.benchmark_stage,
         )
     except TTLangSimulatorUnavailable as exc:
         print(str(exc), file=sys.stderr)
@@ -677,6 +763,8 @@ def _run_external_qmul_suite(
     execution_label: ExecutionLabel,
     stable_benchmark: bool,
     methodology_note: str,
+    repetitions: int,
+    benchmark_stage: BenchmarkStage | None,
 ) -> dict[str, object]:
     if suite != "qmul":
         raise ValueError("external-qmul backend currently supports --suite qmul only")
@@ -691,6 +779,17 @@ def _run_external_qmul_suite(
         iterations_override=iterations_override,
         warmup_override=warmup_override,
     )
+    validate_execution_policy(
+        backend="external-qmul",
+        execution_label=execution_label,
+        stable_benchmark=stable_benchmark,
+        command=external_command,
+        stage=benchmark_stage,
+        repetitions=repetitions,
+        items=[case.items for case in cases],
+        iterations=[case.iterations for case in cases],
+        warmups=[case.warmup for case in cases],
+    )
     results = [
         _run_external_qmul_case(
             suite=suite,
@@ -700,6 +799,8 @@ def _run_external_qmul_suite(
             execution_label=execution_label,
             stable_benchmark=stable_benchmark,
             methodology_note=methodology_note,
+            repetitions=repetitions,
+            benchmark_stage=benchmark_stage,
         )
         for index, case in enumerate(cases)
     ]
@@ -721,6 +822,16 @@ def _run_external_qmul_suite(
         "python_version": sys.version.split()[0],
         "platform": platform.platform(),
         "results": [asdict(result) for result in results],
+        "repetitions": repetitions,
+        "benchmark_stage": benchmark_stage,
+        "case_items": [case.items for case in cases],
+        "provenance": {
+            "repository_commit": repository_commit(Path(__file__).resolve().parents[1]),
+            "candidate_sha256": command_sha256(
+                external_command, Path(__file__).resolve().parents[1]
+            ),
+            "candidate": results[0].provenance if results else None,
+        },
     }
 
 
@@ -733,13 +844,24 @@ def _run_external_qmul_case(
     execution_label: ExecutionLabel,
     stable_benchmark: bool,
     methodology_note: str,
+    repetitions: int,
+    benchmark_stage: BenchmarkStage | None,
 ) -> BenchmarkResult:
     generator = torch.Generator(device="cpu").manual_seed(seed)
     a64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
     b64 = torch_backend.qnormalize(_randn((case.items, 4), generator))
     a = a64.to(dtype=torch.float32)
     b = b64.to(dtype=torch.float32)
-    reference = torch_backend.qmul(a64, b64)
+    reference = independent_qmul_golden(a, b)
+
+    setup_samples: list[float] = []
+    device_samples: list[float] = []
+    end_to_end_samples: list[float] = []
+    correctness: dict[str, object] | None = None
+    metrics: dict[str, object] = {}
+    output: torch.Tensor | None = None
+    repo_root = Path(__file__).resolve().parents[1]
+    candidate_hash = command_sha256(external_command, repo_root)
 
     with tempfile.TemporaryDirectory(prefix="tt-rqm-external-qmul-") as tmp_dir:
         work_dir = Path(tmp_dir)
@@ -781,16 +903,33 @@ def _run_external_qmul_case(
             + "\n",
         )
 
-        _run_external_command(
-            external_command,
-            work_dir=work_dir,
-            manifest_path=manifest_path,
-        )
-        metrics = _load_external_metrics(metrics_path)
-        elapsed_s = _external_elapsed_s(metrics)
-        output = _read_float32_binary(out_path, (case.items, 4))
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for _ in range(repetitions):
+            host_elapsed_s = _run_external_command(
+                external_command,
+                work_dir=work_dir,
+                manifest_path=manifest_path,
+                execution_label=execution_label,
+            )
+            metrics = _load_external_metrics(metrics_path)
+            timing = validate_external_metrics(
+                metrics,
+                manifest,
+                execution_label=execution_label,
+                host_end_to_end_s=host_elapsed_s,
+                candidate_sha256=candidate_hash,
+                stage=benchmark_stage,
+            )
+            output = _read_float32_binary(out_path, (case.items, 4))
+            _, correctness = validate_qmul_output(output, a, b)
+            setup_samples.append(float(timing["setup_s"]))
+            device_samples.append(float(timing["device_s"]))
+            end_to_end_samples.append(float(timing["end_to_end_s"]))
 
-    scalar_error = _scalar_check_qmul(output, a64, b64, "float32")
+    if output is None or correctness is None:
+        raise RuntimeError("external-qmul did not produce a validated output")
+    elapsed_s = float(timing_summary(device_samples)["median"])
+    scalar_error = float(correctness["scalar_first_eight_max_abs_error"])
     return _result_from_output(
         suite,
         case,
@@ -805,6 +944,26 @@ def _run_external_qmul_case(
         execution_label=execution_label,
         stable_benchmark=stable_benchmark,
         methodology_note=methodology_note,
+        correctness=correctness,
+        timing={
+            "repetitions": repetitions,
+            "setup_s": timing_summary(setup_samples),
+            "device_s": timing_summary(device_samples),
+            "end_to_end_s": timing_summary(end_to_end_samples),
+            "primary_elapsed": "device_s.median",
+        },
+        provenance={
+            **(
+                dict(metrics.get("provenance", {}))
+                if isinstance(metrics.get("provenance"), dict)
+                else {}
+            ),
+            "repository_commit": repository_commit(repo_root),
+            "candidate_sha256": candidate_hash,
+            "external_command": external_command,
+        },
+        implementation_class=str(metrics["implementation_class"]),
+        performance_eligible=bool(metrics["performance_eligible"]),
     )
 
 
@@ -1123,7 +1282,14 @@ def _result_from_output(
     execution_label: ExecutionLabel | None = None,
     stable_benchmark: bool = False,
     methodology_note: str | None = None,
+    correctness: dict[str, object] | None = None,
+    timing: dict[str, object] | None = None,
+    provenance: dict[str, object] | None = None,
+    implementation_class: str | None = None,
+    performance_eligible: bool = False,
 ) -> BenchmarkResult:
+    if not torch.isfinite(output).all() or not torch.isfinite(reference).all():
+        raise ValueError("benchmark output/reference contains non-finite values")
     errors = _error_metrics(output, reference)
     hardware = _hardware_estimate(case, dtype, elapsed_s)
     latency_ms = elapsed_s * 1000.0 / case.iterations
@@ -1166,6 +1332,27 @@ def _result_from_output(
             execution_label or _default_execution_label(backend),
             None,
         ),
+        correctness=correctness
+        or {
+            "passed": True,
+            "atol": SCALAR_ERROR_TOLERANCES[dtype_name],
+            "rtol": SCALAR_ERROR_TOLERANCES[dtype_name],
+            "failing_values": 0,
+            "nonfinite_values": 0,
+            "validated_values": output.numel(),
+            "whole_output_max_abs_error": errors["max_abs_error"],
+            "scalar_first_eight_max_abs_error": scalar_reference_max_abs_error,
+            "golden": "backend reference plus independent scalar diagnostic",
+        },
+        timing=timing
+        or {
+            "repetitions": 1,
+            "device_s": timing_summary([elapsed_s]),
+            "primary_elapsed": "device_s.median",
+        },
+        provenance=provenance,
+        implementation_class=implementation_class,
+        performance_eligible=performance_eligible,
     )
 
 
@@ -1196,7 +1383,8 @@ def _run_external_command(
     *,
     work_dir: Path,
     manifest_path: Path,
-) -> None:
+    execution_label: ExecutionLabel | None = None,
+) -> float:
     command = shlex.split(external_command)
     if not command:
         raise ValueError("--external-command must not be empty")
@@ -1204,12 +1392,16 @@ def _run_external_command(
     env = os.environ.copy()
     env["TT_RQM_EXTERNAL_QMUL_DIR"] = str(work_dir)
     env["TT_RQM_EXTERNAL_QMUL_MANIFEST"] = str(manifest_path)
+    if execution_label is not None:
+        env["TT_RQM_EXECUTION_LABEL"] = execution_label
+    started = time.perf_counter()
     completed = subprocess.run(
         command,
         capture_output=True,
         text=True,
         env=env,
     )
+    elapsed_s = time.perf_counter() - started
     if completed.returncode != 0:
         raise RuntimeError(
             "external-qmul command failed\n"
@@ -1218,6 +1410,7 @@ def _run_external_command(
             f"stdout:\n{completed.stdout}\n"
             f"stderr:\n{completed.stderr}"
         )
+    return elapsed_s
 
 
 def _load_external_metrics(path: Path) -> dict[str, object]:
@@ -1227,15 +1420,6 @@ def _load_external_metrics(path: Path) -> dict[str, object]:
     if not isinstance(payload, dict):
         raise TypeError("external-qmul metrics.json must contain a JSON object")
     return payload
-
-
-def _external_elapsed_s(metrics: dict[str, object]) -> float:
-    if "elapsed_s" not in metrics:
-        raise ValueError("external-qmul metrics.json must include elapsed_s")
-    elapsed_s = float(metrics["elapsed_s"])
-    if not math.isfinite(elapsed_s) or elapsed_s <= 0.0:
-        raise ValueError("external-qmul elapsed_s must be a positive finite value")
-    return elapsed_s
 
 
 def _write_float32_binary(path: Path, value: torch.Tensor) -> None:
@@ -1497,8 +1681,8 @@ def _backend_note(report: dict[str, object]) -> str:
     if report.get("backend") == "external-qmul":
         return (
             "- Current results use the external-qmul candidate harness. "
-            "StructuredBench validates candidate output against CPU/PyTorch and "
-            "scalar references; hardware claims depend on the external command "
+            "StructuredBench validates the whole output against an independent "
+            "float64 golden calculation; hardware claims depend on the external command "
             "and measurement environment."
         )
     return "- Current results use the CPU/PyTorch reference backend."
@@ -1506,15 +1690,26 @@ def _backend_note(report: dict[str, object]) -> str:
 
 def _report_intro(report: dict[str, object]) -> list[str]:
     execution_label = report.get("execution_label")
+    results = report.get("results", [])
+    legacy = isinstance(results, list) and any(
+        isinstance(result, dict) and "correctness" not in result for result in results
+    )
+    legacy_note = (
+        "This is a historical pre-integrity artifact and has not been rerun under "
+        "the whole-output/metrics-v2 gate."
+        if legacy
+        else ""
+    )
     if report.get("backend") == "tt-lang-sim":
         return [
             (
                 "This report demonstrates that the `[N, 4]` `qmul` contract can "
                 "be exercised through the TT-Lang functional simulator and "
-                "validated against CPU/PyTorch plus scalar references. It is a "
+                "validated through the current conformance contract. It is a "
                 "logic and report-shape artifact, not hardware performance evidence."
             ),
             "",
+            *([legacy_note, ""] if legacy_note else []),
             "Next evidence target: `reports/tt_emule_qmul_candidate.md`.",
             "Final target: `reports/tt_hardware_qmul_quickstart.md`.",
             "",
@@ -1524,10 +1719,11 @@ def _report_intro(report: dict[str, object]) -> list[str]:
             (
                 "This report demonstrates the `external-qmul` candidate protocol "
                 "with an emulation-labeled run. StructuredBench validates the "
-                "candidate output against CPU/PyTorch plus scalar references. It "
+                "candidate output through the current conformance contract. It "
                 "is not hardware performance evidence."
             ),
             "",
+            *([legacy_note, ""] if legacy_note else []),
             "Final target: `reports/tt_hardware_qmul_quickstart.md`.",
             "",
         ]

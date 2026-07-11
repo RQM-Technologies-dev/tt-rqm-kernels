@@ -71,39 +71,49 @@ metrics.json
 
 ```json
 {
-  "elapsed_s": 0.001,
-  "device": "tenstorrent/<device>"
+  "schema": "tt-rqm-external-qmul-metrics.v2",
+  "protocol": "tt-rqm-external-qmul.v1",
+  "backend": "tt-metalium-qmul",
+  "device": "tenstorrent/<device>",
+  "dtype": "float32",
+  "items": 128,
+  "iterations": 1,
+  "warmup": 0,
+  "execution_kind": "hardware",
+  "implementation_class": "<implementation>",
+  "performance_eligible": false,
+  "timings_s": {"setup": 0.1, "device": 0.001},
+  "provenance": {
+    "chip_type": "<chip>",
+    "tt_metal_commit": "<commit>",
+    "compiler_version": "<version>",
+    "runtime_version": "<version>",
+    "build_id": "<identity>",
+    "timer_scope": "<exact measured scope>"
+  }
 }
 ```
 
 Required fields:
 
-- `elapsed_s`: positive measured elapsed seconds for the benchmark iterations
-- `device`: short device label used in StructuredBench reports
+- manifest-matching protocol, dtype, size, iteration, and warmup values
+- non-empty backend, device, and implementation identity
+- separate finite setup and device-execution timing
+- complete chip, source, compiler, runtime, build, and timer-scope provenance
+- `performance_eligible=false` for the scalar RISC-V correctness baseline
 
-## Recommended metrics.json Fields
+The harness independently measures end-to-end subprocess time, verifies timing
+consistency, computes the candidate file hash, and records the repository
+commit. A candidate-provided end-to-end number is not trusted as the primary
+measurement.
 
-Recommended fields:
+## Benchmark Stages
 
-- `software_stack`
-- `tt_metal_commit`
-- `hardware_kind`
-- `host`
-- `notes`
-
-Example:
-
-```json
-{
-  "elapsed_s": 0.001,
-  "device": "tenstorrent/wormhole",
-  "software_stack": "tt-metal",
-  "tt_metal_commit": "<commit>",
-  "hardware_kind": "<device>",
-  "host": "<host>",
-  "notes": "Initial hardware validation sample; not a stable benchmark."
-}
-```
+- Stage A (`conformance`): exactly `N=128`, one repetition, one measured
+  iteration, and `stable_benchmark=false`. This proves silicon compatibility.
+- Stage B (`performance`): sizes 4,096, 65,536, and 262,144 with at least ten
+  repetitions and reported median/p95 timing. It requires
+  `performance_eligible=true`; the current scalar baseline cannot enter Stage B.
 
 ## Validation Command
 
@@ -112,6 +122,7 @@ Once a hardware command exists:
 ```bash
 python scripts/rqm_tt_quickstart.py \
   --mode hardware \
+  --benchmark-stage conformance \
   --command "<real Tenstorrent hardware qmul command>" \
   --items 128 \
   --iters 1 \

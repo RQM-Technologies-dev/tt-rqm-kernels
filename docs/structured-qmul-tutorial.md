@@ -178,12 +178,13 @@ metrics.json
 ```
 
 The binary tensors are raw little-endian float32 row-major values. `metrics.json`
-must include a positive finite `elapsed_s` value and may include a `device` label
-such as `cpu-reference`, `simulator`, `emulator`, or a real hardware identifier.
+must satisfy `tt-rqm-external-qmul-metrics.v2`, including manifest identity,
+setup/device timing, execution kind, implementation class, and performance
+eligibility; hardware runs additionally require full provenance.
 
-After the candidate exits, StructuredBench validates `out.bin` against the
-CPU/PyTorch `qmul` reference and scalar spot checks, then emits the usual
-`structuredbench.v1` report.
+After the candidate exits, StructuredBench validates every output against an
+independent float64 golden calculation from the exact float32 inputs, then emits
+the additive `structuredbench.v1` report.
 
 ## Future TT-Metalium Plug-In Path
 

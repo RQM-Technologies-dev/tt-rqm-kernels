@@ -320,9 +320,8 @@ def test_tenstorrent_packet_generator(tmp_path: Path) -> None:
     )
 
     packet = output_path.read_text(encoding="utf-8")
-    assert "Proposed first TT-Metalium target: `qmul`" in packet
-    assert "Where should a minimal TT-Metalium qmul example" in packet
-    assert "one hardware-labeled StructuredBench qmul report" in packet
+    assert "Implemented Stage A TT-Metalium target" in packet
+    assert "one Stage A hardware conformance report" in packet
     assert "docs/tenstorrent-landing.md" in packet
     assert "docs/tenstorrent-engineer-copy-paste-packet.md" in packet
     assert "reports/tt_emule_qmul_candidate.md" in packet

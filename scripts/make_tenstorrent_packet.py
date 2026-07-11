@@ -73,8 +73,8 @@ def render_packet(report: dict[str, object]) -> str:
                 "`tt-rqm-kernels` is an independent RQM Technologies LLC project "
                 "for structured quaternion, rotor, and phase-aware tensor kernels "
                 "represented inside ordinary floating-point tensors. StructuredBench "
-                "provides a CPU/PyTorch reference benchmark contract intended to "
-                "compare future TT-Metalium and TT-NN backend implementations."
+                "provides a conformance-gated benchmark contract and an implemented "
+                "scalar RISC-V TT-Metalium correctness baseline."
             ),
             "",
             (
@@ -120,13 +120,35 @@ def render_packet(report: dict[str, object]) -> str:
             "-> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity",
             "```",
             "",
+            "## Immediate Ask",
+            "",
+            (
+                "The current request is one Stage A silicon-conformance `qmul` run "
+                "using the delegated engineer packet: "
+                "[docs/tenstorrent-engineer-copy-paste-packet.md]"
+                "(../docs/tenstorrent-engineer-copy-paste-packet.md)."
+            ),
+            "",
+            "The returned artifacts should be:",
+            "",
+            "```text",
+            "reports/tt_hardware_qmul_quickstart.json",
+            "reports/tt_hardware_qmul_quickstart.md",
+            "reports/tt_hardware_qmul_environment.txt",
+            "```",
+            "",
+            (
+                "Use `execution_label=hardware`, `benchmark_stage=conformance`, "
+                "and `stable_benchmark=false` only for real Tenstorrent hardware."
+            ),
+            "",
             "## Long-Term Direction: QuantumIR for Classical AI Compute",
             "",
             (
                 "QuantumIR here means a classical/AI accelerator front end for "
                 "selected quantum-mechanics workloads, not a quantum-hardware "
-                "proposal. The immediate ask remains narrow: placement guidance "
-                "for a minimal `[N, 4]` structured `qmul` kernel path."
+                "proposal. The immediate ask remains narrow: one Stage A silicon "
+                "conformance run for the existing `[N, 4]` `qmul` candidate."
             ),
             "",
             (
@@ -180,7 +202,7 @@ def render_packet(report: dict[str, object]) -> str:
             "",
             "## Proposed First TT-Metalium Target",
             "",
-            "Proposed first TT-Metalium target: `qmul` for `[N, 4]` quaternion tensors.",
+            "Implemented Stage A TT-Metalium target: scalar RISC-V `qmul` for `[N, 4]` quaternion tensors; not performance-eligible.",
             "",
             "## Proposed Second Target",
             "",
@@ -207,9 +229,9 @@ def render_packet(report: dict[str, object]) -> str:
             "",
             "The repo now has a one-command readiness check (`python scripts/rqm_tt_quickstart.py --check`), an external-qmul protocol for candidate commands, and tt-emule evidence for the experimental TT-Metalium candidate. The tt-emule report is emulation-only and is not hardware performance.",
             "",
-            "Where should a minimal TT-Metalium qmul example for [N, 4] structured tensors live? If possible, could Tenstorrent also enable or run one hardware-labeled StructuredBench qmul report?",
+            "Could Tenstorrent enable or run one Stage A hardware conformance report for the existing [N, 4] TT-Metalium qmul candidate?",
             "",
-            "Secondary questions: if a TT-Metalium programming example is not the right starting point, is there a preferred TT-NN custom-op path? Would a TT-MLIR representation be useful later, after there is a concrete lower-stack qmul example?",
+            "Secondary questions, only if there is actionable guidance: where should the existing TT-Metalium qmul example live, and is there a preferred TT-NN custom-op path after Stage B hardware evidence exists?",
             "",
             "The benchmark reports throughput, latency, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity, with scalar-reference spot checks for correctness.",
             "```",
@@ -219,7 +241,7 @@ def render_packet(report: dict[str, object]) -> str:
             "```text",
             "Hi Tenstorrent community, RQM Technologies is building an independent structured-kernel benchmark for quaternion and rotor tensor operators represented inside ordinary floating-point tensors.",
             "",
-            "For a first external structured-kernel contribution, should we target a TT-Metalium programming example or a TT-NN custom-op path?",
+            "The immediate ask is one Stage A qmul silicon-conformance report, not a new hardware feature or placement decision. The copy/paste packet is in docs/tenstorrent-engineer-copy-paste-packet.md.",
             "",
             "Repo: https://github.com/RQM-Technologies-dev/tt-rqm-kernels",
             "```",

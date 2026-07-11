@@ -31,7 +31,7 @@ using namespace tt::tt_metal;
 namespace {
 
 constexpr std::string_view kProtocol = "tt-rqm-external-qmul.v1";
-constexpr std::string_view kMetricsSchema = "tt-rqm-external-qmul-metrics.v1";
+constexpr std::string_view kMetricsSchema = "tt-rqm-external-qmul-metrics.v2";
 constexpr uint32_t kLanes = 4;
 constexpr uint32_t kQuaternionBytes = kLanes * sizeof(uint32_t);
 
@@ -211,9 +211,8 @@ Config parse_config(int argc, char** argv) {
     return config;
 }
 
-void run_program_once(
+distributed::MeshWorkload build_workload(
     const std::shared_ptr<distributed::MeshDevice>& mesh_device,
-    distributed::MeshCommandQueue& cq,
     const std::shared_ptr<distributed::MeshBuffer>& a_dram_buffer,
     const std::shared_ptr<distributed::MeshBuffer>& b_dram_buffer,
     const std::shared_ptr<distributed::MeshBuffer>& out_dram_buffer,
@@ -247,7 +246,7 @@ void run_program_once(
         });
 
     workload.add_program(device_range, std::move(program));
-    distributed::EnqueueMeshWorkload(cq, workload, true);
+    return workload;
 }
 
 std::vector<uint32_t> run_qmul_candidate(
@@ -255,7 +254,9 @@ std::vector<uint32_t> run_qmul_candidate(
     const std::vector<uint32_t>& b_words,
     const Manifest& manifest,
     int device_id,
-    double& elapsed_s) {
+    double& setup_s,
+    double& device_s) {
+    const auto setup_start = std::chrono::steady_clock::now();
     std::shared_ptr<distributed::MeshDevice> mesh_device = distributed::MeshDevice::create_unit_mesh(device_id);
     distributed::MeshCommandQueue& cq = mesh_device->mesh_command_queue();
 
@@ -275,35 +276,30 @@ std::vector<uint32_t> run_qmul_candidate(
     distributed::EnqueueWriteMeshBuffer(cq, a_dram_buffer, a_words, false);
     distributed::EnqueueWriteMeshBuffer(cq, b_dram_buffer, b_words, false);
 
+    auto workload = build_workload(
+        mesh_device,
+        a_dram_buffer,
+        b_dram_buffer,
+        out_dram_buffer,
+        a_l1_buffer,
+        b_l1_buffer,
+        out_l1_buffer,
+        manifest.items);
+    distributed::Finish(cq);
+    const auto setup_end = std::chrono::steady_clock::now();
+    setup_s = std::chrono::duration<double>(setup_end - setup_start).count();
+
     for (uint32_t i = 0; i < manifest.warmup; ++i) {
-        run_program_once(
-            mesh_device,
-            cq,
-            a_dram_buffer,
-            b_dram_buffer,
-            out_dram_buffer,
-            a_l1_buffer,
-            b_l1_buffer,
-            out_l1_buffer,
-            manifest.items);
+        distributed::EnqueueMeshWorkload(cq, workload, true);
     }
 
     const auto start = std::chrono::steady_clock::now();
     for (uint32_t i = 0; i < manifest.iterations; ++i) {
-        run_program_once(
-            mesh_device,
-            cq,
-            a_dram_buffer,
-            b_dram_buffer,
-            out_dram_buffer,
-            a_l1_buffer,
-            b_l1_buffer,
-            out_l1_buffer,
-            manifest.items);
+        distributed::EnqueueMeshWorkload(cq, workload, true);
     }
     distributed::Finish(cq);
     const auto end = std::chrono::steady_clock::now();
-    elapsed_s = std::chrono::duration<double>(end - start).count();
+    device_s = std::chrono::duration<double>(end - start).count();
 
     std::vector<uint32_t> out_words;
     distributed::EnqueueReadMeshBuffer(cq, out_words, out_dram_buffer, true);
@@ -320,7 +316,24 @@ std::string device_label() {
     return "tt-metalium-riscv-qmul-candidate";
 }
 
-void write_metrics(const std::filesystem::path& path, const Manifest& manifest, double elapsed_s) {
+std::string execution_kind() {
+    const char* configured = std::getenv("TT_RQM_EXECUTION_LABEL");
+    if (configured != nullptr) {
+        return configured;
+    }
+    return std::getenv("TT_METAL_EMULE_MODE") != nullptr ? "emulation" : "hardware";
+}
+
+std::string env_or_unknown(const char* name) {
+    const char* value = std::getenv(name);
+    return value == nullptr || std::string_view(value).empty() ? "unknown" : value;
+}
+
+void write_metrics(
+    const std::filesystem::path& path,
+    const Manifest& manifest,
+    double setup_s,
+    double device_s) {
     std::ostringstream metrics;
     metrics << "{\n"
             << "  \"schema\": \"" << kMetricsSchema << "\",\n"
@@ -331,7 +344,19 @@ void write_metrics(const std::filesystem::path& path, const Manifest& manifest, 
             << "  \"items\": " << manifest.items << ",\n"
             << "  \"iterations\": " << manifest.iterations << ",\n"
             << "  \"warmup\": " << manifest.warmup << ",\n"
-            << "  \"elapsed_s\": " << elapsed_s << ",\n"
+            << "  \"execution_kind\": \"" << execution_kind() << "\",\n"
+            << "  \"implementation_class\": \"scalar_riscv_correctness_baseline\",\n"
+            << "  \"performance_eligible\": false,\n"
+            << "  \"timings_s\": {\"setup\": " << setup_s
+            << ", \"device\": " << device_s << "},\n"
+            << "  \"provenance\": {\n"
+            << "    \"chip_type\": \"" << env_or_unknown("TT_RQM_CHIP_TYPE") << "\",\n"
+            << "    \"tt_metal_commit\": \"" << env_or_unknown("TT_RQM_TT_METAL_COMMIT") << "\",\n"
+            << "    \"compiler_version\": \"" << env_or_unknown("TT_RQM_COMPILER_VERSION") << "\",\n"
+            << "    \"runtime_version\": \"" << env_or_unknown("TT_RQM_RUNTIME_VERSION") << "\",\n"
+            << "    \"build_id\": \"" << env_or_unknown("TT_RQM_BUILD_ID") << "\",\n"
+            << "    \"timer_scope\": \"prepared workload enqueue plus Finish; excludes setup and readback\"\n"
+            << "  },\n"
             << "  \"note\": \"Experimental TT-Metalium RISC-V qmul candidate; validate execution label before using as emulation or hardware evidence.\"\n"
             << "}\n";
     write_text(path, metrics.str());
@@ -346,13 +371,15 @@ int main(int argc, char** argv) {
         const auto a_words = read_words(config.workdir / "a.bin", manifest.items);
         const auto b_words = read_words(config.workdir / "b.bin", manifest.items);
 
-        double elapsed_s = 0.0;
-        auto out_words = run_qmul_candidate(a_words, b_words, manifest, config.device_id, elapsed_s);
+        double setup_s = 0.0;
+        double device_s = 0.0;
+        auto out_words = run_qmul_candidate(
+            a_words, b_words, manifest, config.device_id, setup_s, device_s);
         if (out_words.size() != static_cast<size_t>(manifest.items) * kLanes) {
             throw std::runtime_error("candidate output size mismatch");
         }
         write_words(config.workdir / "out.bin", out_words);
-        write_metrics(config.workdir / "metrics.json", manifest, elapsed_s);
+        write_metrics(config.workdir / "metrics.json", manifest, setup_s, device_s);
         return 0;
     } catch (const std::exception& exc) {
         std::cerr << "tt_metalium_qmul_candidate failed: " << exc.what() << "\n";

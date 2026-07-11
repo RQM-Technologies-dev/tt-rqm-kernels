@@ -54,8 +54,8 @@ The repo already has the right handshake:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/12>
 - StructuredBench-HPC expansion roadmap and closed tracker issue #13:
   <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/13>
-- external LWT/ILWT `tt-metal` worktree tracker issue #14:
-  <https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/14>
+- external LWT/ILWT tracker #14 is closed; upstream issue #40494 is assigned
+  and is not an active `tt-rqm-kernels` lane
 - TT-MLIR fused lowering prerequisites documented:
   `docs/tt-mlir-fused-lowering-prerequisites.md`
 - public `tt-metal` placement Discussion and narrow placement issue

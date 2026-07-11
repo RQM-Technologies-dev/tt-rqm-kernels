@@ -4,7 +4,9 @@ Generated: `2026-07-03T19:43:44.015086+00:00`
 
 Backend: `tt-lang-sim`  Device: `functional-simulator`  Execution: `simulator`  Stable benchmark: `false`  Dtype: `float32`  Suite: `qmul`
 
-This report demonstrates that the `[N, 4]` `qmul` contract can be exercised through the TT-Lang functional simulator and validated against CPU/PyTorch plus scalar references. It is a logic and report-shape artifact, not hardware performance evidence.
+This report demonstrates that the `[N, 4]` `qmul` contract can be exercised through the TT-Lang functional simulator and validated through the current conformance contract. It is a logic and report-shape artifact, not hardware performance evidence.
+
+This is a historical pre-integrity artifact and has not been rerun under the whole-output/metrics-v2 gate.
 
 Next evidence target: `reports/tt_emule_qmul_candidate.md`.
 Final target: `reports/tt_hardware_qmul_quickstart.md`.
@@ -14,6 +16,12 @@ Final target: `reports/tt_hardware_qmul_quickstart.md`.
 | workload | items | iters | latency_ms | throughput | unit | max_abs_err | rms_err | stability | scalar_ref |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | qmul | 128 | 1 | 19.0821 | 6707.84 | qmul/s | 1.055e-07 | 2.865e-08 | - | 6.278e-08 |
+
+## Conformance and Timing Integrity
+
+| workload | implementation_class | performance_eligible | correctness_passed | validated_values | whole_output_max_abs_err | repetitions | device_median_s | device_p95_s | end_to_end_median_s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| qmul | - | false | false | - | 0.000e+00 | 1 | - | - | - |
 
 ## Hardware-Relevant Metrics
 

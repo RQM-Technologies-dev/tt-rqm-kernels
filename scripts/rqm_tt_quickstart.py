@@ -33,6 +33,7 @@ EMULE_REFRESH_COMMAND = """python scripts/rqm_tt_quickstart.py \\
 
 HARDWARE_REFRESH_COMMAND = """python scripts/rqm_tt_quickstart.py \\
   --mode hardware \\
+  --benchmark-stage conformance \\
   --items 128 \\
   --iters 1 \\
   --warmup 0 \\
@@ -60,6 +61,12 @@ def main() -> int:
     parser.add_argument("--items", type=_positive_int, default=128)
     parser.add_argument("--iters", type=_positive_int, default=1)
     parser.add_argument("--warmup", type=_nonnegative_int, default=0)
+    parser.add_argument("--repetitions", type=_positive_int, default=1)
+    parser.add_argument(
+        "--benchmark-stage",
+        choices=("conformance", "performance"),
+        default=None,
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--json-output",
@@ -95,6 +102,11 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
+    benchmark_stage = args.benchmark_stage
+    if args.mode == "hardware" and benchmark_stage is None:
+        benchmark_stage = "conformance"
+    if args.mode == "emule" and benchmark_stage is not None:
+        parser.error("--benchmark-stage is reserved for real hardware mode")
 
     path = resolve_execution_path(args.mode, command=args.command)
     if not path.available:
@@ -123,6 +135,8 @@ def main() -> int:
             warmup=args.warmup,
             seed=args.seed,
             stable_benchmark=args.stable_benchmark,
+            repetitions=args.repetitions,
+            benchmark_stage=benchmark_stage,
         )
     except (TenstorrentAdapterError, ReportLabelError, RuntimeError, ValueError) as exc:
         print(str(exc), file=sys.stderr)

@@ -28,6 +28,7 @@ N=128
 iters=1
 warmup=0
 execution_label=hardware
+benchmark_stage=conformance
 stable_benchmark=false
 ```
 
@@ -91,9 +92,16 @@ python experimental/tt_metalium_qmul/build_candidate.py \
   --build-dir "$TT_RQM_CANDIDATE_BUILD" \
   --generator Ninja
 
+export TT_RQM_CHIP_TYPE="${TT_RQM_CHIP_TYPE:?set TT_RQM_CHIP_TYPE to the real chip type}"
+export TT_RQM_TT_METAL_COMMIT="$(git -C "$TT_METAL_HOME" rev-parse HEAD)"
+export TT_RQM_COMPILER_VERSION="$(c++ --version | head -n 1)"
+export TT_RQM_RUNTIME_VERSION="$TT_RQM_TT_METAL_COMMIT"
+export TT_RQM_BUILD_ID="$(sha256sum "$TT_RQM_CANDIDATE_BUILD/tt_rqm_metalium_qmul_candidate" | cut -d' ' -f1)"
+
 python scripts/validate_qmul_candidate.py \
   --command "$TT_RQM_CANDIDATE_BUILD/tt_rqm_metalium_qmul_candidate" \
   --execution-label hardware \
+  --benchmark-stage conformance \
   --methodology-note "Initial Tenstorrent hardware validation sample for experimental TT-Metalium scalar RISC-V qmul candidate; not a stable benchmark." \
   --items 128 \
   --iters 1 \
@@ -119,8 +127,9 @@ python scripts/validate_qmul_candidate.py \
 The candidate command must implement the
 [Tenstorrent hardware command contract](tenstorrent-hardware-command-contract.md):
 StructuredBench provides `a.bin`, `b.bin`, and `manifest.json`; the candidate
-writes `out.bin` and `metrics.json`. StructuredBench validates output against
-CPU/PyTorch and scalar references before writing the report artifacts.
+writes `out.bin` and strict metrics-v2 metadata. StructuredBench validates every
+output value against an independent float64 golden result from the exact float32
+inputs before writing the report artifacts.
 
 If the build fails because the local TT-Metalium export layout differs, return
 the build log and the `tt-metal` commit instead of fabricating a report.

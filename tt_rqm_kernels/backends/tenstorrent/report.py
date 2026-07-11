@@ -7,6 +7,12 @@ from pathlib import Path
 from typing import Literal
 
 from tt_rqm_kernels.structuredbench import EXECUTION_LABELS, render_markdown_report
+from tt_rqm_kernels.benchmark_integrity import (
+    IntegrityError,
+    validate_label_command,
+    validate_report,
+    validate_stability,
+)
 
 ExecutionLabel = Literal["cpu", "simulator", "emulation", "hardware"]
 
@@ -26,23 +32,10 @@ def validate_external_qmul_label(
         raise ReportLabelError(
             "execution_label must be one of: " + ", ".join(EXECUTION_LABELS)
         )
-    if execution_label == "simulator":
-        raise ReportLabelError(
-            "external-qmul reports should use cpu, emulation, or hardware; "
-            "use tt-lang-sim for simulator reports"
-        )
-    if execution_label == "hardware" and command is not None:
-        lowered = command.lower()
-        if "tt-emule" in lowered or "emule" in lowered or "run_candidate_docker" in lowered:
-            raise ReportLabelError(
-                "hardware reports require a real Tenstorrent hardware command; "
-                "tt-emule or Docker emulation commands must use execution_label=emulation"
-            )
-        if "docker" in lowered or "podman" in lowered:
-            raise ReportLabelError(
-                "hardware reports require a real Tenstorrent hardware command; "
-                "Docker/container commands must not be labeled as hardware"
-            )
+    try:
+        validate_label_command(execution_label, command=command)
+    except IntegrityError as exc:
+        raise ReportLabelError(str(exc)) from exc
     return execution_label  # type: ignore[return-value]
 
 
@@ -53,11 +46,10 @@ def validate_stable_benchmark(
 ) -> None:
     """Reject stable benchmark labels for non-hardware external candidates."""
 
-    if stable_benchmark and execution_label != "hardware":
-        raise ReportLabelError(
-            "stable benchmark reports are only allowed for real hardware runs; "
-            f"execution_label={execution_label} must use stable_benchmark=false"
-        )
+    try:
+        validate_stability(execution_label, stable_benchmark=stable_benchmark)
+    except IntegrityError as exc:
+        raise ReportLabelError(str(exc)) from exc
 
 
 def methodology_note_for_label(
@@ -95,6 +87,8 @@ def write_structuredbench_report(
     markdown_output: Path | None = None,
 ) -> None:
     """Write StructuredBench JSON and Markdown report files when requested."""
+
+    validate_report(report)
 
     if json_output is not None:
         json_output.parent.mkdir(parents=True, exist_ok=True)
