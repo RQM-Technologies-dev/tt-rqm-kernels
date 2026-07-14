@@ -18,7 +18,11 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "matplotlib==3.10.1",
   "pytest>=8.0"
+]
+benchmark = [
+  "matplotlib==3.10.1"
 ]
 
 [tool.setuptools.packages.find]

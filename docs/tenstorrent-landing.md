@@ -43,6 +43,11 @@ sample is explicitly not stable and is not an acceleration comparison.
 The persistent-device path removes repeated process/device creation from the
 measurement session while preserving that non-claim.
 
+The public [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
+packages the current evidence, deterministic charts, claim policy, provenance,
+and limitations. It classifies the single persistent session as Claim Level 1,
+not as a stable result.
+
 ## Run It In 10 Minutes
 
 ```bash
@@ -128,6 +133,8 @@ The first hardware sample should use `execution_label=hardware` and
 
 ## Key Links
 
+- [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
+- [Benchmark claim policy](benchmarks/claim-policy.md)
 - [StructuredBench specification](structuredbench-spec.md)
 - [Tenstorrent RFC](tenstorrent-rfc.md)
 - [TT-Metalium qmul design](tt-metalium-qmul-design.md)

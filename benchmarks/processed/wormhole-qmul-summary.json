@@ -1,0 +1,166 @@
+{
+  "benchmark_id": "wormhole-qmul-fp32",
+  "cases": [
+    {
+      "atol": 0.0001,
+      "core_count": 4,
+      "device_median_s": 0.0016516274999999999,
+      "device_p95_s": 0.001724061,
+      "device_samples_s": [
+        0.001675492,
+        0.001675512,
+        0.001676682,
+        0.001639862,
+        0.001646013,
+        0.001644772,
+        0.001657242,
+        0.001724061,
+        0.001642502,
+        0.001618873
+      ],
+      "estimated_flops_per_s": 2083181589.068964,
+      "failing_values": 0,
+      "items": 4096,
+      "iterations": 30,
+      "logical_traffic_gb_per_s": 3.571168438403938,
+      "nonfinite_values": 0,
+      "phases_s": {
+        "buffer_allocation": 0.000216518,
+        "cleanup": 3.1959e-05,
+        "d2h": 0.000238257,
+        "h2d": 0.014120757,
+        "prewarm_sync": 9.6749e-05,
+        "program_build": 0.000657483,
+        "samples": [
+          0.001675492,
+          0.001675512,
+          0.001676682,
+          0.001639862,
+          0.001646013,
+          0.001644772,
+          0.001657242,
+          0.001724061,
+          0.001642502,
+          0.001618873
+        ],
+        "warmup": 0.01567677
+      },
+      "rtol": 0.0001,
+      "throughput_qmul_per_s": 74399342.46674871,
+      "validated_values": 16384,
+      "whole_output_max_abs_error": 7.663336720753477e-07
+    },
+    {
+      "atol": 0.0001,
+      "core_count": 56,
+      "device_median_s": 0.0021010869999999997,
+      "device_p95_s": 0.002143976,
+      "device_samples_s": [
+        0.002115317,
+        0.002086868,
+        0.002143976,
+        0.002104347,
+        0.002105988,
+        0.002093387,
+        0.002095567,
+        0.002089598,
+        0.002097827,
+        0.002110147
+      ],
+      "estimated_flops_per_s": 26200837947.214943,
+      "failing_values": 0,
+      "items": 65536,
+      "iterations": 30,
+      "logical_traffic_gb_per_s": 44.91572219522562,
+      "nonfinite_values": 0,
+      "phases_s": {
+        "buffer_allocation": 2.491e-05,
+        "cleanup": 1.638e-05,
+        "d2h": 0.00183853,
+        "h2d": 0.000286427,
+        "prewarm_sync": 3.647e-05,
+        "program_build": 0.000485495,
+        "samples": [
+          0.002115317,
+          0.002086868,
+          0.002143976,
+          0.002104347,
+          0.002105988,
+          0.002093387,
+          0.002095567,
+          0.002089598,
+          0.002097827,
+          0.002110147
+        ],
+        "warmup": 0.001246116
+      },
+      "rtol": 0.0001,
+      "throughput_qmul_per_s": 935744212.4005338,
+      "validated_values": 262144,
+      "whole_output_max_abs_error": 1.5416372889376362e-06
+    },
+    {
+      "atol": 0.0001,
+      "core_count": 56,
+      "device_median_s": 0.004231194000000001,
+      "device_p95_s": 0.004303374,
+      "device_samples_s": [
+        0.004235824,
+        0.004303374,
+        0.004232564,
+        0.004229134,
+        0.004268914,
+        0.004264204,
+        0.004213274,
+        0.004215394,
+        0.004178205,
+        0.004229824
+      ],
+      "estimated_flops_per_s": 52042274591.99459,
+      "failing_values": 0,
+      "items": 262144,
+      "iterations": 30,
+      "logical_traffic_gb_per_s": 89.21532787199072,
+      "nonfinite_values": 0,
+      "phases_s": {
+        "buffer_allocation": 6.631e-05,
+        "cleanup": 2.94e-05,
+        "d2h": 0.005802217,
+        "h2d": 0.000733122,
+        "prewarm_sync": 3.621e-05,
+        "program_build": 0.000636953,
+        "samples": [
+          0.004235824,
+          0.004303374,
+          0.004232564,
+          0.004229134,
+          0.004268914,
+          0.004264204,
+          0.004213274,
+          0.004215394,
+          0.004178205,
+          0.004229824
+        ],
+        "warmup": 0.001715091
+      },
+      "rtol": 0.0001,
+      "throughput_qmul_per_s": 1858652663.999807,
+      "validated_values": 1048576,
+      "whole_output_max_abs_error": 1.486650566207004e-06
+    }
+  ],
+  "claim": {
+    "level": 1,
+    "name": "qualified_first_performance_sample",
+    "public_session_count": 1,
+    "stable_benchmark": false
+  },
+  "schema": "tt-rqm-benchmark-processed.v1",
+  "session_timing_s": {
+    "candidate_session": 2.407865554,
+    "device_close": 0.130627294,
+    "device_create": 2.087592366,
+    "host_process_end_to_end_s": 3.06052512700262
+  },
+  "source_report": "reports/tt_hardware_qmul_stage_b_persistent_performance.json"
+}
