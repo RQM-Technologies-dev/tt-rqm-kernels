@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from pathlib import Path
 import statistics
 from typing import Any, Mapping, Sequence
@@ -145,16 +146,20 @@ def _analyze_session(
     if not isinstance(artifacts, list):
         raise IntegrityError("session manifest has no artifact list")
     report_path: Path | None = None
+    report_display_path: Path | None = None
     for artifact in artifacts:
         if not isinstance(artifact, dict):
             raise IntegrityError("session artifact is malformed")
-        path = (manifest_path.parent / str(artifact["path"])).resolve()
+        display_path = Path(os.path.normpath(manifest_path.parent / str(artifact["path"])))
+        path = display_path.resolve()
         if not path.is_file() or sha256_file(path) != artifact.get("sha256"):
             raise IntegrityError(f"session artifact hash mismatch: {path}")
         if artifact.get("role") == "hardware-report":
             report_path = path
+            report_display_path = display_path
     if report_path is None:
         raise IntegrityError("session manifest has no hardware report")
+    assert report_display_path is not None
     report = json.loads(report_path.read_text(encoding="utf-8"))
     validate_persistent_report(report)
     if report.get("benchmark_stage") != "performance":
@@ -192,7 +197,7 @@ def _analyze_session(
     )
     return ({
         "manifest": str(manifest_path),
-        "hardware_report": str(report_path),
+        "hardware_report": str(report_display_path),
         "session_id": str(manifest.get("session_id")),
         "passed_input_gates": not rejected,
         "rejected_gates": rejected,
