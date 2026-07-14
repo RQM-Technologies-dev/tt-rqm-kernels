@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -109,3 +111,18 @@ def test_strict_metrics_reject_contract_drift(path: tuple[object, ...], value: o
     target[path[-1]] = value  # type: ignore[index]
     with pytest.raises(IntegrityError):
         validate_su2_metrics(changed, manifest, "c" * 64, 3.0)
+
+
+def test_committed_conformance_release_hashes_and_claim_are_valid() -> None:
+    release = json.loads(Path("benchmarks/manifests/su2-compose-conformance.json").read_text())
+    assert release["claim"] == {"level": 0, "name": "silicon_conformance", "stable_benchmark": False}
+    for artifact in release["artifacts"]:
+        assert hashlib.sha256(Path(artifact["path"]).read_bytes()).hexdigest() == artifact["sha256"]
+
+
+def test_public_hardware_claim_is_immediately_qualified() -> None:
+    for path in (Path("README.md"), Path("docs/tenstorrent-landing.md"), Path("docs/benchmarks/su2-compose-bench.md")):
+        text = path.read_text()
+        claim = text.index("RQM runs quantum Hamiltonian simulations on Tenstorrent")
+        qualification = text.index("CPU-lowered FP32 evolution operators", claim)
+        assert qualification - claim < 350

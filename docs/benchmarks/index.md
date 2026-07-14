@@ -19,7 +19,7 @@ result, or Tenstorrent endorsement.
 ## Preregistered next benchmark
 
 - [Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole](su2-compose-bench.md)
-- Current state: CPU contract and preregistration; no SU(2) hardware result yet
+- Current state: N300 device-0 silicon conformance; performance eligibility remains false
 - Family: `SU2HamiltonianBench`; first stage: `SU2ComposeBench`
 
 ## Policy and next measurements

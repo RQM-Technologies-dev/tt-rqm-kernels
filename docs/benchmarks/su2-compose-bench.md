@@ -1,14 +1,16 @@
 # Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole
 
-> **RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.**
+> **RQM runs quantum Hamiltonian simulations on Tenstorrent.**
 
 The first implementation targets fused, time-ordered SU(2) evolution on
 Wormhole using CPU-lowered FP32 evolution operators. A later stage will lower
 Hamiltonian coefficients on device.
 
-This page is currently a preregistered benchmark contract, not a hardware
-result. After N300 conformance passes, the opening statement will become
-“RQM runs quantum Hamiltonian simulations on Tenstorrent.”
+The initial fused and unfused candidates have passed N300 device-0
+conformance. The result is Claim Level 0 silicon evidence and remains
+`performance_eligible=false`, `stable_benchmark=false`. See the
+[whole-output report](../../reports/tt_hardware_su2_compose_conformance.md) and
+[architecture audit](../../reports/tt_hardware_su2_compose_architecture_audit.md).
 
 ## Problem Definition
 

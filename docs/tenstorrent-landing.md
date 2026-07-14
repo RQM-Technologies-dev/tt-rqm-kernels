@@ -3,9 +3,9 @@
 This page is for Tenstorrent engineers arriving from `tt-awesome`, GitHub
 Discussions, or a maintainer handoff.
 
-> **RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.**
+> **RQM runs quantum Hamiltonian simulations on Tenstorrent.**
 
-The first planned implementation executes fused, time-ordered SU(2) evolution
+The first implementation executes fused, time-ordered SU(2) evolution
 on Wormhole using CPU-lowered FP32 evolution operators. A later stage will
 lower Hamiltonian coefficients on device. The exact preregistered boundary is
 documented in [SU2ComposeBench](benchmarks/su2-compose-bench.md).
