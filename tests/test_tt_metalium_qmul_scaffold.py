@@ -151,11 +151,12 @@ def test_tt_metalium_multicore_architecture_is_stage_b_candidate() -> None:
     assert "constexpr bool kPerformanceEligible = false" in host
     assert "noc_async_read_page" in reader
     assert "noc_async_write_page" in writer
-    assert "qmul_tiles_sfpu" in compute
-    assert "out_w = aw * bw - ax * bx - ay * by - az * bz" in sfpu
-    assert "out_x = aw * bx + ax * bw + ay * bz - az * by" in sfpu
-    assert "out_y = aw * by - ax * bz + ay * bw + az * bx" in sfpu
-    assert "out_z = aw * bz + ax * by - ay * bx + az * bw" in sfpu
+    assert "TT_RQM_QMUL_SFPU_CALL" in compute
+    assert "qmul_w_tile_face" in sfpu
+    assert "qmul_x_tile_face" in sfpu
+    assert "qmul_y_tile_face" in sfpu
+    assert "qmul_z_tile_face" in sfpu
+    assert sfpu.count("sfpi::vFloat result") == 4
     for data_movement_source in (reader, writer):
         assert "sfpi::" not in data_movement_source
         assert "out_w" not in data_movement_source

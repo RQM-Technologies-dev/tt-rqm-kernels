@@ -13,10 +13,9 @@
 #include "qmul_sfpu.h"
 #endif
 
-inline void qmul_tiles_sfpu() {
-    MATH((_llk_math_eltwise_unary_sfpu_params_(
-        ::ckernel::sfpu::qmul_tile_face, 0, VectorMode::RC)));
-}
+#define TT_RQM_QMUL_SFPU_CALL(component)                                                        \
+    MATH((_llk_math_eltwise_unary_sfpu_params_(                                                 \
+        ::ckernel::sfpu::qmul_##component##_tile_face, 0, VectorMode::RC)))
 
 void kernel_main() {
     const uint32_t tile_count = get_arg_val<uint32_t>(0);
@@ -31,22 +30,29 @@ void kernel_main() {
             cb_wait_front(first_input_cb + lane, 1);
         }
 
-        tile_regs_acquire();
-        for (uint32_t lane = 0; lane < 8; ++lane) {
-            copy_tile(first_input_cb + lane, 0, lane);
-        }
-        qmul_tiles_sfpu();
-        tile_regs_commit();
-        tile_regs_wait();
-
-        for (uint32_t lane = 0; lane < 4; ++lane) {
-            cb_reserve_back(first_output_cb + lane, 1);
-            pack_tile(lane, first_output_cb + lane);
-            cb_push_back(first_output_cb + lane, 1);
+        for (uint32_t output_lane = 0; output_lane < 4; ++output_lane) {
+            tile_regs_acquire();
+            for (uint32_t input_lane = 0; input_lane < 8; ++input_lane) {
+                copy_tile(first_input_cb + input_lane, 0, input_lane);
+            }
+            if (output_lane == 0) {
+                TT_RQM_QMUL_SFPU_CALL(w);
+            } else if (output_lane == 1) {
+                TT_RQM_QMUL_SFPU_CALL(x);
+            } else if (output_lane == 2) {
+                TT_RQM_QMUL_SFPU_CALL(y);
+            } else {
+                TT_RQM_QMUL_SFPU_CALL(z);
+            }
+            tile_regs_commit();
+            tile_regs_wait();
+            cb_reserve_back(first_output_cb + output_lane, 1);
+            pack_tile(0, first_output_cb + output_lane);
+            cb_push_back(first_output_cb + output_lane, 1);
+            tile_regs_release();
         }
         for (uint32_t lane = 0; lane < 8; ++lane) {
             cb_pop_front(first_input_cb + lane, 1);
         }
-        tile_regs_release();
     }
 }
