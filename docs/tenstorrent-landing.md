@@ -3,12 +3,14 @@
 This page is for Tenstorrent engineers arriving from `tt-awesome`, GitHub
 Discussions, or a maintainer handoff.
 
-> **RQM runs quantum Hamiltonian simulations on Tenstorrent.**
+> **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**
 
-The first implementation executes fused, time-ordered SU(2) evolution
-on Wormhole using CPU-lowered FP32 evolution operators. A later stage will
-lower Hamiltonian coefficients on device. The exact preregistered boundary is
-documented in [SU2ComposeBench](benchmarks/su2-compose-bench.md).
+H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
+rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
+H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
+stage of a Hamiltonian-simulation pipeline, not the complete device-side
+pipeline. The exact boundary is documented in
+[SU2ComposeBench](benchmarks/su2-compose-bench.md).
 
 ## What This Is
 

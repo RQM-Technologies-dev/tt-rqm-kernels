@@ -309,8 +309,8 @@ def validate_su2_metrics(
 def render_su2_markdown(report: Mapping[str, object]) -> str:
     lines = [
         "# Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole", "",
-        "> **RQM runs quantum Hamiltonian simulations on Tenstorrent.**", "",
-        "The first implementation executes fused, time-ordered SU(2) evolution on Wormhole using CPU-lowered FP32 evolution operators. A later stage will lower Hamiltonian coefficients on device.", "",
+        "> **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**", "",
+        "H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32 rotors and phase pairs on the CPU. Wormhole performs their ordered composition. H2 will address device-side Hamiltonian coefficient lowering. H1 is a real stage of a Hamiltonian-simulation pipeline, not the complete device-side pipeline.", "",
         f"Stage: `{report['benchmark_stage']}`  ", f"Performance eligible: `{str(report['performance_eligible']).lower()}`  ",
         "Stable benchmark: `false`", "", str(report["methodology_note"]), "", "## Results", "",
         "| B | K | values/path | fused median s | unfused median s | ratio | fused max error |", "|---:|---:|---:|---:|---:|---:|---:|",

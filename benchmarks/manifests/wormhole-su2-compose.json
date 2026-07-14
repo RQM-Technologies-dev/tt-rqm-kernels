@@ -7,7 +7,7 @@
     {
       "path": "benchmarks/manifests/su2-compose-preregistration.json",
       "role": "preregistration",
-      "sha256": "52ee14a9bba713c2c0705df81e00adc406a19788c2eb5a9719cb03d0a5825727"
+      "sha256": "6f36c9e3f5a68d41d305f5368b6e690cc5529d079dbca54edb51072a70a0578b"
     },
     {
       "path": "reports/tt_hardware_su2_compose_architecture_audit.md",

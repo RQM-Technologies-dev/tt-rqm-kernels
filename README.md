@@ -1,423 +1,99 @@
 # tt-rqm-kernels
 
-Structured quaternion and rotor kernels for Tenstorrent hardware
-
 [![CI](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml/badge.svg)](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml)
 
-`tt-rqm-kernels` is an independent open-source "RQM Technologies" project for structured numerical kernels targeting the Tenstorrent ecosystem. The first release surface is a correctness-tested CPU/PyTorch reference library. Later work can move selected kernels down into TT-Metalium, TT-NN, and TT-Forge / TT-MLIR.
-
-This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
-
-> **RQM runs quantum Hamiltonian simulations on Tenstorrent.**
-
-The first implementation executes fused, time-ordered SU(2) evolution on
-Wormhole using CPU-lowered FP32 evolution operators. A later stage will lower
-Hamiltonian coefficients on device. See the
-[SU2HamiltonianBench roadmap](docs/hamiltonian-evolution-roadmap.md).
-
-## Tenstorrent Quick Read
-
-For Tenstorrent engineers:
-
-1. What this is: structured `[N, 4]` float tensor kernels, starting with `qmul`.
-2. Why it matters: compact benchmark between scalar elementwise ops and matmul.
-3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, tt-emule, Stage
-   A N300 conformance, and a first multicore/SFPU Stage B N300 sample.
-4. Current milestone: the one-device Float32 Stage B architecture passed
-   conformance, was audited as performance-eligible, and completed the official
-   three-size sweep once.
-5. The Stage B report retains `stable_benchmark=false`; it is methodology
-   evidence, not an acceleration claim or a comparison against another backend.
-6. A separate persistent-device Stage B path keeps one Wormhole device open
-   across the complete sweep; its first report also remains non-stable.
-7. Public benchmark report:
-   [Structured FP32 Quaternion Kernels on Tenstorrent Wormhole](docs/benchmarks/wormhole-qmul.md).
-8. Best current timing-methodology link:
-   [reports/tt_hardware_qmul_stage_b_persistent_performance.md](reports/tt_hardware_qmul_stage_b_persistent_performance.md).
-
-The first hardware gate and first Stage B implementation pass are complete.
-Acceleration claims remain blocked on stable methodology and a defined
-comparison baseline.
-
-The evidence sequence is explicit: immutable scalar Stage A, first multicore
-Stage B, persistent-device Stage B, future multi-session stability, and future
-timing-scope-compatible CPU comparison. See
-[the preregistered stability methodology](docs/stage-b-stability-methodology.md).
-The first persistent artifact passed its one-session gates and remains
-`stable_benchmark=false`.
-
-## For Tenstorrent Reviewers
-
-1. Start here: [docs/tenstorrent-landing.md](docs/tenstorrent-landing.md)
-2. Technical spec: [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
-3. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
-4. Emulation evidence: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
-5. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
-6. N300 environment record: [reports/tt_hardware_qmul_environment.txt](reports/tt_hardware_qmul_environment.txt)
-7. Stage B architecture audit: [reports/tt_hardware_qmul_stage_b_architecture_audit.md](reports/tt_hardware_qmul_stage_b_architecture_audit.md)
-8. Stage B conformance: [reports/tt_hardware_qmul_stage_b_candidate_conformance.md](reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
-9. Stage B first sample: [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md)
-10. Persistent Stage B sample: [reports/tt_hardware_qmul_stage_b_persistent_performance.md](reports/tt_hardware_qmul_stage_b_persistent_performance.md)
-11. Persistent environment and timer audit: [environment](reports/tt_hardware_qmul_stage_b_persistent_environment.txt), [audit](reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
-12. Current status command: `python scripts/repo_status.py`
-13. Evidence-backed benchmark page: [docs/benchmarks/](docs/benchmarks/index.md)
-14. Preregistered SU(2) evolution benchmark: [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
-15. SU2ComposeBench N300 conformance: [hardware report](reports/tt_hardware_su2_compose_conformance.md)
-16. SU2ComposeBench Claim Level 1 report: [Fused Time-Ordered SU(2) Composition on Wormhole](docs/benchmarks/su2-compose-bench.md)
-17. Reproduce both SU(2) evidence levels: `python scripts/reproduce_wormhole_su2_compose.py --check`
-
-Current result: the scalar baseline remains the immutable Stage A record. The
-separate `multicore_tensix_sfpu_qmul` candidate passed whole-output N=128
-conformance, was architecture-audited, and completed the official Stage B
-sweep on Wormhole device 0. The first sample is hardware-labeled,
-`performance_eligible=true`, and `stable_benchmark=false`.
-
-## Functional Tenstorrent Path
-
-The current functional path is the StructuredBench `external-qmul` protocol:
-CPU/PyTorch reference validation, optional tt-emule execution, and real-device
-execution through the experimental TT-Metalium candidate. The first committed
-hardware artifact used an approved SSH-accessible N300 host.
-
-Start here:
-
-- [docs/tenstorrent-functional-quickstart.md](docs/tenstorrent-functional-quickstart.md)
-- `python scripts/rqm_tt_quickstart.py --check`
-- Browser silicon target: Tenstorrent Cloud Console
-- [docs/tenstorrent-console-access-plan.md](docs/tenstorrent-console-access-plan.md)
-- [docs/tenstorrent-console-copy-paste.md](docs/tenstorrent-console-copy-paste.md)
-- `python scripts/rqm_tt_console_runner.py --check`
-- [docs/outreach/tenstorrent-console-access-request.md](docs/outreach/tenstorrent-console-access-request.md)
-- [docs/tenstorrent-cloud-access-plan.md](docs/tenstorrent-cloud-access-plan.md)
-- [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md)
-- `python scripts/rqm_tt_cloud_runner.py --check`
-- [examples/tenstorrent_qmul_quickstart.py](examples/tenstorrent_qmul_quickstart.py)
-- [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
-
-For no-cost hardware validation, prefer delegated Tenstorrent-run validation or
-explicitly granted no-cost Tenstorrent Cloud access. This repo does not
-implement payment-backed cloud provisioning, cloud billing integration, or
-credential storage.
-
-Tenstorrent approved SSH access to an N300 host, which was used for the first
-Stage A report. Console and delegated-validation documents remain as setup and
-reproduction references; no payment-backed provisioning is part of this repo.
-
-## Core Idea
-
-RQM Technologies develops structured numerical kernels where quaternions, rotors, phase, orientation, and wave states are represented inside ordinary floating-point tensors.
-
-A quaternion can live inside floats as:
-
-```text
-[..., 4] = [real, i, j, k]
-```
-
-The tensor is still a regular real-valued PyTorch tensor. The structure comes from the convention and the operators applied to the final dimension. `qmul` is short for **quaternion multiplication**: the Hamilton product that combines two quaternion values. It consumes two tensors with final dimension `4` and returns a tensor with the same final dimension.
-
-This keeps the data layout friendly to accelerator stacks while preserving useful algebraic structure at the operator level.
-
-For normalized rotation quaternions, `qmul` composes orientation state with an
-incremental rotation. That makes it a correctness-first foundation for existing
-vector rotation and future fused pose streams, as well as a possible primitive
-beneath the proposed physical-AI state-integrity layer. It does not by itself
-provide sensor fusion, state estimation, or hardware acceleration; those remain
-separate, measurement-driven capabilities.
-
-## Why Structured Tensor Kernels Matter
-
-Modern AI accelerators are optimized around dense tensor movement, tiling, and fused math. Many domains, however, carry structured state:
-
-- orientations and poses in robotics
-- rotations and streams of transforms in graphics
-- phase in wireless and signal processing
-- vector and wave state in imaging and simulation
-- geometric features in scientific computing and physical AI
-- downstream signals processing where these numerical patterns are relevant
-
-Representing these states as ordinary floating-point tensors makes them compatible with accelerator data paths. Implementing the right structured kernels then lets software keep the math meaningful without leaving the tensor runtime.
-
-The goal of this repository is correctness first:
-
-- simple PyTorch reference operators
-- clear validation and broadcasting rules
-- tests for algebraic identities and numerical tolerances
-- benchmarks that make future accelerator ports comparable
-- StructuredBench reports for quaternion, rotor, inverse, normalization, and phase workloads
-
-## Current Milestone
-
-Phase 1 implements CPU/PyTorch reference kernels for quaternion and rotor operations:
-
-- Hamilton product: `qmul`
-- conjugate, norm, normalization, inverse, and dot product
-- vector rotation by unit rotors
-- phase and orientation tracking helpers
-- examples, benchmark scripts, and the StructuredBench CLI
-
-Run the benchmark smoke suite:
-
-```bash
-python -m tt_rqm_kernels.structuredbench --suite smoke
-```
-
-Run focused or full suites:
-
-```bash
-python -m tt_rqm_kernels.structuredbench --suite qmul
-python -m tt_rqm_kernels.structuredbench --suite qrotate
-python -m tt_rqm_kernels.structuredbench --suite full
-```
-
-StructuredBench emits a versioned report schema intended to compare CPU/PyTorch reference results against later TT-Metalium and TT-NN backend implementations.
-
-## Optional TT-Lang Simulator qmul Smoke
-
-The first Tenstorrent-adjacent prototype is an optional TT-Lang functional
-simulator smoke for `qmul` over `[N, 4]` row-major float32 tensors. It is not a
-hardware backend and does not claim hardware performance.
-
-Check whether the simulator is available:
-
-```bash
-python scripts/run_ttlang_qmul_smoke.py --check
-```
-
-The check output also reports whether `tt-lang-sim-stats` is available. Stats
-support is optional; missing stats tooling does not block simulator correctness
-runs.
-
-Run it in an environment with `tt-lang-sim` installed:
-
-```bash
-python scripts/run_ttlang_qmul_smoke.py \
-  --items 128 \
-  --json-output reports/tt_lang_qmul_sim.json \
-  --markdown-output reports/tt_lang_qmul_sim.md
-```
-
-The default TT-Lang simulator variant is `block`, which splits each `[N, 4]`
-quaternion into lane slices inside TT-Lang dataflow buffers. An experimental
-`raw` variant uses TT-Lang raw element reads and writes to make the four scalar
-lane equations explicit inside the simulator:
-
-```bash
-python scripts/run_ttlang_qmul_smoke.py \
-  --variant raw \
-  --items 128 \
-  --iters 1 \
-  --warmup 0
-```
-
-Both variants are simulator-only checks. They compare implementation shape and
-trace/stat diagnostics, not hardware performance.
-
-Optionally capture a simulator trace and post-process it with
-`tt-lang-sim-stats` when that tool is installed:
-
-```bash
-python scripts/run_ttlang_qmul_smoke.py \
-  --items 128 \
-  --iters 1 \
-  --warmup 0 \
-  --seed 0 \
-  --trace-output reports/tt_lang_qmul_trace.jsonl \
-  --stats-output reports/tt_lang_qmul_stats.txt \
-  --json-output reports/tt_lang_qmul_sim.json \
-  --markdown-output reports/tt_lang_qmul_sim.md
-```
-
-Or run the same optional backend through StructuredBench:
-
-```bash
-python -m tt_rqm_kernels.structuredbench \
-  --backend tt-lang-sim \
-  --suite qmul \
-  --items 128 \
-  --iters 1 \
-  --warmup 0
-```
-
-StructuredBench exposes the same trace/stat capture through TT-Lang-specific
-flags:
-
-```bash
-python -m tt_rqm_kernels.structuredbench \
-  --backend tt-lang-sim \
-  --suite qmul \
-  --tt-lang-variant raw \
-  --items 128 \
-  --iters 1 \
-  --warmup 0 \
-  --tt-lang-trace-output reports/tt_lang_qmul_trace.jsonl \
-  --tt-lang-stats-output reports/tt_lang_qmul_stats.txt
-```
-
-Trace/stat output is simulator diagnostics only. It is useful for inspecting
-dataflow-buffer and copy activity before a hardware backend exists, but it is
-not hardware performance evidence.
-
-See [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md) for setup details
-and acceptance criteria.
-
-## Why Tenstorrent Developers Should Care
-
-This repo gives Tenstorrent a compact benchmark class between scalar elementwise ops and large matmul. Some workloads need to preserve structure inside the data: rotation, phase, orientation, direction, and geometric state. That shows up in robotics pose updates, graphics rotation streams, wireless phase tracking, imaging, wave simulation, physical AI, scientific computing, signal processing, and downstream signals processing.
-
-The first benchmark target is `qmul` over `[N, 4]` floating-point tensors. `qmul` is small enough to validate, but structured enough to test cross-lane dependencies, fixed multiply/add/sign patterns, data movement, fusion, register reuse, and arithmetic intensity. This can help Tenstorrent show useful accelerator behavior beyond LLM inference and matmul-heavy neural networks.
-
-No native quaternion datatype, new silicon feature, or hardware change is required. The values stay inside ordinary floating-point tensors.
-
-Simple proof path:
-
-```text
-CPU/PyTorch qmul reference
--> scalar correctness check
--> TT-Lang simulator qmul for [N, 4]
--> tt-emule run of real TT-Metalium qmul candidate
--> real TT-Metalium / Tenstorrent hardware report
--> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity
-```
-
-## Long-Term QuantumIR Direction For Classical AI Compute
-
-QuantumIR here means a classical/AI accelerator front end for selected
-quantum-mechanics workloads, not a quantum-hardware proposal. The long-term
-direction is to lower selected workloads into the structured quaternion, rotor,
-phase, and tensor kernels already defined here. The near-term target is not a
-new backend or a claim about replacing quantum hardware. It is a documentation
-and validation path for representing small SU(2)-style operations as ordinary
-floating-point tensor kernels.
-
-The first proposed QuantumIR target is a single-qubit SU(2) gate represented as
-a unit quaternion rotor and validated against a standard 2x2 complex matrix
-reference. That layer should lower into the existing `[N, 4]` kernel foundation
-and StructuredBench report path rather than displacing the active qmul,
-tt-emule, Cloud/hardware, or maintainer-placement work.
-
-See:
-
-- [docs/quantum-ir.md](docs/quantum-ir.md)
-- [docs/quantum-ir-roadmap.md](docs/quantum-ir-roadmap.md)
-- [docs/quantum-ir-operator-mapping.md](docs/quantum-ir-operator-mapping.md)
-
-## Future Physical-AI State Integrity Direction
-
-`tt-rqm-kernels` could eventually provide accelerated quaternion, rotor, phase,
-spectral, coherence, reduction, pose-stream, and integrity-scoring primitives
-beneath a future RQM State Engine: a coherence-aware state-estimation and
-integrity engine for physical AI. The proposed application layer would remain
-in a separate `rqm-state-engine` repository, where it could supervise an
-existing estimator and evaluate sensor health, cross-sensor coherence, and
-degraded-navigation status.
-
-This is a future direction, not a current estimator, PX4/ROS integration, or
-hardware claim. It does not displace the immediate `qmul` hardware-validation
-path; backend work remains measurement-driven and follows evidence from real
-hardware runs.
-
-See [Future Alignment: Coherence-Aware State Integrity for Physical AI](docs/future-physical-ai-state-integrity.md)
-for the proposed boundaries, candidate kernel map, offline demonstration, and
-claim guardrails.
-
-## StructuredBench Hardware Metrics
-
-StructuredBench now reports hardware-relevant estimates alongside latency, throughput, and numerical error:
-
-- estimated FLOPs
-- estimated FLOPs/sec
-- estimated bytes read and written
-- effective GB/sec
-- arithmetic intensity in FLOPs/byte
-
-The estimates are intentionally simple and documented. For example, `qmul` counts 28 FLOPs per Hamilton product, reads two 4-lane quaternion inputs, and writes one 4-lane quaternion output. These are comparison metrics for backend evaluation, not hardware-counter measurements.
-
-Committed reports are sample CPU/PyTorch reference outputs. They are included to show the report shape and outreach packet format, not to claim stable hardware performance.
-
-Generate JSON and Markdown reports:
-
-```bash
-python -m tt_rqm_kernels.structuredbench \
-  --suite smoke \
-  --json-output reports/structuredbench_latest.json \
-  --markdown-output reports/structuredbench_latest.md
-```
-
-## Connection Points To Tenstorrent
-
-The Tenstorrent-facing surfaces are:
-
-- [docs/tenstorrent-landing.md](docs/tenstorrent-landing.md)
-- [docs/tenstorrent-rfc.md](docs/tenstorrent-rfc.md)
-- [docs/collaboration-map.md](docs/collaboration-map.md)
-- [docs/structuredbench-spec.md](docs/structuredbench-spec.md)
-- [docs/structured-qmul-tutorial.md](docs/structured-qmul-tutorial.md)
-- [docs/tenstorrent-execution-runbook.md](docs/tenstorrent-execution-runbook.md)
-- [docs/tenstorrent-functional-quickstart.md](docs/tenstorrent-functional-quickstart.md)
-- [docs/tenstorrent-console-access-plan.md](docs/tenstorrent-console-access-plan.md)
-- [docs/tenstorrent-console-copy-paste.md](docs/tenstorrent-console-copy-paste.md)
-- [docs/tenstorrent-cloud-access-plan.md](docs/tenstorrent-cloud-access-plan.md)
-- [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md)
-- [docs/tenstorrent-hardware-command-contract.md](docs/tenstorrent-hardware-command-contract.md)
-- [docs/tenstorrent-delegated-validation.md](docs/tenstorrent-delegated-validation.md)
-- [docs/tenstorrent-value-proposition.md](docs/tenstorrent-value-proposition.md)
-- [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
-- [docs/complex-quaternion-bridge.md](docs/complex-quaternion-bridge.md)
-- [docs/phase-update-tenstorrent-plan.md](docs/phase-update-tenstorrent-plan.md)
-- [docs/external-tenstorrent-contribution-selection.md](docs/external-tenstorrent-contribution-selection.md)
-- [docs/physical-ai-pose-stream-demo.md](docs/physical-ai-pose-stream-demo.md)
-- [docs/structuredbench-hpc-expansion-roadmap.md](docs/structuredbench-hpc-expansion-roadmap.md)
-- [docs/quantum-ir.md](docs/quantum-ir.md)
-- [docs/quantum-ir-roadmap.md](docs/quantum-ir-roadmap.md)
-- [docs/quantum-ir-operator-mapping.md](docs/quantum-ir-operator-mapping.md)
-- [docs/tt-mlir-fused-lowering-prerequisites.md](docs/tt-mlir-fused-lowering-prerequisites.md)
-- [docs/operator-contracts.md](docs/operator-contracts.md)
-- [docs/tt-lang-qmul-plan.md](docs/tt-lang-qmul-plan.md)
-- [docs/structuredbench-opportunity-plan.md](docs/structuredbench-opportunity-plan.md)
-- [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
-- [reports/tenstorrent_hardware_report_template.md](reports/tenstorrent_hardware_report_template.md)
-- [reports/tt_emule_qmul_candidate.md](reports/tt_emule_qmul_candidate.md)
-- [reports/tt_hardware_qmul_quickstart.md](reports/tt_hardware_qmul_quickstart.md)
-- [reports/tt_hardware_qmul_environment.txt](reports/tt_hardware_qmul_environment.txt)
-- [reports/tt_hardware_qmul_stage_b_candidate_conformance.md](reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
-- [reports/tt_hardware_qmul_stage_b_architecture_audit.md](reports/tt_hardware_qmul_stage_b_architecture_audit.md)
-- [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md)
-
-Proposed backend path:
-
-- optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
-- tt-emule validation for the experimental TT-Metalium `qmul` candidate
-- immutable scalar RISC-V TT-Metalium `qmul` Stage A correctness baseline for
-  `[N, 4]` quaternion tensors, validated on N300 hardware
-- separate Float32 multicore/SFPU Stage B candidate on one Wormhole device,
-  conformance-qualified and sampled once with `stable_benchmark=false`
-- CPU/PyTorch physical-AI pose stream demo using `qrotate_vector`
-- future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
-  evidence is clearer
-- future `phase_update` backend plan after the `qmul` candidate path is stable
-- future TT-NN wrapper once lower-stack evidence is reproducible
-- future TT-MLIR lowering discussion after an explicit lower-stack kernel exists
-
-## Install for Development
+`tt-rqm-kernels` develops structured floating-point tensor kernels for
+Tenstorrent hardware. Quaternions, rotors, complex phase pairs, and SU(2) state
+remain ordinary tensors; the structure comes from their lane conventions and
+the operators applied to them.
+
+This is an independent open-source RQM Technologies LLC project. It is not an
+official Tenstorrent repository or a statement of Tenstorrent endorsement.
+
+> **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**
+
+H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
+rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
+H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
+stage of a Hamiltonian-simulation pipeline, not the complete device-side
+pipeline.
+
+## Current proven result
+
+The repository contains real N300 device-0 evidence for quaternion
+multiplication and `SU2ComposeBench`. Every current performance sample remains
+non-stable and supports no acceleration claim.
+
+| Evidence | Implementation | Claim | Stable benchmark |
+|---|---|---|---|
+| Stage A qmul conformance | scalar RISC-V correctness baseline | Level 0 | `false` |
+| Stage B qmul | multicore Tensix compute/SFPU | Level 1 | `false` |
+| Persistent qmul | one persistent Wormhole device session | Level 1 | `false` |
+| SU2ComposeBench H1 conformance | fused and unfused ordered composition | Level 0 | `false` |
+| SU2ComposeBench H1 comparison | one qualified fused/unfused session | Level 1 | `false` |
+
+The SU(2) comparison validates every output against independent CPU oracles.
+The fused path retains rotor and phase accumulators in Tensix L1; the unfused
+path uses repeated qmul-plus-phase dispatches with DRAM ping-pong storage. See
+the [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the exact
+contract, results, and limitations.
+
+## Why it matters
+
+Structured kernels occupy useful territory between scalar elementwise code and
+large matrix multiplication:
+
+- fixed cross-lane dependencies test more than independent elementwise math;
+- noncommutative ordered composition makes execution order observable;
+- register and L1 reuse create concrete fusion opportunities;
+- fused chains can avoid intermediate DRAM movement;
+- the same representation supports disciplined scientific-computing and
+  physical-AI experiments without introducing a native quaternion datatype.
+
+These results do not establish CPU acceleration, stable performance, measured
+hardware bandwidth, energy efficiency, application speedup, full device-side
+Hamiltonian lowering, dual-device scaling, or Tenstorrent endorsement.
+
+## Five-minute local quickstart
+
+The default developer path is hardware-free:
 
 ```bash
 python -m pip install -e ".[dev]"
 python -m pytest
+python -m tt_rqm_kernels.structuredbench --suite smoke --items 128 --iters 1 --warmup 0
+python scripts/repo_status.py
 ```
 
-## Repository Layout
+Hardware, TT-Lang, and tt-emule integrations are optional and are not required
+for the local suite.
 
-```text
-tt_rqm_kernels/        Reference Python package
-docs/                  Thesis and Tenstorrent backend roadmap
-examples/              Small domain-oriented usage examples
-benchmarks/            CPU reference benchmark scripts
-reports/               Generated StructuredBench and outreach reports
-tests/                 Correctness and shape tests
+## Reproduce committed evidence
+
+These commands validate hashes, provenance, claim gates, raw samples, and
+deterministic generated outputs without accessing hardware:
+
+```bash
+python scripts/validate_benchmark_release.py
+python scripts/reproduce_wormhole_qmul.py --check
+python scripts/validate_su2_compose_preregistration.py
+python scripts/validate_su2_compose_release.py
+python scripts/reproduce_wormhole_su2_compose.py --check
 ```
 
-See [docs/structuredbench.md](docs/structuredbench.md) for benchmark suite details.
+## Documentation paths
+
+- [Architecture and operator contracts](docs/operator-contracts.md): tensor
+  conventions, Hamilton products, rotor/phase operators, and backend designs.
+- [Benchmark evidence and reproduction](docs/benchmarks/index.md): qmul and
+  SU2ComposeBench reports, release manifests, claim policy, and methodology.
+- [Roadmap and future work](plan.md): proven capabilities, active evidence
+  work, deferred integrations, H2, and non-goals.
+
+The [documentation index](docs/index.md) organizes secondary runbooks,
+simulator/emulation material, cloud-access history, outreach packets,
+QuantumIR notes, and longer-term physical-AI directions.
 
 ## License
 
-Apache License 2.0. See `LICENSE`.
+Apache License 2.0. See [LICENSE](LICENSE).

@@ -139,6 +139,6 @@ def test_committed_conformance_release_hashes_and_claim_are_valid() -> None:
 def test_public_hardware_claim_is_immediately_qualified() -> None:
     for path in (Path("README.md"), Path("docs/tenstorrent-landing.md"), Path("docs/benchmarks/su2-compose-bench.md")):
         text = path.read_text()
-        claim = text.index("RQM runs quantum Hamiltonian simulations on Tenstorrent")
-        qualification = text.index("CPU-lowered FP32 evolution operators", claim)
-        assert qualification - claim < 350
+        claim = text.index("RQM runs fused time-ordered SU(2) evolution")
+        qualification = text.index("on the CPU", claim)
+        assert qualification - claim < 500
