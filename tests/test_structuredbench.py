@@ -7,6 +7,7 @@ from pathlib import Path
 
 from tt_rqm_kernels.structuredbench import (
     SCHEMA_VERSION,
+    _build_external_qmul_cases,
     build_cases,
     render_markdown_report,
     render_table,
@@ -20,6 +21,20 @@ def test_build_smoke_cases_cover_core_workloads() -> None:
     workloads = {case.workload for case in build_cases("smoke")}
 
     assert workloads == {"qmul", "qrotate", "qnormalize", "qinverse", "phase_update"}
+
+
+def test_external_qmul_conformance_builds_one_exact_stage_a_case() -> None:
+    cases = _build_external_qmul_cases(
+        "qmul",
+        items_override=128,
+        iterations_override=1,
+        warmup_override=0,
+        benchmark_stage="conformance",
+    )
+
+    assert [(case.items, case.iterations, case.warmup) for case in cases] == [
+        (128, 1, 0)
+    ]
 
 
 def test_run_suite_smoke_with_small_overrides() -> None:

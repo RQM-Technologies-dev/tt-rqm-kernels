@@ -773,11 +773,12 @@ def _run_external_qmul_suite(
     if not external_command:
         raise ValueError("--backend external-qmul requires --external-command")
 
-    cases = build_cases(
+    cases = _build_external_qmul_cases(
         suite,
         items_override=items_override,
         iterations_override=iterations_override,
         warmup_override=warmup_override,
+        benchmark_stage=benchmark_stage,
     )
     validate_execution_policy(
         backend="external-qmul",
@@ -833,6 +834,32 @@ def _run_external_qmul_suite(
             "candidate": results[0].provenance if results else None,
         },
     }
+
+
+def _build_external_qmul_cases(
+    suite: str,
+    *,
+    items_override: int | None,
+    iterations_override: int | None,
+    warmup_override: int | None,
+    benchmark_stage: BenchmarkStage | None,
+) -> list[BenchmarkCase]:
+    if benchmark_stage == "conformance":
+        return [
+            BenchmarkCase(
+                "qmul",
+                128 if items_override is None else items_override,
+                1 if iterations_override is None else iterations_override,
+                0 if warmup_override is None else warmup_override,
+                "qmul/s",
+            )
+        ]
+    return build_cases(
+        suite,
+        items_override=items_override,
+        iterations_override=iterations_override,
+        warmup_override=warmup_override,
+    )
 
 
 def _run_external_qmul_case(
