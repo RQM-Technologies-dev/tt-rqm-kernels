@@ -19,6 +19,7 @@ without making it part of the primary introduction.
 - [Benchmark reports](benchmarks/index.md)
 - [Claim policy](benchmarks/claim-policy.md)
 - [SU2ComposeBench claim policy](benchmarks/su2-compose-claim-policy.md)
+- [SU2ComposeBench stability methodology](su2-stability-methodology.md)
 - [Stage B stability methodology](stage-b-stability-methodology.md)
 - [Tenstorrent execution runbook](tenstorrent-execution-runbook.md)
 - [Functional quickstart](tenstorrent-functional-quickstart.md)

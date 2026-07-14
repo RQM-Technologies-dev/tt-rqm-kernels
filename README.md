@@ -39,6 +39,21 @@ path uses repeated qmul-plus-phase dispatches with DRAM ping-pong storage. See
 the [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the exact
 contract, results, and limitations.
 
+### SU2 stability status
+
+The published SU2 evidence remains **Claim Level 1** with
+`stable_benchmark=false`. Its Level 2 qualification contract is now frozen:
+three independent cold-start sessions must use the same candidate and
+environment, retain every designated run, pass whole-output correctness, and
+satisfy preregistered per-path and fused/unfused comparison-variability gates
+across all eight benchmark cases. Sessions 2 and 3 have not been collected, so
+the repository makes no stable SU2 performance claim.
+
+The [stability methodology](docs/su2-stability-methodology.md) and
+[machine-readable preregistration](benchmarks/manifests/su2-compose-stability-preregistration.json)
+define the gates. The collector and deterministic qualifier fail closed on
+candidate, environment, session, correctness, or timing inconsistencies.
+
 The sibling `TwoQubitHamiltonianBench` now has a CPU-only
 [EntanglementDynamicsBench reference foundation](docs/benchmarks/entanglement-dynamics-bench.md).
 It adds joint-state evolution and entanglement diagnostics, but has no
@@ -85,6 +100,7 @@ deterministic generated outputs without accessing hardware:
 python scripts/validate_benchmark_release.py
 python scripts/reproduce_wormhole_qmul.py --check
 python scripts/validate_su2_compose_preregistration.py
+python scripts/validate_su2_compose_stability_preregistration.py
 python scripts/validate_su2_compose_release.py
 python scripts/reproduce_wormhole_su2_compose.py --check
 python scripts/validate_entanglement_dynamics_preregistration.py

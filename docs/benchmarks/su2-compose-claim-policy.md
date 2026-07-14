@@ -14,10 +14,15 @@ The shared repository claim ladder applies:
 
 - Level 0: silicon conformance;
 - Level 1: qualified first performance sample, non-stable;
-- Level 2: stable one-device performance across at least three sessions;
+- Level 2: stable one-device performance across exactly three designated
+  sessions under the frozen v1 methodology;
 - Level 3: stable matched-scope fused/unfused comparison;
 - Level 4: application workload result;
 - Level 5: reviewed upstream contribution.
 
 “Full device-side Hamiltonian evolution lowering” is reserved for H2. No level
 permits a general quantum-computing, endorsement, or quantum-hardware claim.
+Level 2 requires the hash-bound qualifier to recompute every fused, unfused,
+and paired-ratio gate. It does not authorize an acceleration claim.
+
+See the [stability methodology](../su2-stability-methodology.md).

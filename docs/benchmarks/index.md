@@ -43,6 +43,8 @@ result, or Tenstorrent endorsement.
 - [Level 2 release manifest](../../benchmarks/manifests/wormhole-qmul-level2.json)
 - [Archived Level 1 release manifest](../../benchmarks/manifests/wormhole-qmul.json)
 - [SU2ComposeBench release manifest](../../benchmarks/manifests/wormhole-su2-compose.json)
+- [SU2 stability methodology](../su2-stability-methodology.md)
+- [Frozen SU2 stability preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration.json)
 
 Validate the complete published release without hardware access:
 

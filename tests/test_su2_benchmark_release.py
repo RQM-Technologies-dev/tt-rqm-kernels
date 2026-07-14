@@ -41,7 +41,7 @@ def test_su2_artifact_tampering_is_rejected() -> None:
 def test_su2_level_two_requires_three_sessions() -> None:
     release = copy.deepcopy(load_manifest(ROOT / DEFAULT_MANIFEST))
     release["claim"].update({"level": 2, "stable_benchmark": True})
-    with pytest.raises(SU2ReleaseError, match="at least three"):
+    with pytest.raises(SU2ReleaseError, match="exactly three"):
         validate_manifest(release, repo_root=ROOT)
 
 
@@ -55,7 +55,9 @@ def test_su2_measured_bandwidth_field_requires_ceiling() -> None:
 def test_su2_outputs_are_byte_deterministic(tmp_path: Path) -> None:
     first, second = tmp_path / "first", tmp_path / "second"
     outputs = generate_release(ROOT / DEFAULT_MANIFEST, repo_root=ROOT, destination_root=first)
-    assert outputs == generate_release(ROOT / DEFAULT_MANIFEST, repo_root=ROOT, destination_root=second)
+    assert outputs == generate_release(
+        ROOT / DEFAULT_MANIFEST, repo_root=ROOT, destination_root=second
+    )
     for relative in outputs:
         assert (first / relative).read_bytes() == (second / relative).read_bytes()
         assert (ROOT / relative).read_bytes() == (first / relative).read_bytes()
@@ -65,7 +67,9 @@ def test_su2_outputs_are_byte_deterministic(tmp_path: Path) -> None:
 
 
 def test_su2_one_command_check_is_read_only() -> None:
-    before = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, check=True, capture_output=True, text=True).stdout
+    before = subprocess.run(
+        ["git", "status", "--porcelain"], cwd=ROOT, check=True, capture_output=True, text=True
+    ).stdout
     completed = subprocess.run(
         [sys.executable, "scripts/reproduce_wormhole_su2_compose.py", "--check"],
         cwd=ROOT,
@@ -73,7 +77,9 @@ def test_su2_one_command_check_is_read_only() -> None:
         capture_output=True,
         text=True,
     )
-    after = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT, check=True, capture_output=True, text=True).stdout
+    after = subprocess.run(
+        ["git", "status", "--porcelain"], cwd=ROOT, check=True, capture_output=True, text=True
+    ).stdout
     assert before == after
     assert "Claim Level 1" in completed.stdout
     assert "stable_benchmark=false" in completed.stdout

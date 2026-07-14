@@ -18,7 +18,10 @@ if str(REPO_ROOT) not in sys.path:
 from tt_rqm_kernels.benchmark_release import validate_release as validate_qmul_release
 from tt_rqm_kernels.entanglement_benchmark import validate_entanglement_preregistration
 from tt_rqm_kernels.su2_benchmark import validate_su2_preregistration
-from tt_rqm_kernels.su2_benchmark_release import validate_release as validate_su2_release
+from tt_rqm_kernels.su2_benchmark_release import (
+    published_manifest_path,
+    validate_release as validate_su2_release,
+)
 
 TT_LANG_AVAILABILITY_PATH = (
     REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "availability.py"
@@ -464,18 +467,26 @@ def _su2_conformance_status(root: Path) -> tuple[str, str]:
 
 
 def _su2_comparison_status(root: Path) -> tuple[str, str]:
-    manifest_path = root / "benchmarks/manifests/wormhole-su2-compose.json"
+    manifest_path = root / published_manifest_path(root)
     if not manifest_path.is_file():
         return "not implemented", "The SU2ComposeBench Claim Level 1 release is absent."
     try:
         release = validate_su2_release(manifest_path, repo_root=root, verify_generated=False)
         claim = release.get("claim")
-        if claim != {
-            "level": 1,
-            "name": "qualified_first_comparison_sample",
-            "public_session_count": 1,
-            "stable_benchmark": False,
-        }:
+        if claim not in (
+            {
+                "level": 1,
+                "name": "qualified_first_comparison_sample",
+                "public_session_count": 1,
+                "stable_benchmark": False,
+            },
+            {
+                "level": 2,
+                "name": "stable_one_device_performance",
+                "public_session_count": 3,
+                "stable_benchmark": True,
+            },
+        ):
             raise ValueError("comparison claim or session count mismatch")
         report = json.loads((root / release["primary_report"]).read_text(encoding="utf-8"))
         if not _valid_su2_report_header(report, stage="performance", eligible=True):
@@ -486,6 +497,11 @@ def _su2_comparison_status(root: Path) -> tuple[str, str]:
             raise ValueError("comparison result validation failed")
     except (KeyError, OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
         return "invalid comparison evidence", f"SU2 Claim Level 1 validation failed: {exc}"
+    if claim["level"] == 2:
+        return (
+            "stable one-device comparison present",
+            "Three designated device-0 sessions passed the hash-bound SU2 Level 2 stability qualification; this is not an acceleration result.",
+        )
     return (
         "qualified first comparison present",
         "One hash-bound fused/unfused device-0 session passed Claim Level 1 gates with stable_benchmark=false; it is not an acceleration result.",
@@ -493,6 +509,27 @@ def _su2_comparison_status(root: Path) -> tuple[str, str]:
 
 
 def _su2_stability_status(root: Path) -> tuple[str, str]:
+    level2_path = root / "benchmarks/manifests/wormhole-su2-compose-level2.json"
+    if level2_path.is_file():
+        try:
+            release = validate_su2_release(
+                level2_path,
+                repo_root=root,
+                verify_generated=False,
+            )
+            if release.get("claim") != {
+                "level": 2,
+                "name": "stable_one_device_performance",
+                "public_session_count": 3,
+                "stable_benchmark": True,
+            }:
+                raise ValueError("Level 2 claim shape mismatch")
+        except (OSError, TypeError, ValueError) as exc:
+            return "invalid stability status", f"SU2 stability validation failed: {exc}"
+        return (
+            "established",
+            "Three designated cold-start sessions passed the reproducible SU2 stability qualification.",
+        )
     manifest_path = root / "benchmarks/manifests/wormhole-su2-compose.json"
     if not manifest_path.is_file():
         return (
