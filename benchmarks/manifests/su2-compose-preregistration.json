@@ -2,8 +2,8 @@
   "benchmark_id": "wormhole-su2-compose-fp32",
   "claims": {
     "current_level": null,
-    "public_pre_conformance": "RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.",
-    "public_post_conformance": "RQM runs quantum Hamiltonian simulations on Tenstorrent.",
+    "public_pre_conformance": "RQM is building fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.",
+    "public_post_conformance": "RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.",
     "stable_benchmark": false
   },
   "conformance_cases": [

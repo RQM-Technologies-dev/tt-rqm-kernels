@@ -1,18 +1,14 @@
 # SU2ComposeBench Claim Policy
 
-The short public description is intentionally accessible, while the evidence
-state determines its tense.
+The current public description is:
 
-- Before silicon conformance: **RQM is building quantum Hamiltonian simulation
-  benchmarks for Tenstorrent.**
-- After Level 0 silicon conformance: **RQM runs quantum Hamiltonian simulations
-  on Tenstorrent.**
+> **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**
 
-The second form must be followed in the same introductory block by this scope:
-
-> The first implementation executes fused, time-ordered SU(2) evolution on
-> Wormhole using CPU-lowered FP32 evolution operators. A later stage will lower
-> Hamiltonian coefficients on device.
+It must be followed in the same introductory block by the H1 boundary: the CPU
+lowers piecewise-constant two-level Hamiltonian coefficients into FP32 rotors
+and phase pairs; Wormhole composes them in time order; H2 will address
+device-side coefficient lowering. H1 is a real pipeline stage, not the complete
+device-side pipeline.
 
 The shared repository claim ladder applies:
 

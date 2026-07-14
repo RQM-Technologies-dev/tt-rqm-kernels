@@ -1,0 +1,114 @@
+{
+  "schema": "tt-rqm-su2-compose-release.v1",
+  "benchmark_id": "wormhole-su2-compose-fp32",
+  "title": "Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole",
+  "primary_report": "reports/tt_hardware_su2_compose_first_comparison.json",
+  "artifacts": [
+    {
+      "path": "benchmarks/manifests/su2-compose-preregistration.json",
+      "role": "preregistration",
+      "sha256": "6f36c9e3f5a68d41d305f5368b6e690cc5529d079dbca54edb51072a70a0578b"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_architecture_audit.md",
+      "role": "pre-eligibility-architecture-audit",
+      "sha256": "101f29f219e4b952f2168c0520b69e60255f724f17ce94d382d633b8b47dac41"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_conformance.json",
+      "role": "pre-eligibility-conformance",
+      "sha256": "1300af7f69a1371a1f905ec310211c9029c8d57ff0e0ae60e6b013edee4770d4"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_eligibility_audit.md",
+      "role": "eligibility-promotion-audit",
+      "sha256": "11ca3067d4efd7b17a441f5a1eb1ef34c61062834024c1cfb2914c2a95b24956"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_eligible_conformance.json",
+      "role": "eligible-candidate-conformance",
+      "sha256": "d18ebc3249c740a520ceb327785b375f6c01524a3b73608a9d248b6b8b1bf64d"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_eligible_conformance.md",
+      "role": "eligible-candidate-conformance-summary",
+      "sha256": "f2f2fe19f5a4e15c8d600ef0cd723f2afb35a1e6c340d7dd19fbdf90859b6531"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_first_comparison.json",
+      "role": "first-comparison-performance",
+      "sha256": "c7133f2a6a2b33a70ba248163ea3728dd55b00c065a6e78aac089c2c54d3386f"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_first_comparison.md",
+      "role": "first-comparison-summary",
+      "sha256": "51a5213121fcccc57037d54ac50e6f8eddfd20fb972b00ae285f6a6a37b07dda"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_eligible_environment.txt",
+      "role": "environment-and-device-health",
+      "sha256": "f7692c9c6ec8c323f79239483520e8a26cfe4c0855a9965960e0775c93cb48f2"
+    },
+    {
+      "path": "benchmarks/raw/su2-compose/2026-07-14-n300-device0-session-1/session.json",
+      "role": "session-manifest",
+      "sha256": "186749fec024d7ac0b9133f3c1691fe074e1e9ca8b9bdefd94d7f23234021c95"
+    }
+  ],
+  "provenance": {
+    "candidate_sha256": "d8237f2e5b05885167085d87a0400daf8b5feb0318d906285a1d263035294441",
+    "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "claim": {
+    "level": 1,
+    "name": "qualified_first_comparison_sample",
+    "public_session_count": 1,
+    "stable_benchmark": false
+  },
+  "sessions": [
+    {
+      "id": "2026-07-14-n300-device0-session-1",
+      "performance_report": "reports/tt_hardware_su2_compose_first_comparison.json",
+      "session_manifest": "benchmarks/raw/su2-compose/2026-07-14-n300-device0-session-1/session.json",
+      "qualification_passed": true
+    }
+  ],
+  "definitions": {
+    "datatype": "FP32",
+    "steps_per_second": "B*K/time",
+    "trajectories_per_second": "B/time",
+    "qmul_per_second": "B*(K-1)/time",
+    "fused_logical_bytes": "24*B*K + 24*B",
+    "unfused_logical_bytes": "72*B*(K-1)",
+    "logical_bytes_are_not_measured_hardware_bandwidth": true
+  },
+  "qualification_gates": {
+    "whole_output_atol": 0.0001,
+    "whole_output_rtol": 0.0001,
+    "zero_failures": true,
+    "zero_nonfinite": true,
+    "one_device": true,
+    "architecture_audited": true,
+    "minimum_sessions_for_level_2": 3
+  },
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_energy_claim",
+    "no_dual_device_claim",
+    "no_full_device_side_hamiltonian_lowering_claim",
+    "no_tenstorrent_endorsement"
+  ],
+  "processed_output": "benchmarks/processed/wormhole-su2-compose-summary.json",
+  "raw_samples_output": "benchmarks/raw/su2-compose/2026-07-14-n300-device0-session-1/raw-samples.json",
+  "charts": [
+    {"id": "latency", "output": "benchmarks/plots/wormhole-su2-compose-latency.svg"},
+    {"id": "throughput", "output": "benchmarks/plots/wormhole-su2-compose-throughput.svg"},
+    {"id": "error_drift", "output": "benchmarks/plots/wormhole-su2-compose-error-drift.svg"},
+    {"id": "raw_paired_samples", "output": "benchmarks/plots/wormhole-su2-compose-raw-paired-samples.svg"},
+    {"id": "timing_breakdown", "output": "benchmarks/plots/wormhole-su2-compose-timing-breakdown.svg"}
+  ]
+}

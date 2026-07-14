@@ -1,14 +1,36 @@
 # Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole
 
-> **RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.**
+> **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**
 
-The first implementation targets fused, time-ordered SU(2) evolution on
-Wormhole using CPU-lowered FP32 evolution operators. A later stage will lower
-Hamiltonian coefficients on device.
+H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
+rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
+H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
+stage of a Hamiltonian-simulation pipeline, not the complete device-side
+pipeline.
 
-This page is currently a preregistered benchmark contract, not a hardware
-result. After N300 conformance passes, the opening statement will become
-“RQM runs quantum Hamiltonian simulations on Tenstorrent.”
+The fused and unfused paths passed N300 device-0 conformance before and after
+the audited eligibility promotion. The first comparison is **Claim Level 1: a
+qualified first comparison sample**. It remains `stable_benchmark=false` and
+does not establish an acceleration or stability claim.
+
+The historical report Markdown is hash-bound release evidence and remains
+byte-for-byte unchanged. This page and the claim policy provide the current,
+more precise public framing; future generated reports use the same wording.
+
+## Kernel Architecture
+
+H1 lowers time-dependent two-level Hamiltonians into FP32 rotors and phase
+pairs on the CPU. One binary then runs two matched paths on Wormhole device 0:
+
+- **Unfused:** K-1 persistent qmul-plus-phase dispatches with DRAM ping-pong
+  accumulators and runtime-argument updates.
+- **Fused:** one reader-compute-writer workload that retains four rotor and two
+  phase accumulator tiles in Tensix L1 across the complete chain.
+
+Both paths use the same step-major, component-planar 32x32-tile input. All
+Hamilton-product and phase arithmetic is in the compute/SFPU kernels; the
+reader and writer perform only DMA and synchronization. Trajectory tiles are
+split row-major across up to 56 Tensix cores.
 
 ## Problem Definition
 
@@ -19,36 +41,65 @@ phase per trajectory in exact `K-1 ... 0` multiplication order.
 The inputs include varying, noncommuting Hamiltonians. Alternating x- and
 y-axis rotations make an accidental order reversal fail visibly.
 
-## Planned Hardware Comparison
+## First Hardware Comparison
 
-The unfused baseline performs `K-1` qmul-plus-phase dispatches and moves every
-intermediate accumulator through DRAM. The fused candidate performs one
-dispatch and retains accumulator tiles in Tensix-local storage until the final
-write. Both paths use one Wormhole device and the same serialized input.
+The balanced-work cases below are exact medians from one public session. Each
+case has two warmup pairs and ten measured pairs with alternating path order.
+They are supporting evidence, not the headline claim.
+
+| B | K | Tensix cores | fused median | unfused median | fused/unfused |
+|---:|---:|---:|---:|---:|---:|
+| 32,768 | 8 | 32 | 0.141 ms | 0.667 ms | 0.211 |
+| 8,192 | 32 | 8 | 0.421 ms | 1.977 ms | 0.213 |
+| 2,048 | 128 | 2 | 1.575 ms | 7.256 ms | 0.217 |
+| 512 | 512 | 1 | 6.180 ms | 26.700 ms | 0.231 |
+
+The same session also covers B=1,024/4,096/16,384/65,536 at K=128. See the
+[canonical report](../../reports/tt_hardware_su2_compose_first_comparison.md),
+[release manifest](../../benchmarks/manifests/wormhole-su2-compose.json), and
+[processed evidence](../../benchmarks/processed/wormhole-su2-compose-summary.json).
+
+![Fused and unfused latency](../../benchmarks/plots/wormhole-su2-compose-latency.svg)
+
+![Fused throughput](../../benchmarks/plots/wormhole-su2-compose-throughput.svg)
 
 ## Correctness
 
-Two independent CPU oracles are required: complex128 matrix exponentiation and
-Float64 quaternion-plus-phase composition. Hardware output will be checked in
-full against the exact serialized FP32 inputs; no primary output is
-renormalized.
+Two independent CPU oracles are used: complex128 matrix exponentiation and
+Float64 quaternion-plus-phase composition. Every hardware output was checked
+against the exact serialized FP32 inputs; no primary output was renormalized.
 
-Published diagnostics will include matrix and state-vector error, rotor and
+All eight cases recorded zero failing and zero nonfinite values. The largest
+fused max absolute error was `1.868e-6`, below the preregistered `1e-4`
+tolerance. The report also records matrix and state-vector error, rotor and
 phase norm drift, unitarity, determinant and global-phase consistency, Bloch
-norm drift, error versus chain length, and failure/nonfinite counts.
+norm drift, and error versus chain length.
+
+![Error and drift](../../benchmarks/plots/wormhole-su2-compose-error-drift.svg)
 
 ## Performance Methodology
 
-The exact cases, sample counts, timing boundaries, traffic formulas, claim
-gates, and nonclaims are fixed in the
+The exact cases, repeat counts, timing boundaries, logical-traffic formulas,
+claim gates, and nonclaims were fixed before collection in the
 [machine-readable preregistration](../../benchmarks/manifests/su2-compose-preregistration.json).
-No chart or performance number will be added before real hardware evidence is
-committed.
+The [raw paired samples](../../benchmarks/raw/su2-compose/2026-07-14-n300-device0-session-1/raw-samples.json)
+and generated SVGs are deterministic products of the committed hardware
+report. Validate everything without hardware using:
+
+```bash
+python scripts/reproduce_wormhole_su2_compose.py --check
+```
+
+![Raw paired samples](../../benchmarks/plots/wormhole-su2-compose-raw-paired-samples.svg)
+
+![Timing breakdown](../../benchmarks/plots/wormhole-su2-compose-timing-breakdown.svg)
 
 ## Limitations And Nonclaims
 
 H1 composes pre-lowered evolution operators. It is a real stage of a quantum
 Hamiltonian simulation pipeline, but it is not yet device-side coefficient
-lowering. The first hardware sample will remain `stable_benchmark=false` and
-will not support an acceleration, CPU-comparison, bandwidth, energy,
-dual-device, or Tenstorrent-endorsement claim.
+lowering. This one session remains `stable_benchmark=false` and does not
+support an acceleration, CPU-comparison, measured-bandwidth, energy,
+dual-device, or Tenstorrent-endorsement claim. Level 2 requires three
+independent cold-start sessions with complete correctness and the
+preregistered coefficient-of-variation limits.

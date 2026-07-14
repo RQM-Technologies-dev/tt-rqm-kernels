@@ -19,7 +19,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "matplotlib==3.10.1",
-  "pytest>=8.0"
+  "pytest>=8.0",
+  "ruff==0.15.17"
 ]
 benchmark = [
   "matplotlib==3.10.1"
@@ -31,3 +32,15 @@ include = ["tt_rqm_kernels*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+extend-exclude = [
+  "benchmarks/raw",
+  "experimental/**/build*",
+  "reports"
+]
+
+[tool.ruff.lint]
+# These legacy layout rules require a separate formatting-only migration.
+ignore = ["E402", "E701", "E702", "E731"]

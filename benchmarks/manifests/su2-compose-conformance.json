@@ -1,0 +1,43 @@
+{
+  "artifacts": [
+    {
+      "path": "reports/tt_hardware_su2_compose_conformance.json",
+      "role": "level-0-conformance-json",
+      "sha256": "1300af7f69a1371a1f905ec310211c9029c8d57ff0e0ae60e6b013edee4770d4"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_conformance.md",
+      "role": "level-0-conformance-markdown",
+      "sha256": "768b41256d7a35e4dd783962789d71f473998d2d4a2b391f53cb48aa5801e918"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_environment.txt",
+      "role": "level-0-environment",
+      "sha256": "d53780221b6cdb08a17fb17504e453400fc7bc1441ddf3201dfc2f5a728394aa"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_architecture_audit.md",
+      "role": "architecture-audit",
+      "sha256": "101f29f219e4b952f2168c0520b69e60255f724f17ce94d382d633b8b47dac41"
+    }
+  ],
+  "benchmark_id": "wormhole-su2-compose-fp32",
+  "claim": {
+    "level": 0,
+    "name": "silicon_conformance",
+    "stable_benchmark": false
+  },
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_full_device_side_hamiltonian_lowering_claim"
+  ],
+  "provenance": {
+    "candidate_sha256": "2f783b375b7a7f206f7d96db9dd38c9d5d736da27a1cf68e1ea1ea3e9ac16197",
+    "repository_commit": "cec33db64f9b3acd1264018d85f557d164e04551",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "schema": "tt-rqm-su2-compose-conformance-release.v1"
+}

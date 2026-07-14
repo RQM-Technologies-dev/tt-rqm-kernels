@@ -5,12 +5,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from pathlib import Path
 import platform
 import shutil
 import subprocess
-import sys
 from typing import Any
 
 from check_environment import (
