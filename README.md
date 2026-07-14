@@ -14,15 +14,16 @@ For Tenstorrent engineers:
 
 1. What this is: structured `[N, 4]` float tensor kernels, starting with `qmul`.
 2. Why it matters: compact benchmark between scalar elementwise ops and matmul.
-3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, and tt-emule candidate.
-4. Current ask: enable or run one hardware-labeled `qmul` report.
+3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, tt-emule, and one
+   N300 Stage A hardware conformance report.
+4. Current milestone: Stage A silicon correctness passed; the next accelerator
+   step is a performance-eligible multicore/SFPU Stage B implementation.
 5. Stage A proves silicon conformance; acceleration claims require a later
    performance-eligible multicore/SFPU Stage B implementation.
-6. Best next link: [docs/tenstorrent-engineer-copy-paste-packet.md](docs/tenstorrent-engineer-copy-paste-packet.md).
+6. Best evidence link: [reports/tt_hardware_qmul_quickstart.md](reports/tt_hardware_qmul_quickstart.md).
 
-The single next action is to help produce one hardware-labeled StructuredBench
-`qmul` report. Placement guidance is welcome if it arrives, but the active plan
-no longer waits on it.
+The first hardware gate is complete. Its single N=128 sample proves conformance,
+not accelerator performance; throughput claims remain blocked on Stage B.
 
 ## For Tenstorrent Reviewers
 
@@ -31,19 +32,19 @@ no longer waits on it.
 3. First ask: [docs/tt-metalium-qmul-design.md](docs/tt-metalium-qmul-design.md)
 4. Emulation evidence: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 5. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
-6. Current status command: `python scripts/repo_status.py`
+6. N300 environment record: [reports/tt_hardware_qmul_environment.txt](reports/tt_hardware_qmul_environment.txt)
+7. Current status command: `python scripts/repo_status.py`
 
-Current blocker: the experimental TT-Metalium scalar RISC-V `qmul` candidate
-has now built and produced an emulation-labeled StructuredBench report through
-`tt-emule`. It is not a hardware result. The next implementation step is a real
-Tenstorrent Cloud or hardware run through the existing external candidate path.
+Current result: the experimental TT-Metalium scalar RISC-V `qmul` candidate
+built and passed whole-output conformance on an N300. The committed report is
+hardware-labeled, `stable_benchmark=false`, and `performance_eligible=false`.
 
 ## Functional Tenstorrent Path
 
 The current functional path is the StructuredBench `external-qmul` protocol:
-CPU/PyTorch reference validation, optional tt-emule execution through the
-experimental TT-Metalium candidate wrapper, and a hardware mode that requires a
-real Tenstorrent Cloud or device command before it can run.
+CPU/PyTorch reference validation, optional tt-emule execution, and real-device
+execution through the experimental TT-Metalium candidate. The first committed
+hardware artifact used an approved SSH-accessible N300 host.
 
 Start here:
 
@@ -65,15 +66,9 @@ explicitly granted no-cost Tenstorrent Cloud access. This repo does not
 implement payment-backed cloud provisioning, cloud billing integration, or
 credential storage.
 
-Observed Console fit: API inference, Usage, Billing, Compute, and Resources are
-visible; no dedicated hardware allocation is assumed; Instances and Baremetal
-are treated as blocked until access is granted. The hardware request path is
-`Compute -> Resources -> Request Capacity` for one small `[N, 4]`
-StructuredBench `qmul` report, then either a VSCode/browser instance run or SSH
-baremetal run. If the Console form has no selectable Resource Type, use the
-Tenstorrent engineer packet for delegated validation. Tenstorrent support has
-acknowledged request `CUST-812` for TT-Cloud access for this StructuredBench
-`qmul` hardware validation.
+Tenstorrent approved SSH access to an N300 host, which was used for the first
+Stage A report. Console and delegated-validation documents remain as setup and
+reproduction references; no payment-backed provisioning is part of this repo.
 
 ## Core Idea
 
@@ -349,13 +344,16 @@ The Tenstorrent-facing surfaces are:
 - [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 - [reports/tenstorrent_hardware_report_template.md](reports/tenstorrent_hardware_report_template.md)
 - [reports/tt_emule_qmul_candidate.md](reports/tt_emule_qmul_candidate.md)
+- [reports/tt_hardware_qmul_quickstart.md](reports/tt_hardware_qmul_quickstart.md)
+- [reports/tt_hardware_qmul_environment.txt](reports/tt_hardware_qmul_environment.txt)
 
 Proposed backend path:
 
 - optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
 - tt-emule validation for the experimental TT-Metalium `qmul` candidate
 - implemented scalar RISC-V TT-Metalium `qmul` Stage A correctness baseline for
-  `[N, 4]` quaternion tensors; a later multicore/SFPU kernel is required for Stage B
+  `[N, 4]` quaternion tensors, now validated on N300 hardware; a later
+  multicore/SFPU kernel is required for Stage B
 - CPU/PyTorch physical-AI pose stream demo using `qrotate_vector`
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
   evidence is clearer

@@ -29,13 +29,14 @@ scalar reference checks: implemented
 StructuredBench report schema: implemented
 TT-Lang simulator qmul: implemented, simulator-only
 tt-emule TT-Metalium candidate: implemented, emulation-only
-Tenstorrent hardware report: not implemented yet
+Tenstorrent N300 hardware report: Stage A conformance present
 qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 ```
 
-The committed TT-Lang and tt-emule reports are validation artifacts. They are
-not hardware performance claims.
+The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
+The N300 report is real-hardware correctness evidence, but it is explicitly not
+a stable or performance-eligible benchmark.
 
 ## Run It In 10 Minutes
 
@@ -57,19 +58,22 @@ python scripts/repo_status.py
 python scripts/rqm_tt_quickstart.py --check
 ```
 
-## Current Blocker
+## Current Milestone
 
-The next useful evidence target is one real Tenstorrent hardware run of the
-existing `[N, 4]` `qmul` path.
+The existing `[N, 4]` `qmul` path passed its first real N300 Stage A gate. See
+[the StructuredBench report](../reports/tt_hardware_qmul_quickstart.md) and
+[environment record](../reports/tt_hardware_qmul_environment.txt).
 
-Observed Console state for RQM Technologies:
+The next accelerator milestone is a multicore/SFPU Stage B implementation that
+can qualify for the repository's performance methodology. No performance claim
+is made from the scalar Stage A result.
 
-- API inference, Usage, Billing, Compute, and Resources are visible.
-- No dedicated hardware allocation is assumed.
-- Instances and Baremetal are blocked until access is granted.
-- `Compute -> Resources -> Request Capacity` opens, but `Resource Type` has no
-  selectable option for the org, so a capacity request cannot currently be
-  submitted from the Console.
+Access state for RQM Technologies:
+
+- Tenstorrent approved SSH access to an N300 host.
+- The pinned TT-Metalium source build and scalar candidate ran successfully.
+- The committed report records exact repo, TT-Metalium, compiler, runtime, and
+  candidate-binary provenance.
 
 ## How A Tenstorrent Engineer Can Help
 

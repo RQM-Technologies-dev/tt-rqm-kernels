@@ -1,8 +1,8 @@
 # Tenstorrent Execution Runbook
 
-This runbook prepares `tt-rqm-kernels` for a future real Tenstorrent execution
-of the StructuredBench `qmul` workload. It does not claim hardware performance
-and it separates CPU, simulator, emulation, and hardware labels.
+This runbook records and reproduces real Tenstorrent execution of the
+StructuredBench `qmul` workload. It does not claim hardware performance and it
+separates CPU, simulator, emulation, and hardware labels.
 
 Use this when a Tenstorrent Cloud or local TT-Metalium environment is available
 and a real `qmul` candidate executable exists.
@@ -19,11 +19,11 @@ Current local status:
 - tt-emule validation preflight and build-prerequisite checks are implemented.
 - The experimental candidate has produced an emulation-labeled StructuredBench
   sample report under `reports/tt_emule_qmul_candidate.*`.
-- Real Tenstorrent hardware execution is not implemented yet.
-- Tenstorrent Console shows API inference, Usage, Billing, Compute, and
-  Resources for the RQM organization; no dedicated hardware allocation is
-  assumed.
-- Instances and Baremetal are treated as blocked until access is granted.
+- One N300 Stage A hardware conformance report is committed under
+  `reports/tt_hardware_qmul_quickstart.*` with its environment record.
+- The scalar Stage A candidate is not performance-eligible; Stage B remains a
+  separate multicore/SFPU implementation milestone.
+- Tenstorrent approved SSH access to the N300 used for the first report.
 
 Placement guidance is tracked separately in the public `tt-metal` issue and the
 repo-local tracker. Do not open an upstream Tenstorrent PR from this repo until

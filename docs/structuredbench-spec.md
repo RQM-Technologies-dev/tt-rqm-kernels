@@ -39,8 +39,8 @@ CPU reference: implemented
 scalar reference checks: implemented
 TT-Lang simulator: implemented, simulator-only
 tt-emule TT-Metalium candidate: implemented, emulation-only
-Tenstorrent hardware report: not implemented yet
-Current ask: one hardware validation run
+Tenstorrent N300 hardware report: Stage A conformance present
+Current next step: performance-eligible multicore/SFPU Stage B implementation
 ```
 
 ## Current Status
@@ -50,7 +50,9 @@ Current ask: one hardware validation run
 - optional TT-Lang simulator reports are simulator-only
 - experimental TT-Metalium `qmul` candidate has an emulation-labeled tt-emule
   sample report
-- Tenstorrent hardware backend is not implemented yet
+- the same scalar candidate has one committed N300 hardware conformance report
+- the hardware report is `stable_benchmark=false` and
+  `performance_eligible=false`
 - active validation path uses the external `qmul` candidate without waiting for
   upstream placement guidance
 
@@ -59,9 +61,9 @@ Current ask: one hardware validation run
 StructuredBench gives Tenstorrent a small public workload for structured numerical kernels, not another LLM benchmark. It shows how ordinary floating-point tensors can carry rotation, phase, orientation, direction, and geometric state without a new datatype or hardware feature.
 
 The first path is intentionally narrow: CPU/PyTorch reference results, scalar
-correctness checks, TT-Lang simulator validation, tt-emule validation of an
-experimental TT-Metalium candidate, then a future hardware-backed TT-Metalium
-`qmul` comparison for `[N, 4]` tensors. That lets Tenstorrent demonstrate a
+correctness checks, TT-Lang simulator validation, tt-emule validation, and an
+N300 Stage A run of the experimental TT-Metalium candidate for `[N, 4]`
+tensors. A future Stage B implementation can then demonstrate a
 custom kernel path for 4-lane structured values with fixed cross-lane
 dependencies, then compare throughput, latency, numerical error, FLOPs/sec,
 effective GB/sec, and arithmetic intensity against the reference report.

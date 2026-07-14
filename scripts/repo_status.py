@@ -31,6 +31,7 @@ def build_status() -> dict[str, Any]:
     tt_metalium_dir = REPO_ROOT / "experimental" / "tt_metalium_qmul"
     tt_emule_dir = REPO_ROOT / "experimental" / "tt_emule_qmul"
     tt_emule_report = REPO_ROOT / "reports" / "tt_emule_qmul_candidate.json"
+    hardware_report_status, hardware_report_detail = _hardware_report_status()
 
     return {
         "schema": "tt-rqm-repo-status.v1",
@@ -82,8 +83,8 @@ def build_status() -> dict[str, Any]:
             ),
             _item(
                 "hardware report",
-                "not implemented",
-                "Only the future report template exists; no hardware result is claimed.",
+                hardware_report_status,
+                hardware_report_detail,
             ),
         ],
     }
@@ -116,6 +117,41 @@ def _item(name: str, status: str, detail: str) -> dict[str, str]:
         "status": status,
         "detail": detail,
     }
+
+
+def _hardware_report_status() -> tuple[str, str]:
+    report_path = REPO_ROOT / "reports" / "tt_hardware_qmul_quickstart.json"
+    companion_paths = (
+        REPO_ROOT / "reports" / "tt_hardware_qmul_quickstart.md",
+        REPO_ROOT / "reports" / "tt_hardware_qmul_environment.txt",
+    )
+    if not report_path.exists() or not all(path.exists() for path in companion_paths):
+        return (
+            "not implemented",
+            "The required JSON, Markdown, and environment evidence set is incomplete.",
+        )
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        results = report.get("results", [])
+        valid = (
+            report.get("execution_label") == "hardware"
+            and report.get("benchmark_stage") == "conformance"
+            and report.get("stable_benchmark") is False
+            and len(results) == 1
+            and results[0].get("correctness", {}).get("passed") is True
+            and results[0].get("performance_eligible") is False
+        )
+    except (json.JSONDecodeError, OSError, TypeError, AttributeError):
+        valid = False
+    if not valid:
+        return (
+            "invalid hardware report",
+            "The committed hardware evidence does not satisfy the Stage A status checks.",
+        )
+    return (
+        "hardware conformance report present",
+        "reports/tt_hardware_qmul_quickstart.* records one N300 Stage A correctness run; it is not performance-eligible.",
+    )
 
 
 if __name__ == "__main__":

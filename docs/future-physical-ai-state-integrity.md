@@ -11,11 +11,12 @@ It is documentation and strategic alignment only. The separate
 currently implement an estimator, sensor ingestion, failure classifier, PX4 or
 ROS 2 integration, new kernel, or Tenstorrent backend for this direction.
 
-The immediate priority remains unchanged: produce a real hardware-labeled
-StructuredBench `qmul` report through the existing TT-Metalium, `tt-emule`, and
-hardware-report path. This document describes a credible application layer
-that could later use the resulting primitives; it does not change the active
-kernel-validation sequence.
+The immediate Stage A priority is complete: the scalar TT-Metalium `qmul`
+candidate has a real N300 hardware-labeled conformance report. The next lower-
+stack milestone is a separately validated, performance-eligible Stage B
+implementation. This document describes a credible application layer that
+could later use the resulting primitives; it does not change that kernel-
+validation sequence.
 
 ## The physical-AI state-integrity problem
 
