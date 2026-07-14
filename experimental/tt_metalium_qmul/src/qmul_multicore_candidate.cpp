@@ -46,7 +46,7 @@ constexpr uint32_t kTileWidth = 32;
 constexpr uint32_t kTileHeight = 32;
 constexpr uint32_t kElementsPerTile = kTileWidth * kTileHeight;
 constexpr uint32_t kTileBytes = kElementsPerTile * sizeof(uint32_t);
-constexpr bool kPerformanceEligible = false;
+constexpr bool kPerformanceEligible = true;
 
 struct Config {
     std::filesystem::path workdir;
