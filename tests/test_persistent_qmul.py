@@ -103,6 +103,13 @@ def test_persistent_source_owns_one_device_lifecycle_and_reuses_audited_kernels(
     assert "tt_rqm_metalium_qmul_multicore_persistent_candidate" in cmake
 
 
+def test_persistent_harness_binds_build_id_to_observed_binary_hash() -> None:
+    source = Path(
+        "tt_rqm_kernels/backends/tenstorrent/qmul_persistent.py"
+    ).read_text()
+    assert '"TT_RQM_BUILD_ID": candidate_hash' in source
+
+
 def test_persistent_padding_boundaries_cover_partial_and_multicore_tiles() -> None:
     for items in (1, 128, 1023, 1024, 1025, 4096, 65537, 262144):
         tiles = (items + 1023) // 1024

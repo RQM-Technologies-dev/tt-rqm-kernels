@@ -143,7 +143,12 @@ def main(argv: list[str] | None = None) -> int:
 
     binary = build_dir / binary_name
     print(f"Built {args.candidate} candidate: {binary}")
-    print("Validate with scripts/validate_qmul_candidate.py before reporting results.")
+    validator = (
+        "scripts/validate_qmul_persistent_candidate.py"
+        if args.candidate == "persistent"
+        else "scripts/validate_qmul_candidate.py"
+    )
+    print(f"Validate with {validator} before reporting results.")
     return 0
 
 

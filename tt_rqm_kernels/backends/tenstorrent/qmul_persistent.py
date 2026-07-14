@@ -445,6 +445,7 @@ def _run_candidate(
             "TT_RQM_PERSISTENT_QMUL_MANIFEST": str(manifest_path),
             "TT_RQM_EXECUTION_LABEL": "hardware",
             "TT_RQM_CANDIDATE_SHA256": candidate_hash,
+            "TT_RQM_BUILD_ID": candidate_hash,
             "TT_RQM_REPOSITORY_COMMIT": source_commit,
         }
     )
