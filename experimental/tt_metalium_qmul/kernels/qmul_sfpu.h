@@ -5,61 +5,54 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 
 #include "sfpi.h"
 
 namespace ckernel::sfpu {
 
-// Dst tiles 0..3 contain a=(w,x,y,z), and 4..7 contain b=(w,x,y,z).
-// Each function covers one tile face and writes its result to Dst tile 0.
-// Keeping only one result live avoids exceeding the Wormhole SFPI register
-// allocator while leaving all Hamilton-product arithmetic on SFPU.
-inline void qmul_w_tile_face() {
-    constexpr std::size_t vectors_per_face = 8;
-    constexpr std::size_t vectors_per_tile = 32;
+constexpr std::size_t kVectorsPerFace = 8;
+constexpr std::size_t kVectorsPerTile = 32;
 
-    for (std::size_t i = 0; i < vectors_per_face; ++i) {
-        sfpi::vFloat result = sfpi::dst_reg[0 * vectors_per_tile + i] * sfpi::dst_reg[4 * vectors_per_tile + i];
-        result = result - sfpi::dst_reg[1 * vectors_per_tile + i] * sfpi::dst_reg[5 * vectors_per_tile + i];
-        result = result - sfpi::dst_reg[2 * vectors_per_tile + i] * sfpi::dst_reg[6 * vectors_per_tile + i];
-        result = result - sfpi::dst_reg[3 * vectors_per_tile + i] * sfpi::dst_reg[7 * vectors_per_tile + i];
-        sfpi::dst_reg[i] = result;
+inline void qmul_product_tile_face(
+    const uint32_t lhs_index,
+    const uint32_t rhs_index,
+    const uint32_t out_index) {
+    const uint32_t lhs_base = lhs_index * kVectorsPerTile;
+    const uint32_t rhs_base = rhs_index * kVectorsPerTile;
+    const uint32_t out_base = out_index * kVectorsPerTile;
+    for (std::size_t i = 0; i < kVectorsPerFace; ++i) {
+        sfpi::dst_reg[out_base + i] = sfpi::dst_reg[lhs_base + i] * sfpi::dst_reg[rhs_base + i];
     }
 }
 
-inline void qmul_x_tile_face() {
-    constexpr std::size_t vectors_per_face = 8;
-    constexpr std::size_t vectors_per_tile = 32;
-    for (std::size_t i = 0; i < vectors_per_face; ++i) {
-        sfpi::vFloat result = sfpi::dst_reg[0 * vectors_per_tile + i] * sfpi::dst_reg[5 * vectors_per_tile + i];
-        result = result + sfpi::dst_reg[1 * vectors_per_tile + i] * sfpi::dst_reg[4 * vectors_per_tile + i];
-        result = result + sfpi::dst_reg[2 * vectors_per_tile + i] * sfpi::dst_reg[7 * vectors_per_tile + i];
-        result = result - sfpi::dst_reg[3 * vectors_per_tile + i] * sfpi::dst_reg[6 * vectors_per_tile + i];
-        sfpi::dst_reg[i] = result;
+inline void qmul_add_product_tile_face(
+    const uint32_t accumulator_index,
+    const uint32_t lhs_index,
+    const uint32_t rhs_index,
+    const uint32_t out_index) {
+    const uint32_t accumulator_base = accumulator_index * kVectorsPerTile;
+    const uint32_t lhs_base = lhs_index * kVectorsPerTile;
+    const uint32_t rhs_base = rhs_index * kVectorsPerTile;
+    const uint32_t out_base = out_index * kVectorsPerTile;
+    for (std::size_t i = 0; i < kVectorsPerFace; ++i) {
+        sfpi::dst_reg[out_base + i] =
+            sfpi::dst_reg[accumulator_base + i] + sfpi::dst_reg[lhs_base + i] * sfpi::dst_reg[rhs_base + i];
     }
 }
 
-inline void qmul_y_tile_face() {
-    constexpr std::size_t vectors_per_face = 8;
-    constexpr std::size_t vectors_per_tile = 32;
-    for (std::size_t i = 0; i < vectors_per_face; ++i) {
-        sfpi::vFloat result = sfpi::dst_reg[0 * vectors_per_tile + i] * sfpi::dst_reg[6 * vectors_per_tile + i];
-        result = result - sfpi::dst_reg[1 * vectors_per_tile + i] * sfpi::dst_reg[7 * vectors_per_tile + i];
-        result = result + sfpi::dst_reg[2 * vectors_per_tile + i] * sfpi::dst_reg[4 * vectors_per_tile + i];
-        result = result + sfpi::dst_reg[3 * vectors_per_tile + i] * sfpi::dst_reg[5 * vectors_per_tile + i];
-        sfpi::dst_reg[i] = result;
-    }
-}
-
-inline void qmul_z_tile_face() {
-    constexpr std::size_t vectors_per_face = 8;
-    constexpr std::size_t vectors_per_tile = 32;
-    for (std::size_t i = 0; i < vectors_per_face; ++i) {
-        sfpi::vFloat result = sfpi::dst_reg[0 * vectors_per_tile + i] * sfpi::dst_reg[7 * vectors_per_tile + i];
-        result = result + sfpi::dst_reg[1 * vectors_per_tile + i] * sfpi::dst_reg[6 * vectors_per_tile + i];
-        result = result - sfpi::dst_reg[2 * vectors_per_tile + i] * sfpi::dst_reg[5 * vectors_per_tile + i];
-        result = result + sfpi::dst_reg[3 * vectors_per_tile + i] * sfpi::dst_reg[4 * vectors_per_tile + i];
-        sfpi::dst_reg[i] = result;
+inline void qmul_subtract_product_tile_face(
+    const uint32_t accumulator_index,
+    const uint32_t lhs_index,
+    const uint32_t rhs_index,
+    const uint32_t out_index) {
+    const uint32_t accumulator_base = accumulator_index * kVectorsPerTile;
+    const uint32_t lhs_base = lhs_index * kVectorsPerTile;
+    const uint32_t rhs_base = rhs_index * kVectorsPerTile;
+    const uint32_t out_base = out_index * kVectorsPerTile;
+    for (std::size_t i = 0; i < kVectorsPerFace; ++i) {
+        sfpi::dst_reg[out_base + i] =
+            sfpi::dst_reg[accumulator_base + i] - sfpi::dst_reg[lhs_base + i] * sfpi::dst_reg[rhs_base + i];
     }
 }
 
