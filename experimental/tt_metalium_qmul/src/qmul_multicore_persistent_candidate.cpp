@@ -39,10 +39,8 @@ std::string fnv1a64(const std::vector<uint32_t>& words) {
 
 class PersistentDeviceSession {
 public:
-    explicit PersistentDeviceSession(int device_id) {
-        if (device_id != 0) {
-            throw std::runtime_error("persistent Stage B candidate is restricted to Wormhole device 0");
-        }
+    explicit PersistentDeviceSession(int device_id) : device_id_(device_id) {
+        if (device_id != 0 && device_id != 1) throw std::runtime_error("persistent qmul device must be 0 or 1");
         const auto started = Clock::now();
         device_ = distributed::MeshDevice::create_unit_mesh(device_id);
         create_s_ = seconds_since(started);
@@ -66,6 +64,7 @@ public:
     double create_s() const { return create_s_; }
     uint32_t create_count() const { return create_count_; }
     uint32_t close_count() const { return close_count_; }
+    int device_id() const { return device_id_; }
 
     double close() {
         if (closed_) {
@@ -86,6 +85,7 @@ private:
     uint32_t create_count_ = 0;
     uint32_t close_count_ = 0;
     bool closed_ = false;
+    int device_id_ = 0;
 };
 
 struct PersistentConfig {
@@ -112,7 +112,7 @@ PersistentConfig parse_persistent_config(int argc, char** argv) {
     }
     if (config.workdir.empty()) throw std::runtime_error("TT_RQM_PERSISTENT_QMUL_DIR is required");
     if (config.manifest.empty()) config.manifest = config.workdir / "manifest.json";
-    if (config.device_id != 0) throw std::runtime_error("persistent Stage B candidate is restricted to Wormhole device 0");
+    if (config.device_id != 0 && config.device_id != 1) throw std::runtime_error("persistent qmul device must be 0 or 1");
     return config;
 }
 
@@ -121,6 +121,7 @@ json run_case(PersistentDeviceSession& session, const std::filesystem::path& wor
     const uint32_t iterations = spec.at("iterations").get<uint32_t>();
     const uint32_t warmup = spec.at("warmup").get<uint32_t>();
     const uint32_t samples = spec.at("samples").get<uint32_t>();
+    const uint32_t requested_max_cores = spec.value("requested_max_cores", 0U);
     if (items == 0 || iterations == 0 || samples == 0) throw std::runtime_error("items, iterations, and samples must be positive");
 
     const auto& inputs = spec.at("inputs");
@@ -140,7 +141,7 @@ json run_case(PersistentDeviceSession& session, const std::filesystem::path& wor
     const double buffer_allocation_s = seconds_since(allocation_started);
 
     const auto build_started = Clock::now();
-    auto prepared = build_workload(session.device(), a, b, out, component_tiles);
+    auto prepared = build_workload(session.device(), a, b, out, component_tiles, requested_max_cores);
     const double program_build_s = seconds_since(build_started);
 
     const auto a_planar = aos_to_planar_tiles(a_aos, items);
@@ -194,9 +195,15 @@ json run_case(PersistentDeviceSession& session, const std::filesystem::path& wor
             {"samples", sample_timings}, {"d2h", d2h_s}, {"cleanup", cleanup_s}
         }},
         {"work", {
-            {"device_count", 1}, {"device_id", 0}, {"core_count", prepared.metadata.core_count},
+            {"device_count", 1}, {"device_id", session.device_id()}, {"core_count", prepared.metadata.core_count},
+            {"requested_max_cores", prepared.metadata.requested_max_cores},
             {"component_tiles", prepared.metadata.component_tiles}, {"grid_x", prepared.metadata.grid_x},
             {"grid_y", prepared.metadata.grid_y}, {"available_core_count", prepared.metadata.grid_x * prepared.metadata.grid_y},
+            {"group_1_core_count", prepared.metadata.group_1_core_count},
+            {"group_2_core_count", prepared.metadata.group_2_core_count},
+            {"group_1_tiles_per_core", prepared.metadata.group_1_tiles_per_core},
+            {"group_2_tiles_per_core", prepared.metadata.group_2_tiles_per_core},
+            {"work_allocation_imbalance_tiles", prepared.metadata.group_2_core_count == 0 ? 0 : prepared.metadata.group_1_tiles_per_core - prepared.metadata.group_2_tiles_per_core},
             {"layout", "planar_float32_tiles_32x32"}, {"work_split", "row_major"},
             {"arithmetic_path", "tensix_compute_sfpu"}
         }}
@@ -209,6 +216,7 @@ int run(int argc, char** argv) {
     const json manifest = json::parse(read_text(config.manifest));
     if (manifest.value("schema", "") != kPersistentProtocol || manifest.value("workload", "") != "qmul" ||
         manifest.value("dtype", "") != "float32") throw std::runtime_error("unsupported persistent-qmul manifest");
+    if (manifest.value("device_id", -1) != config.device_id) throw std::runtime_error("manifest device does not match selected device");
 
     json case_metrics = json::array();
     double create_s = 0.0;
@@ -227,10 +235,10 @@ int run(int argc, char** argv) {
     json metrics = {
         {"schema", std::string(kPersistentMetrics)}, {"protocol", std::string(kPersistentProtocol)},
         {"backend", "tt-metalium-qmul-multicore-persistent-candidate"},
-        {"device", "tenstorrent/wormhole-device-0"}, {"dtype", "float32"},
+        {"device", "tenstorrent/wormhole-device-" + std::to_string(config.device_id)}, {"dtype", "float32"},
         {"execution_kind", execution_kind()}, {"implementation_class", std::string(kImplementationClass)},
         {"performance_eligible", true}, {"stable_benchmark", false},
-        {"lifecycle", {{"device_count", 1}, {"device_id", 0}, {"create_count", create_count}, {"close_count", close_count}}},
+        {"lifecycle", {{"device_count", 1}, {"device_id", config.device_id}, {"create_count", create_count}, {"close_count", close_count}}},
         {"session_timings_s", {{"device_create", create_s}, {"device_close", close_s}, {"candidate_session", seconds_since(process_started)}}},
         {"cases", case_metrics},
         {"provenance", {

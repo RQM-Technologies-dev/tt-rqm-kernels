@@ -143,7 +143,8 @@ def test_tt_metalium_multicore_architecture_is_stage_b_candidate() -> None:
     writer = Path("experimental/tt_metalium_qmul/kernels/qmul_multicore_writer.cpp").read_text()
     sfpu = Path("experimental/tt_metalium_qmul/kernels/qmul_sfpu.h").read_text()
 
-    assert "split_work_to_cores(grid, component_tiles, true)" in host
+    assert "num_cores_to_corerangeset(active_core_limit, grid, true)" in host
+    assert "split_work_to_cores(requested_cores, component_tiles, true)" in host
     assert "MeshDevice::create_unit_mesh(device_id)" in host
     assert "Stage B candidate is restricted to Wormhole device 0" in host
     assert "DataFormat::Float32" in host

@@ -39,19 +39,38 @@ PERFORMANCE_WARMUP = 5
 PERFORMANCE_SAMPLES = 10
 
 
+def device_label(device_id: int) -> str:
+    if device_id not in (0, 1):
+        raise IntegrityError("persistent qmul device_id must be 0 or 1")
+    return f"tenstorrent/wormhole-device-{device_id}"
+
+
 def run_persistent_qmul(
     *,
     command: str,
     benchmark_stage: str,
     methodology_note: str,
     seed: int = 0,
+    device_id: int = 0,
+    case_specs: Sequence[tuple[int, ...]] | None = None,
+    expected_repository_commit: str | None = None,
+    expected_candidate_sha256: str | None = None,
+    expected_tt_metal_commit: str | None = None,
+    process_capture: dict[str, str] | None = None,
+    candidate_environment: Mapping[str, str] | None = None,
+    collector_repository_root: Path | None = None,
 ) -> dict[str, object]:
     """Execute all cases in one candidate process and validate every output."""
 
-    if benchmark_stage == "conformance":
-        case_specs = [(128, 1, 0, 1)]
+    selected_device = device_label(device_id)
+    if case_specs is not None:
+        selected_specs = list(case_specs)
+        if not selected_specs:
+            raise IntegrityError("persistent qmul custom case_specs must not be empty")
+    elif benchmark_stage == "conformance":
+        selected_specs = [(128, 1, 0, 1)]
     elif benchmark_stage == "performance":
-        case_specs = [
+        selected_specs = [
             (items, PERFORMANCE_ITERATIONS, PERFORMANCE_WARMUP, PERFORMANCE_SAMPLES)
             for items in PERFORMANCE_ITEMS
         ]
@@ -61,24 +80,32 @@ def run_persistent_qmul(
         raise IntegrityError("persistent hardware reports require a methodology note")
 
     candidate_hash = command_sha256(command, Path.cwd())
-    source_commit = repository_commit(Path.cwd())
+    if expected_candidate_sha256 is not None and candidate_hash != expected_candidate_sha256:
+        raise IntegrityError("persistent candidate hash does not match the frozen expected SHA-256")
+    collector_commit = repository_commit(collector_repository_root or Path.cwd())
+    source_commit = expected_repository_commit or collector_commit
     prepared: list[tuple[dict[str, object], torch.Tensor, torch.Tensor]] = []
 
     with tempfile.TemporaryDirectory(prefix="tt-rqm-persistent-qmul-") as temp:
         workdir = Path(temp)
         manifest_cases: list[dict[str, object]] = []
-        for items, iterations, warmup, samples in case_specs:
+        for case_index, spec in enumerate(selected_specs):
+            if len(spec) not in (4, 5):
+                raise IntegrityError("persistent qmul case specs require 4 or 5 integers")
+            items, iterations, warmup, samples = spec[:4]
+            requested_max_cores = spec[4] if len(spec) == 5 else None
             generator = torch.Generator().manual_seed(seed)
             a = torch.randn((items, 4), generator=generator, dtype=torch.float32)
             b = torch.randn((items, 4), generator=generator, dtype=torch.float32)
-            a_name = f"a_{items}.bin"
-            b_name = f"b_{items}.bin"
-            out_name = f"out_{items}.bin"
+            suffix = f"{case_index}_{items}" if case_specs is not None else str(items)
+            a_name = f"a_{suffix}.bin"
+            b_name = f"b_{suffix}.bin"
+            out_name = f"out_{suffix}.bin"
             _write_float32(workdir / a_name, a)
             _write_float32(workdir / b_name, b)
             a_hash = _sha256(workdir / a_name)
             b_hash = _sha256(workdir / b_name)
-            case_id = f"qmul-f32-seed-{seed}-n-{items}-{a_hash[:12]}-{b_hash[:12]}"
+            case_id = f"qmul-f32-seed-{seed}-n-{items}-case-{case_index}-{a_hash[:12]}-{b_hash[:12]}"
             case = {
                 "case_id": case_id,
                 "items": items,
@@ -94,6 +121,8 @@ def run_persistent_qmul(
                 },
                 "outputs": {"out": out_name},
             }
+            if requested_max_cores is not None:
+                case["requested_max_cores"] = int(requested_max_cores)
             manifest_cases.append(case)
             prepared.append((case, a, b))
 
@@ -105,7 +134,7 @@ def run_persistent_qmul(
             "input_format": "raw little-endian float32 row-major",
             "output_format": "raw little-endian float32 row-major",
             "seed": seed,
-            "device_id": 0,
+            "device_id": device_id,
             "cases": manifest_cases,
             "outputs": {"metrics": "metrics.json"},
         }
@@ -121,6 +150,9 @@ def run_persistent_qmul(
             manifest_path=manifest_path,
             candidate_hash=candidate_hash,
             source_commit=source_commit,
+            device_id=device_id,
+            process_capture=process_capture,
+            candidate_environment=candidate_environment,
         )
         host_process_s = time.perf_counter() - host_started
         metrics = json.loads((workdir / "metrics.json").read_text(encoding="utf-8"))
@@ -129,6 +161,8 @@ def run_persistent_qmul(
             manifest,
             candidate_sha256=candidate_hash,
             host_process_s=host_process_s,
+            device_id=device_id,
+            expected_tt_metal_commit=expected_tt_metal_commit,
         )
 
         results: list[dict[str, object]] = []
@@ -160,7 +194,7 @@ def run_persistent_qmul(
                     "suite": "qmul",
                     "workload": "qmul",
                     "backend": "external-qmul",
-                    "device": DEVICE,
+                    "device": selected_device,
                     "execution_label": "hardware",
                     "stable_benchmark": False,
                     "methodology_note": methodology_note,
@@ -212,7 +246,7 @@ def run_persistent_qmul(
         "benchmark_stage": benchmark_stage,
         "measurement_mode": "persistent_device_session.v1",
         "protocol": PERSISTENT_PROTOCOL,
-        "device": DEVICE,
+        "device": selected_device,
         "execution_label": "hardware",
         "stable_benchmark": False,
         "methodology_note": methodology_note,
@@ -222,7 +256,7 @@ def run_persistent_qmul(
         "platform": platform.platform(),
         "external_command": command,
         "repetitions": 1 if benchmark_stage == "conformance" else PERFORMANCE_SAMPLES,
-        "case_items": [spec[0] for spec in case_specs],
+        "case_items": [spec[0] for spec in selected_specs],
         "session_timing": {
             "host_process_end_to_end_s": host_process_s,
             **metrics["session_timings_s"],
@@ -230,6 +264,7 @@ def run_persistent_qmul(
         "lifecycle": metrics["lifecycle"],
         "provenance": {
             "repository_commit": source_commit,
+            "collector_repository_commit": collector_commit,
             "candidate_sha256": candidate_hash,
             "candidate": metrics["provenance"],
         },
@@ -245,6 +280,8 @@ def validate_persistent_metrics(
     *,
     candidate_sha256: str,
     host_process_s: float,
+    device_id: int = 0,
+    expected_tt_metal_commit: str | None = None,
 ) -> dict[str, object]:
     """Strictly validate candidate metrics before accepting output evidence."""
 
@@ -253,7 +290,7 @@ def validate_persistent_metrics(
     expected_top = {
         "schema": PERSISTENT_METRICS_SCHEMA,
         "protocol": PERSISTENT_PROTOCOL,
-        "device": DEVICE,
+        "device": device_label(device_id),
         "dtype": "float32",
         "execution_kind": "hardware",
         "implementation_class": IMPLEMENTATION_CLASS,
@@ -268,7 +305,7 @@ def validate_persistent_metrics(
     lifecycle = metrics.get("lifecycle")
     if lifecycle != {
         "device_count": 1,
-        "device_id": 0,
+        "device_id": device_id,
         "create_count": 1,
         "close_count": 1,
     }:
@@ -288,6 +325,8 @@ def validate_persistent_metrics(
             raise IntegrityError(f"persistent hardware metrics missing provenance.{key}")
     if provenance["candidate_sha256"] != candidate_sha256:
         raise IntegrityError("persistent candidate_sha256 does not match the executed binary")
+    if expected_tt_metal_commit is not None and provenance["tt_metal_commit"] != expected_tt_metal_commit:
+        raise IntegrityError("persistent TT-Metalium commit does not match the frozen expected commit")
 
     session = metrics.get("session_timings_s")
     if not isinstance(session, dict):
@@ -342,7 +381,16 @@ def validate_persistent_metrics(
             raise IntegrityError("persistent timing sample count mismatch")
         for value in samples:
             accounted_s += _finite_positive(value, "timings_s.samples[]")
-        _validate_work(actual.get("work"), items=int(expected["items"]))
+        _validate_work(
+            actual.get("work"),
+            items=int(expected["items"]),
+            device_id=device_id,
+            requested_max_cores=(
+                int(expected["requested_max_cores"])
+                if "requested_max_cores" in expected
+                else None
+            ),
+        )
         normalized_cases.append(actual)
     if accounted_s > candidate_session * 1.05 + 1e-6:
         raise IntegrityError("persistent phase timings exceed candidate session timing")
@@ -358,9 +406,15 @@ def validate_persistent_report(report: Mapping[str, object]) -> None:
         raise IntegrityError("persistent report protocol mismatch")
     if report.get("stable_benchmark") is not False:
         raise IntegrityError("first persistent report must keep stable_benchmark=false")
-    if report.get("lifecycle") != {
+    lifecycle = report.get("lifecycle")
+    if not isinstance(lifecycle, dict) or lifecycle.get("device_id") not in (0, 1):
+        raise IntegrityError("persistent report device lifecycle is invalid")
+    device_id = int(lifecycle["device_id"])
+    if report.get("device") != device_label(device_id):
+        raise IntegrityError("persistent report device label mismatch")
+    if lifecycle != {
         "device_count": 1,
-        "device_id": 0,
+        "device_id": device_id,
         "create_count": 1,
         "close_count": 1,
     }:
@@ -431,6 +485,9 @@ def _run_candidate(
     manifest_path: Path,
     candidate_hash: str,
     source_commit: str,
+    device_id: int,
+    process_capture: dict[str, str] | None,
+    candidate_environment: Mapping[str, str] | None,
 ) -> None:
     tokens = shlex.split(command)
     if not tokens:
@@ -449,7 +506,13 @@ def _run_candidate(
             "TT_RQM_REPOSITORY_COMMIT": source_commit,
         }
     )
-    completed = subprocess.run(tokens, capture_output=True, text=True, env=env)
+    if candidate_environment is not None:
+        env.update(candidate_environment)
+    completed = subprocess.run(
+        [*tokens, "--device", str(device_id)], capture_output=True, text=True, env=env
+    )
+    if process_capture is not None:
+        process_capture.update({"stdout": completed.stdout, "stderr": completed.stderr})
     if completed.returncode:
         raise IntegrityError(
             "persistent qmul candidate failed\n"
@@ -457,13 +520,19 @@ def _run_candidate(
         )
 
 
-def _validate_work(value: object, *, items: int) -> None:
+def _validate_work(
+    value: object,
+    *,
+    items: int,
+    device_id: int = 0,
+    requested_max_cores: int | None = None,
+) -> None:
     if not isinstance(value, dict):
         raise IntegrityError("persistent case requires work metadata")
     tiles = (items + 1023) // 1024
     expected = {
         "device_count": 1,
-        "device_id": 0,
+        "device_id": device_id,
         "component_tiles": tiles,
         "layout": "planar_float32_tiles_32x32",
         "work_split": "row_major",
@@ -477,8 +546,25 @@ def _validate_work(value: object, *, items: int) -> None:
             raise IntegrityError(f"persistent work.{key} must be positive")
     if value["grid_x"] * value["grid_y"] != value["available_core_count"]:
         raise IntegrityError("persistent work grid mismatch")
-    if value["core_count"] != min(tiles, value["available_core_count"]):
+    expected_cores = min(
+        tiles,
+        value["available_core_count"],
+        requested_max_cores if requested_max_cores is not None else value["available_core_count"],
+    )
+    if value["core_count"] != expected_cores:
         raise IntegrityError("persistent work core count mismatch")
+    if requested_max_cores is not None and value.get("requested_max_cores") != requested_max_cores:
+        raise IntegrityError("persistent work requested core count mismatch")
+    if value["core_count"] > tiles:
+        raise IntegrityError("persistent work may not allocate idle cores")
+    if "group_1_core_count" in value:
+        group_1 = int(value["group_1_core_count"])
+        group_2 = int(value["group_2_core_count"])
+        if group_1 + group_2 != value["core_count"]:
+            raise IntegrityError("persistent work group core coverage mismatch")
+        covered = group_1 * int(value["group_1_tiles_per_core"]) + group_2 * int(value["group_2_tiles_per_core"])
+        if covered != tiles:
+            raise IntegrityError("persistent work groups do not cover every tile")
 
 
 def _write_float32(path: Path, tensor: torch.Tensor) -> None:
