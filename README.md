@@ -21,14 +21,15 @@ pipeline.
 ## Current proven result
 
 The repository contains real N300 device-0 evidence for quaternion
-multiplication and `SU2ComposeBench`. Every current performance sample remains
-non-stable and supports no acceleration claim.
+multiplication and `SU2ComposeBench`. Three independent persistent qmul
+sessions support a stable one-device release; the SU2 comparison remains a
+single non-stable session. Neither result is an acceleration claim.
 
 | Evidence | Implementation | Claim | Stable benchmark |
 |---|---|---|---|
 | Stage A qmul conformance | scalar RISC-V correctness baseline | Level 0 | `false` |
 | Stage B qmul | multicore Tensix compute/SFPU | Level 1 | `false` |
-| Persistent qmul | one persistent Wormhole device session | Level 1 | `false` |
+| Persistent qmul | three qualified device-0 sessions | Level 2 | `true` |
 | SU2ComposeBench H1 conformance | fused and unfused ordered composition | Level 0 | `false` |
 | SU2ComposeBench H1 comparison | one qualified fused/unfused session | Level 1 | `false` |
 
@@ -50,9 +51,10 @@ large matrix multiplication:
 - the same representation supports disciplined scientific-computing and
   physical-AI experiments without introducing a native quaternion datatype.
 
-These results do not establish CPU acceleration, stable performance, measured
-hardware bandwidth, energy efficiency, application speedup, full device-side
-Hamiltonian lowering, dual-device scaling, or Tenstorrent endorsement.
+These results do not establish CPU acceleration, stable SU2 performance,
+measured hardware bandwidth, energy efficiency, application speedup, full
+device-side Hamiltonian lowering, dual-device scaling, or Tenstorrent
+endorsement.
 
 ## Five-minute local quickstart
 

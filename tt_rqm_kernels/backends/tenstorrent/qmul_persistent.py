@@ -15,7 +15,7 @@ import subprocess
 import sys
 import tempfile
 import time
-from typing import Mapping
+from typing import Mapping, Sequence
 
 import torch
 

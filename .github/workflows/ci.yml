@@ -59,6 +59,7 @@ jobs:
 
       - name: Verify deterministic generated outputs
         run: |
+          python scripts/generate_qmul_hardware_evidence.py
           python scripts/generate_benchmark_plots.py
           python scripts/generate_su2_compose_plots.py
           git diff --exit-code

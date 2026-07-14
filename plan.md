@@ -11,13 +11,15 @@ CPU/PyTorch reference operators: complete
 TT-Lang simulator qmul: complete, simulator-only
 tt-emule TT-Metalium qmul: complete, emulation-only
 Stage A scalar RISC-V N300 conformance: complete
-Stage B multicore/SFPU qmul: Claim Level 1
-Persistent-device qmul session: Claim Level 1
+Stage B multicore/SFPU qmul first sweep: Claim Level 1
+Persistent-device qmul release: Claim Level 2
+Independent qmul multi-session stability: complete
 SU2ComposeBench H1 foundation: complete
 SU2ComposeBench H1 Wormhole implementation: present
 SU2ComposeBench first fused/unfused session: Claim Level 1
-Independent multi-session stability: pending
-Profiler attribution: pending
+Independent SU2 multi-session stability: pending
+qmul profiler and ceiling diagnostics: present
+SU2 profiler attribution: pending
 CPU timing-scope-compatible comparison: pending
 Energy measurement: pending
 H2 device-side coefficient lowering: pending
@@ -25,10 +27,12 @@ TT-NN integration: deferred
 TT-MLIR lowering discussion: deferred until the backend evidence is sufficiently mature
 ```
 
-The real-device evidence uses one Wormhole device (`device_id=0`) and pinned
-TT-Metalium provenance. Stage A preserves the scalar correctness baseline.
-Stage B moves qmul arithmetic into multicore Tensix compute/SFPU kernels. H1
-adds fused and unfused ordered SU(2) rotor-and-phase composition.
+The primary real-device releases use one Wormhole device (`device_id=0`) and
+pinned TT-Metalium provenance. Stage A preserves the scalar correctness
+baseline. Stage B moves qmul arithmetic into multicore Tensix compute/SFPU
+kernels. Three independent persistent qmul sessions pass the preregistered
+Level 2 stability gates. H1 adds fused and unfused ordered SU(2)
+rotor-and-phase composition but remains at Level 1.
 
 H1 begins after CPU lowering. The CPU converts piecewise-constant two-level
 Hamiltonian coefficients into FP32 rotors and phase pairs; Wormhole composes
@@ -99,13 +103,15 @@ remain separate follow-ons. They must not inherit H1 evidence or claim levels.
 
 ## Claim boundaries and non-goals
 
-Current hardware reports remain `stable_benchmark=false`. Claim Level 1 means a
-qualified first sample, not stable performance or acceleration.
+Individual qmul and SU2 hardware reports remain `stable_benchmark=false`.
+The hash-bound aggregate qmul release is `stable_benchmark=true` because three
+independent sessions passed its preregistered Level 2 gates. SU2 remains Level
+1. Neither state is an acceleration claim.
 
 The repository currently makes no claim of:
 
 - CPU acceleration or superiority;
-- stable one-device performance;
+- stable SU2 one-device performance;
 - measured DRAM, NoC, PCIe, or compute bandwidth;
 - energy efficiency or application speedup;
 - full device-side Hamiltonian coefficient lowering;

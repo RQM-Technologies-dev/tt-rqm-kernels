@@ -17,6 +17,7 @@ artifact and a versioned release manifest.
 - [Structured FP32 Quaternion Kernels on Tenstorrent Wormhole](wormhole-qmul.md)
 - [Wormhole qmul hardware evidence](wormhole-qmul-hardware-evidence.md)
 - Qualification: **Claim Level 2 — stable one-device performance**
+- Stability: `stable_benchmark=true` for the aggregate release
 - Public persistent sessions: **3**
 
 The release records real Wormhole device-0 execution, whole-output correctness,

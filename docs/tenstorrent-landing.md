@@ -42,7 +42,7 @@ Tenstorrent N300 hardware report: Stage A conformance present
 qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
-persistent multicore/SFPU path: implemented; hardware qualification is separate
+persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sessions
 SU2ComposeBench fused/unfused paths: N300 conformance and one comparison session present
 ```
 
@@ -117,9 +117,10 @@ Access state for RQM Technologies:
 ## How A Tenstorrent Engineer Can Help
 
 The remaining engineering ask is review of the one-device multicore/SFPU
-architecture and its measurement scope before any stable or comparative
-performance claim. Placement guidance remains welcome but is independent of
-the external candidate evidence.
+architecture, diagnostic evidence, and next optimization choices. The qmul
+release supports stable one-device performance, but no acceleration or
+matched-baseline claim. Placement guidance remains welcome but is independent
+of the external candidate evidence.
 
 The copy/paste handoff is:
 
@@ -140,8 +141,9 @@ reports/tt_hardware_qmul_stage_b_persistent_performance.json
 reports/tt_hardware_qmul_stage_b_persistent_performance.md
 ```
 
-The first hardware sample should use `execution_label=hardware` and
-`stable_benchmark=false`.
+Every new individual hardware sample should use `execution_label=hardware` and
+`stable_benchmark=false`; only a separate aggregate qualification may promote
+a release-level stability claim.
 
 ## Key Links
 
