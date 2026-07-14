@@ -85,6 +85,7 @@ deterministic generated outputs without accessing hardware:
 python scripts/validate_benchmark_release.py
 python scripts/reproduce_wormhole_qmul.py --check
 python scripts/validate_su2_compose_preregistration.py
+python scripts/validate_su2_compose_stability_preregistration.py
 python scripts/validate_su2_compose_release.py
 python scripts/reproduce_wormhole_su2_compose.py --check
 python scripts/validate_entanglement_dynamics_preregistration.py

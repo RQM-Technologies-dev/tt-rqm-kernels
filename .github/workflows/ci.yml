@@ -36,8 +36,12 @@ jobs:
           scripts/repo_status.py
           tt_rqm_kernels/entanglement_benchmark.py
           tt_rqm_kernels/su2_benchmark.py
+          tt_rqm_kernels/su2_hardware_session.py
+          tt_rqm_kernels/su2_stability.py
           tests/test_entanglement_benchmark.py
           tests/test_repo_status.py
+          tests/test_su2_hardware_session.py
+          tests/test_su2_stability.py
 
       - name: Run Python tests
         run: python -m pytest
@@ -53,6 +57,7 @@ jobs:
       - name: Validate SU2ComposeBench evidence
         run: |
           python scripts/validate_su2_compose_preregistration.py
+          python scripts/validate_su2_compose_stability_preregistration.py
           python scripts/validate_su2_compose_release.py
           python scripts/reproduce_wormhole_su2_compose.py --check
 
