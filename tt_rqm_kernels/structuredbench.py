@@ -105,6 +105,7 @@ class BenchmarkResult:
     provenance: dict[str, object] | None = None
     implementation_class: str | None = None
     performance_eligible: bool = False
+    candidate_metadata: dict[str, object] | None = None
 
 
 def positive_int(value: str) -> int:
@@ -991,6 +992,11 @@ def _run_external_qmul_case(
         },
         implementation_class=str(metrics["implementation_class"]),
         performance_eligible=bool(metrics["performance_eligible"]),
+        candidate_metadata=(
+            dict(timing["candidate_metadata"])
+            if isinstance(timing.get("candidate_metadata"), dict)
+            else None
+        ),
     )
 
 
@@ -1314,6 +1320,7 @@ def _result_from_output(
     provenance: dict[str, object] | None = None,
     implementation_class: str | None = None,
     performance_eligible: bool = False,
+    candidate_metadata: dict[str, object] | None = None,
 ) -> BenchmarkResult:
     if not torch.isfinite(output).all() or not torch.isfinite(reference).all():
         raise ValueError("benchmark output/reference contains non-finite values")
@@ -1380,6 +1387,7 @@ def _result_from_output(
         provenance=provenance,
         implementation_class=implementation_class,
         performance_eligible=performance_eligible,
+        candidate_metadata=candidate_metadata,
     )
 
 

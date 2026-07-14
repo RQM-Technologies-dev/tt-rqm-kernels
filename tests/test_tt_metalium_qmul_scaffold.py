@@ -148,6 +148,7 @@ def test_tt_metalium_multicore_architecture_is_stage_b_candidate() -> None:
     assert "DataFormat::Float32" in host
     assert ".fp32_dest_acc_en = true" in host
     assert "multicore_tensix_sfpu_qmul" in host
+    assert "available_core_count" in host
     assert "constexpr bool kPerformanceEligible = false" in host
     assert "noc_async_read_page" in reader
     assert "noc_async_write_page" in writer

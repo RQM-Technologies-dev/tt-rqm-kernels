@@ -226,6 +226,33 @@ def validate_external_metrics(
         )
     if stage == "performance" and metrics.get("performance_eligible") is not True:
         raise IntegrityError("performance stage requires performance_eligible=true")
+    work = metrics.get("work")
+    if metrics.get("implementation_class") == "multicore_tensix_sfpu_qmul":
+        if not isinstance(work, Mapping):
+            raise IntegrityError("multicore qmul metrics require work metadata")
+        expected_component_tiles = (int(manifest["items"]) + 1023) // 1024
+        expected_work = {
+            "device_count": 1,
+            "device_id": 0,
+            "component_tiles": expected_component_tiles,
+            "layout": "planar_float32_tiles_32x32",
+            "work_split": "row_major",
+            "arithmetic_path": "tensix_compute_sfpu",
+        }
+        for key, expected in expected_work.items():
+            if work.get(key) != expected:
+                raise IntegrityError(
+                    f"multicore qmul work.{key} mismatch: expected {expected!r}, "
+                    f"got {work.get(key)!r}"
+                )
+        for key in ("core_count", "grid_x", "grid_y", "available_core_count"):
+            if not isinstance(work.get(key), int) or int(work[key]) <= 0:
+                raise IntegrityError(f"multicore qmul work.{key} must be a positive integer")
+        available_cores = int(work["available_core_count"])
+        if int(work["grid_x"]) * int(work["grid_y"]) != available_cores:
+            raise IntegrityError("multicore qmul work grid does not match available_core_count")
+        if int(work["core_count"]) != min(expected_component_tiles, available_cores):
+            raise IntegrityError("multicore qmul core_count does not match row-major work split")
     if execution_label == "hardware":
         provenance = metrics.get("provenance")
         if not isinstance(provenance, Mapping):
@@ -251,6 +278,7 @@ def validate_external_metrics(
         "device_s": device_s,
         "end_to_end_s": host_s,
         "candidate_sha256": candidate_sha256,
+        "candidate_metadata": dict(work) if isinstance(work, Mapping) else None,
     }
 
 

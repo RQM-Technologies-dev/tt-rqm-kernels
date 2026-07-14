@@ -63,6 +63,8 @@ struct Manifest {
 struct WorkloadMetadata {
     uint32_t core_count = 0;
     uint32_t component_tiles = 0;
+    uint32_t grid_x = 0;
+    uint32_t grid_y = 0;
 };
 
 struct PreparedWorkload {
@@ -308,7 +310,15 @@ PreparedWorkload build_workload(
 
     distributed::MeshWorkload workload;
     workload.add_program(distributed::MeshCoordinateRange(mesh_device->shape()), std::move(program));
-    return {.workload = std::move(workload), .metadata = {.core_count = core_count, .component_tiles = component_tiles}};
+    return {
+        .workload = std::move(workload),
+        .metadata = {
+            .core_count = core_count,
+            .component_tiles = component_tiles,
+            .grid_x = grid.x,
+            .grid_y = grid.y,
+        },
+    };
 }
 
 std::vector<uint32_t> run_candidate(
@@ -393,6 +403,8 @@ void write_metrics(
             << "  \"timings_s\": {\"setup\": " << setup_s << ", \"device\": " << device_s << "},\n"
             << "  \"work\": {\"device_count\": 1, \"device_id\": 0, \"core_count\": " << metadata.core_count
             << ", \"component_tiles\": " << metadata.component_tiles
+            << ", \"grid_x\": " << metadata.grid_x << ", \"grid_y\": " << metadata.grid_y
+            << ", \"available_core_count\": " << metadata.grid_x * metadata.grid_y
             << ", \"layout\": \"planar_float32_tiles_32x32\", \"work_split\": \"row_major\", "
                "\"arithmetic_path\": \"tensix_compute_sfpu\"},\n"
             << "  \"provenance\": {\n"
