@@ -14,12 +14,22 @@ from check_environment import main as check_environment_main
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 DEFAULT_BUILD_DIR = PACKAGE_DIR / "build_emule_candidate"
-DEFAULT_BINARY_NAME = "tt_rqm_metalium_qmul_candidate"
+CANDIDATE_TARGETS = {
+    "scalar": "tt_rqm_metalium_qmul_candidate",
+    "multicore": "tt_rqm_metalium_qmul_multicore_candidate",
+}
+DEFAULT_BINARY_NAME = CANDIDATE_TARGETS["scalar"]
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Build the experimental TT-Metalium qmul candidate."
+    )
+    parser.add_argument(
+        "--candidate",
+        choices=tuple(CANDIDATE_TARGETS),
+        default="scalar",
+        help="Candidate architecture to build. Defaults to the scalar Stage A baseline.",
     )
     parser.add_argument(
         "--tt-metal-root",
@@ -48,6 +58,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Optional CMake generator. Ninja is used when available.",
     )
     args = parser.parse_args(argv)
+    binary_name = CANDIDATE_TARGETS[args.candidate]
 
     check_args = []
     if args.tt_metal_root is not None:
@@ -115,7 +126,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         subprocess.run(configure, cwd=PACKAGE_DIR, check=True, env=env)
         subprocess.run(
-            [cmake, "--build", str(args.build_dir), "--target", DEFAULT_BINARY_NAME],
+            [cmake, "--build", str(args.build_dir), "--target", binary_name],
             cwd=PACKAGE_DIR,
             check=True,
             env=env,
@@ -128,8 +139,8 @@ def main(argv: list[str] | None = None) -> int:
         )
         return exc.returncode or 2
 
-    binary = args.build_dir / DEFAULT_BINARY_NAME
-    print(f"Built candidate: {binary}")
+    binary = args.build_dir / binary_name
+    print(f"Built {args.candidate} candidate: {binary}")
     print("Validate with scripts/validate_qmul_candidate.py before reporting results.")
     return 0
 

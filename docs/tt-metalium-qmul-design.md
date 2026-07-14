@@ -1,11 +1,11 @@
 # TT-Metalium qmul Design
 
-This document describes the implemented scalar RISC-V TT-Metalium `qmul`
-candidate and the later optimized target for `tt-rqm-kernels`.
+This document describes the immutable scalar RISC-V Stage A candidate and the
+separate multicore/SFPU Stage B candidate for `tt-rqm-kernels`.
 
-The goal is to make the first hardware-facing kernel small, testable, and easy
-for Tenstorrent maintainers to place correctly before any TT-Metalium code is
-written.
+The scalar candidate has passed N300 silicon conformance. The active development
+target moves Float32 Hamilton arithmetic into the Tensix compute path on one
+Wormhole device.
 
 ## Purpose
 
@@ -19,9 +19,11 @@ This workload is useful because it is compact but not scalar-trivial:
 - correctness can be checked against existing CPU/PyTorch and scalar references
 - benchmark output can reuse the existing StructuredBench report shape
 
-The current version is explicitly `scalar_riscv_correctness_baseline` with
+The scalar version is explicitly `scalar_riscv_correctness_baseline` with
 `performance_eligible=false`. It is suitable for Stage A silicon conformance,
-not acceleration claims. Stage B requires a separate multicore/SFPU candidate.
+not acceleration claims. The separate Stage B implementation identifies itself
+as `multicore_tensix_sfpu_qmul` and remains `performance_eligible=false` until
+hardware conformance and architecture audits pass.
 
 ## Operator Contract
 
@@ -108,17 +110,41 @@ For an external TT-Metalium executable, the intended bridge is the StructuredBen
 `scripts/qmul_external_reference.py` command is only a CPU/PyTorch protocol
 reference, not a hardware backend.
 
-The implementation staging area is `experimental/tt_metalium_qmul/`. It contains
-real TT-Metalium host/kernel source validated under tt-emule.
+The implementation area is `experimental/tt_metalium_qmul/`. It contains the
+scalar TT-Metalium host/kernel source validated under tt-emule and N300, plus
+the distinct Stage B host, reader, compute/SFPU, and writer sources.
 
 The current package includes:
 
 - `check_environment.py` for detecting a local `tt-metal` checkout
-- `build_candidate.py` for building the candidate against TT-Metalium
+- `build_candidate.py --candidate {scalar,multicore}` for building the selected
+  target against TT-Metalium; it defaults to `scalar`
 - scalar RISC-V candidate source and a Docker/tt-emule execution wrapper
+- a planar Float32 multicore target using device 0, row-major work splitting,
+  DMA-only reader/writer kernels, and a compute/SFPU Hamilton kernel
 - `validate_candidate.py` as the wrapper around `scripts/validate_qmul_candidate.py`
 
 The scalar implementation is Stage A correctness evidence only.
+
+## Stage B Layout and Work Split
+
+The Stage B host converts `[N,4]` AoS inputs into four padded component planes
+per operand. Each plane is stored as 32x32 Float32 tiles. `N=128` therefore uses
+one component tile with 896 zero-padded rows; readback interleaves only the
+first 128 rows into `out.bin`.
+
+The candidate creates a unit mesh for device 0 and calls
+`split_work_to_cores(grid, component_tiles, true)`. Component tiles are assigned
+row-major to `min(component_tiles, available Tensix cores)`. Each selected core
+runs three roles:
+
+- reader RISC-V: DMA four A and four B component tiles into CBs 0-7;
+- compute/SFPU: unpack all eight Float32 tiles into FP32 destination registers,
+  evaluate the four Hamilton equations, and pack CBs 16-19;
+- writer RISC-V: DMA the four output component tiles to planar DRAM.
+
+Only the compute kernel and its SFPU helper contain Hamilton arithmetic. The
+data-movement kernels contain addressing and DMA control only.
 
 ## StructuredBench Report Fields
 

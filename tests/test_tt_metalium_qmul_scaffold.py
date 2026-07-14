@@ -125,6 +125,52 @@ def test_tt_metalium_source_candidate_files_exist() -> None:
     assert os.path.exists("experimental/tt_metalium_qmul/kernels/qmul_riscv.cpp")
 
 
+def test_tt_metalium_multicore_candidate_files_exist() -> None:
+    package = Path("experimental/tt_metalium_qmul")
+
+    assert (package / "src/qmul_multicore_candidate.cpp").exists()
+    assert (package / "kernels/qmul_multicore_reader.cpp").exists()
+    assert (package / "kernels/qmul_multicore_compute.cpp").exists()
+    assert (package / "kernels/qmul_multicore_writer.cpp").exists()
+    assert (package / "kernels/qmul_sfpu.h").exists()
+
+
+def test_tt_metalium_multicore_architecture_is_stage_b_candidate() -> None:
+    host = Path("experimental/tt_metalium_qmul/src/qmul_multicore_candidate.cpp").read_text()
+    reader = Path("experimental/tt_metalium_qmul/kernels/qmul_multicore_reader.cpp").read_text()
+    compute = Path("experimental/tt_metalium_qmul/kernels/qmul_multicore_compute.cpp").read_text()
+    writer = Path("experimental/tt_metalium_qmul/kernels/qmul_multicore_writer.cpp").read_text()
+    sfpu = Path("experimental/tt_metalium_qmul/kernels/qmul_sfpu.h").read_text()
+
+    assert "split_work_to_cores(grid, component_tiles, true)" in host
+    assert "MeshDevice::create_unit_mesh(device_id)" in host
+    assert "Stage B candidate is restricted to Wormhole device 0" in host
+    assert "DataFormat::Float32" in host
+    assert ".fp32_dest_acc_en = true" in host
+    assert "multicore_tensix_sfpu_qmul" in host
+    assert "constexpr bool kPerformanceEligible = false" in host
+    assert "noc_async_read_page" in reader
+    assert "noc_async_write_page" in writer
+    assert "qmul_tiles_sfpu" in compute
+    assert "out_w = aw * bw - ax * bx - ay * by - az * bz" in sfpu
+    assert "out_x = aw * bx + ax * bw + ay * bz - az * by" in sfpu
+    assert "out_y = aw * by - ax * bz + ay * bw + az * bx" in sfpu
+    assert "out_z = aw * bz + ax * by - ay * bx + az * bw" in sfpu
+    for data_movement_source in (reader, writer):
+        assert "sfpi::" not in data_movement_source
+        assert "out_w" not in data_movement_source
+
+
+def test_tt_metalium_build_candidate_selection_defaults_to_scalar() -> None:
+    module = _load_script("experimental/tt_metalium_qmul/build_candidate.py")
+
+    assert module.CANDIDATE_TARGETS == {
+        "scalar": "tt_rqm_metalium_qmul_candidate",
+        "multicore": "tt_rqm_metalium_qmul_multicore_candidate",
+    }
+    assert module.DEFAULT_BINARY_NAME == module.CANDIDATE_TARGETS["scalar"]
+
+
 def test_tt_metalium_candidate_is_stage_a_baseline_with_split_timing() -> None:
     source = Path("experimental/tt_metalium_qmul/src/qmul_candidate.cpp").read_text()
 

@@ -244,22 +244,45 @@ python scripts/validate_qmul_candidate.py \
 ```
 
 Do not use the scalar RISC-V correctness baseline for a larger performance
-report. After a multicore/SFPU candidate declares `performance_eligible=true`,
-run the hardware-only Stage B sweep with at least ten repetitions:
+report. First qualify the multicore/SFPU candidate with its protected Stage B
+conformance artifact names while `performance_eligible=false`:
 
 ```bash
-python experimental/tt_metalium_qmul/validate_candidate.py \
-  --candidate-command "/path/to/tt_metalium_qmul_candidate" \
-  --benchmark-stage performance \
-  --repetitions 10 \
-  --iters 30 \
-  --warmup 5 \
+python scripts/validate_qmul_candidate.py \
+  --command "/path/to/tt_rqm_metalium_qmul_multicore_candidate" \
+  --candidate multicore \
+  --benchmark-stage conformance \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --repetitions 1 \
   --seed 0 \
   --execution-label hardware \
-  --methodology-note "Performance-eligible real hardware Stage B sweep" \
-  --json-output reports/tt_metalium_qmul_candidate_4096.json \
-  --markdown-output reports/tt_metalium_qmul_candidate_4096.md
+  --methodology-note "One Wormhole device 0 multicore/SFPU N=128 conformance gate; not a performance sample." \
+  --json-output reports/tt_hardware_qmul_stage_b_candidate_conformance.json \
+  --markdown-output reports/tt_hardware_qmul_stage_b_candidate_conformance.md
 ```
+
+After that report passes and the architecture/hash audit is recorded, promote
+the implementation constant to `performance_eligible=true`, rebuild, and run
+the official hardware-only Stage B sweep once:
+
+```bash
+python scripts/validate_qmul_candidate.py \
+  --command "/path/to/tt_rqm_metalium_qmul_multicore_candidate" \
+  --candidate multicore \
+  --benchmark-stage performance \
+  --repetitions 10 \
+  --seed 0 \
+  --execution-label hardware \
+  --methodology-note "One Wormhole device 0 performance-eligible multicore/SFPU Stage B sweep; first sample, stable_benchmark=false." \
+  --json-output reports/tt_hardware_qmul_stage_b_performance.json \
+  --markdown-output reports/tt_hardware_qmul_stage_b_performance.md
+```
+
+The performance stage fixes N to 4096/65536/262144, measured iterations to 30,
+and warmups to 5 internally. Do not add `--stable-benchmark` for the first
+sample. Do not run either command with the scalar candidate.
 
 Label this result as either:
 

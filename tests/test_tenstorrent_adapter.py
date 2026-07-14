@@ -9,10 +9,14 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from scripts.rqm_tt_quickstart import _print_next_actions
+from scripts.rqm_tt_quickstart import _default_outputs, _print_next_actions
 from scripts.validate_qmul_candidate import (
     EXPECTED_HARDWARE_JSON_OUTPUT,
     EXPECTED_HARDWARE_MARKDOWN_OUTPUT,
+    EXPECTED_STAGE_B_CONFORMANCE_JSON_OUTPUT,
+    EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT,
+    EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT,
+    EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT,
     _validate_report_args,
 )
 from tt_rqm_kernels.backends.tenstorrent.availability import (
@@ -173,6 +177,61 @@ def test_hardware_labeled_report_path_requires_safe_handoff_metadata(
         json_output=json_output,
         markdown_output=markdown_output,
     )
+
+
+def test_stage_b_hardware_artifact_names_are_protected(tmp_path: Path) -> None:
+    conformance_json = tmp_path / EXPECTED_STAGE_B_CONFORMANCE_JSON_OUTPUT
+    conformance_markdown = tmp_path / EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT
+    performance_json = tmp_path / EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT
+    performance_markdown = tmp_path / EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT
+
+    _validate_report_args(
+        command="/opt/tt/tt_rqm_metalium_qmul_multicore_candidate",
+        execution_label="hardware",
+        stable_benchmark=False,
+        methodology_note="one Wormhole device 0 multicore conformance",
+        json_output=conformance_json,
+        markdown_output=conformance_markdown,
+        benchmark_stage="conformance",
+        candidate="multicore",
+    )
+    _validate_report_args(
+        command="/opt/tt/tt_rqm_metalium_qmul_multicore_candidate",
+        execution_label="hardware",
+        stable_benchmark=False,
+        methodology_note="one Wormhole device 0 first Stage B sample",
+        json_output=performance_json,
+        markdown_output=performance_markdown,
+        benchmark_stage="performance",
+        candidate="multicore",
+    )
+
+    with pytest.raises(ValueError, match="stage_b_candidate_conformance"):
+        _validate_report_args(
+            command="/opt/tt/tt_rqm_metalium_qmul_multicore_candidate",
+            execution_label="hardware",
+            stable_benchmark=False,
+            methodology_note="one Wormhole device 0 multicore conformance",
+            json_output=tmp_path / EXPECTED_HARDWARE_JSON_OUTPUT,
+            markdown_output=conformance_markdown,
+            benchmark_stage="conformance",
+            candidate="multicore",
+        )
+
+    assert _default_outputs(
+        "hardware",
+        json_output=None,
+        markdown_output=None,
+        benchmark_stage="conformance",
+        candidate="multicore",
+    ) == (EXPECTED_STAGE_B_CONFORMANCE_JSON_OUTPUT, EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT)
+    assert _default_outputs(
+        "hardware",
+        json_output=None,
+        markdown_output=None,
+        benchmark_stage="performance",
+        candidate="multicore",
+    ) == (EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT, EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT)
 
 
 def test_qmul_external_adapter_requires_command() -> None:

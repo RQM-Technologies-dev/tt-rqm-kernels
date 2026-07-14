@@ -164,6 +164,22 @@ python experimental/tt_metalium_qmul/build_candidate.py \
   --cmake-prefix-path /path/to/tt-metal/build_emule
 ```
 
+The build defaults to the immutable scalar target. Select Stage B explicitly:
+
+```bash
+python experimental/tt_metalium_qmul/build_candidate.py \
+  --candidate multicore \
+  --tt-metal-root /path/to/tt-metal \
+  --cmake-prefix-path /path/to/tt-metal/build_n300 \
+  --build-dir experimental/tt_metalium_qmul/build_n300_multicore_candidate
+```
+
+This produces `tt_rqm_metalium_qmul_multicore_candidate`. Its conformance and
+performance reports are protected as
+`tt_hardware_qmul_stage_b_candidate_conformance.*` and
+`tt_hardware_qmul_stage_b_performance.*`, respectively. The canonical commands
+are in the [execution runbook](../../docs/tenstorrent-execution-runbook.md).
+
 The scalar source follows TT-Metalium's public
 `add_2_integers_in_riscv` host/data-movement pattern. It maps one quaternion to
 one 16-byte page and evaluates the Hamilton equations on the scalar
