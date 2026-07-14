@@ -56,6 +56,8 @@ def validate_execution_policy(
             "external-qmul reports should use cpu, emulation, or hardware; "
             "use tt-lang-sim for simulator reports"
         )
+    if stage in {"conformance", "performance"} and execution_label != "hardware":
+        raise IntegrityError("explicit qmul benchmark stages are only allowed on real hardware")
     validate_stability(execution_label, stable_benchmark=stable_benchmark)
     if execution_label == "hardware":
         validate_label_command(execution_label, command=command)
@@ -224,8 +226,45 @@ def validate_external_metrics(
         raise IntegrityError(
             "external-qmul setup plus device time exceeds host end-to-end time"
         )
-    if stage == "performance" and metrics.get("performance_eligible") is not True:
+    implementation_class = metrics.get("implementation_class")
+    performance_eligible = metrics.get("performance_eligible")
+    if implementation_class == "multicore_tensix_sfpu_qmul" and execution_label != "hardware":
+        raise IntegrityError("multicore Stage B qmul metrics require execution_label=hardware")
+    if stage == "conformance" and performance_eligible is not False:
+        raise IntegrityError("conformance stage requires performance_eligible=false")
+    if stage == "performance" and performance_eligible is not True:
         raise IntegrityError("performance stage requires performance_eligible=true")
+    if stage == "performance" and implementation_class != "multicore_tensix_sfpu_qmul":
+        raise IntegrityError(
+            "performance stage requires implementation_class=multicore_tensix_sfpu_qmul"
+        )
+    work = metrics.get("work")
+    if implementation_class == "multicore_tensix_sfpu_qmul":
+        if not isinstance(work, Mapping):
+            raise IntegrityError("multicore qmul metrics require work metadata")
+        expected_component_tiles = (int(manifest["items"]) + 1023) // 1024
+        expected_work = {
+            "device_count": 1,
+            "device_id": 0,
+            "component_tiles": expected_component_tiles,
+            "layout": "planar_float32_tiles_32x32",
+            "work_split": "row_major",
+            "arithmetic_path": "tensix_compute_sfpu",
+        }
+        for key, expected in expected_work.items():
+            if work.get(key) != expected:
+                raise IntegrityError(
+                    f"multicore qmul work.{key} mismatch: expected {expected!r}, "
+                    f"got {work.get(key)!r}"
+                )
+        for key in ("core_count", "grid_x", "grid_y", "available_core_count"):
+            if not isinstance(work.get(key), int) or int(work[key]) <= 0:
+                raise IntegrityError(f"multicore qmul work.{key} must be a positive integer")
+        available_cores = int(work["available_core_count"])
+        if int(work["grid_x"]) * int(work["grid_y"]) != available_cores:
+            raise IntegrityError("multicore qmul work grid does not match available_core_count")
+        if int(work["core_count"]) != min(expected_component_tiles, available_cores):
+            raise IntegrityError("multicore qmul core_count does not match row-major work split")
     if execution_label == "hardware":
         provenance = metrics.get("provenance")
         if not isinstance(provenance, Mapping):
@@ -251,6 +290,7 @@ def validate_external_metrics(
         "device_s": device_s,
         "end_to_end_s": host_s,
         "candidate_sha256": candidate_sha256,
+        "candidate_metadata": dict(work) if isinstance(work, Mapping) else None,
     }
 
 

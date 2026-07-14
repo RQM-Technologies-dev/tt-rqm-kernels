@@ -21,8 +21,12 @@ Current local status:
   sample report under `reports/tt_emule_qmul_candidate.*`.
 - One N300 Stage A hardware conformance report is committed under
   `reports/tt_hardware_qmul_quickstart.*` with its environment record.
-- The scalar Stage A candidate is not performance-eligible; Stage B remains a
-  separate multicore/SFPU implementation milestone.
+- The scalar Stage A candidate remains permanently ineligible for Stage B.
+- A separate Float32 multicore/SFPU candidate passed protected N=128
+  conformance, architecture/hash audit, and the official three-size Stage B
+  sweep once on Wormhole device 0.
+- The first Stage B sample is `performance_eligible=true` and
+  `stable_benchmark=false`; it is not an acceleration claim.
 - Tenstorrent approved SSH access to the N300 used for the first report.
 
 Placement guidance is tracked separately in the public `tt-metal` issue and the
@@ -244,22 +248,57 @@ python scripts/validate_qmul_candidate.py \
 ```
 
 Do not use the scalar RISC-V correctness baseline for a larger performance
-report. After a multicore/SFPU candidate declares `performance_eligible=true`,
-run the hardware-only Stage B sweep with at least ten repetitions:
+report. First qualify the multicore/SFPU candidate with its protected Stage B
+conformance artifact names while `performance_eligible=false`:
 
 ```bash
-python experimental/tt_metalium_qmul/validate_candidate.py \
-  --candidate-command "/path/to/tt_metalium_qmul_candidate" \
-  --benchmark-stage performance \
-  --repetitions 10 \
-  --iters 30 \
-  --warmup 5 \
+python scripts/validate_qmul_candidate.py \
+  --command "/path/to/tt_rqm_metalium_qmul_multicore_candidate" \
+  --candidate multicore \
+  --benchmark-stage conformance \
+  --items 128 \
+  --iters 1 \
+  --warmup 0 \
+  --repetitions 1 \
   --seed 0 \
   --execution-label hardware \
-  --methodology-note "Performance-eligible real hardware Stage B sweep" \
-  --json-output reports/tt_metalium_qmul_candidate_4096.json \
-  --markdown-output reports/tt_metalium_qmul_candidate_4096.md
+  --methodology-note "One Wormhole device 0 multicore/SFPU N=128 conformance gate; not a performance sample." \
+  --json-output reports/tt_hardware_qmul_stage_b_candidate_conformance.json \
+  --markdown-output reports/tt_hardware_qmul_stage_b_candidate_conformance.md
 ```
+
+After that report passes and the architecture/hash audit is recorded, promote
+the implementation constant to `performance_eligible=true`, rebuild, and run
+the official hardware-only Stage B sweep once:
+
+```bash
+python scripts/validate_qmul_candidate.py \
+  --command "/path/to/tt_rqm_metalium_qmul_multicore_candidate" \
+  --candidate multicore \
+  --benchmark-stage performance \
+  --repetitions 10 \
+  --seed 0 \
+  --execution-label hardware \
+  --methodology-note "One Wormhole device 0 performance-eligible multicore/SFPU Stage B sweep; first sample, stable_benchmark=false." \
+  --json-output reports/tt_hardware_qmul_stage_b_performance.json \
+  --markdown-output reports/tt_hardware_qmul_stage_b_performance.md
+```
+
+The performance stage fixes N to 4096/65536/262144, measured iterations to 30,
+and warmups to 5 internally. Do not add `--stable-benchmark` for the first
+sample. Do not run either command with the scalar candidate.
+
+The first completed artifacts are:
+
+- [candidate conformance JSON](../reports/tt_hardware_qmul_stage_b_candidate_conformance.json)
+  and [Markdown](../reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
+- [architecture audit](../reports/tt_hardware_qmul_stage_b_architecture_audit.md)
+- [Stage B performance JSON](../reports/tt_hardware_qmul_stage_b_performance.json)
+  and [Markdown](../reports/tt_hardware_qmul_stage_b_performance.md)
+
+The performance binary ran from promotion commit `debdce2`; commit `635f41b`
+then added the resulting report. This is the same normal execution-source then
+evidence-commit sequence used by Stage A.
 
 Label this result as either:
 

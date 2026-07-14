@@ -128,6 +128,18 @@ def test_stage_constraints_and_fake_hardware_labels_are_rejected() -> None:
             stable_benchmark=True,
             items=[128],
         )
+    with pytest.raises(IntegrityError, match="only allowed on real hardware"):
+        validate_execution_policy(
+            backend="external-qmul",
+            execution_label="emulation",
+            stable_benchmark=False,
+            command="/opt/tt/qmul_emule",
+            stage="conformance",
+            repetitions=1,
+            items=[128],
+            iterations=[1],
+            warmups=[0],
+        )
 
 
 def test_performance_stage_rejects_scalar_correctness_baseline() -> None:
@@ -172,6 +184,82 @@ def test_performance_stage_rejects_scalar_correctness_baseline() -> None:
         )
 
 
+def test_performance_stage_rejects_eligible_non_multicore_class() -> None:
+    manifest = {
+        "schema": "tt-rqm-external-qmul.v1",
+        "dtype": "float32",
+        "items": 4096,
+        "iterations": 30,
+        "warmup": 5,
+    }
+    metrics = {
+        "schema": "tt-rqm-external-qmul-metrics.v2",
+        "protocol": "tt-rqm-external-qmul.v1",
+        "backend": "candidate",
+        "device": "tenstorrent/wormhole-device-0",
+        "dtype": "float32",
+        "items": 4096,
+        "iterations": 30,
+        "warmup": 5,
+        "execution_kind": "hardware",
+        "implementation_class": "scalar_riscv_correctness_baseline",
+        "performance_eligible": True,
+        "timings_s": {"setup": 0.1, "device": 0.2},
+        "provenance": {
+            "chip_type": "n300",
+            "tt_metal_commit": "abc",
+            "compiler_version": "c++",
+            "runtime_version": "tt-metal",
+            "build_id": "build",
+            "timer_scope": "enqueue plus finish",
+        },
+    }
+
+    with pytest.raises(IntegrityError, match="multicore_tensix_sfpu_qmul"):
+        validate_external_metrics(
+            metrics,
+            manifest,
+            execution_label="hardware",
+            host_end_to_end_s=1.0,
+            candidate_sha256="hash",
+            stage="performance",
+        )
+
+
+def test_conformance_stage_rejects_promoted_candidate() -> None:
+    manifest = {
+        "schema": "tt-rqm-external-qmul.v1",
+        "dtype": "float32",
+        "items": 128,
+        "iterations": 1,
+        "warmup": 0,
+    }
+    metrics = {
+        "schema": "tt-rqm-external-qmul-metrics.v2",
+        "protocol": "tt-rqm-external-qmul.v1",
+        "backend": "candidate",
+        "device": "tenstorrent/wormhole-device-0",
+        "dtype": "float32",
+        "items": 128,
+        "iterations": 1,
+        "warmup": 0,
+        "execution_kind": "hardware",
+        "implementation_class": "multicore_tensix_sfpu_qmul",
+        "performance_eligible": True,
+        "timings_s": {"setup": 0.1, "device": 0.2},
+    }
+
+    with pytest.raises(IntegrityError, match="performance_eligible=false"):
+        validate_external_metrics(
+            metrics,
+            manifest,
+            execution_label="hardware",
+            host_end_to_end_s=1.0,
+            candidate_sha256="hash",
+            stage="conformance",
+        )
+
+
 def test_hardware_metrics_require_full_provenance() -> None:
     manifest = {
         "schema": "tt-rqm-external-qmul.v1",
@@ -204,6 +292,71 @@ def test_hardware_metrics_require_full_provenance() -> None:
             host_end_to_end_s=1.0,
             candidate_sha256="hash",
             stage="conformance",
+        )
+
+
+def test_multicore_metrics_require_auditable_work_split() -> None:
+    manifest = {
+        "schema": "tt-rqm-external-qmul.v1",
+        "dtype": "float32",
+        "items": 4096,
+        "iterations": 30,
+        "warmup": 5,
+    }
+    metrics = {
+        "schema": "tt-rqm-external-qmul-metrics.v2",
+        "protocol": "tt-rqm-external-qmul.v1",
+        "backend": "tt-metalium-qmul-multicore-candidate",
+        "device": "tenstorrent/wormhole-device-0",
+        "dtype": "float32",
+        "items": 4096,
+        "iterations": 30,
+        "warmup": 5,
+        "execution_kind": "hardware",
+        "implementation_class": "multicore_tensix_sfpu_qmul",
+        "performance_eligible": True,
+        "timings_s": {"setup": 0.1, "device": 0.2},
+        "work": {
+            "device_count": 1,
+            "device_id": 0,
+            "core_count": 4,
+            "component_tiles": 4,
+            "grid_x": 8,
+            "grid_y": 10,
+            "available_core_count": 80,
+            "layout": "planar_float32_tiles_32x32",
+            "work_split": "row_major",
+            "arithmetic_path": "tensix_compute_sfpu",
+        },
+        "provenance": {
+            "chip_type": "n300",
+            "tt_metal_commit": "abc",
+            "compiler_version": "c++",
+            "runtime_version": "tt-metal",
+            "build_id": "build",
+            "timer_scope": "enqueue plus finish",
+        },
+    }
+
+    validated = validate_external_metrics(
+        metrics,
+        manifest,
+        execution_label="hardware",
+        host_end_to_end_s=1.0,
+        candidate_sha256="hash",
+        stage="performance",
+    )
+    assert validated["candidate_metadata"] == metrics["work"]
+
+    metrics["work"]["core_count"] = 1
+    with pytest.raises(IntegrityError, match="core_count"):
+        validate_external_metrics(
+            metrics,
+            manifest,
+            execution_label="hardware",
+            host_end_to_end_s=1.0,
+            candidate_sha256="hash",
+            stage="performance",
         )
 
 

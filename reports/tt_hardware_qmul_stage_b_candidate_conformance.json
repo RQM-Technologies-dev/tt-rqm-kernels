@@ -1,0 +1,131 @@
+{
+  "backend": "external-qmul",
+  "benchmark_stage": "conformance",
+  "case_items": [
+    128
+  ],
+  "device": "tenstorrent/wormhole-device-0",
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "external_command": "/home/user/src/tt-rqm-kernels/experimental/tt_metalium_qmul/build_n300_multicore_candidate/tt_rqm_metalium_qmul_multicore_candidate",
+  "generated_at_utc": "2026-07-14T18:48:14.999929+00:00",
+  "methodology_note": "One Wormhole device 0 multicore/SFPU N=128 conformance gate; not a performance sample.",
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "protocol": "tt-rqm-external-qmul.v1",
+  "provenance": {
+    "candidate": {
+      "build_id": "16ab386118bcf934ca01d1269ea69f3e1272be3de742f2f59ca7ec30d9a4cd8d",
+      "candidate_sha256": "16ab386118bcf934ca01d1269ea69f3e1272be3de742f2f59ca7ec30d9a4cd8d",
+      "chip_type": "n300",
+      "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "external_command": "/home/user/src/tt-rqm-kernels/experimental/tt_metalium_qmul/build_n300_multicore_candidate/tt_rqm_metalium_qmul_multicore_candidate",
+      "repository_commit": "7a9b6b044e623e62938127136f61ebec54f06eb7",
+      "runtime_version": "TT-Metalium 0.75.0",
+      "timer_scope": "prepared multicore workload enqueue plus Finish; excludes setup and readback",
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    "candidate_sha256": "16ab386118bcf934ca01d1269ea69f3e1272be3de742f2f59ca7ec30d9a4cd8d",
+    "repository_commit": "7a9b6b044e623e62938127136f61ebec54f06eb7"
+  },
+  "python_version": "3.10.12",
+  "repetitions": 1,
+  "results": [
+    {
+      "arithmetic_intensity_flops_per_byte": 0.5833333333333334,
+      "backend": "external-qmul",
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 1,
+        "core_count": 1,
+        "device_count": 1,
+        "device_id": 0,
+        "grid_x": 8,
+        "grid_y": 7,
+        "layout": "planar_float32_tiles_32x32",
+        "work_split": "row_major"
+      },
+      "checksum": 3.6184370033442974,
+      "correctness": {
+        "atol": 0.0001,
+        "failing_values": 0,
+        "golden": "independent Hamilton product; exact float32 inputs promoted to float64",
+        "nonfinite_values": 0,
+        "passed": true,
+        "rtol": 0.0001,
+        "scalar_first_eight_max_abs_error": 4.58546471904242e-08,
+        "validated_values": 512,
+        "whole_output_max_abs_error": 9.686581936563243e-08
+      },
+      "device": "tenstorrent/wormhole-device-0",
+      "dtype": "float32",
+      "effective_gb_per_s": 0.00039384110460122305,
+      "elapsed_s": 0.0156002,
+      "estimated_bytes_read": 4096,
+      "estimated_bytes_written": 2048,
+      "estimated_flops": 3584,
+      "estimated_flops_per_s": 229740.64435071347,
+      "estimated_total_bytes": 6144,
+      "execution_label": "hardware",
+      "implementation_class": "multicore_tensix_sfpu_qmul",
+      "items": 128,
+      "iterations": 1,
+      "latency_ms": 15.6002,
+      "max_abs_error": 9.686581936563243e-08,
+      "max_rel_error": 0.0002716559975476317,
+      "methodology_note": "One Wormhole device 0 multicore/SFPU N=128 conformance gate; not a performance sample.",
+      "performance_eligible": false,
+      "provenance": {
+        "build_id": "16ab386118bcf934ca01d1269ea69f3e1272be3de742f2f59ca7ec30d9a4cd8d",
+        "candidate_sha256": "16ab386118bcf934ca01d1269ea69f3e1272be3de742f2f59ca7ec30d9a4cd8d",
+        "chip_type": "n300",
+        "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+        "external_command": "/home/user/src/tt-rqm-kernels/experimental/tt_metalium_qmul/build_n300_multicore_candidate/tt_rqm_metalium_qmul_multicore_candidate",
+        "repository_commit": "7a9b6b044e623e62938127136f61ebec54f06eb7",
+        "runtime_version": "TT-Metalium 0.75.0",
+        "timer_scope": "prepared multicore workload enqueue plus Finish; excludes setup and readback",
+        "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+      },
+      "rms_error": 2.1096078329286822e-08,
+      "scalar_reference_max_abs_error": 4.58546471904242e-08,
+      "stability_max_abs": null,
+      "stable_benchmark": false,
+      "structured_shape": "[128, 4]",
+      "suite": "qmul",
+      "throughput": 8205.02301252548,
+      "throughput_unit": "qmul/s",
+      "timing": {
+        "device_s": {
+          "median": 0.0156002,
+          "p95": 0.0156002,
+          "samples": [
+            0.0156002
+          ]
+        },
+        "end_to_end_s": {
+          "median": 2.8790385969987256,
+          "p95": 2.8790385969987256,
+          "samples": [
+            2.8790385969987256
+          ]
+        },
+        "primary_elapsed": "device_s.median",
+        "repetitions": 1,
+        "setup_s": {
+          "median": 2.08175,
+          "p95": 2.08175,
+          "samples": [
+            2.08175
+          ]
+        }
+      },
+      "warmup": 0,
+      "workload": "qmul"
+    }
+  ],
+  "schema": "structuredbench.v1",
+  "seed": 0,
+  "stable_benchmark": false,
+  "suite": "qmul",
+  "torch_version": "2.13.0+cu130"
+}

@@ -41,6 +41,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--warmup", type=_nonnegative_int, default=0)
     parser.add_argument("--repetitions", type=_positive_int, default=1)
     parser.add_argument(
+        "--candidate",
+        choices=("scalar", "multicore"),
+        default="scalar",
+        help="Candidate architecture; propagated to protected report validation.",
+    )
+    parser.add_argument(
         "--benchmark-stage",
         choices=("conformance", "performance"),
         default=None,
@@ -85,6 +91,8 @@ def main(argv: list[str] | None = None) -> int:
         str(args.seed),
         "--repetitions",
         str(args.repetitions),
+        "--candidate",
+        args.candidate,
         "--format",
         args.format,
     ]

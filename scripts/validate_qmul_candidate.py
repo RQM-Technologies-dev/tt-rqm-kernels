@@ -21,6 +21,18 @@ from tt_rqm_kernels.backends.tenstorrent.report import (
 
 EXPECTED_HARDWARE_JSON_OUTPUT = Path("reports/tt_hardware_qmul_quickstart.json")
 EXPECTED_HARDWARE_MARKDOWN_OUTPUT = Path("reports/tt_hardware_qmul_quickstart.md")
+EXPECTED_STAGE_B_CONFORMANCE_JSON_OUTPUT = Path(
+    "reports/tt_hardware_qmul_stage_b_candidate_conformance.json"
+)
+EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT = Path(
+    "reports/tt_hardware_qmul_stage_b_candidate_conformance.md"
+)
+EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT = Path(
+    "reports/tt_hardware_qmul_stage_b_performance.json"
+)
+EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT = Path(
+    "reports/tt_hardware_qmul_stage_b_performance.md"
+)
 
 
 def main() -> int:
@@ -43,6 +55,12 @@ def main() -> int:
         "--benchmark-stage",
         choices=("conformance", "performance"),
         default=None,
+    )
+    parser.add_argument(
+        "--candidate",
+        choices=("scalar", "multicore"),
+        default="scalar",
+        help="Candidate architecture; selects protected hardware artifact names.",
     )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
@@ -77,6 +95,8 @@ def main() -> int:
             methodology_note=args.methodology_note,
             json_output=args.json_output,
             markdown_output=args.markdown_output,
+            benchmark_stage=args.benchmark_stage,
+            candidate=args.candidate,
         )
         report = run_suite(
             "qmul",
@@ -97,6 +117,7 @@ def main() -> int:
             repetitions=args.repetitions,
             benchmark_stage=args.benchmark_stage,
         )
+        _validate_candidate_report(args.candidate, report)
     except (RuntimeError, ValueError, TypeError, OSError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
@@ -121,29 +142,78 @@ def _validate_report_args(
     methodology_note: str | None,
     json_output: Path | None,
     markdown_output: Path | None,
+    benchmark_stage: str | None = None,
+    candidate: str = "scalar",
 ) -> None:
+    if candidate == "multicore":
+        if execution_label != "hardware":
+            raise ValueError("Stage B multicore validation requires --execution-label hardware")
+        if benchmark_stage not in {"conformance", "performance"}:
+            raise ValueError(
+                "Stage B multicore validation requires --benchmark-stage conformance or performance"
+            )
     if execution_label is None:
         return
     label = validate_external_qmul_label(execution_label, command=command)
     validate_stable_benchmark(label, stable_benchmark=stable_benchmark)
     if label != "hardware":
         return
+    if benchmark_stage == "performance" and candidate != "multicore":
+        raise ValueError("Stage B performance requires --candidate multicore")
     if not methodology_note or not methodology_note.strip():
         raise ValueError(
             "hardware-labeled external-qmul reports require --methodology-note "
             "describing the real Tenstorrent hardware environment; first "
             "samples should keep stable_benchmark=false."
         )
-    _require_hardware_output_path(
-        json_output,
-        expected=EXPECTED_HARDWARE_JSON_OUTPUT,
-        flag="--json-output",
+    expected_json, expected_markdown = _expected_hardware_outputs(
+        candidate=candidate,
+        benchmark_stage=benchmark_stage,
     )
+    _require_hardware_output_path(json_output, expected=expected_json, flag="--json-output")
     _require_hardware_output_path(
-        markdown_output,
-        expected=EXPECTED_HARDWARE_MARKDOWN_OUTPUT,
-        flag="--markdown-output",
+        markdown_output, expected=expected_markdown, flag="--markdown-output"
     )
+
+
+def _validate_candidate_report(candidate: str, report: object) -> None:
+    if not isinstance(report, dict):
+        raise ValueError("candidate report must be an object")
+    if candidate == "scalar" and report.get("execution_label") != "hardware":
+        return
+    expected = {
+        "scalar": "scalar_riscv_correctness_baseline",
+        "multicore": "multicore_tensix_sfpu_qmul",
+    }[candidate]
+    results = report.get("results")
+    if not isinstance(results, list) or not results:
+        raise ValueError("candidate report must contain results")
+    observed = {
+        result.get("implementation_class")
+        for result in results
+        if isinstance(result, dict)
+    }
+    if observed != {expected}:
+        raise ValueError(
+            f"--candidate {candidate} requires implementation_class={expected}; "
+            f"observed {sorted(str(value) for value in observed)}"
+        )
+
+
+def _expected_hardware_outputs(
+    *, candidate: str, benchmark_stage: str | None
+) -> tuple[Path, Path]:
+    if candidate == "multicore" and benchmark_stage == "performance":
+        return (
+            EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT,
+            EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT,
+        )
+    if candidate == "multicore":
+        return (
+            EXPECTED_STAGE_B_CONFORMANCE_JSON_OUTPUT,
+            EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT,
+        )
+    return EXPECTED_HARDWARE_JSON_OUTPUT, EXPECTED_HARDWARE_MARKDOWN_OUTPUT
 
 
 def _require_hardware_output_path(

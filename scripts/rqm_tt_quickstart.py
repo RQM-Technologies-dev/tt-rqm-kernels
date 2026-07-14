@@ -67,6 +67,12 @@ def main() -> int:
         choices=("conformance", "performance"),
         default=None,
     )
+    parser.add_argument(
+        "--candidate",
+        choices=("scalar", "multicore"),
+        default="scalar",
+        help="Candidate architecture; selects protected hardware artifact names.",
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--json-output",
@@ -107,6 +113,10 @@ def main() -> int:
         benchmark_stage = "conformance"
     if args.mode == "emule" and benchmark_stage is not None:
         parser.error("--benchmark-stage is reserved for real hardware mode")
+    if args.mode == "emule" and args.candidate != "scalar":
+        parser.error("--candidate multicore is reserved for real hardware mode")
+    if benchmark_stage == "performance" and args.candidate != "multicore":
+        parser.error("Stage B performance requires --candidate multicore")
 
     path = resolve_execution_path(args.mode, command=args.command)
     if not path.available:
@@ -124,6 +134,8 @@ def main() -> int:
         args.mode,
         json_output=args.json_output,
         markdown_output=args.markdown_output,
+        benchmark_stage=benchmark_stage,
+        candidate=args.candidate,
     )
 
     try:
@@ -219,8 +231,17 @@ def _default_outputs(
     *,
     json_output: Path | None,
     markdown_output: Path | None,
+    benchmark_stage: str | None = None,
+    candidate: str = "scalar",
 ) -> tuple[Path, Path]:
-    stem = "tt_emule_qmul_quickstart" if mode == "emule" else "tt_hardware_qmul_quickstart"
+    if mode == "emule":
+        stem = "tt_emule_qmul_quickstart"
+    elif candidate == "multicore" and benchmark_stage == "performance":
+        stem = "tt_hardware_qmul_stage_b_performance"
+    elif candidate == "multicore":
+        stem = "tt_hardware_qmul_stage_b_candidate_conformance"
+    else:
+        stem = "tt_hardware_qmul_quickstart"
     return (
         json_output or Path("reports") / f"{stem}.json",
         markdown_output or Path("reports") / f"{stem}.md",
