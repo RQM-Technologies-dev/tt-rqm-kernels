@@ -41,6 +41,7 @@ qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
 persistent multicore/SFPU path: implemented; hardware qualification is separate
+SU2ComposeBench fused/unfused paths: N300 conformance and one comparison session present
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
@@ -49,6 +50,11 @@ Stage B report is performance-eligible architecture evidence, but its first
 sample is explicitly not stable and is not an acceleration comparison.
 The persistent-device path removes repeated process/device creation from the
 measurement session while preserving that non-claim.
+
+The [SU2ComposeBench report](benchmarks/su2-compose-bench.md) adds fused,
+time-ordered SU(2) evolution. Its fused and unfused paths passed whole-output
+conformance and completed one paired N300 device-0 session. That result is
+Claim Level 1 with `stable_benchmark=false`, not an acceleration claim.
 
 The public [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
 packages the current evidence, deterministic charts, claim policy, provenance,

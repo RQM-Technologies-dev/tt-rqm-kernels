@@ -16,10 +16,12 @@ correctness. It is not a stability result, CPU comparison, acceleration claim,
 hardware bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
-## Preregistered next benchmark
+## SU2HamiltonianBench report
 
 - [Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole](su2-compose-bench.md)
-- Current state: N300 device-0 silicon conformance; performance eligibility remains false
+- Qualification: **Claim Level 1 — qualified first comparison sample**
+- Stability: `stable_benchmark=false`
+- Public cold-start sessions: **1**
 - Family: `SU2HamiltonianBench`; first stage: `SU2ComposeBench`
 
 ## Policy and next measurements
@@ -28,9 +30,11 @@ result, or Tenstorrent endorsement.
 - [Preregistered evidence program](methodology.md)
 - [Stage B stability thresholds](../stage-b-stability-methodology.md)
 - [Machine-readable release manifest](../../benchmarks/manifests/wormhole-qmul.json)
+- [SU2ComposeBench release manifest](../../benchmarks/manifests/wormhole-su2-compose.json)
 
 Validate the complete published release without hardware access:
 
 ```bash
 python scripts/reproduce_wormhole_qmul.py --check
+python scripts/reproduce_wormhole_su2_compose.py --check
 ```

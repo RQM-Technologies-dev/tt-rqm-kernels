@@ -63,6 +63,8 @@ The first persistent artifact passed its one-session gates and remains
 13. Evidence-backed benchmark page: [docs/benchmarks/](docs/benchmarks/index.md)
 14. Preregistered SU(2) evolution benchmark: [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
 15. SU2ComposeBench N300 conformance: [hardware report](reports/tt_hardware_su2_compose_conformance.md)
+16. SU2ComposeBench Claim Level 1 report: [Fused Time-Ordered SU(2) Composition on Wormhole](docs/benchmarks/su2-compose-bench.md)
+17. Reproduce both SU(2) evidence levels: `python scripts/reproduce_wormhole_su2_compose.py --check`
 
 Current result: the scalar baseline remains the immutable Stage A record. The
 separate `multicore_tensix_sfpu_qmul` candidate passed whole-output N=128
