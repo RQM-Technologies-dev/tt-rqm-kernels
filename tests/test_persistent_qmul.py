@@ -87,6 +87,27 @@ def test_diagnostic_core_cap_selects_only_physically_active_cores() -> None:
     assert work["group_1_core_count"] + work["group_2_core_count"] == 2
 
 
+def test_output_backpressure_ablation_changes_only_output_cb_depth() -> None:
+    report = run_persistent_qmul(
+        command=shlex.join((sys.executable, str(FIXTURE))),
+        benchmark_stage="diagnostic",
+        methodology_note="Synthetic output-backpressure ablation.",
+        case_specs=[(65536, 30, 5, 10, 56)],
+        output_cb_depth=4,
+    )
+    work = report["results"][0]["candidate_metadata"]
+    assert work["output_cb_depth"] == 4
+    assert work["core_count"] == 56
+
+    with pytest.raises(IntegrityError, match="output_cb_depth"):
+        run_persistent_qmul(
+            command=shlex.join((sys.executable, str(FIXTURE))),
+            benchmark_stage="conformance",
+            methodology_note="Invalid output depth.",
+            output_cb_depth=3,
+        )
+
+
 def test_strict_metrics_reject_stale_label_device_samples_hash_and_timing() -> None:
     manifest, metrics = _minimal_contract()
     valid = lambda payload: validate_persistent_metrics(
@@ -180,6 +201,7 @@ def _minimal_contract() -> tuple[dict, dict]:
         "layout": "planar_float32_tiles_32x32",
         "work_split": "row_major",
         "arithmetic_path": "tensix_compute_sfpu",
+        "output_cb_depth": 2,
     }
     case = {
         "case_id": "case-128",

@@ -92,6 +92,7 @@ struct PersistentConfig {
     std::filesystem::path workdir;
     std::filesystem::path manifest;
     int device_id = 0;
+    uint32_t output_cb_depth = 2;
 };
 
 PersistentConfig parse_persistent_config(int argc, char** argv) {
@@ -108,15 +109,17 @@ PersistentConfig parse_persistent_config(int argc, char** argv) {
         if (arg == "--workdir") config.workdir = next();
         else if (arg == "--manifest") config.manifest = next();
         else if (arg == "--device") config.device_id = std::stoi(next());
+        else if (arg == "--output-cb-depth") config.output_cb_depth = std::stoul(next());
         else throw std::runtime_error("unknown argument: " + std::string(arg));
     }
     if (config.workdir.empty()) throw std::runtime_error("TT_RQM_PERSISTENT_QMUL_DIR is required");
     if (config.manifest.empty()) config.manifest = config.workdir / "manifest.json";
     if (config.device_id != 0 && config.device_id != 1) throw std::runtime_error("persistent qmul device must be 0 or 1");
+    if (config.output_cb_depth != 2 && config.output_cb_depth != 4) throw std::runtime_error("output CB depth must be 2 or 4");
     return config;
 }
 
-json run_case(PersistentDeviceSession& session, const std::filesystem::path& workdir, const json& spec) {
+json run_case(PersistentDeviceSession& session, const std::filesystem::path& workdir, const json& spec, uint32_t output_cb_depth) {
     const uint32_t items = spec.at("items").get<uint32_t>();
     const uint32_t iterations = spec.at("iterations").get<uint32_t>();
     const uint32_t warmup = spec.at("warmup").get<uint32_t>();
@@ -141,7 +144,7 @@ json run_case(PersistentDeviceSession& session, const std::filesystem::path& wor
     const double buffer_allocation_s = seconds_since(allocation_started);
 
     const auto build_started = Clock::now();
-    auto prepared = build_workload(session.device(), a, b, out, component_tiles, requested_max_cores);
+    auto prepared = build_workload(session.device(), a, b, out, component_tiles, requested_max_cores, output_cb_depth);
     const double program_build_s = seconds_since(build_started);
 
     const auto a_planar = aos_to_planar_tiles(a_aos, items);
@@ -204,6 +207,7 @@ json run_case(PersistentDeviceSession& session, const std::filesystem::path& wor
             {"group_1_tiles_per_core", prepared.metadata.group_1_tiles_per_core},
             {"group_2_tiles_per_core", prepared.metadata.group_2_tiles_per_core},
             {"work_allocation_imbalance_tiles", prepared.metadata.group_2_core_count == 0 ? 0 : prepared.metadata.group_1_tiles_per_core - prepared.metadata.group_2_tiles_per_core},
+            {"output_cb_depth", prepared.metadata.output_cb_depth},
             {"layout", "planar_float32_tiles_32x32"}, {"work_split", "row_major"},
             {"arithmetic_path", "tensix_compute_sfpu"}
         }}
@@ -227,7 +231,7 @@ int run(int argc, char** argv) {
         PersistentDeviceSession session(config.device_id);
         create_s = session.create_s();
         create_count = session.create_count();
-        for (const auto& spec : manifest.at("cases")) case_metrics.push_back(run_case(session, config.workdir, spec));
+        for (const auto& spec : manifest.at("cases")) case_metrics.push_back(run_case(session, config.workdir, spec, config.output_cb_depth));
         close_s = session.close();
         close_count = session.close_count();
     }

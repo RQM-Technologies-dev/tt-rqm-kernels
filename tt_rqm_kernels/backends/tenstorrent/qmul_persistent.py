@@ -52,6 +52,7 @@ def run_persistent_qmul(
     methodology_note: str,
     seed: int = 0,
     device_id: int = 0,
+    output_cb_depth: int = 2,
     case_specs: Sequence[tuple[int, ...]] | None = None,
     expected_repository_commit: str | None = None,
     expected_candidate_sha256: str | None = None,
@@ -63,6 +64,8 @@ def run_persistent_qmul(
     """Execute all cases in one candidate process and validate every output."""
 
     selected_device = device_label(device_id)
+    if output_cb_depth not in (2, 4):
+        raise IntegrityError("persistent qmul output_cb_depth must be 2 or 4")
     if case_specs is not None:
         selected_specs = list(case_specs)
         if not selected_specs:
@@ -151,6 +154,7 @@ def run_persistent_qmul(
             candidate_hash=candidate_hash,
             source_commit=source_commit,
             device_id=device_id,
+            output_cb_depth=output_cb_depth,
             process_capture=process_capture,
             candidate_environment=candidate_environment,
         )
@@ -162,6 +166,7 @@ def run_persistent_qmul(
             candidate_sha256=candidate_hash,
             host_process_s=host_process_s,
             device_id=device_id,
+            output_cb_depth=output_cb_depth,
             expected_tt_metal_commit=expected_tt_metal_commit,
         )
 
@@ -281,6 +286,7 @@ def validate_persistent_metrics(
     candidate_sha256: str,
     host_process_s: float,
     device_id: int = 0,
+    output_cb_depth: int = 2,
     expected_tt_metal_commit: str | None = None,
 ) -> dict[str, object]:
     """Strictly validate candidate metrics before accepting output evidence."""
@@ -390,6 +396,7 @@ def validate_persistent_metrics(
                 if "requested_max_cores" in expected
                 else None
             ),
+            output_cb_depth=output_cb_depth,
         )
         normalized_cases.append(actual)
     if accounted_s > candidate_session * 1.05 + 1e-6:
@@ -486,6 +493,7 @@ def _run_candidate(
     candidate_hash: str,
     source_commit: str,
     device_id: int,
+    output_cb_depth: int,
     process_capture: dict[str, str] | None,
     candidate_environment: Mapping[str, str] | None,
 ) -> None:
@@ -509,7 +517,10 @@ def _run_candidate(
     if candidate_environment is not None:
         env.update(candidate_environment)
     completed = subprocess.run(
-        [*tokens, "--device", str(device_id)], capture_output=True, text=True, env=env
+        [*tokens, "--device", str(device_id), "--output-cb-depth", str(output_cb_depth)],
+        capture_output=True,
+        text=True,
+        env=env,
     )
     if process_capture is not None:
         process_capture.update({"stdout": completed.stdout, "stderr": completed.stderr})
@@ -526,6 +537,7 @@ def _validate_work(
     items: int,
     device_id: int = 0,
     requested_max_cores: int | None = None,
+    output_cb_depth: int = 2,
 ) -> None:
     if not isinstance(value, dict):
         raise IntegrityError("persistent case requires work metadata")
@@ -537,6 +549,7 @@ def _validate_work(
         "layout": "planar_float32_tiles_32x32",
         "work_split": "row_major",
         "arithmetic_path": "tensix_compute_sfpu",
+        "output_cb_depth": output_cb_depth,
     }
     for key, expected_value in expected.items():
         if value.get(key) != expected_value:

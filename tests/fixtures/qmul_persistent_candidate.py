@@ -37,6 +37,9 @@ def main() -> int:
     device_id = 0
     if "--device" in sys.argv:
         device_id = int(sys.argv[sys.argv.index("--device") + 1])
+    output_cb_depth = 2
+    if "--output-cb-depth" in sys.argv:
+        output_cb_depth = int(sys.argv[sys.argv.index("--output-cb-depth") + 1])
     workdir = Path(os.environ["TT_RQM_PERSISTENT_QMUL_DIR"])
     manifest = json.loads(
         Path(os.environ["TT_RQM_PERSISTENT_QMUL_MANIFEST"]).read_text()
@@ -109,6 +112,7 @@ def main() -> int:
                     "layout": "planar_float32_tiles_32x32",
                     "work_split": "row_major",
                     "arithmetic_path": "tensix_compute_sfpu",
+                    "output_cb_depth": output_cb_depth,
                 },
             }
         )

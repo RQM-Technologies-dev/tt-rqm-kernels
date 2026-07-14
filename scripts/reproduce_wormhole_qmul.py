@@ -36,6 +36,7 @@ def main() -> int:
     parser.add_argument("--session-id", default=None)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--device-id", type=int, choices=(0, 1), default=0)
+    parser.add_argument("--output-cb-depth", type=int, choices=(2, 4), default=2)
     parser.add_argument("--repository-root", type=Path, default=Path.cwd())
     parser.add_argument("--tt-metal-root", type=Path)
     parser.add_argument("--tt-smi-command", default="tt-smi -s")
@@ -105,6 +106,7 @@ def main() -> int:
             expected_execution_source_commit=(args.expected_execution_source_commit or provenance["repository_commit"]),
             expected_tt_metal_commit=(args.expected_tt_metal_commit or provenance["tt_metal_commit"]),
             device_id=args.device_id,
+            output_cb_depth=args.output_cb_depth,
             seed=args.seed,
             invocation=shlex.join([sys.executable, *sys.argv]),
             tt_smi_command=args.tt_smi_command,
