@@ -1,0 +1,43 @@
+{
+  "schema": "tt-rqm-su2-compose-session.v1",
+  "session_id": "2026-07-14-n300-device0-session-1",
+  "classification": "claim_level_1_first_comparison_sample",
+  "cold_start_host_session": true,
+  "no_discarded_performance_runs": true,
+  "device": {
+    "architecture": "wormhole_b0",
+    "board": "n300",
+    "device_count": 1,
+    "device_id": 0
+  },
+  "candidate": {
+    "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+    "sha256": "d8237f2e5b05885167085d87a0400daf8b5feb0318d906285a1d263035294441",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "artifacts": [
+    {
+      "path": "reports/tt_hardware_su2_compose_first_comparison.json",
+      "role": "raw-paired-performance-and-correctness",
+      "sha256": "c7133f2a6a2b33a70ba248163ea3728dd55b00c065a6e78aac089c2c54d3386f"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_eligible_conformance.json",
+      "role": "eligible-candidate-conformance",
+      "sha256": "d18ebc3249c740a520ceb327785b375f6c01524a3b73608a9d248b6b8b1bf64d"
+    },
+    {
+      "path": "reports/tt_hardware_su2_compose_eligible_environment.txt",
+      "role": "environment-and-device-health",
+      "sha256": "f7692c9c6ec8c323f79239483520e8a26cfe4c0855a9965960e0775c93cb48f2"
+    }
+  ],
+  "sample_contract": {
+    "measured_pairs_per_case": 10,
+    "warmup_pairs_per_case": 2,
+    "paired_order": "alternating_fused_first_unfused_first",
+    "normalized_per_chain_samples": true,
+    "nearest_rank_p95": true,
+    "stable_benchmark": false
+  }
+}
