@@ -44,3 +44,14 @@ def test_core_scaling_never_allocates_idle_cores() -> None:
     payload = json.loads(path.read_text())
     assert all(row["requested_cores"] == row["actual_cores"] for row in payload["rows"])
     assert all(row["actual_cores"] <= row["component_tiles"] for row in payload["rows"])
+
+
+def test_output_backpressure_ablation_retains_qualified_depth() -> None:
+    payload = json.loads(
+        (ROOT / "benchmarks/processed/wormhole-qmul-output-backpressure.json").read_text()
+    )
+    assert payload["same_candidate"] is True
+    assert payload["setup_failure_disclosed"] is True
+    assert "retain output_cb_depth=2" in payload["decision"]
+    assert all(row["depth_2_correctness_passed"] for row in payload["rows"])
+    assert all(row["depth_4_correctness_passed"] for row in payload["rows"])

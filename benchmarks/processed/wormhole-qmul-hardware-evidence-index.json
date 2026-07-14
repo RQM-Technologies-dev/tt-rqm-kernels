@@ -35,6 +35,13 @@
       "json_sha256": "9459d8fa7ee80d78dc2d70277fc578b94d74eb502ef9877612b4365ec1911110",
       "markdown": "benchmarks/processed/wormhole-qmul-saturation.md",
       "markdown_sha256": "236e59293af5f3d82b84c8d896dcce2bddb810e7f297ecf88d121b633ec3b904"
+    },
+    {
+      "evidence_type": "output-circular-buffer-backpressure-ablation",
+      "json": "benchmarks/processed/wormhole-qmul-output-backpressure.json",
+      "json_sha256": "67497b09bd20f9a5e8feb27a0e359af58fbcd6bda8e49f80484d74be39b661b1",
+      "markdown": "benchmarks/processed/wormhole-qmul-output-backpressure.md",
+      "markdown_sha256": "0157635ff70db13086ca051f1231f155146c411fab436b41eee98e7dc46279d3"
     }
   ],
   "public_claim_updated": true,

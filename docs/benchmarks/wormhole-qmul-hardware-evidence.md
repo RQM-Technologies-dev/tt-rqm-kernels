@@ -19,6 +19,9 @@ dual-device, aggregate-N300, hardware-bandwidth, or endorsement claims.
   longest and compute is nearly coextensive.
 - The nine-size sweep passed through N=1048576. N=57344 is the exact 56-tile,
   56-core occupancy knee; throughput continued rising beyond it.
+- Raising output circular-buffer depth from two tiles to four changed median
+  time by -0.044% at N=65536 and +0.701% at N=262144. Because the change did
+  not improve both sizes, the default remains two tiles.
 
 ## Evidence
 
@@ -28,6 +31,7 @@ dual-device, aggregate-N300, hardware-bandwidth, or endorsement claims.
 - [initialization diagnostics](../../benchmarks/processed/wormhole-qmul-initialization-diagnostics.md)
 - [profiler and same-device ceilings](../../benchmarks/processed/wormhole-qmul-profiler-and-ceilings.md)
 - [larger-size saturation](../../benchmarks/processed/wormhole-qmul-saturation.md)
+- [output-backpressure ablation](../../benchmarks/processed/wormhole-qmul-output-backpressure.md)
 - [machine-readable evidence index](../../benchmarks/processed/wormhole-qmul-hardware-evidence-index.json)
 
 Every processed file is deterministically regenerated from the isolated raw

@@ -55,6 +55,74 @@ def _timing(result: Mapping[str, Any]) -> tuple[float, float]:
     return float(timing["median"]), float(timing["p95"])
 
 
+def output_backpressure(repo_root: Path, raw_root: Path) -> tuple[dict[str, Any], str]:
+    directories = {
+        2: raw_root / "wormhole-qmul-output-cb-depth-2-01",
+        4: raw_root / "wormhole-qmul-output-cb-depth-4-01",
+    }
+    reports = {depth: _load(path / "report.json") for depth, path in directories.items()}
+    rows = []
+    baseline = _result_map(reports[2])
+    deeper = _result_map(reports[4])
+    for items in sorted(baseline):
+        median_2, p95_2 = _timing(baseline[items])
+        median_4, p95_4 = _timing(deeper[items])
+        rows.append({
+            "items": items,
+            "depth_2_median_s": median_2,
+            "depth_4_median_s": median_4,
+            "depth_4_to_2_median_ratio": median_4 / median_2,
+            "depth_2_p95_s": p95_2,
+            "depth_4_p95_s": p95_4,
+            "depth_4_to_2_p95_ratio": p95_4 / p95_2,
+            "depth_2_correctness_passed": baseline[items]["correctness"]["passed"],
+            "depth_4_correctness_passed": deeper[items]["correctness"]["passed"],
+        })
+    candidate_hashes = {
+        report["provenance"]["candidate"]["candidate_sha256"] for report in reports.values()
+    }
+    source_paths = [
+        *(path / name for path in directories.values() for name in ("report.json", "session-manifest.json")),
+        raw_root / "wormhole-qmul-output-cb-setup-failure-01" / "session-manifest.json",
+    ]
+    payload = {
+        "schema": SCHEMA,
+        "evidence_type": "output-circular-buffer-backpressure-ablation",
+        "classification": "one-change diagnostic; not a new qualified release candidate",
+        "controlled_change": "output circular-buffer depth: 2 tiles versus 4 tiles",
+        "held_fixed": ["candidate binary", "arithmetic", "layout", "core allocation", "protocol", "timing contract"],
+        "same_candidate": len(candidate_hashes) == 1,
+        "candidate_sha256": next(iter(candidate_hashes)),
+        "decision": "retain output_cb_depth=2; depth 4 did not improve both published sizes",
+        "setup_failure_disclosed": True,
+        "rows": rows,
+        "sources": _sources(source_paths, repo_root),
+    }
+    lines = [
+        "# Wormhole qmul output-backpressure ablation",
+        "",
+        "Only output circular-buffer depth changed. Both runs used the same binary, arithmetic, layout, 56-core allocation, protocol, and timing contract.",
+        "",
+        "| N | depth 2 median ms | depth 4 median ms | D4/D2 | depth 2 p95 ms | depth 4 p95 ms | D4/D2 p95 | correct |",
+        "|---:|---:|---:|---:|---:|---:|---:|---|",
+    ]
+    for row in rows:
+        lines.append(
+            f"| {row['items']:,} | {row['depth_2_median_s']*1e3:.6f} | "
+            f"{row['depth_4_median_s']*1e3:.6f} | {row['depth_4_to_2_median_ratio']:.6f} | "
+            f"{row['depth_2_p95_s']*1e3:.6f} | {row['depth_4_p95_s']*1e3:.6f} | "
+            f"{row['depth_4_to_2_p95_ratio']:.6f} | "
+            f"{'yes' if row['depth_2_correctness_passed'] and row['depth_4_correctness_passed'] else 'no'} |"
+        )
+    lines.extend([
+        "",
+        "Decision: retain depth 2. Depth 4 was effectively unchanged at N=65,536 and slower at N=262,144.",
+        "",
+        "A pre-device setup failure caused by an unset TT_METAL_RUNTIME_ROOT is preserved in raw evidence and excluded from timing comparison.",
+    ])
+    return payload, "\n".join(lines)
+
+
 def device_parity(repo_root: Path, raw_root: Path) -> tuple[dict[str, Any], str]:
     names = {
         "device0_conformance": "wormhole-qmul-device0-parity-reference-conformance-01",
@@ -457,6 +525,7 @@ def generate_all(repo_root: Path, raw_root: Path | None = None, processed_root: 
         "wormhole-qmul-initialization-diagnostics": initialization,
         "wormhole-qmul-profiler-and-ceilings": profiler_and_ceilings,
         "wormhole-qmul-saturation": saturation,
+        "wormhole-qmul-output-backpressure": output_backpressure,
     }
     written = []
     index_entries = []

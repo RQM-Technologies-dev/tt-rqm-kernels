@@ -1,0 +1,7 @@
+2026-07-14 22:20:09.886 | critical |           Metal | Failed to determine TT-Metal root directory. Root directory must be set via one of the following methods:
+1. Automatically determined when using a package install
+2. Set TT_METAL_RUNTIME_ROOT environment variable to the path containing tt_metal/
+3. Call RunTimeOptions::set_root_dir() API before creating RunTimeOptions
+4. Run from the root of the repository
+Current working directory: /home/user/src/tt-rqm-kernels (rtoptions.cpp:343)
+2026-07-14 22:20:09.886 | critical |          Always | TT_FATAL: Root Directory is not set. (assert.hpp:104)
