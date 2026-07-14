@@ -77,6 +77,11 @@ def run_su2_compose(
 
     if not methodology_note.strip():
         raise IntegrityError("SU2ComposeBench reports require a methodology note")
+    command_tokens = shlex.split(command)
+    if not command_tokens or Path(command_tokens[0]).name == "env":
+        raise IntegrityError(
+            "SU2ComposeBench command must name the candidate directly so its SHA-256 identifies the binary"
+        )
     specs = _case_specs(stage)
     candidate_hash = command_sha256(command, Path.cwd())
     source_commit = repository_commit(Path.cwd())

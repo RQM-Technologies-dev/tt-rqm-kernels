@@ -14,6 +14,7 @@ from tt_rqm_kernels.backends.tenstorrent.su2_compose_persistent import (
     PROTOCOL,
     TT_METAL_COMMIT,
     _case_specs,
+    run_su2_compose,
     validate_su2_metrics,
 )
 from tt_rqm_kernels.benchmark_integrity import IntegrityError
@@ -81,6 +82,15 @@ def test_audited_candidate_is_performance_eligible_but_not_stable() -> None:
     source = (PACKAGE / "src/su2_compose_candidate.cpp").read_text()
     assert "constexpr bool kPerformanceEligible = true;" in source
     assert '{"stable_benchmark", false}' in source
+
+
+def test_candidate_command_cannot_hide_binary_behind_env_wrapper() -> None:
+    with pytest.raises(IntegrityError, match="must name the candidate directly"):
+        run_su2_compose(
+            command="env TT_METAL_RUNTIME_ROOT=/tmp candidate",
+            stage="conformance",
+            methodology_note="wrapper identity rejection",
+        )
 
 
 def test_preregistered_case_specs_are_exact() -> None:
