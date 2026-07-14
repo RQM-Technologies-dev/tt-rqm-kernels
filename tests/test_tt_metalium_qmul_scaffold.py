@@ -137,6 +137,28 @@ def test_tt_metalium_candidate_is_stage_a_baseline_with_split_timing() -> None:
     assert "run_program_once(" not in source
 
 
+def test_tt_metalium_readme_preserves_stage_a_hardware_record() -> None:
+    readme = Path("experimental/tt_metalium_qmul/README.md").read_text()
+
+    assert "Stage A N300 silicon\nconformance gate" in readme
+    assert "tt-rqm-external-qmul-metrics.v2" in readme
+    assert "f73221f014c2ea0c1ad9b44fbfd44c5492859943" in readme
+    assert "efa529a59bc709fccb58d6134dedff3297f8fdaa" in readme
+    assert "permanently ineligible for Stage B" in readme
+
+
+def test_tt_metalium_readme_rejects_obsolete_scalar_guidance() -> None:
+    readme = Path("experimental/tt_metalium_qmul/README.md").read_text()
+
+    assert "It has not been run on Tenstorrent hardware." not in readme
+    assert '"elapsed_s": 0.001' not in readme
+    assert '"device": "candidate-device-label"' not in readme
+    assert "For a larger report once the candidate is real" not in readme
+    assert "--items 4096" not in readme
+    assert "--iters 10" not in readme
+    assert "--warmup 2" not in readme
+
+
 def test_tt_metalium_build_accepts_lowercase_metalium_config(tmp_path: Path) -> None:
     module = _load_script("experimental/tt_metalium_qmul/build_candidate.py")
     prefix = tmp_path / "build_emule"
