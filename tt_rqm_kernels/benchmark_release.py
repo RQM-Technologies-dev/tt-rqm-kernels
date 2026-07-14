@@ -16,8 +16,7 @@ from tt_rqm_kernels.backends.tenstorrent.qmul_persistent import (
 
 RELEASE_SCHEMA = "tt-rqm-benchmark-release.v1"
 DEFAULT_MANIFEST = Path("benchmarks/manifests/wormhole-qmul.json")
-REQUIRED_NONCLAIMS = {
-    "no_stability_claim",
+BASE_NONCLAIMS = {
     "no_hardware_bandwidth_claim",
     "no_cpu_comparison",
     "no_energy_claim",
@@ -26,6 +25,7 @@ REQUIRED_NONCLAIMS = {
     "no_tenstorrent_endorsement",
     "no_acceleration_claim",
 }
+LEVEL_ONE_NONCLAIMS = BASE_NONCLAIMS | {"no_stability_claim"}
 EXPECTED_CHARTS = {
     "throughput",
     "timing_breakdown",
@@ -272,6 +272,20 @@ def _validate_claim(
         _require(len(sessions) >= 3, "Claim Level 2 requires at least three independent sessions")
         _require(claim.get("stable_benchmark") is True, "Claim Level 2 requires stable_benchmark=true")
         _require(all(session.get("qualification_passed") is True for session in sessions), "every Level 2 session must pass qualification")
+        session_manifest_paths: list[str] = []
+        for session in sessions:
+            session_manifest_path = session.get("session_manifest")
+            _require(
+                session_manifest_path in artifact_by_path,
+                f"session manifest is not a hashed artifact: {session_manifest_path}",
+            )
+            session_manifest_paths.append(str(session_manifest_path))
+            _validate_session_manifest(
+                session,
+                manifest,
+                root,
+                str(session_manifest_path),
+            )
         qualification = next(
             (
                 artifact
@@ -301,12 +315,18 @@ def _validate_claim(
             qualification_payload.get("session_ids") == ids,
             "stability qualification session IDs must match the release",
         )
+        _require(
+            qualification_payload.get("session_manifests") == session_manifest_paths,
+            "stability qualification session manifests must match the release",
+        )
 
 
 def _validate_nonclaims(manifest: Mapping[str, Any], artifacts: list[Any]) -> None:
     nonclaims = manifest.get("nonclaims")
     _require(isinstance(nonclaims, list), "manifest requires nonclaims")
-    _require(set(nonclaims) == REQUIRED_NONCLAIMS, "manifest nonclaims are incomplete")
+    level = manifest.get("claim", {}).get("level")
+    expected = LEVEL_ONE_NONCLAIMS if level == 1 else BASE_NONCLAIMS
+    _require(set(nonclaims) == expected, "manifest nonclaims are incomplete")
     has_ceiling = any(
         isinstance(artifact, dict) and artifact.get("role") == "measured-hardware-ceiling"
         for artifact in artifacts
@@ -318,6 +338,47 @@ def _validate_nonclaims(manifest: Mapping[str, Any], artifacts: list[Any]) -> No
                 raise BenchmarkReleaseError(
                     "measured-bandwidth language requires a hashed hardware-ceiling artifact"
                 )
+
+
+def _validate_session_manifest(
+    session: Mapping[str, Any],
+    release: Mapping[str, Any],
+    root: Path,
+    relative: str,
+) -> None:
+    path = _resolve_repo_path(root, Path(relative))
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise BenchmarkReleaseError(f"session manifest is invalid: {relative}: {exc}") from exc
+    _require(
+        payload.get("schema") in {"tt-rqm-benchmark-session.v1", "tt-rqm-benchmark-session.v2"},
+        f"session manifest schema mismatch: {relative}",
+    )
+    _require(payload.get("session_id") == session.get("id"), f"session ID mismatch: {relative}")
+    _require(payload.get("collection_status") == "passed", f"session did not pass: {relative}")
+    _require(payload.get("cold_start_host_session") is True, f"session is not cold-start: {relative}")
+    _require(payload.get("stable_benchmark") is False, f"individual session must remain non-stable: {relative}")
+    _require(payload.get("device_id") == 0 and payload.get("device_count") == 1, f"session device scope mismatch: {relative}")
+    _require(payload.get("candidate_sha256") == release["provenance"]["candidate_sha256"], f"session candidate mismatch: {relative}")
+    _require(payload.get("tt_metal_commit") == release["provenance"]["tt_metal_commit"], f"session TT-Metalium mismatch: {relative}")
+
+    hardware_report: Path | None = None
+    artifacts = payload.get("artifacts")
+    _require(isinstance(artifacts, list) and artifacts, f"session has no artifacts: {relative}")
+    for artifact in artifacts:
+        _require(isinstance(artifact, dict), f"malformed session artifact: {relative}")
+        artifact_path = (path.parent / str(artifact.get("path"))).resolve()
+        _require(artifact_path.is_file(), f"missing session artifact: {artifact_path}")
+        _require(
+            sha256_file(artifact_path) == artifact.get("sha256"),
+            f"session artifact SHA-256 mismatch: {artifact_path}",
+        )
+        if artifact.get("role") == "hardware-report":
+            hardware_report = artifact_path
+    _require(hardware_report is not None, f"session has no hardware report: {relative}")
+    expected_report = _resolve_repo_path(root, Path(str(session.get("performance_report"))))
+    _require(hardware_report == expected_report, f"session report path mismatch: {relative}")
 
 
 def _validate_outputs(manifest: Mapping[str, Any]) -> None:
