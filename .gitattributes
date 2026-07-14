@@ -1,0 +1,2 @@
+# Raw hardware captures are byte-preserved evidence, including terminal whitespace.
+benchmarks/raw/** -whitespace

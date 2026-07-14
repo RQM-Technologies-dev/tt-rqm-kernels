@@ -1,0 +1,145 @@
+{
+  "artifacts": [
+    {
+      "immutable": true,
+      "path": "reports/tt_hardware_qmul_stage_b_persistent_performance.json",
+      "role": "persistent-performance-session",
+      "sha256": "89df35d63d350d12f5339fbecf987149ec5029194848ff04ab0d92766e9da3a0"
+    },
+    {
+      "immutable": true,
+      "path": "benchmarks/raw/wormhole-qmul-stability-01/session-manifest.json",
+      "role": "stability-session-manifest",
+      "sha256": "724b4f246fd009d17ed1598be4692c478a13fb7a15aad3f1fdda7840c441d13e"
+    },
+    {
+      "immutable": true,
+      "path": "benchmarks/raw/wormhole-qmul-stability-02/report.json",
+      "role": "persistent-performance-session",
+      "sha256": "3276b19546a3eff6a5ff7f26dfd8c74d299c327856aba96887ab60723e8a08e8"
+    },
+    {
+      "immutable": true,
+      "path": "benchmarks/raw/wormhole-qmul-stability-02/session-manifest.json",
+      "role": "stability-session-manifest",
+      "sha256": "7e88f01b9086a1a43fd906ebd4fa9866dca5da5ed5e59037f9dd06999e49c5f7"
+    },
+    {
+      "immutable": true,
+      "path": "benchmarks/raw/wormhole-qmul-stability-03/report.json",
+      "role": "persistent-performance-session",
+      "sha256": "71406e33495f20c9a8bcc6f630ea63f034c2f9c0ca49c49b7d64dd3cf93fa339"
+    },
+    {
+      "immutable": true,
+      "path": "benchmarks/raw/wormhole-qmul-stability-03/session-manifest.json",
+      "role": "stability-session-manifest",
+      "sha256": "3f3e8bd5d3b63d3a492ad122419c86695b6602f8e81c7f3ce714194a12e8759e"
+    },
+    {
+      "immutable": true,
+      "path": "benchmarks/processed/wormhole-qmul-stability-qualification.json",
+      "role": "stability-qualification",
+      "sha256": "174ebeda69b473859f27963f3dd2a119799148722372974f0bac410a99ca6afb"
+    }
+  ],
+  "benchmark_id": "wormhole-qmul-fp32",
+  "charts": [
+    {
+      "id": "throughput",
+      "output": "benchmarks/plots/wormhole-qmul-throughput.svg"
+    },
+    {
+      "id": "timing_breakdown",
+      "output": "benchmarks/plots/wormhole-qmul-timing-breakdown.svg"
+    },
+    {
+      "id": "raw_samples",
+      "output": "benchmarks/plots/wormhole-qmul-raw-samples.svg"
+    },
+    {
+      "id": "correctness",
+      "output": "benchmarks/plots/wormhole-qmul-correctness.svg"
+    }
+  ],
+  "claim": {
+    "level": 2,
+    "name": "stable_one_device_performance",
+    "public_session_count": 3,
+    "stable_benchmark": true
+  },
+  "claim_ladder": [
+    {"level": 0, "name": "silicon_conformance"},
+    {"level": 1, "name": "qualified_first_performance_sample"},
+    {"level": 2, "name": "stable_one_device_performance"},
+    {"level": 3, "name": "matched_scope_baseline_comparison"},
+    {"level": 4, "name": "application_workload_result"},
+    {"level": 5, "name": "reviewed_upstream_contribution"}
+  ],
+  "future_evidence": [
+    "optimization_ablations",
+    "matched_scope_cpu_baseline",
+    "sustained_energy_to_solution",
+    "pose_stream_bench"
+  ],
+  "nonclaims": [
+    "no_hardware_bandwidth_claim",
+    "no_cpu_comparison",
+    "no_energy_claim",
+    "no_application_speedup_claim",
+    "no_dual_device_claim",
+    "no_tenstorrent_endorsement",
+    "no_acceleration_claim"
+  ],
+  "primary_report": "reports/tt_hardware_qmul_stage_b_persistent_performance.json",
+  "processed_output": "benchmarks/processed/wormhole-qmul-level2-summary.json",
+  "provenance": {
+    "candidate_sha256": "179a5cc3e6b146a1e8c61e61ab9ab173bbc543f88181b91c8621a7e959c98ce5",
+    "repository_commit": "3ae68815e8ac025e49f09d3797dbbac2f77245b3",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "qualification_gates": [
+    "whole_output_float64_golden",
+    "atol_1e-4_rtol_1e-4",
+    "strict_metrics_and_provenance",
+    "single_device_zero_lifecycle",
+    "architecture_performance_eligible",
+    "three_independent_cold_start_sessions",
+    "preregistered_dispersion_thresholds"
+  ],
+  "schema": "tt-rqm-benchmark-release.v1",
+  "sessions": [
+    {
+      "id": "wormhole-qmul-stability-01",
+      "performance_report": "reports/tt_hardware_qmul_stage_b_persistent_performance.json",
+      "qualification_passed": true,
+      "session_manifest": "benchmarks/raw/wormhole-qmul-stability-01/session-manifest.json",
+      "stable_benchmark": false
+    },
+    {
+      "id": "wormhole-qmul-stability-02",
+      "performance_report": "benchmarks/raw/wormhole-qmul-stability-02/report.json",
+      "qualification_passed": true,
+      "session_manifest": "benchmarks/raw/wormhole-qmul-stability-02/session-manifest.json",
+      "stable_benchmark": false
+    },
+    {
+      "id": "wormhole-qmul-stability-03",
+      "performance_report": "benchmarks/raw/wormhole-qmul-stability-03/report.json",
+      "qualification_passed": true,
+      "session_manifest": "benchmarks/raw/wormhole-qmul-stability-03/session-manifest.json",
+      "stable_benchmark": false
+    }
+  ],
+  "title": "Structured FP32 Quaternion Kernels on Tenstorrent Wormhole",
+  "workload": {
+    "arithmetic_intensity_flops_per_logical_byte": 0.5833333333333334,
+    "dtype": "float32",
+    "flops_per_qmul": 28,
+    "input_shape": "[N, 4] x [N, 4]",
+    "lane_order": ["real", "i", "j", "k"],
+    "logical_bytes_per_qmul": 48,
+    "operation": "Hamilton product",
+    "output_shape": "[N, 4]"
+  }
+}

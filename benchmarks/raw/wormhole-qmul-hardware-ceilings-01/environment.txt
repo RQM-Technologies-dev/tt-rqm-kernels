@@ -1,0 +1,5 @@
+TT-Metal commit: dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4
+TT-Metal status:
+Compiler: c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+CMake: cmake version 4.0.2
+KMD: 2.10.0

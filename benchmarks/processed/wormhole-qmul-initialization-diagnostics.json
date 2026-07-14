@@ -1,0 +1,169 @@
+{
+  "classification": "diagnostic; canonical stability order unchanged",
+  "evidence_type": "initialization-diagnostics",
+  "finding": {
+    "attribution": "first device submission/dispatch and transfer initialization, independent of first case size",
+    "first_h2d_range_s": [
+      0.008748318,
+      0.01423565
+    ],
+    "first_warmup_range_s": [
+      0.016308788,
+      0.017432767
+    ],
+    "later_h2d_range_s": [
+      6.684e-05,
+      0.000764951
+    ],
+    "later_warmup_range_s": [
+      0.000788582,
+      0.001742872
+    ],
+    "program_build_is_primary_cause": false,
+    "size_dependent": false,
+    "stability_protocol_changed": false
+  },
+  "rows": [
+    {
+      "buffer_allocation_s": 0.000226397,
+      "cleanup_s": 3.209e-05,
+      "d2h_s": 0.000253377,
+      "h2d_s": 0.01423565,
+      "items": 4096,
+      "median_s": 0.0017954160000000002,
+      "occurrence": 0,
+      "p95_s": 0.00182611,
+      "prewarm_sync_s": 0.000100239,
+      "program_build_s": 0.000554844,
+      "session_id": "wormhole-qmul-initialization-order-a-01",
+      "warmup_s": 0.016432207
+    },
+    {
+      "buffer_allocation_s": 2.491e-05,
+      "cleanup_s": 1.588e-05,
+      "d2h_s": 0.001630343,
+      "h2d_s": 0.000301397,
+      "items": 65536,
+      "median_s": 0.0021545825,
+      "occurrence": 1,
+      "p95_s": 0.002181007,
+      "prewarm_sync_s": 4.642e-05,
+      "program_build_s": 0.000497645,
+      "session_id": "wormhole-qmul-initialization-order-a-01",
+      "warmup_s": 0.001256716
+    },
+    {
+      "buffer_allocation_s": 6.6429e-05,
+      "cleanup_s": 3.0519e-05,
+      "d2h_s": 0.006212634,
+      "h2d_s": 0.000764951,
+      "items": 262144,
+      "median_s": 0.0042983299999999995,
+      "occurrence": 2,
+      "p95_s": 0.004332084,
+      "prewarm_sync_s": 4.216e-05,
+      "program_build_s": 0.000628493,
+      "session_id": "wormhole-qmul-initialization-order-a-01",
+      "warmup_s": 0.001742872
+    },
+    {
+      "buffer_allocation_s": 3.991e-05,
+      "cleanup_s": 1.062e-05,
+      "d2h_s": 0.000167418,
+      "h2d_s": 0.000102729,
+      "items": 4096,
+      "median_s": 0.0015017939999999999,
+      "occurrence": 3,
+      "p95_s": 0.001523624,
+      "prewarm_sync_s": 3.938e-05,
+      "program_build_s": 0.000241018,
+      "session_id": "wormhole-qmul-initialization-order-a-01",
+      "warmup_s": 0.0009095
+    },
+    {
+      "buffer_allocation_s": 0.000245427,
+      "cleanup_s": 4.733e-05,
+      "d2h_s": 0.0056928,
+      "h2d_s": 0.012066863,
+      "items": 262144,
+      "median_s": 0.0042289755,
+      "occurrence": 0,
+      "p95_s": 0.004267305,
+      "prewarm_sync_s": 9.9918e-05,
+      "program_build_s": 0.00092303,
+      "session_id": "wormhole-qmul-initialization-order-b-01",
+      "warmup_s": 0.017432767
+    },
+    {
+      "buffer_allocation_s": 4.558e-05,
+      "cleanup_s": 1.1469e-05,
+      "d2h_s": 0.001113599,
+      "h2d_s": 0.000257517,
+      "items": 65536,
+      "median_s": 0.001902695,
+      "occurrence": 1,
+      "p95_s": 0.001917319,
+      "prewarm_sync_s": 3.853e-05,
+      "program_build_s": 0.000574134,
+      "session_id": "wormhole-qmul-initialization-order-b-01",
+      "warmup_s": 0.001253147
+    },
+    {
+      "buffer_allocation_s": 1.709e-05,
+      "cleanup_s": 1.024e-05,
+      "d2h_s": 7.9379e-05,
+      "h2d_s": 6.684e-05,
+      "items": 4096,
+      "median_s": 0.001323296,
+      "occurrence": 2,
+      "p95_s": 0.001340046,
+      "prewarm_sync_s": 3.3449e-05,
+      "program_build_s": 0.000142358,
+      "session_id": "wormhole-qmul-initialization-order-b-01",
+      "warmup_s": 0.000788582
+    },
+    {
+      "buffer_allocation_s": 0.000230078,
+      "cleanup_s": 3.299e-05,
+      "d2h_s": 0.001714022,
+      "h2d_s": 0.008748318,
+      "items": 65536,
+      "median_s": 0.0020637535,
+      "occurrence": 0,
+      "p95_s": 0.002080598,
+      "prewarm_sync_s": 9.3759e-05,
+      "program_build_s": 0.000872241,
+      "session_id": "wormhole-qmul-initialization-order-c-01",
+      "warmup_s": 0.016308788
+    },
+    {
+      "buffer_allocation_s": 2.657e-05,
+      "cleanup_s": 1.559e-05,
+      "d2h_s": 0.001412605,
+      "h2d_s": 0.000214368,
+      "items": 65536,
+      "median_s": 0.0020549035,
+      "occurrence": 1,
+      "p95_s": 0.002070528,
+      "prewarm_sync_s": 3.8139e-05,
+      "program_build_s": 0.000506665,
+      "session_id": "wormhole-qmul-initialization-order-c-01",
+      "warmup_s": 0.001545024
+    }
+  ],
+  "schema": "tt-rqm-qmul-hardware-evidence.v1",
+  "sources": [
+    {
+      "path": "benchmarks/raw/wormhole-qmul-initialization-order-a-01/report.json",
+      "sha256": "7e816d64113e91f81a5bf383c6a8473e538d73c30927e30ae40e2ccfaf079c30"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-initialization-order-b-01/report.json",
+      "sha256": "85fd8fb9617061ddc98c15c88413e06f8185d64671d1ac66f7e310b66c276c74"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-initialization-order-c-01/report.json",
+      "sha256": "c2f30c08ac75f22b2580bc6d3c45e8ab06ae9f2c9ccb80ee9ac60c52c249bd0a"
+    }
+  ]
+}

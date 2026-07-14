@@ -1,0 +1,556 @@
+{
+  "ceilings": [
+    {
+      "kind": "pcie_h2d",
+      "status": "measured",
+      "unit": "GB/s",
+      "value": 12.129
+    },
+    {
+      "kind": "pcie_d2h",
+      "status": "measured",
+      "unit": "GB/s",
+      "value": 9.092
+    },
+    {
+      "kind": "noc_read",
+      "status": "measured-host-timed",
+      "unit": "B/clock",
+      "value": 3.767
+    },
+    {
+      "kind": "noc_write",
+      "status": "measured-host-timed",
+      "unit": "B/clock",
+      "value": 23.234
+    },
+    {
+      "kind": "dram_adjacent_read",
+      "status": "measured-host-timed-post-first-use",
+      "unit": "GB/s",
+      "value": 124.512
+    },
+    {
+      "kind": "dispatch_all_cores",
+      "status": "measured",
+      "unit": "us/iteration",
+      "value": 15.331672
+    },
+    {
+      "kind": "compute_bfp8_fpu",
+      "status": "closest-supported-noncomparable",
+      "unit": "TFLOP/s",
+      "value": 27.06
+    },
+    {
+      "kind": "compute_fp32_sfpu",
+      "status": "not available in pinned microbenchmark suite",
+      "unit": "TFLOP/s",
+      "value": null
+    }
+  ],
+  "classification": "diagnostic; qmul logical traffic is not measured bandwidth",
+  "evidence_type": "profiler-and-same-device-ceilings",
+  "failed_or_unsupported_attempts": [
+    {
+      "benchmark": "test_noc_adjacent --use-device-profiler",
+      "reason": "fixed profiler postprocessor buffer overflow; raw failure retained"
+    },
+    {
+      "benchmark": "test_dram_offchip",
+      "reason": "pinned kernel source fails JIT compilation against pinned TensorAccessor API; raw failure retained"
+    },
+    {
+      "benchmark": "test_compute_mm FP32-accumulation single-core",
+      "reason": "pinned profiler postprocessor buffer overflow; raw failure retained"
+    }
+  ],
+  "profile": {
+    "clock_mhz": 1000,
+    "critical_path": "writer/NCRISC is marginally longest; compute is nearly coextensive",
+    "dispatch_count": 22,
+    "not_observable": [
+      "circular-buffer stall counters",
+      "NoC wait counters",
+      "SFPU utilization counters"
+    ],
+    "overlap": "reader, compute, and writer kernel scopes overlap on every profiled core",
+    "sizes": [
+      {
+        "items": 65536,
+        "profiled_dispatches_excluding_first": 10,
+        "roles": {
+          "compute_math": {
+            "median_of_core_maxima_cycles": 29847.0,
+            "median_of_core_medians_cycles": 17858.25
+          },
+          "compute_pack": {
+            "median_of_core_maxima_cycles": 27182.0,
+            "median_of_core_medians_cycles": 15181.0
+          },
+          "compute_unpack": {
+            "median_of_core_maxima_cycles": 29333.5,
+            "median_of_core_medians_cycles": 17368.5
+          },
+          "reader": {
+            "median_of_core_maxima_cycles": 14560.5,
+            "median_of_core_medians_cycles": 8139.5
+          },
+          "writer": {
+            "median_of_core_maxima_cycles": 30217.0,
+            "median_of_core_medians_cycles": 18380.75
+          }
+        }
+      },
+      {
+        "items": 262144,
+        "profiled_dispatches_excluding_first": 10,
+        "roles": {
+          "compute_math": {
+            "median_of_core_maxima_cycles": 100956.5,
+            "median_of_core_medians_cycles": 81714.25
+          },
+          "compute_pack": {
+            "median_of_core_maxima_cycles": 98302.5,
+            "median_of_core_medians_cycles": 79042.0
+          },
+          "compute_unpack": {
+            "median_of_core_maxima_cycles": 100487.0,
+            "median_of_core_medians_cycles": 81198.0
+          },
+          "reader": {
+            "median_of_core_maxima_cycles": 85691.0,
+            "median_of_core_medians_cycles": 70010.5
+          },
+          "writer": {
+            "median_of_core_maxima_cycles": 101328.5,
+            "median_of_core_medians_cycles": 82241.25
+          }
+        }
+      }
+    ]
+  },
+  "schema": "tt-rqm-qmul-hardware-evidence.v1",
+  "sources": [
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/binaries.sha256",
+      "sha256": "2e123fcb5a41d2af18193fd0c237ad1deb9aed92c6666314bc81774b1d7d2048"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling-1024.command.txt",
+      "sha256": "f7c4a5b42bccde4a65237531384907b2850618d95b5a376214c2757490645fba"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling-1024.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling-1024.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling-1024.stdout.txt",
+      "sha256": "b3837c6fd17afb10df598dec788d0c906216470696d9cd19eef6e8cc0263ac0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling.command.txt",
+      "sha256": "691b934c3d827df1421efb4817a7dceb32e5c6534c560859785f51a638b49726"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-bfp8-fpu-ceiling.stdout.txt",
+      "sha256": "e2c2cfc8b040fc92314d174e06910c984dc4577cd44b534f112f047e20eb29fd"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc-small.command.txt",
+      "sha256": "91f393c50bd71df9792bb6306a43c8e4f3db85f0a51aec8daa72db4a18d9e93e"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc-small.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc-small.stderr.txt",
+      "sha256": "6ea92d2e305c27599ac163164f85cd2678fdbbf7ab24219f1c85f699d2702d36"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc-small.stdout.txt",
+      "sha256": "3965ea428608a58249bb55e83ad466ac87ecd651cf6c83d4c0a37d78a5343465"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc.command.txt",
+      "sha256": "4fe02baa4971c2d31e01910711b1ba252f1cac8cc15218e2c4ae0998ece6fbd0"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/compute-closest-fp32-acc.stdout.txt",
+      "sha256": "61d589b1cfb3f996b69bd0e0c32272e9dd823d64c2a4036b4c2e5b5c47ac060c"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores-ceiling.command.txt",
+      "sha256": "76f6bfeb705e7e959b02d2ac240023ae772b8ba39125ef5e48d5b46301ad0bde"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores-ceiling.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores-ceiling.stderr.txt",
+      "sha256": "dd2e58ffe7a88069b0a61c4c4930da269c4457f99ba67cb9d472e0fa0be8b7e5"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores-ceiling.stdout.txt",
+      "sha256": "0cbf9ad72583339f148ba5e8cd2a75b5e05f04c74bd32d2b6b42856f509c65a5"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores.command.txt",
+      "sha256": "76f6bfeb705e7e959b02d2ac240023ae772b8ba39125ef5e48d5b46301ad0bde"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores.stderr.txt",
+      "sha256": "0d3b3778b24255bade1a9340d2ce332d3c4994f3662219737c123b6cd52099be"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dispatch-all-cores.stdout.txt",
+      "sha256": "978502c84c45b2b754f7f7203ef3b9171455ce2b9f2bd2e2bdcd21562226dfc8"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read-ceiling.command.txt",
+      "sha256": "854c8a14afd66da9811b176bc3c5f0ebf8e5f3c27bb25698bb54cf01222f9822"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read-ceiling.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read-ceiling.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read-ceiling.stdout.txt",
+      "sha256": "0e3475ac9680d45da83940d2422c46ab3d5b786a69c81d01553d593afc94baa4"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read.command.txt",
+      "sha256": "dc675e484ec1b038ef68d0aa9f97dfd9b0496e9457797af03ceeab07b8d94921"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read.stderr.txt",
+      "sha256": "05ded7d7095d5d31a0de44e8f38ecca6832088c93b175c03e45a7f490c5c484f"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-adjacent-read.stdout.txt",
+      "sha256": "414c28fc488de2deec00b4a51dac205e05d0624e1b01b92e3dc1d498504b4132"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-read.command.txt",
+      "sha256": "2b73f421b71c84767628eb7e2ddf34d427f0b57cb826df41bc17cca64c14373d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-read.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-read.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-read.stdout.txt",
+      "sha256": "da74d5735b6e05f92c6a616d161b489d5deb665bd6f565d71bf4206484296d62"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-write.command.txt",
+      "sha256": "a1df8f84359cb33dc7aed4117bc8b2d489b2828505b1647dc5bef9aef21dc0bb"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-write.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-write.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/dram-write.stdout.txt",
+      "sha256": "eeed63795f2d68d7706405d9ccdadd2d460f1d829f070bf5ba09420232a575b2"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/environment.txt",
+      "sha256": "1b25532fd9c36d7db146e58b64ec974128e7fc2dc94f5ad880499d51c976b240"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-ceiling.command.txt",
+      "sha256": "2e699aa8ad7a63d4422bf9bcfa4665b7fc07de2ec9e41ce7295d393c39bc4b2d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-ceiling.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-ceiling.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-ceiling.stdout.txt",
+      "sha256": "729b5671099ca826527520d996bc9de8d1ddba0a14eb7f242551912e82c94275"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-host-timed.command.txt",
+      "sha256": "2e699aa8ad7a63d4422bf9bcfa4665b7fc07de2ec9e41ce7295d393c39bc4b2d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-host-timed.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-host-timed.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read-host-timed.stdout.txt",
+      "sha256": "5072c2c11c78e811c41d6a1424a21a5594e8ce94d3562a9b738f24896943aae1"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read.command.txt",
+      "sha256": "3c296e0139adbee209c13daf6b3a10877cb76bdb2a656c4e8cd63bed94070dec"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read.stderr.txt",
+      "sha256": "70bbff6546c35c5ddec2a6303d506331235c8c8f56e25dabc47baebb27e157c4"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-read.stdout.txt",
+      "sha256": "b03fe68adafa94c1c71b305b067eac315240387de7989817ee64ba46c1928072"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-ceiling.command.txt",
+      "sha256": "39a01f4b699add2d7758fbf581ea74f7233f890f9991a635cd53fe160cc47d35"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-ceiling.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-ceiling.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-ceiling.stdout.txt",
+      "sha256": "f2f620e7cb14e3e75ea9e2f71087a28b2d5029a5ef8ab7e4906098a8a0fcb811"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-host-timed.command.txt",
+      "sha256": "39a01f4b699add2d7758fbf581ea74f7233f890f9991a635cd53fe160cc47d35"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-host-timed.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-host-timed.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write-host-timed.stdout.txt",
+      "sha256": "1315e2a6ea4b6b898c20a41ea35ed421d5f19b32abf6b50c47219b867c8c9f42"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write.command.txt",
+      "sha256": "2b8e0853c62cbed0578296175045b236f574bb42fd8ef5fdc0220ac5b6c27cea"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write.stderr.txt",
+      "sha256": "bb08444321070df0d3c14251daeb436c08fad70673f4bab8be3b256bd98434a8"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/noc-write.stdout.txt",
+      "sha256": "ecd9245533df56a206337b6fd299c5c9a116f6a969ccf5bf968f85264d902f3c"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/pcie-dram.command.txt",
+      "sha256": "0319e2b0442ad6b99b151f0ea4aab2c063fe74ddc2811fe4c62bc626c4b7da2a"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/pcie-dram.exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/pcie-dram.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/pcie-dram.stdout.txt",
+      "sha256": "26af573a8678563f0d2ad7e1a4b197faa9f6d5d03120d22484b99e9ca430910b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/post-device-health.txt",
+      "sha256": "d4debea451407002c1fc87651a2a66ce5c2966523feb6106fb38ffe0390da715"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/pre-device-health.txt",
+      "sha256": "b092de3721e73ee66990b0f8dbb1ad4567a8bdfe39385a201fae985365b2a40d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/compute-closest-fp32-acc/new_zone_src_locations.log",
+      "sha256": "73999e64e1182dcaef049d9121a5ef9556b93ea9f93c3e8e84c4bd1ebe8b339d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/compute-closest-fp32-acc/profile_log_device.csv",
+      "sha256": "cd63a1e2afec8ea2243b784178c465f6b99b63a3b210056c0ac9a17d08b9bd3d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/compute-closest-fp32-acc/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/compute-closest-fp32-acc-small/new_zone_src_locations.log",
+      "sha256": "8a2ed024328b7774945c4d55905f5d6a521c66bdaede5d1d686e491201ec2ae8"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/compute-closest-fp32-acc-small/profile_log_device.csv",
+      "sha256": "6d45ccba499429dfb724af928254d6b8075409e1d5ccb0645526b59fe2d2e26b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/compute-closest-fp32-acc-small/zone_src_locations.log",
+      "sha256": "ce9901c4c8e048abd2d56dbcf656264cd667d79a993a24e73b380fbca1f8bdc6"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-adjacent-read/new_zone_src_locations.log",
+      "sha256": "063473202982bba135e0ea3f2dbafecc89898def404fd54212822dc287ecbe8b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-adjacent-read/profile_log_device.csv",
+      "sha256": "240220265b8e7ecaeb8386c098269ea99b41659dbe08f9175fe586b984e21d34"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-adjacent-read/zone_src_locations.log",
+      "sha256": "dc1ed633a451209f20364722c9a37c9f4f4b8e73cefb3e1073aefa7fab3a6afd"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-read/new_zone_src_locations.log",
+      "sha256": "73999e64e1182dcaef049d9121a5ef9556b93ea9f93c3e8e84c4bd1ebe8b339d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-read/profile_log_device.csv",
+      "sha256": "cd63a1e2afec8ea2243b784178c465f6b99b63a3b210056c0ac9a17d08b9bd3d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-read/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-write/new_zone_src_locations.log",
+      "sha256": "73999e64e1182dcaef049d9121a5ef9556b93ea9f93c3e8e84c4bd1ebe8b339d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-write/profile_log_device.csv",
+      "sha256": "cd63a1e2afec8ea2243b784178c465f6b99b63a3b210056c0ac9a17d08b9bd3d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/dram-write/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-read/new_zone_src_locations.log",
+      "sha256": "7df0600044b1d0e4fa41cfbbf8418988ee5cd52de5f8305b1ca350218d2ba61e"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-read/profile_log_device.csv",
+      "sha256": "e6f9c00349ee3144e9a61f1be0165dceb04ed47190ea4697449df90f54120774"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-read/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-read-host-timed/new_zone_src_locations.log",
+      "sha256": "d701950afd99f3893e4f3fbf81a464f3ba2002f8f567546556ce49287550eb15"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-read-host-timed/profile_log_device.csv",
+      "sha256": "8248411b897461b41e478202efed359a96ac10b59cfd52d1c9675cb420b8db5c"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-read-host-timed/zone_src_locations.log",
+      "sha256": "8d3689df5bcccdcf67cc2a15ef0e00e40baaf95e464fc32a6f09bc0c840cbf1c"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-write/new_zone_src_locations.log",
+      "sha256": "7df0600044b1d0e4fa41cfbbf8418988ee5cd52de5f8305b1ca350218d2ba61e"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-write/profile_log_device.csv",
+      "sha256": "cbaab19595f5de55e0d1ad3525ec4a1668b6fd51b45d05572873ef5b9ff6cceb"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-write/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-write-host-timed/new_zone_src_locations.log",
+      "sha256": "9a35771541d484ff3db93288827641c25e7887d4a84fa5644ad6ace127a77aef"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-write-host-timed/profile_log_device.csv",
+      "sha256": "d62e9c217e24bd5e6c4f75420cd786defedfe93bc7d8a8df3cc395471c872b10"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/noc-write-host-timed/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/pcie-dram/new_zone_src_locations.log",
+      "sha256": "73999e64e1182dcaef049d9121a5ef9556b93ea9f93c3e8e84c4bd1ebe8b339d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/pcie-dram/profile_log_device.csv",
+      "sha256": "cd63a1e2afec8ea2243b784178c465f6b99b63a3b210056c0ac9a17d08b9bd3d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-hardware-ceilings-01/profiler/pcie-dram/zone_src_locations.log",
+      "sha256": "9f01d56ca9e5188bbacb7d51ef2da96ef40579705b18f6371a8906f2822cdb0b"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-profile-01/profiler/device-profiler-logs/profile_log_device.csv",
+      "sha256": "bc98324598c9a11708b4de81dc798cf3ba024dc0d293ac5a9f4d12fb808dd3ce"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-profile-01/profiler/wormhole-qmul-profile-01.tracy",
+      "sha256": "cd80fdc1b278f8d772a7a657b0cb103aecf11dffd882724d63d9486354b5fbac"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-profile-01/report.json",
+      "sha256": "a7fd21850ef7a1abb0d9a39c6fd842e4f5f61093300100a902a44093356a13b2"
+    }
+  ]
+}

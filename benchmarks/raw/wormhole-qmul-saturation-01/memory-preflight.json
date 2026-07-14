@@ -1,0 +1,91 @@
+{
+  "cases": [
+    {
+      "component_tiles": 1,
+      "items": 1024,
+      "padded_planar_buffer_bytes_each": 16384,
+      "raw_input_bytes_each": 16384,
+      "raw_output_bytes": 16384,
+      "total_three_device_buffers_bytes": 49152,
+      "total_three_device_buffers_mib": 0.046875
+    },
+    {
+      "component_tiles": 4,
+      "items": 4096,
+      "padded_planar_buffer_bytes_each": 65536,
+      "raw_input_bytes_each": 65536,
+      "raw_output_bytes": 65536,
+      "total_three_device_buffers_bytes": 196608,
+      "total_three_device_buffers_mib": 0.1875
+    },
+    {
+      "component_tiles": 16,
+      "items": 16384,
+      "padded_planar_buffer_bytes_each": 262144,
+      "raw_input_bytes_each": 262144,
+      "raw_output_bytes": 262144,
+      "total_three_device_buffers_bytes": 786432,
+      "total_three_device_buffers_mib": 0.75
+    },
+    {
+      "component_tiles": 56,
+      "items": 57344,
+      "padded_planar_buffer_bytes_each": 917504,
+      "raw_input_bytes_each": 917504,
+      "raw_output_bytes": 917504,
+      "total_three_device_buffers_bytes": 2752512,
+      "total_three_device_buffers_mib": 2.625
+    },
+    {
+      "component_tiles": 64,
+      "items": 65536,
+      "padded_planar_buffer_bytes_each": 1048576,
+      "raw_input_bytes_each": 1048576,
+      "raw_output_bytes": 1048576,
+      "total_three_device_buffers_bytes": 3145728,
+      "total_three_device_buffers_mib": 3.0
+    },
+    {
+      "component_tiles": 128,
+      "items": 131072,
+      "padded_planar_buffer_bytes_each": 2097152,
+      "raw_input_bytes_each": 2097152,
+      "raw_output_bytes": 2097152,
+      "total_three_device_buffers_bytes": 6291456,
+      "total_three_device_buffers_mib": 6.0
+    },
+    {
+      "component_tiles": 256,
+      "items": 262144,
+      "padded_planar_buffer_bytes_each": 4194304,
+      "raw_input_bytes_each": 4194304,
+      "raw_output_bytes": 4194304,
+      "total_three_device_buffers_bytes": 12582912,
+      "total_three_device_buffers_mib": 12.0
+    },
+    {
+      "component_tiles": 512,
+      "items": 524288,
+      "padded_planar_buffer_bytes_each": 8388608,
+      "raw_input_bytes_each": 8388608,
+      "raw_output_bytes": 8388608,
+      "total_three_device_buffers_bytes": 25165824,
+      "total_three_device_buffers_mib": 24.0
+    },
+    {
+      "component_tiles": 1024,
+      "items": 1048576,
+      "padded_planar_buffer_bytes_each": 16777216,
+      "raw_input_bytes_each": 16777216,
+      "raw_output_bytes": 16777216,
+      "total_three_device_buffers_bytes": 50331648,
+      "total_three_device_buffers_mib": 48.0
+    }
+  ],
+  "device_id": 0,
+  "largest_total_device_buffers_bytes": 50331648,
+  "largest_total_device_buffers_mib": 48.0,
+  "safe": true,
+  "safety_basis": "largest three-buffer footprint is 48 MiB; no allocation exceeds the already healthy Wormhole device DRAM capacity",
+  "schema": "tt-rqm-qmul-memory-preflight.v1"
+}

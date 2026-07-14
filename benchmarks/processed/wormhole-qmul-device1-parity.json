@@ -1,0 +1,101 @@
+{
+  "classification": "device-1 parity evidence; not stability or dual-device scaling",
+  "conformance_passed": true,
+  "evidence_type": "device-1-parity",
+  "rows": [
+    {
+      "correctness_equal": true,
+      "device0_core_count": 4,
+      "device0_median_s": 0.001601423,
+      "device0_p95_s": 0.001626753,
+      "device1_core_count": 4,
+      "device1_median_s": 0.001523639,
+      "device1_p95_s": 0.001559684,
+      "device1_to_device0_median_ratio": 0.9514281985459182,
+      "device1_to_device0_p95_ratio": 0.9587712455425008,
+      "grid_equal": true,
+      "items": 4096,
+      "max_abs_error": 7.663336720753477e-07
+    },
+    {
+      "correctness_equal": true,
+      "device0_core_count": 56,
+      "device0_median_s": 0.0020772580000000002,
+      "device0_p95_s": 0.002146197,
+      "device1_core_count": 56,
+      "device1_median_s": 0.0021348275000000003,
+      "device1_p95_s": 0.002191347,
+      "device1_to_device0_median_ratio": 1.027714178980175,
+      "device1_to_device0_p95_ratio": 1.0210372114023085,
+      "grid_equal": true,
+      "items": 65536,
+      "max_abs_error": 1.5416372889376362e-06
+    },
+    {
+      "correctness_equal": true,
+      "device0_core_count": 56,
+      "device0_median_s": 0.0042333305,
+      "device0_p95_s": 0.004262865,
+      "device1_core_count": 56,
+      "device1_median_s": 0.0042887045000000006,
+      "device1_p95_s": 0.004301364,
+      "device1_to_device0_median_ratio": 1.0130804811955978,
+      "device1_to_device0_p95_ratio": 1.0090312501099612,
+      "grid_equal": true,
+      "items": 262144,
+      "max_abs_error": 1.486650566207004e-06
+    }
+  ],
+  "same_candidate": true,
+  "schema": "tt-rqm-qmul-hardware-evidence.v1",
+  "sources": [
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device0-parity-reference-conformance-01/post-device-health.txt",
+      "sha256": "d8e2e3d2ae3b525186c0b7f548d295b5205662fa2d08a260e1102a1558cba4d6"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device0-parity-reference-conformance-01/pre-device-health.txt",
+      "sha256": "d61dbace373173d0338d156f7c1102c6413068075048189022e339ea978584cf"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device0-parity-reference-conformance-01/report.json",
+      "sha256": "cd3ae35a0416f9e0263e98384f46f483731f0f540653d74746f0b4adbb757948"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device0-parity-reference-performance-01/post-device-health.txt",
+      "sha256": "bef92d51a640a005e70182803cee0b06c8f9909fe4f22c289bd6be78ea6d3fd3"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device0-parity-reference-performance-01/pre-device-health.txt",
+      "sha256": "9a15e6b26ba26780de62e578d2a913b09b8702e51de9ce97444fd49871cd2268"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device0-parity-reference-performance-01/report.json",
+      "sha256": "cf259e85c1ed006c2e2dda7f7c6c6dc12e441e46aa3f0b61e51fb1971fa6b58d"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device1-conformance-01/post-device-health.txt",
+      "sha256": "b182433dbfd20dbef8fc694e5352634c78eefb8b2a02d32297ed78c57efb91b9"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device1-conformance-01/pre-device-health.txt",
+      "sha256": "6cc42b239ba2c32b4e6c73c1a3d03b79cae52941e2fbb35b494e90522da1976e"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device1-conformance-01/report.json",
+      "sha256": "d3c15c14d0eee8b404250b3becdad555367212b1d1ea912f9f99f00c3651b52f"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device1-performance-01/post-device-health.txt",
+      "sha256": "54e7a7b712376ee331bd6c77295d3f9518610498dbfebf275bccf95c559e5800"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device1-performance-01/pre-device-health.txt",
+      "sha256": "f5da3fcd200c1eb110aba0b459d02baa409c66872422724057e9870e8713fbf7"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-device1-performance-01/report.json",
+      "sha256": "b15f3ab63d3b8927768457dc519c33d75661d27957123d06d6eb374a09862f8f"
+    }
+  ]
+}

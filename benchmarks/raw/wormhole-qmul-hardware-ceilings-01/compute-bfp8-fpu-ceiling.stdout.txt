@@ -1,0 +1,47 @@
+2026-07-14 21:52:36.602 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:228)
+2026-07-14 21:52:36.603 | info     |             UMD | Cluster constructor started. (cluster.cpp:348)
+2026-07-14 21:52:36.603 | info     |             UMD | Creating TopologyDiscovery for architecture: wormhole_b0 (topology_discovery.cpp:95)
+2026-07-14 21:52:36.603 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:114)
+2026-07-14 21:52:36.605 | info     |             UMD | Established firmware bundle version: 19.6.0 (topology_discovery.cpp:574)
+2026-07-14 21:52:36.613 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:118)
+2026-07-14 21:52:37.749 | warning  |             UMD | Sysmem (0x80000000 bytes) using regular pages; pre-allocate hugepages for better DMA performance (e.g. 2 × 1GB or 1024 × 2MB; on AArch64 also 4 × 512MB). (silicon_sysmem_manager.cpp:106)
+2026-07-14 21:52:37.751 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {1} (cluster.cpp:168)
+2026-07-14 21:52:37.751 | info     |             UMD | IOMMU: enabled (cluster.cpp:142)
+2026-07-14 21:52:37.751 | info     |             UMD | KMD version: 2.10.0 (cluster.cpp:145)
+2026-07-14 21:52:37.751 | info     |             UMD | Cluster constructor completed. (cluster.cpp:520)
+2026-07-14 21:52:37.754 | info     |             UMD | Starting devices in cluster (cluster.cpp:1024)
+2026-07-14 21:52:37.887 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1032)
+2026-07-14 21:52:38.013 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:408)
+2026-07-14 21:52:38.013 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:470)
+2026-07-14 21:52:38.013 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=1 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:52:38.013 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=0 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:52:38.013 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=1 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:52:38.013 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=0 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:52:38.014 | info     |          Fabric | Logical multi-mesh adjacency: intermesh degree histogram {0:1}; intra-mesh degree histograms mesh0 {1:2} (topology_mapper_utils.cpp:2342)
+2026-07-14 21:52:38.014 | info     |          Fabric | Physical multi-mesh adjacency: intermesh degree histogram {0:1}; intra-mesh degree histograms mesh0 {1:2} (topology_mapper_utils.cpp:2350)
+2026-07-14 21:52:38.035 | info     |    BuildKernels | Using pre-compiled firmware from: /home/user/src/tt-metal/tt_metal/pre-compiled/1173036929715483899/ (build_env_manager.cpp:347)
+2026-07-14 21:52:38.035 | info     |    BuildKernels | Using pre-compiled firmware from: /home/user/src/tt-metal/tt_metal/pre-compiled/1173036929715483899/ (build_env_manager.cpp:347)
+2026-07-14 21:52:38.106 | info     |           Metal | ShmResourceTracker: removed orphaned shm '/tt_device_10226921853_memory' (shm_resource_tracker.cpp:282)
+2026-07-14 21:52:38.692 | info     |           Metal | [Real-time profiler] Device 0 sync complete: 100 samples, frequency=0.985512 GHz, device_time_at_sync=33251247081955 cycles (realtime_profiler_manager.cpp:1127)
+2026-07-14 21:52:38.730 | info     |            Test | Input M, N, K = 11264, 3072, 768 / 352, 96, 24 tile(s) (test_compute_mm.cpp:346)
+2026-07-14 21:52:38.730 | error    |            Test | M, N, K = 11264, 3072, 768 cannot be tested due to insufficient L1 memory. (test_compute_mm.cpp:374)
+2026-07-14 21:52:38.730 | critical |          Always | TT_FATAL: Multi core matmul not supported with L1 memory constraints (assert.hpp:104)
+2026-07-14 21:52:38.862 | error    |            Test | TT_FATAL @ /home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/1_compute_mm/test_compute_mm.cpp:375: false
+info:
+Multi core matmul not supported with L1 memory constraints
+backtrace:
+ --- /home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/1_compute_mm/test_compute_mm(+0x26349) [0x5617dab08349]
+ --- /home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/1_compute_mm/test_compute_mm(main+0x4ecb) [0x5617daafe38b]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x787127829d90]
+ --- /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80) [0x787127829e40]
+ --- /home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/1_compute_mm/test_compute_mm(_start+0x25) [0x5617daaf93f5]
+ (test_compute_mm.cpp:718)
+2026-07-14 21:52:38.862 | error    |            Test | System error message: No such process (test_compute_mm.cpp:720)
+2026-07-14 21:52:38.862 | error    |            Test | Test Failed (test_compute_mm.cpp:726)
+2026-07-14 21:52:38.862 | info     |    BuildKernels | JIT cache stats: 8/8 hits (100.0%) [8 cached, 0 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:207)
+2026-07-14 21:52:38.862 | info     |    BuildKernels | JIT telemetry: 3 registered TelemetryTokens (build_cache_telemetry.cpp:230)
+2026-07-14 21:52:38.868 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:513)
+2026-07-14 21:52:38.868 | info     |             UMD | Closing devices in cluster (cluster.cpp:1037)
+2026-07-14 21:52:39.289 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1046)
+2026-07-14 21:52:39.289 | info     |             UMD | Cluster destructor started. (cluster.cpp:754)
+2026-07-14 21:52:39.289 | info     |             UMD | Cluster destructor completed. (cluster.cpp:757)

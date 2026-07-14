@@ -1,0 +1,1 @@
+/home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/1_compute_mm/test_compute_mm --m 1024 --n 1024 --k 1024 --dtype 1 --fidel 1 --fp32 1 --one-core 1 --num-blocks 1 --num-tests 10 --fast-dispatch --bypass-check 

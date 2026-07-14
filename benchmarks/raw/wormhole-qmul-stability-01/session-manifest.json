@@ -1,0 +1,44 @@
+{
+  "schema": "tt-rqm-benchmark-session.v2",
+  "session_id": "wormhole-qmul-stability-01",
+  "collection_status": "passed",
+  "cold_start_host_session": true,
+  "benchmark_stage": "performance",
+  "stable_benchmark": false,
+  "device_count": 1,
+  "device_id": 0,
+  "candidate_sha256": "179a5cc3e6b146a1e8c61e61ab9ab173bbc543f88181b91c8621a7e959c98ce5",
+  "execution_source_commit": "3ae68815e8ac025e49f09d3797dbbac2f77245b3",
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+  "seed": 0,
+  "case_items": [4096, 65536, 262144],
+  "lifecycle": {
+    "device_count": 1,
+    "device_id": 0,
+    "create_count": 1,
+    "close_count": 1
+  },
+  "historical_health_attestation": {
+    "pre_run": "both N300 entries reported healthy DRAM and FAULTS=0x0",
+    "post_run": "both entries reported healthy DRAM, FAULTS=0x0, THROTTLER=0x0 and AICLK 500 MHz",
+    "source": "persistent environment record and timing audit"
+  },
+  "failure": null,
+  "artifacts": [
+    {
+      "path": "../../../reports/tt_hardware_qmul_stage_b_persistent_performance.json",
+      "role": "hardware-report",
+      "sha256": "89df35d63d350d12f5339fbecf987149ec5029194848ff04ab0d92766e9da3a0"
+    },
+    {
+      "path": "../../../reports/tt_hardware_qmul_stage_b_persistent_environment.txt",
+      "role": "environment",
+      "sha256": "72d2301ab6d292de6605d41cd78bb431e2dc85541bd2de700ea5da5e73998a73"
+    },
+    {
+      "path": "../../../reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md",
+      "role": "timing-audit",
+      "sha256": "0078ac583ebd97e4780f5dfd739afd230b868f2fc682bb1185f67fdede227bf3"
+    }
+  ]
+}

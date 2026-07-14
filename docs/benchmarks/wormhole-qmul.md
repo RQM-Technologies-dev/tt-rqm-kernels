@@ -1,13 +1,11 @@
 # Structured FP32 Quaternion Kernels on Tenstorrent Wormhole
 
-Correctness, multicore scaling, memory efficiency, persistent latency, and
-energy-to-solution are the measurement program. This first public report covers
-real-device correctness, the multicore compute architecture, one persistent
-timing session, and its complete limitations.
+This report covers real-device correctness, the multicore compute architecture,
+and three independent persistent timing sessions.
 
-> **Qualification: Claim Level 1 — qualified first performance sample.**
+> **Qualification: Claim Level 2 — stable one-device performance.**
 >
-> `performance_eligible=true`, `stable_benchmark=false`, one public session.
+> Three device-0 cold starts passed the preregistered stability gates.
 
 ## Kernel contract
 
@@ -31,12 +29,11 @@ checks that arithmetic is in the compute path rather than the data-movement
 kernels. The [timing audit](../../reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
 defines the synchronization and timer boundaries.
 
-## Qualified evidence snapshot
+## Representative session
 
-The table is supporting evidence from one public persistent session. Throughput
-uses the median prepared-workload device time. “Logical GB/s” divides the fixed
-48-byte-per-qmul traffic model by that time; it is not an observation of the
-DRAM, NoC, or PCIe fabrics.
+The table shows the first qualified session. Throughput uses median
+prepared-workload device time. “Logical GB/s” is a fixed traffic model, not
+measured DRAM, NoC, or PCIe bandwidth.
 
 | N | cores | median device ms | p95 device ms | qmul/s | logical GB/s | validated values | max abs error |
 |---:|---:|---:|---:|---:|---:|---:|---:|
@@ -47,6 +44,12 @@ DRAM, NoC, or PCIe fabrics.
 Every result passed the independent Float64 Hamilton-product golden across the
 whole output with `atol=1e-4`, `rtol=1e-4`, zero failing values, and zero
 non-finite values.
+
+Across the three sessions, maximum within-session dispersion / maximum
+cross-session median deviation was 6.2083% / 3.2133% at N=4,096,
+2.0413% / 2.4194% at N=65,536, and 1.7059% / 0.9190% at N=262,144. All are
+within the preregistered limits. See the
+[qualification artifact](../../benchmarks/processed/wormhole-qmul-stability-qualification.json).
 
 ![Throughput from the first persistent session](../../benchmarks/plots/wormhole-qmul-throughput.svg)
 
@@ -75,9 +78,10 @@ close, candidate-session time, and host-process end-to-end time.
 
 The canonical [JSON report](../../reports/tt_hardware_qmul_stage_b_persistent_performance.json),
 [environment record](../../reports/tt_hardware_qmul_stage_b_persistent_environment.txt),
-and [release manifest](../../benchmarks/manifests/wormhole-qmul.json) are the
-sources of truth. The manifest hashes every Stage A, Stage B, and persistent
-artifact used by this release.
+and [Level 2 release manifest](../../benchmarks/manifests/wormhole-qmul-level2.json)
+are the sources of truth. The original
+[Level 1 manifest](../../benchmarks/manifests/wormhole-qmul.json) remains
+unchanged.
 
 ## Reproduce and validate
 
@@ -107,13 +111,7 @@ python scripts/reproduce_wormhole_qmul.py \
 
 ## Limits and next measurements
 
-This report does not establish run-to-run stability, controlled core scaling,
-hardware-fabric ceilings, profiler attribution, a CPU comparison, sustained
-energy, PoseStreamBench performance, device-1 or dual-device behavior,
-acceleration, or endorsement by Tenstorrent.
-
-Those measurements remain explicitly “not measured yet.” Their order and
-acceptance rules are defined in the [evidence program](methodology.md) and
-[claim policy](claim-policy.md). In particular, Claim Level 2 requires at least
-three independent cold-start sessions; the current session remains immutable
-and non-stable even if later sessions qualify.
+This release does not make a hardware-bandwidth, CPU, energy, application,
+dual-device, acceleration, or Tenstorrent-endorsement claim. Controlled scaling,
+device parity, profiling, ceilings, and saturation measurements are reported
+separately as [diagnostic evidence](wormhole-qmul-hardware-evidence.md).

@@ -1,0 +1,539 @@
+{
+  "classification": "diagnostic; logical traffic and estimated FLOP/s only",
+  "evidence_type": "larger-size-saturation",
+  "memory_preflight": {
+    "cases": [
+      {
+        "component_tiles": 1,
+        "items": 1024,
+        "padded_planar_buffer_bytes_each": 16384,
+        "raw_input_bytes_each": 16384,
+        "raw_output_bytes": 16384,
+        "total_three_device_buffers_bytes": 49152,
+        "total_three_device_buffers_mib": 0.046875
+      },
+      {
+        "component_tiles": 4,
+        "items": 4096,
+        "padded_planar_buffer_bytes_each": 65536,
+        "raw_input_bytes_each": 65536,
+        "raw_output_bytes": 65536,
+        "total_three_device_buffers_bytes": 196608,
+        "total_three_device_buffers_mib": 0.1875
+      },
+      {
+        "component_tiles": 16,
+        "items": 16384,
+        "padded_planar_buffer_bytes_each": 262144,
+        "raw_input_bytes_each": 262144,
+        "raw_output_bytes": 262144,
+        "total_three_device_buffers_bytes": 786432,
+        "total_three_device_buffers_mib": 0.75
+      },
+      {
+        "component_tiles": 56,
+        "items": 57344,
+        "padded_planar_buffer_bytes_each": 917504,
+        "raw_input_bytes_each": 917504,
+        "raw_output_bytes": 917504,
+        "total_three_device_buffers_bytes": 2752512,
+        "total_three_device_buffers_mib": 2.625
+      },
+      {
+        "component_tiles": 64,
+        "items": 65536,
+        "padded_planar_buffer_bytes_each": 1048576,
+        "raw_input_bytes_each": 1048576,
+        "raw_output_bytes": 1048576,
+        "total_three_device_buffers_bytes": 3145728,
+        "total_three_device_buffers_mib": 3.0
+      },
+      {
+        "component_tiles": 128,
+        "items": 131072,
+        "padded_planar_buffer_bytes_each": 2097152,
+        "raw_input_bytes_each": 2097152,
+        "raw_output_bytes": 2097152,
+        "total_three_device_buffers_bytes": 6291456,
+        "total_three_device_buffers_mib": 6.0
+      },
+      {
+        "component_tiles": 256,
+        "items": 262144,
+        "padded_planar_buffer_bytes_each": 4194304,
+        "raw_input_bytes_each": 4194304,
+        "raw_output_bytes": 4194304,
+        "total_three_device_buffers_bytes": 12582912,
+        "total_three_device_buffers_mib": 12.0
+      },
+      {
+        "component_tiles": 512,
+        "items": 524288,
+        "padded_planar_buffer_bytes_each": 8388608,
+        "raw_input_bytes_each": 8388608,
+        "raw_output_bytes": 8388608,
+        "total_three_device_buffers_bytes": 25165824,
+        "total_three_device_buffers_mib": 24.0
+      },
+      {
+        "component_tiles": 1024,
+        "items": 1048576,
+        "padded_planar_buffer_bytes_each": 16777216,
+        "raw_input_bytes_each": 16777216,
+        "raw_output_bytes": 16777216,
+        "total_three_device_buffers_bytes": 50331648,
+        "total_three_device_buffers_mib": 48.0
+      }
+    ],
+    "device_id": 0,
+    "largest_total_device_buffers_bytes": 50331648,
+    "largest_total_device_buffers_mib": 48.0,
+    "safe": true,
+    "safety_basis": "largest three-buffer footprint is 48 MiB; no allocation exceeds the already healthy Wormhole device DRAM capacity",
+    "schema": "tt-rqm-qmul-memory-preflight.v1"
+  },
+  "occupancy_knee": {
+    "actual_cores": 56,
+    "component_tiles": 56,
+    "items": 57344
+  },
+  "peak_observed": {
+    "items": 1048576,
+    "qmul_per_s": 2992499459.1916585
+  },
+  "rows": [
+    {
+      "actual_cores": 1,
+      "component_tiles": 1,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 540181391.8261894,
+      "items": 1024,
+      "logical_gb_per_s": 0.9260252431306103,
+      "max_abs_error": 1.1065025127265926e-06,
+      "median_s": 0.001592354,
+      "p95_s": 0.001610265,
+      "phases_s": {
+        "buffer_allocation": 0.000221948,
+        "cleanup": 3.055e-05,
+        "d2h": 0.000162209,
+        "h2d": 0.014528168,
+        "prewarm_sync": 9.4459e-05,
+        "program_build": 0.000540254,
+        "samples": [
+          0.001600555,
+          0.001589204,
+          0.001594104,
+          0.001597605,
+          0.001594344,
+          0.001576735,
+          0.001590604,
+          0.001587654,
+          0.001610265,
+          0.001572784
+        ],
+        "warmup": 0.016075112
+      },
+      "qmul_per_s": 19292192.56522105,
+      "samples_s": [
+        0.001600555,
+        0.001589204,
+        0.001594104,
+        0.001597605,
+        0.001594344,
+        0.001576735,
+        0.001590604,
+        0.001587654,
+        0.001610265,
+        0.001572784
+      ],
+      "validated_values": 4096
+    },
+    {
+      "actual_cores": 4,
+      "component_tiles": 4,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 2147361483.5008464,
+      "items": 4096,
+      "logical_gb_per_s": 3.6811911145728793,
+      "max_abs_error": 7.663336720753477e-07,
+      "median_s": 0.001602264,
+      "p95_s": 0.001686744,
+      "phases_s": {
+        "buffer_allocation": 2.387e-05,
+        "cleanup": 1.492e-05,
+        "d2h": 0.000169289,
+        "h2d": 7.7139e-05,
+        "prewarm_sync": 3.8919e-05,
+        "program_build": 0.000186498,
+        "samples": [
+          0.001686744,
+          0.001628804,
+          0.001606814,
+          0.001585075,
+          0.001595124,
+          0.001587234,
+          0.001616294,
+          0.001624195,
+          0.001585494,
+          0.001597714
+        ],
+        "warmup": 0.000936311
+      },
+      "qmul_per_s": 76691481.55360165,
+      "samples_s": [
+        0.001686744,
+        0.001628804,
+        0.001606814,
+        0.001585075,
+        0.001595124,
+        0.001587234,
+        0.001616294,
+        0.001624195,
+        0.001585494,
+        0.001597714
+      ],
+      "validated_values": 16384
+    },
+    {
+      "actual_cores": 16,
+      "component_tiles": 16,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 8518892205.301776,
+      "items": 16384,
+      "logical_gb_per_s": 14.603815209088758,
+      "max_abs_error": 9.228715480702476e-07,
+      "median_s": 0.001615534,
+      "p95_s": 0.001734583,
+      "phases_s": {
+        "buffer_allocation": 2.628e-05,
+        "cleanup": 1.535e-05,
+        "d2h": 0.000469426,
+        "h2d": 0.000116908,
+        "prewarm_sync": 3.885e-05,
+        "program_build": 0.000268567,
+        "samples": [
+          0.001734583,
+          0.001627844,
+          0.001616934,
+          0.001614134,
+          0.001634284,
+          0.001607154,
+          0.001583525,
+          0.001605734,
+          0.001595744,
+          0.001637094
+        ],
+        "warmup": 0.00107716
+      },
+      "qmul_per_s": 304246150.1893491,
+      "samples_s": [
+        0.001734583,
+        0.001627844,
+        0.001616934,
+        0.001614134,
+        0.001634284,
+        0.001607154,
+        0.001583525,
+        0.001605734,
+        0.001595744,
+        0.001637094
+      ],
+      "validated_values": 65536
+    },
+    {
+      "actual_cores": 56,
+      "component_tiles": 56,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 27621202325.231342,
+      "items": 57344,
+      "logical_gb_per_s": 47.35063255753944,
+      "max_abs_error": 1.2659330046460582e-06,
+      "median_s": 0.0017439125,
+      "p95_s": 0.001813833,
+      "phases_s": {
+        "buffer_allocation": 2.702e-05,
+        "cleanup": 1.617e-05,
+        "d2h": 0.001421536,
+        "h2d": 0.000225138,
+        "prewarm_sync": 3.636e-05,
+        "program_build": 0.000508525,
+        "samples": [
+          0.001813833,
+          0.001749133,
+          0.001806312,
+          0.001768713,
+          0.001744142,
+          0.001720434,
+          0.001728483,
+          0.001743683,
+          0.001736583,
+          0.001722023
+        ],
+        "warmup": 0.001177108
+      },
+      "qmul_per_s": 986471511.6154051,
+      "samples_s": [
+        0.001813833,
+        0.001749133,
+        0.001806312,
+        0.001768713,
+        0.001744142,
+        0.001720434,
+        0.001728483,
+        0.001743683,
+        0.001736583,
+        0.001722023
+      ],
+      "validated_values": 229376
+    },
+    {
+      "actual_cores": 56,
+      "component_tiles": 64,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 26644847511.549076,
+      "items": 65536,
+      "logical_gb_per_s": 45.67688144836984,
+      "max_abs_error": 1.5416372889376362e-06,
+      "median_s": 0.0020660745,
+      "p95_s": 0.002145429,
+      "phases_s": {
+        "buffer_allocation": 3.0499e-05,
+        "cleanup": 1.607e-05,
+        "d2h": 0.001467346,
+        "h2d": 0.000319496,
+        "prewarm_sync": 4.006e-05,
+        "program_build": 0.000537435,
+        "samples": [
+          0.002145429,
+          0.0020654,
+          0.00205859,
+          0.002069389,
+          0.00206912,
+          0.00205596,
+          0.00206569,
+          0.002066459,
+          0.00205801,
+          0.00208688
+        ],
+        "warmup": 0.001219128
+      },
+      "qmul_per_s": 951601696.8410385,
+      "samples_s": [
+        0.002145429,
+        0.0020654,
+        0.00205859,
+        0.002069389,
+        0.00206912,
+        0.00205596,
+        0.00206569,
+        0.002066459,
+        0.00205801,
+        0.00208688
+      ],
+      "validated_values": 262144
+    },
+    {
+      "actual_cores": 56,
+      "component_tiles": 128,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 43844016333.31821,
+      "items": 131072,
+      "logical_gb_per_s": 75.16117085711691,
+      "max_abs_error": 1.2747031448157031e-06,
+      "median_s": 0.002511186,
+      "p95_s": 0.002548405,
+      "phases_s": {
+        "buffer_allocation": 3.7969e-05,
+        "cleanup": 1.819e-05,
+        "d2h": 0.002385227,
+        "h2d": 0.000428366,
+        "prewarm_sync": 3.542e-05,
+        "program_build": 0.000415936,
+        "samples": [
+          0.002548405,
+          0.002546875,
+          0.002534245,
+          0.002509586,
+          0.002544255,
+          0.002497575,
+          0.002512786,
+          0.002508665,
+          0.002507056,
+          0.002508995
+        ],
+        "warmup": 0.001197908
+      },
+      "qmul_per_s": 1565857726.189936,
+      "samples_s": [
+        0.002548405,
+        0.002546875,
+        0.002534245,
+        0.002509586,
+        0.002544255,
+        0.002497575,
+        0.002512786,
+        0.002508665,
+        0.002507056,
+        0.002508995
+      ],
+      "validated_values": 524288
+    },
+    {
+      "actual_cores": 56,
+      "component_tiles": 256,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 53205286823.44923,
+      "items": 262144,
+      "logical_gb_per_s": 91.20906312591296,
+      "max_abs_error": 1.486650566207004e-06,
+      "median_s": 0.0041387045,
+      "p95_s": 0.004300938,
+      "phases_s": {
+        "buffer_allocation": 6.3009e-05,
+        "cleanup": 2.8119e-05,
+        "d2h": 0.005861083,
+        "h2d": 0.000781002,
+        "prewarm_sync": 3.72e-05,
+        "program_build": 0.000505535,
+        "samples": [
+          0.00404185,
+          0.00405362,
+          0.004053781,
+          0.00406774,
+          0.00405808,
+          0.004209669,
+          0.004300938,
+          0.004263248,
+          0.004219539,
+          0.004224238
+        ],
+        "warmup": 0.001630424
+      },
+      "qmul_per_s": 1900188815.1231866,
+      "samples_s": [
+        0.00404185,
+        0.00405362,
+        0.004053781,
+        0.00406774,
+        0.00405808,
+        0.004209669,
+        0.004300938,
+        0.004263248,
+        0.004219539,
+        0.004224238
+      ],
+      "validated_values": 1048576
+    },
+    {
+      "actual_cores": 56,
+      "component_tiles": 512,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 77782185925.98943,
+      "items": 524288,
+      "logical_gb_per_s": 133.34089015883904,
+      "max_abs_error": 1.4735021114375968e-06,
+      "median_s": 0.005661989500000001,
+      "p95_s": 0.005745803,
+      "phases_s": {
+        "buffer_allocation": 7.153e-05,
+        "cleanup": 3.873e-05,
+        "d2h": 0.011360669,
+        "h2d": 0.001521885,
+        "prewarm_sync": 3.539e-05,
+        "program_build": 0.000552134,
+        "samples": [
+          0.005483617,
+          0.005474326,
+          0.005479866,
+          0.005548856,
+          0.005683154,
+          0.005725614,
+          0.005696295,
+          0.005690694,
+          0.005745803,
+          0.005640825
+        ],
+        "warmup": 0.001780082
+      },
+      "qmul_per_s": 2777935211.64248,
+      "samples_s": [
+        0.005483617,
+        0.005474326,
+        0.005479866,
+        0.005548856,
+        0.005683154,
+        0.005725614,
+        0.005696295,
+        0.005690694,
+        0.005745803,
+        0.005640825
+      ],
+      "validated_values": 2097152
+    },
+    {
+      "actual_cores": 56,
+      "component_tiles": 1024,
+      "correctness_passed": true,
+      "estimated_flops_per_s": 83789984857.36644,
+      "items": 1048576,
+      "logical_gb_per_s": 143.63997404119962,
+      "max_abs_error": 1.6159907580970412e-06,
+      "median_s": 0.010512042,
+      "p95_s": 0.010631146,
+      "phases_s": {
+        "buffer_allocation": 6.6299e-05,
+        "cleanup": 5.4589e-05,
+        "d2h": 0.022296321,
+        "h2d": 0.002870762,
+        "prewarm_sync": 4.0309e-05,
+        "program_build": 0.000462295,
+        "samples": [
+          0.010422448,
+          0.010507737,
+          0.010593736,
+          0.010491748,
+          0.010488617,
+          0.010465597,
+          0.010571847,
+          0.010631146,
+          0.010516347,
+          0.010588266
+        ],
+        "warmup": 0.002678274
+      },
+      "qmul_per_s": 2992499459.1916585,
+      "samples_s": [
+        0.010422448,
+        0.010507737,
+        0.010593736,
+        0.010491748,
+        0.010488617,
+        0.010465597,
+        0.010571847,
+        0.010631146,
+        0.010516347,
+        0.010588266
+      ],
+      "validated_values": 4194304
+    }
+  ],
+  "schema": "tt-rqm-qmul-hardware-evidence.v1",
+  "sources": [
+    {
+      "path": "benchmarks/raw/wormhole-qmul-saturation-01/memory-preflight.json",
+      "sha256": "5f4c897ed5d296e0ffa723c46a650d9c395ff967d805388c4c2fda48cbfd3065"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-saturation-01/post-device-health.txt",
+      "sha256": "b88b9b03f521d710f31b5767eb1b779ffa52da12d6055117061c1b2deef571cc"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-saturation-01/pre-device-health.txt",
+      "sha256": "9f044579ea53ce989b862675c06bb141c5423e9f6f776b9cc4e8bbb0191cabfd"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-saturation-01/report.json",
+      "sha256": "3c8f2931ba135465b963ffa2d42d460e8bddae23e4805325929684d0c29cafc1"
+    }
+  ]
+}

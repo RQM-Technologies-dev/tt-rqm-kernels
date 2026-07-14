@@ -1,0 +1,1 @@
+/home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/dispatch/test_pgm_dispatch --custom -ac -w 100 -i 1000 -s 256 

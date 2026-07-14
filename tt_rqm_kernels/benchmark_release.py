@@ -15,7 +15,7 @@ from tt_rqm_kernels.backends.tenstorrent.qmul_persistent import (
 )
 
 RELEASE_SCHEMA = "tt-rqm-benchmark-release.v1"
-DEFAULT_MANIFEST = Path("benchmarks/manifests/wormhole-qmul.json")
+DEFAULT_MANIFEST = Path("benchmarks/manifests/wormhole-qmul-level2.json")
 BASE_NONCLAIMS = {
     "no_hardware_bandwidth_claim",
     "no_cpu_comparison",

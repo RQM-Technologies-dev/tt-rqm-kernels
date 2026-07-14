@@ -48,6 +48,22 @@ Only a new report that passes all of those gates may set
 `stable_benchmark=true`. The initial persistent conformance and performance
 artifacts must remain `false` even if their observed dispersion is small.
 
+## July 2026 qualification result
+
+Three distinct cold-start host sessions now satisfy this preregistration:
+`wormhole-qmul-stability-01`, `-02`, and `-03`. The deterministic
+`tt-rqm-benchmark-stability.v1` artifact passes every provenance, lifecycle,
+correctness, health, within-session, and cross-session gate.
+
+| N | maximum within-session dispersion | maximum cross-session deviation | limit | result |
+|---:|---:|---:|---:|---|
+| 4096 | 6.2083% | 3.2133% | 10.4825% | passed |
+| 65536 | 2.0413% | 2.4194% | 5.0000% | passed |
+| 262144 | 1.7059% | 0.9190% | 5.0000% | passed |
+
+The Level 2 release manifest hashes all three sessions and this qualification.
+The immutable individual reports remain non-stable records of single sessions.
+
 ## Explicit exclusions
 
 This policy does not compare against CPU, PyTorch, TT-Lang, tt-emule, the
