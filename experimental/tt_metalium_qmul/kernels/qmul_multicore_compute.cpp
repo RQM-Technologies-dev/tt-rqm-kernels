@@ -7,8 +7,8 @@
 #include "api/compute/common.h"
 #include "api/compute/compute_kernel_api.h"
 #include "api/compute/eltwise_binary_sfpu.h"
-#include "api/compute/eltwise_ternary_sfpu.h"
 #include "api/compute/tile_move_copy.h"
+#include "llk_math_eltwise_ternary_sfpu_macros.h"
 
 #ifdef TRISC_MATH
 #include "qmul_sfpu.h"
