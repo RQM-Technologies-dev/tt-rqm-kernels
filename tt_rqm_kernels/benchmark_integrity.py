@@ -56,6 +56,8 @@ def validate_execution_policy(
             "external-qmul reports should use cpu, emulation, or hardware; "
             "use tt-lang-sim for simulator reports"
         )
+    if stage in {"conformance", "performance"} and execution_label != "hardware":
+        raise IntegrityError("explicit qmul benchmark stages are only allowed on real hardware")
     validate_stability(execution_label, stable_benchmark=stable_benchmark)
     if execution_label == "hardware":
         validate_label_command(execution_label, command=command)
@@ -224,10 +226,20 @@ def validate_external_metrics(
         raise IntegrityError(
             "external-qmul setup plus device time exceeds host end-to-end time"
         )
-    if stage == "performance" and metrics.get("performance_eligible") is not True:
+    implementation_class = metrics.get("implementation_class")
+    performance_eligible = metrics.get("performance_eligible")
+    if implementation_class == "multicore_tensix_sfpu_qmul" and execution_label != "hardware":
+        raise IntegrityError("multicore Stage B qmul metrics require execution_label=hardware")
+    if stage == "conformance" and performance_eligible is not False:
+        raise IntegrityError("conformance stage requires performance_eligible=false")
+    if stage == "performance" and performance_eligible is not True:
         raise IntegrityError("performance stage requires performance_eligible=true")
+    if stage == "performance" and implementation_class != "multicore_tensix_sfpu_qmul":
+        raise IntegrityError(
+            "performance stage requires implementation_class=multicore_tensix_sfpu_qmul"
+        )
     work = metrics.get("work")
-    if metrics.get("implementation_class") == "multicore_tensix_sfpu_qmul":
+    if implementation_class == "multicore_tensix_sfpu_qmul":
         if not isinstance(work, Mapping):
             raise IntegrityError("multicore qmul metrics require work metadata")
         expected_component_tiles = (int(manifest["items"]) + 1023) // 1024

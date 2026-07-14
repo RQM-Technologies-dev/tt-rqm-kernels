@@ -17,6 +17,7 @@ from scripts.validate_qmul_candidate import (
     EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT,
     EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT,
     EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT,
+    _validate_candidate_report,
     _validate_report_args,
 )
 from tt_rqm_kernels.backends.tenstorrent.availability import (
@@ -232,6 +233,44 @@ def test_stage_b_hardware_artifact_names_are_protected(tmp_path: Path) -> None:
         benchmark_stage="performance",
         candidate="multicore",
     ) == (EXPECTED_STAGE_B_PERFORMANCE_JSON_OUTPUT, EXPECTED_STAGE_B_PERFORMANCE_MARKDOWN_OUTPUT)
+
+
+def test_stage_b_rejects_nonhardware_or_unstaged_validation(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="execution-label hardware"):
+        _validate_report_args(
+            command="/opt/tt/tt_rqm_metalium_qmul_multicore_candidate",
+            execution_label="emulation",
+            stable_benchmark=False,
+            methodology_note="emulation",
+            json_output=None,
+            markdown_output=None,
+            benchmark_stage="conformance",
+            candidate="multicore",
+        )
+    with pytest.raises(ValueError, match="benchmark-stage"):
+        _validate_report_args(
+            command="/opt/tt/tt_rqm_metalium_qmul_multicore_candidate",
+            execution_label="hardware",
+            stable_benchmark=False,
+            methodology_note="hardware",
+            json_output=tmp_path / EXPECTED_STAGE_B_CONFORMANCE_JSON_OUTPUT,
+            markdown_output=tmp_path / EXPECTED_STAGE_B_CONFORMANCE_MARKDOWN_OUTPUT,
+            benchmark_stage=None,
+            candidate="multicore",
+        )
+
+
+def test_candidate_selection_must_match_observed_implementation_class() -> None:
+    report = {
+        "results": [
+            {
+                "implementation_class": "scalar_riscv_correctness_baseline",
+            }
+        ]
+    }
+
+    with pytest.raises(ValueError, match="multicore_tensix_sfpu_qmul"):
+        _validate_candidate_report("multicore", report)
 
 
 def test_qmul_external_adapter_requires_command() -> None:

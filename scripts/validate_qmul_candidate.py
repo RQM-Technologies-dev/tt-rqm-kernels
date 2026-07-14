@@ -117,6 +117,7 @@ def main() -> int:
             repetitions=args.repetitions,
             benchmark_stage=args.benchmark_stage,
         )
+        _validate_candidate_report(args.candidate, report)
     except (RuntimeError, ValueError, TypeError, OSError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
@@ -144,6 +145,13 @@ def _validate_report_args(
     benchmark_stage: str | None = None,
     candidate: str = "scalar",
 ) -> None:
+    if candidate == "multicore":
+        if execution_label != "hardware":
+            raise ValueError("Stage B multicore validation requires --execution-label hardware")
+        if benchmark_stage not in {"conformance", "performance"}:
+            raise ValueError(
+                "Stage B multicore validation requires --benchmark-stage conformance or performance"
+            )
     if execution_label is None:
         return
     label = validate_external_qmul_label(execution_label, command=command)
@@ -166,6 +174,30 @@ def _validate_report_args(
     _require_hardware_output_path(
         markdown_output, expected=expected_markdown, flag="--markdown-output"
     )
+
+
+def _validate_candidate_report(candidate: str, report: object) -> None:
+    if not isinstance(report, dict):
+        raise ValueError("candidate report must be an object")
+    if candidate == "scalar" and report.get("execution_label") != "hardware":
+        return
+    expected = {
+        "scalar": "scalar_riscv_correctness_baseline",
+        "multicore": "multicore_tensix_sfpu_qmul",
+    }[candidate]
+    results = report.get("results")
+    if not isinstance(results, list) or not results:
+        raise ValueError("candidate report must contain results")
+    observed = {
+        result.get("implementation_class")
+        for result in results
+        if isinstance(result, dict)
+    }
+    if observed != {expected}:
+        raise ValueError(
+            f"--candidate {candidate} requires implementation_class={expected}; "
+            f"observed {sorted(str(value) for value in observed)}"
+        )
 
 
 def _expected_hardware_outputs(

@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -161,6 +162,59 @@ def test_tt_metalium_multicore_architecture_is_stage_b_candidate() -> None:
     for data_movement_source in (reader, writer):
         assert "sfpi::" not in data_movement_source
         assert "out_w" not in data_movement_source
+
+
+def test_tt_metalium_sfpu_covers_every_float32_tile_element_once() -> None:
+    compute = Path("experimental/tt_metalium_qmul/kernels/qmul_multicore_compute.cpp").read_text()
+    sfpu = Path("experimental/tt_metalium_qmul/kernels/qmul_sfpu.h").read_text()
+
+    vectors_per_face = int(re.search(r"kVectorsPerFace = (\d+)", sfpu).group(1))
+    vectors_per_tile = int(re.search(r"kVectorsPerTile = (\d+)", sfpu).group(1))
+    assert vectors_per_face == 8
+    assert vectors_per_tile == 32
+    assert sfpu.count("i < kVectorsPerFace") == 3
+    assert compute.count("VectorMode::RC") == 3
+
+    # Pinned Wormhole SFPI RC semantics invoke the helper once per face and each
+    # vFloat processes 32 lanes. Four disjoint 8-vector faces therefore cover
+    # the complete 32x32 tile exactly once per helper invocation.
+    covered = {
+        (face * vectors_per_face + vector, lane)
+        for face in range(4)
+        for vector in range(vectors_per_face)
+        for lane in range(32)
+    }
+    assert len(covered) == 32 * 32
+    assert {vector for vector, _ in covered} == set(range(vectors_per_tile))
+
+
+def test_tt_metalium_planar_padding_round_trip_contract() -> None:
+    host = Path("experimental/tt_metalium_qmul/src/qmul_multicore_candidate.cpp").read_text()
+    assert host.count("(items + kElementsPerTile - 1) / kElementsPerTile") >= 2
+    assert "lane) * padded_items + item] = aos[static_cast<size_t>(item) * kLanes + lane]" in host
+    assert "aos[static_cast<size_t>(item) * kLanes + lane] = planar[static_cast<size_t>(lane) * padded_items + item]" in host
+
+    for items in (1, 128, 1023, 1024, 1025, 4096, 65537):
+        aos = list(range(items * 4))
+        component_tiles = (items + 1023) // 1024
+        padded_items = component_tiles * 1024
+        planar = [0] * (4 * padded_items)
+        for item in range(items):
+            for lane in range(4):
+                planar[lane * padded_items + item] = aos[item * 4 + lane]
+        restored = [
+            planar[lane * padded_items + item]
+            for item in range(items)
+            for lane in range(4)
+        ]
+        assert restored == aos
+        assert all(
+            value == 0
+            for lane in range(4)
+            for value in planar[
+                lane * padded_items + items : (lane + 1) * padded_items
+            ]
+        )
 
 
 def test_tt_metalium_build_candidate_selection_defaults_to_scalar() -> None:
