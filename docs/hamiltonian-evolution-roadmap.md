@@ -1,9 +1,11 @@
 # SU2HamiltonianBench Roadmap
 
-RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.
-The first stage, `SU2ComposeBench`, executes the ordered composition portion of
-piecewise-constant two-level evolution. It consumes evolution operators lowered
-on the CPU; it does not yet lower Hamiltonian coefficients on Wormhole.
+**RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian
+simulation on Tenstorrent Wormhole.** H1 lowers piecewise-constant two-level
+Hamiltonian coefficients into FP32 rotors and phase pairs on the CPU, and
+Wormhole performs their ordered composition. H2 will address device-side
+coefficient lowering. H1 is a real pipeline stage, not the complete device-side
+pipeline.
 
 ## Hamilton Product And Hamiltonian
 

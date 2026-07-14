@@ -3,12 +3,14 @@
 This page is for Tenstorrent engineers arriving from `tt-awesome`, GitHub
 Discussions, or a maintainer handoff.
 
-> **RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.**
+> **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**
 
-The first planned implementation executes fused, time-ordered SU(2) evolution
-on Wormhole using CPU-lowered FP32 evolution operators. A later stage will
-lower Hamiltonian coefficients on device. The exact preregistered boundary is
-documented in [SU2ComposeBench](benchmarks/su2-compose-bench.md).
+H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
+rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
+H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
+stage of a Hamiltonian-simulation pipeline, not the complete device-side
+pipeline. The exact boundary is documented in
+[SU2ComposeBench](benchmarks/su2-compose-bench.md).
 
 ## What This Is
 
@@ -41,6 +43,7 @@ qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
 persistent multicore/SFPU path: implemented; hardware qualification is separate
+SU2ComposeBench fused/unfused paths: N300 conformance and one comparison session present
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
@@ -49,6 +52,11 @@ Stage B report is performance-eligible architecture evidence, but its first
 sample is explicitly not stable and is not an acceleration comparison.
 The persistent-device path removes repeated process/device creation from the
 measurement session while preserving that non-claim.
+
+The [SU2ComposeBench report](benchmarks/su2-compose-bench.md) adds fused,
+time-ordered SU(2) evolution. Its fused and unfused paths passed whole-output
+conformance and completed one paired N300 device-0 session. That result is
+Claim Level 1 with `stable_benchmark=false`, not an acceleration claim.
 
 The public [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
 packages the current evidence, deterministic charts, claim policy, provenance,

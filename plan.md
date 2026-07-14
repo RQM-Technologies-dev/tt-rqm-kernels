@@ -1,508 +1,122 @@
-# tt-rqm-kernels Collaboration Plan
+# tt-rqm-kernels Plan
 
-## Partnership Frame
+This plan separates proven capability from evidence still required for broader
+claims. The repository is hardware-backed today; cloud access is no longer an
+implementation blocker.
 
-RQM is not asking Tenstorrent to support quaternion math as a special feature.
-
-The collaboration frame is:
-
-> RQM is building a structured-kernel benchmark and operator family that helps Tenstorrent demonstrate accelerator strength beyond LLM inference: rotation, phase, orientation, geometry, wave state, and scientific kernels represented inside ordinary floating-point tensors.
-
-`tt-rqm-kernels` should be positioned as lower-stack structured-compute infrastructure: kernels, benchmarks, compiler-lowering questions, examples, and developer education.
-
-Defense remains a downstream application area, not the public lead.
-
-## Current State
-
-The repo is ready for a first handshake:
-
-- independent RQM Technologies project, not an official Tenstorrent repo
-- CPU/PyTorch reference kernels for quaternion and rotor operators
-- scalar reference checks for independent correctness spot checks
-- StructuredBench benchmark reports with latency, throughput, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity
-- StructuredBench reports now include explicit `execution_label`,
-  `stable_benchmark`, and `methodology_note` fields so CPU, simulator,
-  emulation, and hardware samples are labeled directly
-- `python scripts/repo_status.py` gives a one-command current status summary
-- optional TT-Lang simulator `qmul` prototype with a hardened,
-  simulator-only StructuredBench-compatible report
-- an `external-qmul` candidate harness for validating future standalone
-  `qmul` executables against CPU/PyTorch and scalar references
-- an external TT-Metalium candidate staging package under
-  `experimental/tt_metalium_qmul/` with build/run/validation placeholders
-- Tenstorrent-facing docs, operator contracts, outreach packet, and CI
-- a Tenstorrent execution runbook and hardware report template for future
-  StructuredBench `qmul` runs
-- a minimal TT-Metalium `qmul` design document for `[N, 4]` structured tensors
-- scientific/HPC positioning that relates RQM structured kernels to
-  Tenstorrent's broader non-LLM scientific workload direction
-- a developer tutorial for structured `[N, 4]` `qmul` kernels:
-  `docs/structured-qmul-tutorial.md`
-- a GitHub Discussion opened in `tenstorrent/tt-metal`
-- a narrower `tt-metal` placement issue opened after the Discussion waiting
-  period:
-  https://github.com/tenstorrent/tt-metal/issues/48944
-- `tt-awesome` submission issue #104 approved, with generated entry PR #106
-  merged:
-  https://github.com/tenstorrent/tt-awesome/pull/106
-- local tracker issue #1 closed after the generated entry PR merged
-- local tracker issue #2 closed after hardening the TT-Lang simulator report
-- local tracker issue #3 is closed/background after the external TT-Metalium
-  `qmul` candidate rebuild path and tt-emule validation report were restored
-- local tracker issue #6 closed after deciding not to wait on upstream
-  placement guidance as an active planning lane
-- local tracker issue #7 started with execution runbook/report-template prework
-- local tracker issue #8 now has its core technical evidence: a real
-  experimental TT-Metalium `qmul` candidate built against `tt-metal/build_emule`
-  and produced an emulation-labeled StructuredBench report
-- x86-64 Linux preflight has passed inside Docker Desktop using sibling
-  `tt-metal` and `tt-emule` checkouts:
-  - `tt-metal` checkout: `/Users/home/Documents/tt-metal` at `fd810266`
-  - `tt-emule` checkout: `/Users/home/Documents/tt-emule` at `abdc348`
-  - Docker image: `python:3.12-slim` with `--platform linux/amd64`
-- experimental TT-Metalium scalar RISC-V `qmul` candidate source has been
-  added under `experimental/tt_metalium_qmul/`
-- the new build-prerequisite gate is
-  `experimental/tt_emule_qmul/check_build_prereqs.py`
-- `tt-metal/build_emule` configure and install helpers now live under
-  `experimental/tt_emule_qmul/`
-- tt-emule candidate state:
-  - `tt-emule` pins `tt-metal` commit
-    `dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4`
-  - completed now: local `/Users/home/Documents/tt-metal` is detached at the
-    pinned commit
-  - completed now: required `tt-metal` submodules `umd` and `tracy` are
-    initialized
-  - completed now: `tt-metal/build_emule` configures successfully inside an
-    Ubuntu 24.04 container with `TT_METAL_USE_EMULE=ON`
-  - completed now: the build-prerequisite checker accepts both current
-    lowercase `tt-metalium-config.cmake` package naming and installed-style
-    `TT-MetaliumConfig.cmake` package naming
-  - completed now: the experimental candidate builder expands uninstalled
-    `build_emule` dependency prefixes so dependency lookup reaches `fmt`,
-    `nlohmann_json`, `spdlog`, `tt-logger`, and UMD build outputs
-  - completed now: `cmake --build build_emule --target install -j2` completed
-    enough to install a usable TT-Metalium CMake package under
-    `/Users/home/Documents/tt-metal/build_emule/lib/cmake/tt-metalium`
-  - completed now: the build-prerequisite checker passes inside Ubuntu 24.04
-    with the installed TT-Metalium package and required UMD/tracy submodules
-  - completed now: the experimental candidate builder prefers the installed
-    package directory over stale root-level generated config files
-  - completed now: the candidate links against the current exported Metalium
-    package plus explicit MPI, hwloc, and numa runtime dependencies needed by
-    the installed `libtt_metal.so` / UMD exports
-  - completed now: `experimental/tt_metalium_qmul/run_candidate_docker.sh`
-    runs the built Linux candidate from the macOS StructuredBench harness
-    through Docker and `tt-emule`
-  - completed now: the candidate kernel uses the tt-emule-supported direct
-    `reinterpret_cast<T*>(get_arg_val<uint32_t>(N))` L1 pointer pattern so the
-    JIT can translate L1 scratch addresses
-  - emulation report artifact:
-    `reports/tt_emule_qmul_candidate.json` and
-    `reports/tt_emule_qmul_candidate.md`
-  - report label: `backend=external-qmul`,
-    `device=tt-emule/tt-metalium-riscv-qmul-candidate`,
-    `execution_label=emulation`, `stable_benchmark=false`
-  - sample report scope: three 32-item `qmul` cases, `iters=1`, `warmup=0`;
-    this is correctness/emulation evidence, not a stable performance benchmark
-- local tracker issues #9 through #13 are closed after their design/demo
-  deliverables landed
-- local tracker issue #14 is closed because upstream LWT/ILWT issue #40494 is
-  assigned and active; it is not a local planning lane
-- QuantumIR is now tracked as a strategic documentation layer above the
-  existing kernel foundation. It is a future lowering direction for selected
-  quantum-mechanics workloads into structured quaternion/SU(2) kernels, not an
-  active replacement for the qmul, tt-emule, Cloud/hardware path.
-- Tenstorrent Console is accessible for the `RQM-Technologies-dev` organization:
-  Billing/Usage, Compute, and Resources are visible. However, `Compute ->
-  Resources -> Request Capacity` is currently blocked because the `Resource
-  Type` dropdown has no selectable options, so `Submit Request` remains
-  disabled.
-- Tenstorrent support has acknowledged `CUST-812`, the RQM Technologies
-  TT-Cloud access request for StructuredBench `qmul` hardware validation. The
-  request is pending Tenstorrent action and is shared with John Van Geem.
-
-The completed setup work should now be treated as background. The active work is
-self-directed hardware validation, delegated hardware handoff quality, and
-keeping the external lower-stack `qmul` candidate reproducible.
-
-## Recommended Next Step
-
-The x86-64 Linux Docker preflight is complete, `tt-metal/build_emule` has an
-installed/exported TT-Metalium package, and the experimental scalar RISC-V
-TT-Metalium `qmul` candidate now validates through `external-qmul` under
-`tt-emule`.
-
-The tt-emule evidence has been committed, pushed, and recorded in tracker issue
-#8. The active implementation pressure now remains issue #7. Tenstorrent
-support has acknowledged request `CUST-812`; the immediate blocker is now the
-pending response that enables a Resource Type for the `RQM-Technologies-dev`
-organization or offers delegated validation using
-`docs/tenstorrent-engineer-copy-paste-packet.md`.
-
-Do not wait on upstream placement guidance. The default path is to keep the
-minimal TT-Metalium `qmul` candidate externally staged in this repo, keep its
-tt-emule report reproducible, and use the same `external-qmul` protocol for a
-real hardware run when access is available.
-
-Known-good preflight commands:
-
-```bash
-docker run --rm --platform linux/amd64 \
-  -v /Users/home/Documents:/work \
-  -w /work/tt-rqm-kernels \
-  python:3.12-slim \
-  python scripts/repo_status.py
-
-docker run --rm --platform linux/amd64 \
-  -v /Users/home/Documents:/work \
-  -w /work/tt-rqm-kernels \
-  -e TT_METAL_HOME=/work/tt-metal \
-  -e TT_EMULE_HOME=/work/tt-emule \
-  python:3.12-slim \
-  python experimental/tt_emule_qmul/check_environment.py
-```
-
-Build-prerequisite command:
-
-```bash
-docker run --rm --platform linux/amd64 \
-  -v /Users/home/Documents:/work \
-  -w /work/tt-rqm-kernels \
-  -e TT_METAL_HOME=/work/tt-metal \
-  -e TT_EMULE_HOME=/work/tt-emule \
-  python:3.12-slim \
-  python experimental/tt_emule_qmul/check_build_prereqs.py
-```
-
-Configure command:
-
-```bash
-docker run --rm --platform linux/amd64 \
-  -v /Users/home/Documents:/work \
-  -w /work/tt-metal \
-  -e TT_METAL_HOME=/work/tt-metal \
-  -e TT_EMULE_HOME=/work/tt-emule \
-  ubuntu:24.04 \
-  bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/configure_build_emule.sh
-```
-
-Build/install command:
-
-```bash
-docker run --rm --platform linux/amd64 \
-  -v /Users/home/Documents:/work \
-  -w /work/tt-metal \
-  -e TT_METAL_HOME=/work/tt-metal \
-  -e TT_EMULE_HOME=/work/tt-emule \
-  -e JOBS=2 \
-  ubuntu:24.04 \
-  bash -lc 'bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/configure_build_emule.sh && \
-            bash /work/tt-rqm-kernels/experimental/tt_emule_qmul/build_install_emule.sh'
-```
-
-Candidate build command:
-
-```bash
-docker run --rm --platform linux/amd64 \
-  -v /Users/home/Documents:/work \
-  -w /work/tt-rqm-kernels \
-  -e TT_METAL_HOME=/work/tt-metal \
-  -e TT_EMULE_HOME=/work/tt-emule \
-  ubuntu:24.04 \
-  bash -lc 'apt-get update >/tmp/apt-update.log 2>&1 && \
-            apt-get install -y --no-install-recommends ca-certificates cmake ninja-build g++ git python3 libopenmpi-dev openmpi-bin libhwloc-dev libnuma-dev >/tmp/apt-install.log 2>&1 && \
-            python3 experimental/tt_metalium_qmul/build_candidate.py \
-              --tt-metal-root /work/tt-metal \
-              --cmake-prefix-path /work/tt-metal/build_emule \
-              --build-dir /work/tt-rqm-kernels/experimental/tt_metalium_qmul/build_emule_candidate \
-              --generator Ninja'
-```
-
-Emulation validation command:
-
-```bash
-python scripts/validate_qmul_candidate.py \
-  --command "bash experimental/tt_metalium_qmul/run_candidate_docker.sh" \
-  --execution-label emulation \
-  --methodology-note "Experimental TT-Metalium qmul candidate run through tt-emule Docker wrapper; first validation sample, not a stable hardware benchmark." \
-  --items 32 \
-  --iters 1 \
-  --warmup 0 \
-  --json-output reports/tt_emule_qmul_candidate.json \
-  --markdown-output reports/tt_emule_qmul_candidate.md
-```
-
-Preflight result:
+## Current proven capabilities
 
 ```text
-tt-metal root detected: /work/tt-metal
-tt-emule root detected: /work/tt-emule
-tt-emule qmul preflight passed. This does not run a kernel.
+CPU/PyTorch reference operators: complete
+TT-Lang simulator qmul: complete, simulator-only
+tt-emule TT-Metalium qmul: complete, emulation-only
+Stage A scalar RISC-V N300 conformance: complete
+Stage B multicore/SFPU qmul: Claim Level 1
+Persistent-device qmul session: Claim Level 1
+SU2ComposeBench H1 foundation: complete
+SU2ComposeBench H1 Wormhole implementation: present
+SU2ComposeBench first fused/unfused session: Claim Level 1
+Independent multi-session stability: pending
+Profiler attribution: pending
+CPU timing-scope-compatible comparison: pending
+Energy measurement: pending
+H2 device-side coefficient lowering: pending
+TT-NN integration: deferred
+TT-MLIR lowering discussion: deferred until the backend evidence is sufficiently mature
 ```
 
-Why this is next:
-
-- the repo now has CPU/PyTorch reference results, a TT-Lang simulator proof
-  point, and a public collaboration map
-- the `tt-awesome` submission has merged, so it is no longer an active
-  repo-building blocker
-- the minimal TT-Metalium `qmul` design document is present, so the next step is
-  coordination and implementation planning rather than more design prose
-- the scientific/HPC positioning now gives RQM a conservative way to reference
-  adjacent Tenstorrent scientific workload activity without claiming that
-  spectral element methods need quaternion kernels
-- the external `qmul` harness gives future TT-Metalium, TT-NN, or cloud-hosted
-  candidate executables a concrete way to emit comparable StructuredBench
-  reports
-- the TT-Metalium candidate package now contains a real experimental scalar
-  RISC-V source candidate that has built and run under tt-emule through
-  `external-qmul`
-- the Linux/tt-emule preflight now passes, `build_emule` has installed usable
-  TT-Metalium exports, and the candidate has produced an emulation-labeled
-  StructuredBench report through `external-qmul`
-- the runbook now makes #7 actionable once Tenstorrent Cloud, a local
-  TT-Metalium SDK checkout, or delegated hardware environment is available
-- the repo status command and report metadata now make the current gap explicit:
-  there is still no real Tenstorrent hardware report
-- the Console account now confirms the next concrete blocker: Tenstorrent has
-  acknowledged `CUST-812`, but hardware validation still waits for an enabled
-  Resource Type or a delegated hardware run
-
-## Priority Lanes
-
-| Priority | Lane | Goal | Success condition |
-| ---: | --- | --- | --- |
-| 1 | Cloud/hardware validation | Turn the benchmark into real hardware evidence | Tenstorrent enables a Console Resource Type or runs delegated validation, producing the first hardware-labeled report |
-| 2 | External TT-Metalium `qmul` candidate | Keep the completed lower-stack candidate self-contained and reproducible in the background | Experimental `[N, 4]` `qmul` candidate rebuilds and validates through `external-qmul` with `execution_label=emulation` |
-| 3 | StructuredBench report standard | Make this useful as a reusable benchmark class | CPU, TT-Lang, emulation, and future hardware reports share `structuredbench.v1` fields with explicit execution labels |
-| 4 | TT-NN wrapper | Deferred until lower-stack hardware evidence exists | `qmul` or `qrotate_vector` exposed through a TT-NN-style wrapper after real hardware proof |
-| 5 | TT-MLIR lowering discussion | Explore compiler value after a working kernel exists | Concrete question: should `qmul` lower as a fused kernel instead of scalar expansion? |
-
-## Strategic Top Layer: QuantumIR
-
-QuantumIR is a future top layer above the current kernel and benchmark stack:
-
-```text
-OpenQASM / Qiskit / RQM DSL
--> QuantumIR / RQM-IR
--> SU(2), quaternion, rotor, phase, spectral, and tensor lowering
--> StructuredBench and tt-rqm-kernels operator contracts
--> TT-MLIR / TT-NN / TT-Metalium / TT-Lang / tt-emule paths
-```
-
-Current status:
-
-- documentation-only direction is recorded in `docs/quantum-ir.md`
-- roadmap is recorded in `docs/quantum-ir-roadmap.md`
-- initial operator mapping is recorded in
-  `docs/quantum-ir-operator-mapping.md`
-
-This is not active backend work. It should not displace the qmul hardware path,
-and it must not claim that RQM replaces quantum hardware or that arbitrary
-quantum computation is efficiently classically simulable.
-
-## Next Repo Work
-
-### 1. Hardware Validation And External Candidate Reproducibility
-
-Active repo issues should now focus on the hardware-facing path:
-
-1. `Run StructuredBench on Tenstorrent Cloud` (#7, active)
-2. `Implement minimal TT-Metalium qmul example using the external-qmul harness`
-   (#3, completed/background; do not reopen for hardware follow-through)
-3. `Define TT-NN wrapper path after lower-stack hardware proof` (#4, deferred)
-4. External LWT/ILWT work is removed from this repo's active plan; upstream
-   issue #40494 is already assigned and active
-
-Current blocker for #7:
+The real-device evidence uses one Wormhole device (`device_id=0`) and pinned
+TT-Metalium provenance. Stage A preserves the scalar correctness baseline.
+Stage B moves qmul arithmetic into multicore Tensix compute/SFPU kernels. H1
+adds fused and unfused ordered SU(2) rotor-and-phase composition.
 
-- Console is accessible.
-- Billing/Usage is visible.
-- Compute/Resources is visible.
-- `Request Capacity` opens, but `Resource Type` has no options and `Submit
-  Request` is disabled.
-- Tenstorrent support acknowledged `CUST-812` for TT-Cloud access for
-  StructuredBench `qmul` hardware validation.
-- Next action: wait for Tenstorrent to enable a Resource Type for
-  `RQM-Technologies-dev`, or for a Tenstorrent engineer to run the delegated
-  hardware packet and return reports. Do not treat the acknowledgement as
-  hardware access.
+H1 begins after CPU lowering. The CPU converts piecewise-constant two-level
+Hamiltonian coefficients into FP32 rotors and phase pairs; Wormhole composes
+those operators in exact time order. This is a real stage of the simulation
+pipeline, but not full device-side Hamiltonian lowering.
 
-If hardware access remains blocked, the repo should stay focused on #7:
-maintain the delegated hardware packet, keep `python scripts/rqm_tt_quickstart.py
---check` actionable, and preserve emulation reproducibility. Do not start TT-NN
-wrappers, QuantumIR/HPC expansion, or in-repo LWT/ILWT implementation while
-`CUST-812` is pending.
+## Active evidence-completion work
 
-Each issue should include:
+### SU2ComposeBench stability
 
-- goal
-- acceptance criteria
-- references to relevant docs
-- clear non-goals
+Collect three independent cold-start sessions with the same candidate,
+environment, input contract, paired ordering, and complete correctness. Do not
+discard failed or noisy designated sessions. Claim Level 2 remains unavailable
+until the preregistered coefficient-of-variation gates pass.
 
-## Technical Roadmap
+### Profiler attribution
 
-### Phase 1: Ecosystem Visibility
+Capture Device Program Profiler and Tracy evidence for the fused and unfused
+paths. Attribute dispatch, compute, data movement, and synchronization costs
+before selecting additional optimizations. Logical-byte formulas must remain
+distinct from measured hardware bandwidth.
 
-Goal:
+### Matched comparisons and energy
 
-- make `tt-rqm-kernels` discoverable inside the Tenstorrent ecosystem
+A future CPU comparison must use identical serialized FP32 inputs, operation
+semantics, validation, batching, warmups, threading disclosure, and timing
+boundaries. Energy measurement requires a separate preregistered acquisition
+protocol. Neither result exists today.
 
-Status:
+## Deferred integration work
 
-- complete: `tt-awesome` submission issue #104 was approved and generated PR
-  #106 merged
+### TT-NN
 
-Exit criteria:
+TT-NN integration is deferred until the lower-level H1 implementation and
+evidence are stable. A wrapper must preserve ordered composition, whole-output
+validation, provenance, and timing boundaries rather than hiding them behind a
+higher-level API.
 
-- generated `tt-awesome` entry PR #106 merged
-- public description leads with structured-kernel benchmarking, not quaternion theory
+### TT-MLIR
 
-### Phase 2: TT-Metalium `qmul`
+TT-MLIR lowering discussion is deferred until the backend evidence is mature
+enough to identify a small, concrete lowering requirement. The current project
+does not request native quaternion hardware or a new datatype.
 
-Goal:
+### Supporting material
 
-- create the first real lower-stack kernel target
+TT-Lang, tt-emule, console, cloud-access, delegated-validation, and outreach
+documents remain useful setup and historical references. They are indexed in
+[docs/index.md](docs/index.md), but they no longer define the active blocker.
 
-Tasks:
+## Future technical milestones
 
-- treat upstream placement guidance as optional if it ever arrives
-- use `docs/tt-metalium-qmul-design.md` as the implementation contract
-- use the `external-qmul` harness as the validation bridge for a standalone
-  candidate executable
-- use `experimental/tt_metalium_qmul/` as the external staging location by
-  default
-- completed: use `docs/tt-emule-qmul-validation-plan.md`,
-  `experimental/tt_emule_qmul/check_environment.py`, and the Docker wrapper
-  before claiming emulation readiness
-- start with `[N, 4]` layout
-- completed for tt-emule: compare against CPU/PyTorch and scalar references
-- completed for tt-emule: report latency, throughput, numerical error, estimated
-  FLOPs/sec, effective
-  GB/sec, arithmetic intensity, `execution_label`, `stable_benchmark`, and
-  `methodology_note`
+### H2: device-side coefficient lowering
 
-Exit criteria:
+H2 will accept Hamiltonian coefficients `[B,K,4]` and `dt` directly, then
+perform norm, axis, sine, cosine, phase, rotor construction, and ordered
+composition on device. Work begins only after H1 stability and an audit of the
+pinned SFPU sine, cosine, reciprocal, square-root, and norm support.
 
-- minimal example or external prototype runs
-- result is reproducible
-- emulation reports are labeled `execution_label=emulation`
-- no unsupported claims about Tenstorrent performance
+Only H2 may support the phrase “full device-side two-level Hamiltonian evolution
+lowering.” This task identifies H2 as the next technical milestone; it does not
+implement it.
 
-### Phase 3: TT-NN Wrapper
+### Later benchmark families
 
-Goal:
+`RigidBodyHamiltonianBench`, PoseStreamBench, and broader physical-AI studies
+remain separate follow-ons. They must not inherit H1 evidence or claim levels.
 
-- make structured kernels usable from the higher-level Tenstorrent operator layer
+## Claim boundaries and non-goals
 
-Tasks:
+Current hardware reports remain `stable_benchmark=false`. Claim Level 1 means a
+qualified first sample, not stable performance or acceleration.
 
-- wait until lower-stack hardware evidence exists
-- follow Tenstorrent's custom-op conventions
-- define a golden/reference function
-- expose a Python-facing path only after lower-stack hardware proof is
-  reproducible
+The repository currently makes no claim of:
 
-Exit criteria:
+- CPU acceleration or superiority;
+- stable one-device performance;
+- measured DRAM, NoC, PCIe, or compute bandwidth;
+- energy efficiency or application speedup;
+- full device-side Hamiltonian coefficient lowering;
+- dual-device or aggregate N300 performance;
+- arbitrary quantum-circuit simulation or quantum-hardware replacement;
+- Tenstorrent endorsement.
 
-- wrapper has a reference comparison and a clean example
-- docs explain when to use the wrapper versus raw benchmark scripts
+## Primary references
 
-### Phase 4: TT-MLIR Lowering Discussion
-
-Goal:
-
-- evaluate whether structured operators should lower as fused kernels instead of scalar expansions
-
-Precondition:
-
-- working `qmul` backend and at least one higher-level wrapper or integration sketch
-
-Core question:
-
-```text
-Should qmul lower as a fused structured operator rather than expanding into scalar multiply/add lanes?
-```
-
-Exit criteria:
-
-- compiler discussion is grounded in working backend evidence, not speculation
-
-### Phase 5: Hardware Report
-
-Goal:
-
-- publish the first real Tenstorrent hardware comparison
-
-Path:
-
-```text
-PyTorch correctness
--> TT-Lang simulation
--> tt-emule no-hardware validation
--> Tenstorrent Cloud hardware result
-```
-
-Exit criteria:
-
-- public report distinguishes CPU reference, simulation, emulation, and hardware
-- report includes methodology and exact commands
-- report avoids claiming stable hardware performance from sample outputs
-
-## Outreach Sequence
-
-Current outreach state:
-
-- Discussion #48871 is open in `tenstorrent/tt-metal` with no maintainer
-  comments as of July 6, 2026:
-  https://github.com/tenstorrent/tt-metal/discussions/48871
-- Narrow placement issue #48944 is open in `tenstorrent/tt-metal`:
-  https://github.com/tenstorrent/tt-metal/issues/48944
-- Local tracker issue #6 is closed because waiting for that answer is no
-  longer part of the active plan.
-
-Next outreach actions:
-
-1. Do not spend active roadmap time waiting for placement replies.
-2. Use outreach only for the concrete hardware run: follow up on `CUST-812`,
-   Console capacity, delegated validation, or an authorized no-cost hardware
-   environment.
-3. Continue the Discussion or issue only if Tenstorrent maintainers reply with
-   actionable placement guidance.
-
-## Public Messaging Rules
-
-Use this framing:
-
-> Structured computation on open accelerators.
-
-Lead with:
-
-- structured 4-lane tensor values
-- compact benchmark between scalar elementwise ops and matmul
-- robotics, graphics, wireless, imaging, wave simulation, physical AI, scientific computing, and signal processing
-- defense only as downstream
-
-Avoid:
-
-- asking for native quaternion hardware
-- implying Tenstorrent endorsement
-- speculative physics claims
-- claiming hardware performance from CPU/PyTorch sample reports
-- presenting TT-NN or TT-MLIR as first-step asks before lower-stack evidence exists
-
-## Reference Links
-
-- Tenstorrent software stack: https://docs.tenstorrent.com/getting-started/tt-software-stack.html
-- TT-Metalium getting started: https://docs.tenstorrent.com/tt-metal/latest/tt-metalium/get_started/get_started.html
-- TT-Lang overview: https://docs.tenstorrent.com/tt-lang/overview.html
-- TT-Lang repo: https://github.com/tenstorrent/tt-lang
-- tt-awesome repo: https://github.com/tenstorrent/tt-awesome
-- TT-NN docs: https://docs.tenstorrent.com/tt-metal/latest/ttnn/
-- tt-emule repo: https://github.com/tenstorrent/tt-emule
-- Tenstorrent Cloud: https://tenstorrent.com/en/hardware/cloud
-- TT-MLIR repo: https://github.com/tenstorrent/tt-mlir
-- TT-Metalium support: https://docs.tenstorrent.com/tt-metal/latest/tt-metalium/resources/support.html
-- Tenstorrent GitHub org: https://github.com/tenstorrent
+- [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md)
+- [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md)
+- [Hamiltonian roadmap](docs/hamiltonian-evolution-roadmap.md)
+- [Benchmark claim policy](docs/benchmarks/claim-policy.md)
+- [Documentation index](docs/index.md)

@@ -85,8 +85,13 @@ def validate_su2_preregistration(payload: Any) -> dict[str, Any]:
     _require(claims.get("current_level") is None, "pre-hardware work cannot claim a level")
     _require(claims.get("stable_benchmark") is False, "foundation cannot be stable")
     _require(
+        claims.get("public_pre_conformance")
+        == "RQM is building fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.",
+        "pre-conformance public framing changed",
+    )
+    _require(
         claims.get("public_post_conformance")
-        == "RQM runs quantum Hamiltonian simulations on Tenstorrent.",
+        == "RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.",
         "approved public framing changed",
     )
     nonclaims = data.get("nonclaims")
