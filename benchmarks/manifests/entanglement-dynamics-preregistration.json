@@ -1,0 +1,90 @@
+{
+  "benchmark_id": "two-qubit-entanglement-dynamics-reference",
+  "cases": [
+    {"id": "product_00", "status": "cpu_reference"},
+    {"id": "product_01", "status": "cpu_reference"},
+    {"id": "product_plus_0", "status": "cpu_reference"},
+    {"id": "bell_phi_plus", "status": "cpu_reference"},
+    {"id": "bell_phi_minus", "status": "cpu_reference"},
+    {"id": "bell_psi_plus", "status": "cpu_reference"},
+    {"id": "bell_psi_minus", "status": "cpu_reference"},
+    {"id": "local_u2_invariance", "status": "cpu_reference"},
+    {"id": "xx_interaction", "status": "cpu_reference"},
+    {"id": "yy_interaction", "status": "cpu_reference"},
+    {"id": "zz_interaction", "status": "cpu_reference"},
+    {"id": "heisenberg_interaction", "status": "cpu_reference"},
+    {"id": "reversed_noncommuting_steps", "status": "cpu_reference"},
+    {"id": "seeded_time_dependent_chain", "status": "cpu_reference"},
+    {"id": "float32_chain_drift", "status": "cpu_reference"}
+  ],
+  "claims": {
+    "current_level": null,
+    "performance_eligible": false,
+    "stable_benchmark": false
+  },
+  "dependencies": {
+    "rqm_entanglement_runtime": false
+  },
+  "execution_scope": "cpu_reference",
+  "generator": {
+    "dt": 0.05,
+    "hbar": 1.0,
+    "seed": 0
+  },
+  "input_validation": {
+    "coefficients": "finite_real_floating_point",
+    "dt": "finite_scalar_or_[B,K]_broadcastable",
+    "hbar": "finite_positive",
+    "minimum_batch": 1,
+    "minimum_steps": 1,
+    "state": "finite_real_lanes_matching_batch_dtype_device"
+  },
+  "metrics": [
+    "state_norm_error",
+    "complex128_max_abs_error",
+    "complex128_rms_error",
+    "global_phase_aligned_max_abs_error",
+    "density_trace_error",
+    "density_hermiticity_error",
+    "reduced_state_eigenvalue_max_abs_error",
+    "subsystem_purity",
+    "concurrence",
+    "reduced_von_neumann_entropy",
+    "nonfinite_values"
+  ],
+  "nonclaims": [
+    "no_hardware_execution_claim",
+    "no_claim_level",
+    "no_performance_claim",
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_throughput_definition",
+    "no_hardware_release_manifest",
+    "no_full_device_side_lowering_claim",
+    "no_tenstorrent_endorsement"
+  ],
+  "operation": {
+    "coefficient_shape": "[B, K, 4, 4]",
+    "complex_lane_order": ["real", "imag"],
+    "composition_order": "step[K-1] * ... * step[0]",
+    "family": "TwoQubitHamiltonianBench",
+    "flattened_storage_view": "[B, 8]",
+    "hamiltonian_definition": "H = sum(C[p,q] * sigma[p] tensor sigma[q])",
+    "lowered_operator_shape": "[B, K, 4, 4, 2]",
+    "normalization": "none",
+    "pauli_axis_order": ["I", "X", "Y", "Z"],
+    "stage": "EntanglementDynamicsBench",
+    "state_basis_order": ["|00>", "|01>", "|10>", "|11>"],
+    "state_shape": "[B, 4, 2]"
+  },
+  "schema": "tt-rqm-entanglement-dynamics-preregistration.v1",
+  "status": "reference_foundation",
+  "tolerances": {
+    "float32_candidate_atol": 0.0001,
+    "float32_candidate_rtol": 0.0001,
+    "float64_oracle_atol": 1e-11,
+    "float64_oracle_rtol": 1e-11,
+    "nonfinite_values": 0
+  },
+  "title": "EntanglementDynamicsBench Reference Foundation"
+}

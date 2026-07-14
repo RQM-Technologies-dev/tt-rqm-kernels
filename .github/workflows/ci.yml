@@ -34,7 +34,9 @@ jobs:
         run: >-
           python -m ruff format --check
           scripts/repo_status.py
+          tt_rqm_kernels/entanglement_benchmark.py
           tt_rqm_kernels/su2_benchmark.py
+          tests/test_entanglement_benchmark.py
           tests/test_repo_status.py
 
       - name: Run Python tests
@@ -53,6 +55,9 @@ jobs:
           python scripts/validate_su2_compose_preregistration.py
           python scripts/validate_su2_compose_release.py
           python scripts/reproduce_wormhole_su2_compose.py --check
+
+      - name: Validate EntanglementDynamicsBench foundation
+        run: python scripts/validate_entanglement_dynamics_preregistration.py
 
       - name: Validate repository status
         run: python scripts/repo_status.py

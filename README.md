@@ -39,6 +39,12 @@ path uses repeated qmul-plus-phase dispatches with DRAM ping-pong storage. See
 the [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the exact
 contract, results, and limitations.
 
+The sibling `TwoQubitHamiltonianBench` now has a CPU-only
+[EntanglementDynamicsBench reference foundation](docs/benchmarks/entanglement-dynamics-bench.md).
+It adds joint-state evolution and entanglement diagnostics, but has no
+Tenstorrent implementation, hardware evidence, performance claim, or claim
+level.
+
 ## Why it matters
 
 Structured kernels occupy useful territory between scalar elementwise code and
@@ -81,6 +87,7 @@ python scripts/reproduce_wormhole_qmul.py --check
 python scripts/validate_su2_compose_preregistration.py
 python scripts/validate_su2_compose_release.py
 python scripts/reproduce_wormhole_su2_compose.py --check
+python scripts/validate_entanglement_dynamics_preregistration.py
 ```
 
 ## Documentation paths
@@ -88,7 +95,8 @@ python scripts/reproduce_wormhole_su2_compose.py --check
 - [Architecture and operator contracts](docs/operator-contracts.md): tensor
   conventions, Hamilton products, rotor/phase operators, and backend designs.
 - [Benchmark evidence and reproduction](docs/benchmarks/index.md): qmul and
-  SU2ComposeBench reports, release manifests, claim policy, and methodology.
+  SU2ComposeBench evidence plus the EntanglementDynamicsBench reference
+  foundation.
 - [Roadmap and future work](plan.md): proven capabilities, active evidence
   work, deferred integrations, H2, and non-goals.
 

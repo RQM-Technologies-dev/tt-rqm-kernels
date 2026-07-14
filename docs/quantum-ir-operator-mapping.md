@@ -76,10 +76,23 @@ keeping the production representation as ordinary real `[N, 4]` tensors. The
 test oracle is reproduced under the test tree and does not add `rqm-core` or
 `rqm-entanglement` as runtime dependencies.
 
-The scope is deliberately limited to single-quaternion/SU(2) composition and a
-local Kronecker-product composition check. It does not implement general
-two-qubit simulation, entangled states, nonlocal gates, or entanglement
-analysis.
+That original conformance target remains limited to single-quaternion/SU(2)
+composition and a local Kronecker-product check. A separate, implemented
+CPU-only [EntanglementDynamicsBench foundation](benchmarks/entanglement-dynamics-bench.md)
+now defines joint two-qubit state evolution, nonlocal Pauli-product
+Hamiltonians, and entanglement analysis. It does not inherit H1 hardware
+evidence or create an entanglement hardware claim.
+
+The current bridge is:
+
+```text
+qmul -> local SU(2) -> U_A tensor U_B -> joint-state evolution
+     -> nonlocal Hamiltonians -> entanglement metrics
+```
+
+Local U(2) operations preserve entanglement. Nonlocal interaction terms can
+generate it. `rqm-entanglement` remains an independent comparison source, not
+a runtime dependency.
 
 This target is useful because it exercises:
 
@@ -96,9 +109,9 @@ It does not claim that all quantum workloads reduce to this representation.
 
 These topics need separate contracts and validation before code is added:
 
-- controlled rotations and small batched circuit patterns
-- Hamiltonian evolution kernels
-- batched spin-system workloads
+- controlled rotations and small batched circuit patterns beyond the current reference
+- Tenstorrent lowering for two-qubit Hamiltonian evolution
+- larger batched spin-system workloads
 - tensor-network or factored-state representations
 - spectral-anchor or coherence diagnostics
 - TT-NN or TT-MLIR lowering of any fused QuantumIR operator

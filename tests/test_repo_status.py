@@ -8,6 +8,8 @@ import subprocess
 import sys
 
 from scripts.repo_status import (
+    _entanglement_foundation_status,
+    _entanglement_hardware_status,
     _su2_comparison_status,
     _su2_conformance_status,
     _su2_foundation_status,
@@ -41,6 +43,8 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["SU2ComposeBench N300 conformance"] == "hardware conformance present"
     assert statuses["SU2ComposeBench first comparison"] == "qualified first comparison present"
     assert statuses["SU2ComposeBench stability"] == "not established"
+    assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
+    assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
 
 
 def test_repo_status_text_is_maintainer_scannable() -> None:
@@ -66,6 +70,10 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
         "SU2ComposeBench first comparison: qualified first comparison present" in completed.stdout
     )
     assert "SU2ComposeBench stability: not established" in completed.stdout
+    assert (
+        "EntanglementDynamicsBench reference foundation: implemented reference" in completed.stdout
+    )
+    assert "EntanglementDynamicsBench hardware: not implemented" in completed.stdout
     assert "not performance-eligible" in completed.stdout
     assert "not an acceleration claim" in completed.stdout
 
@@ -75,6 +83,37 @@ def test_su2_status_fails_clearly_when_evidence_is_absent(tmp_path: Path) -> Non
     assert _su2_conformance_status(tmp_path)[0] == "not implemented"
     assert _su2_comparison_status(tmp_path)[0] == "not implemented"
     assert _su2_stability_status(tmp_path)[0] == "not established"
+
+
+def test_entanglement_status_fails_clearly_when_foundation_is_absent(tmp_path: Path) -> None:
+    assert _entanglement_foundation_status(tmp_path)[0] == "not implemented"
+    assert _entanglement_hardware_status(tmp_path)[0] == "not implemented"
+
+
+def test_entanglement_status_rejects_preregistration_claim_escalation(
+    tmp_path: Path,
+) -> None:
+    for relative in (
+        "benchmarks/manifests/entanglement-dynamics-preregistration.json",
+        "tt_rqm_kernels/hamiltonian/two_qubit.py",
+        "tt_rqm_kernels/hamiltonian/two_qubit_metrics.py",
+        "tt_rqm_kernels/hamiltonian/__init__.py",
+    ):
+        _copy_path(relative, tmp_path)
+    path = tmp_path / "benchmarks/manifests/entanglement-dynamics-preregistration.json"
+    payload = json.loads(path.read_text())
+    payload["claims"]["current_level"] = 0
+    path.write_text(json.dumps(payload))
+
+    assert _entanglement_foundation_status(tmp_path)[0] == "invalid reference foundation"
+
+
+def test_entanglement_status_rejects_unplanned_hardware_evidence(tmp_path: Path) -> None:
+    report = tmp_path / "reports/tt_hardware_entanglement_dynamics.json"
+    report.parent.mkdir(parents=True)
+    report.write_text("{}")
+
+    assert _entanglement_hardware_status(tmp_path)[0] == "unexpected evidence present"
 
 
 def test_su2_status_rejects_malformed_foundation(tmp_path: Path) -> None:
