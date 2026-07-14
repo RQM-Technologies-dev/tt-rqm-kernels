@@ -85,9 +85,16 @@ A quaternion can live inside floats as:
 [..., 4] = [real, i, j, k]
 ```
 
-The tensor is still a regular real-valued PyTorch tensor. The structure comes from the convention and the operators applied to the final dimension. For example, a quaternion multiplication kernel consumes two tensors with final dimension `4` and returns a tensor with the same final dimension.
+The tensor is still a regular real-valued PyTorch tensor. The structure comes from the convention and the operators applied to the final dimension. `qmul` is short for **quaternion multiplication**: the Hamilton product that combines two quaternion values. It consumes two tensors with final dimension `4` and returns a tensor with the same final dimension.
 
 This keeps the data layout friendly to accelerator stacks while preserving useful algebraic structure at the operator level.
+
+For normalized rotation quaternions, `qmul` composes orientation state with an
+incremental rotation. That makes it a correctness-first foundation for existing
+vector rotation and future fused pose streams, as well as a possible primitive
+beneath the proposed physical-AI state-integrity layer. It does not by itself
+provide sensor fusion, state estimation, or hardware acceleration; those remain
+separate, measurement-driven capabilities.
 
 ## Why Structured Tensor Kernels Matter
 
@@ -265,6 +272,25 @@ See:
 - [docs/quantum-ir.md](docs/quantum-ir.md)
 - [docs/quantum-ir-roadmap.md](docs/quantum-ir-roadmap.md)
 - [docs/quantum-ir-operator-mapping.md](docs/quantum-ir-operator-mapping.md)
+
+## Future Physical-AI State Integrity Direction
+
+`tt-rqm-kernels` could eventually provide accelerated quaternion, rotor, phase,
+spectral, coherence, reduction, pose-stream, and integrity-scoring primitives
+beneath a future RQM State Engine: a coherence-aware state-estimation and
+integrity engine for physical AI. The proposed application layer would remain
+in a separate `rqm-state-engine` repository, where it could supervise an
+existing estimator and evaluate sensor health, cross-sensor coherence, and
+degraded-navigation status.
+
+This is a future direction, not a current estimator, PX4/ROS integration, or
+hardware claim. It does not displace the immediate `qmul` hardware-validation
+path; backend work remains measurement-driven and follows evidence from real
+hardware runs.
+
+See [Future Alignment: Coherence-Aware State Integrity for Physical AI](docs/future-physical-ai-state-integrity.md)
+for the proposed boundaries, candidate kernel map, offline demonstration, and
+claim guardrails.
 
 ## StructuredBench Hardware Metrics
 

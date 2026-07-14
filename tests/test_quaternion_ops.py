@@ -25,6 +25,9 @@ def test_hamilton_product_basis_rules() -> None:
     assert torch.allclose(qmul(i, j), k)
     assert torch.allclose(qmul(j, k), i)
     assert torch.allclose(qmul(k, i), j)
+    assert torch.allclose(qmul(j, i), -k)
+    assert torch.allclose(qmul(k, j), -i)
+    assert torch.allclose(qmul(i, k), -j)
 
 
 def test_associativity_within_float_tolerance() -> None:
@@ -56,6 +59,72 @@ def test_conjugate_and_norm_relation() -> None:
 
     assert torch.allclose(product[..., 0], expected_real)
     assert torch.allclose(product[..., 1:], torch.zeros_like(product[..., 1:]))
+
+
+def test_norm_is_multiplicative_for_deterministic_batches() -> None:
+    a = torch.tensor(
+        [[1.0, -2.0, 3.0, -4.0], [0.5, 1.5, -2.5, 3.5], [-1.0, 0.0, 2.0, 1.0]],
+        dtype=torch.float64,
+    )
+    b = torch.tensor(
+        [[-3.0, 2.0, 1.0, -0.5], [2.0, -1.0, 0.25, 0.75], [1.0, -4.0, 0.5, 2.0]],
+        dtype=torch.float64,
+    )
+
+    assert torch.allclose(
+        qnorm(qmul(a, b)),
+        qnorm(a) * qnorm(b),
+        rtol=1e-12,
+        atol=1e-12,
+    )
+
+
+def test_conjugation_reverses_hamilton_product_order() -> None:
+    a = torch.tensor(
+        [[1.0, -2.0, 3.0, -4.0], [0.5, 1.5, -2.5, 3.5]], dtype=torch.float64
+    )
+    b = torch.tensor(
+        [[-3.0, 2.0, 1.0, -0.5], [2.0, -1.0, 0.25, 0.75]], dtype=torch.float64
+    )
+
+    assert torch.allclose(
+        qconj(qmul(a, b)),
+        qmul(qconj(b), qconj(a)),
+        rtol=1e-12,
+        atol=1e-12,
+    )
+
+
+def test_unit_rotors_are_closed_under_hamilton_product() -> None:
+    a = qnormalize(
+        torch.tensor([[1.0, -2.0, 3.0, -4.0], [0.5, 1.5, -2.5, 3.5]], dtype=torch.float64)
+    )
+    b = qnormalize(
+        torch.tensor([[-3.0, 2.0, 1.0, -0.5], [2.0, -1.0, 0.25, 0.75]], dtype=torch.float64)
+    )
+
+    assert torch.allclose(
+        qnorm(qmul(a, b)),
+        torch.ones(2, dtype=torch.float64),
+        rtol=1e-12,
+        atol=1e-12,
+    )
+
+
+def test_inverse_reverses_hamilton_product_order() -> None:
+    a = torch.tensor(
+        [[1.0, -2.0, 3.0, -4.0], [0.5, 1.5, -2.5, 3.5]], dtype=torch.float64
+    )
+    b = torch.tensor(
+        [[-3.0, 2.0, 1.0, -0.5], [2.0, -1.0, 0.25, 0.75]], dtype=torch.float64
+    )
+
+    assert torch.allclose(
+        qinverse(qmul(a, b)),
+        qmul(qinverse(b), qinverse(a)),
+        rtol=1e-12,
+        atol=1e-12,
+    )
 
 
 def test_normalize_rejects_zero_quaternion() -> None:

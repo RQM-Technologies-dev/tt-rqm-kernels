@@ -53,6 +53,16 @@ out.y = a.w*b.y - a.x*b.z + a.y*b.w + a.z*b.x
 out.z = a.w*b.z + a.x*b.y - a.y*b.x + a.z*b.w
 ```
 
+Operand order and independent conformance:
+
+- `qmul(a, b)` means the Hamilton product `a * b`; order is significant.
+- For unit quaternions, the canonical `rqm-core` SU(2) convention is
+  `U([w, x, y, z]) = [[w - i z, -y - i x], [y - i x, w + i z]]`.
+- Under that convention, `U(qmul(a, b)) = U(a) @ U(b)`, and
+  `U(qconj(a)) = U(a)†` for a unit quaternion.
+- These complex matrices are independent correctness oracles. The
+  accelerator-facing representation remains ordinary real `[N, 4]` tensors.
+
 Numerical tolerance expectation:
 
 - float32 backend results should match the CPU/PyTorch and scalar references to small absolute error on representative inputs
@@ -305,6 +315,17 @@ Reference equation:
 ```text
 qrotate_vector(r, v) = (r * [0, v] * qconj(r)).xyz
 ```
+
+Composition order:
+
+```text
+qrotate_vector(qmul(r2, r1), v)
+== qrotate_vector(r2, qrotate_vector(r1, v))
+```
+
+The rightmost rotor `r1` is applied first. Unit rotors `r` and `-r` rotate
+vectors identically; the intermediate pure quaternion retains a zero real lane
+within dtype tolerance.
 
 Numerical tolerance expectation:
 

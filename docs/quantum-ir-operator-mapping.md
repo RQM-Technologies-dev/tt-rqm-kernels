@@ -46,6 +46,41 @@ The reference should use standard complex matrix multiplication as the check.
 The quaternion path should use existing operators such as `qmul`,
 `qnormalize`, `qconj`, and `qinverse` where applicable.
 
+## Verified Quaternion-to-SU(2) Conformance
+
+The focused conformance tests use the canonical `rqm-core` unit-quaternion
+mapping, written for this repository's `[real, i, j, k] = [w, x, y, z]` lane
+order:
+
+```text
+U([w, x, y, z]) = [[w - i z, -y - i x],
+                   [y - i x,  w + i z]]
+```
+
+The mapping preserves the Hamilton-product order used here:
+
+```text
+U(qmul(a, b)) = U(a) @ U(b)
+```
+
+For unit quaternions, conjugation is the SU(2) adjoint and inverse is the
+matrix inverse:
+
+```text
+U(qconj(q)) = U(q)†
+U(qinverse(q)) = inverse(U(q))
+```
+
+This gives `qmul` an independent complex-matrix correctness oracle while
+keeping the production representation as ordinary real `[N, 4]` tensors. The
+test oracle is reproduced under the test tree and does not add `rqm-core` or
+`rqm-entanglement` as runtime dependencies.
+
+The scope is deliberately limited to single-quaternion/SU(2) composition and a
+local Kronecker-product composition check. It does not implement general
+two-qubit simulation, entangled states, nonlocal gates, or entanglement
+analysis.
+
 This target is useful because it exercises:
 
 - four-lane structured values
