@@ -8,6 +8,13 @@ Structured quaternion and rotor kernels for Tenstorrent hardware
 
 This is not an official Tenstorrent repository unless and until accepted or co-developed by Tenstorrent.
 
+> **RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.**
+
+The first planned benchmark executes fused, time-ordered SU(2) evolution on
+Wormhole using CPU-lowered FP32 evolution operators. A later stage will lower
+Hamiltonian coefficients on device. See the
+[SU2HamiltonianBench roadmap](docs/hamiltonian-evolution-roadmap.md).
+
 ## Tenstorrent Quick Read
 
 For Tenstorrent engineers:
@@ -54,6 +61,7 @@ The first persistent artifact passed its one-session gates and remains
 11. Persistent environment and timer audit: [environment](reports/tt_hardware_qmul_stage_b_persistent_environment.txt), [audit](reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
 12. Current status command: `python scripts/repo_status.py`
 13. Evidence-backed benchmark page: [docs/benchmarks/](docs/benchmarks/index.md)
+14. Preregistered SU(2) evolution benchmark: [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
 
 Current result: the scalar baseline remains the immutable Stage A record. The
 separate `multicore_tensix_sfpu_qmul` candidate passed whole-output N=128

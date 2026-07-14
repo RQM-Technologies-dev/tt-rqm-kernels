@@ -1,5 +1,12 @@
 """Structured quaternion and rotor reference kernels."""
 
+from tt_rqm_kernels.hamiltonian import (
+    compose_hamiltonian_matrices,
+    lower_two_level_hamiltonian,
+    su2_compose_chain,
+    u2_matrix_from_rotor_phase,
+)
+
 from tt_rqm_kernels.phase_ops import (
     integrate_phase,
     phase_difference,
@@ -39,9 +46,11 @@ __all__ = [
     "broadcast_qtensors",
     "broadcast_quaternion_and_vector",
     "broadcast_vectors",
+    "compose_hamiltonian_matrices",
     "integrate_phase",
     "is_unit_rotor",
     "leading_shape",
+    "lower_two_level_hamiltonian",
     "phase_difference",
     "phase_to_unit_vector",
     "qconj",
@@ -54,7 +63,9 @@ __all__ = [
     "rotor_angle",
     "rotor_orientation_error",
     "smooth_phase",
+    "su2_compose_chain",
     "unwrap_phase",
+    "u2_matrix_from_rotor_phase",
     "validate_qtensor",
     "validate_unit_rotor",
     "validate_vector_tensor",
