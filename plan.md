@@ -18,6 +18,8 @@ SU2ComposeBench H1 foundation: complete
 SU2ComposeBench H1 Wormhole implementation: present
 SU2ComposeBench first fused/unfused session: Claim Level 1
 Independent SU2 multi-session stability: pending
+EntanglementDynamicsBench CPU reference foundation: complete
+EntanglementDynamicsBench hardware implementation: not started
 qmul profiler and ceiling diagnostics: present
 SU2 profiler attribution: pending
 CPU timing-scope-compatible comparison: pending
@@ -38,6 +40,13 @@ H1 begins after CPU lowering. The CPU converts piecewise-constant two-level
 Hamiltonian coefficients into FP32 rotors and phase pairs; Wormhole composes
 those operators in exact time order. This is a real stage of the simulation
 pipeline, but not full device-side Hamiltonian lowering.
+
+The sibling `TwoQubitHamiltonianBench` now defines a CPU-only
+`EntanglementDynamicsBench` reference: Pauli-product Hamiltonian lowering,
+ordered joint-state evolution, an independent complex128 oracle, local U(2)
+application, and entanglement diagnostics. It has no hardware evidence or claim
+level. The bridge is `qmul -> local SU(2) -> U_A tensor U_B -> joint-state
+evolution -> nonlocal Hamiltonians -> entanglement metrics`.
 
 ## Active evidence-completion work
 
@@ -96,6 +105,14 @@ Only H2 may support the phrase “full device-side two-level Hamiltonian evoluti
 lowering.” This task identifies H2 as the next technical milestone; it does not
 implement it.
 
+### Two-qubit hardware work
+
+Any EntanglementDynamicsBench device path requires a separate contract and
+preregistration. The present foundation defines no throughput metric,
+performance cases, release manifest, or TT-Metalium implementation. Local U(2)
+operations preserve entanglement; nonlocal interaction terms can generate it.
+`rqm-entanglement` is not a runtime dependency.
+
 ### Later benchmark families
 
 `RigidBodyHamiltonianBench`, PoseStreamBench, and broader physical-AI studies
@@ -117,6 +134,7 @@ The repository currently makes no claim of:
 - full device-side Hamiltonian coefficient lowering;
 - dual-device or aggregate N300 performance;
 - arbitrary quantum-circuit simulation or quantum-hardware replacement;
+- entanglement execution on Tenstorrent hardware;
 - Tenstorrent endorsement.
 
 ## Primary references
@@ -124,5 +142,6 @@ The repository currently makes no claim of:
 - [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md)
 - [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md)
 - [Hamiltonian roadmap](docs/hamiltonian-evolution-roadmap.md)
+- [EntanglementDynamicsBench foundation](docs/benchmarks/entanglement-dynamics-bench.md)
 - [Benchmark claim policy](docs/benchmarks/claim-policy.md)
 - [Documentation index](docs/index.md)

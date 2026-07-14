@@ -15,9 +15,10 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from tt_rqm_kernels.benchmark_release import validate_release as validate_qmul_release
+from tt_rqm_kernels.entanglement_benchmark import validate_entanglement_preregistration
 from tt_rqm_kernels.su2_benchmark import validate_su2_preregistration
 from tt_rqm_kernels.su2_benchmark_release import validate_release as validate_su2_release
-from tt_rqm_kernels.benchmark_release import validate_release as validate_qmul_release
 
 TT_LANG_AVAILABILITY_PATH = (
     REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "availability.py"
@@ -46,6 +47,12 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     su2_conformance_status, su2_conformance_detail = _su2_conformance_status(repo_root)
     su2_comparison_status, su2_comparison_detail = _su2_comparison_status(repo_root)
     su2_stability_status, su2_stability_detail = _su2_stability_status(repo_root)
+    entanglement_foundation_status, entanglement_foundation_detail = (
+        _entanglement_foundation_status(repo_root)
+    )
+    entanglement_hardware_status, entanglement_hardware_detail = _entanglement_hardware_status(
+        repo_root
+    )
 
     return {
         "schema": "tt-rqm-repo-status.v1",
@@ -129,6 +136,16 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
                 "SU2ComposeBench stability",
                 su2_stability_status,
                 su2_stability_detail,
+            ),
+            _item(
+                "EntanglementDynamicsBench reference foundation",
+                entanglement_foundation_status,
+                entanglement_foundation_detail,
+            ),
+            _item(
+                "EntanglementDynamicsBench hardware",
+                entanglement_hardware_status,
+                entanglement_hardware_detail,
             ),
         ],
     }
@@ -498,6 +515,51 @@ def _su2_stability_status(root: Path) -> tuple[str, str]:
     return (
         "not established",
         "Only one public cold-start comparison session exists; Level 2 requires three qualified independent sessions.",
+    )
+
+
+def _entanglement_foundation_status(root: Path) -> tuple[str, str]:
+    preregistration = root / "benchmarks/manifests/entanglement-dynamics-preregistration.json"
+    required_sources = (
+        root / "tt_rqm_kernels/hamiltonian/two_qubit.py",
+        root / "tt_rqm_kernels/hamiltonian/two_qubit_metrics.py",
+        root / "tt_rqm_kernels/hamiltonian/__init__.py",
+    )
+    if not preregistration.is_file() or not all(path.is_file() for path in required_sources):
+        return "not implemented", "The H3 CPU reference package or preregistration is absent."
+    try:
+        payload = json.loads(preregistration.read_text(encoding="utf-8"))
+        validate_entanglement_preregistration(payload)
+        public_api = required_sources[-1].read_text(encoding="utf-8")
+        required_api = {
+            "lower_two_qubit_hamiltonian",
+            "compose_two_qubit_state",
+            "evolve_two_qubit_state_reference",
+            "apply_local_rotor_pair",
+            "two_qubit_state_diagnostics",
+            "compare_two_qubit_states",
+        }
+        if not all(name in public_api for name in required_api):
+            raise ValueError("public H3 reference API is incomplete")
+    except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+        return "invalid reference foundation", f"H3 reference validation failed: {exc}"
+    return (
+        "implemented reference",
+        "CPU two-qubit lowering, ordered state evolution, complex128 oracle, and typed entanglement diagnostics are present; no hardware evidence or claim level exists.",
+    )
+
+
+def _entanglement_hardware_status(root: Path) -> tuple[str, str]:
+    forbidden_release = root / "benchmarks/manifests/wormhole-entanglement-dynamics.json"
+    forbidden_report = root / "reports/tt_hardware_entanglement_dynamics.json"
+    if forbidden_release.exists() or forbidden_report.exists():
+        return (
+            "unexpected evidence present",
+            "H3 foundation scope forbids a hardware release or report.",
+        )
+    return (
+        "not implemented",
+        "EntanglementDynamicsBench is CPU-reference-only; no TT-Metalium path, hardware evidence, or claim level exists.",
     )
 
 

@@ -44,6 +44,27 @@ TT-Metal SFPU transcendental APIs have been audited.
 Only H2 may be described as full device-side two-level Hamiltonian evolution
 lowering.
 
+## Sibling Family: TwoQubitHamiltonianBench
+
+`SU2HamiltonianBench` remains unchanged for H1 and H2. The sibling
+`TwoQubitHamiltonianBench` begins with `EntanglementDynamicsBench`, whose first
+milestone is an implemented CPU reference rather than a hardware stage.
+
+```text
+qmul -> local SU(2) -> U_A tensor U_B -> joint-state evolution
+     -> nonlocal Hamiltonians -> entanglement metrics
+```
+
+The reference accepts real `[B,K,4,4]` Pauli-product coefficients and
+`[B,4,2]` state lanes, applies exact time order without normalization, and
+compares against a complex128 matrix-exponential oracle. Local U(2) operations
+preserve entanglement; nonlocal interaction terms can generate it.
+
+The foundation has no TT-Metalium code, hardware evidence, performance cases,
+claim level, or stability claim. It does not use `rqm-entanglement` as a runtime
+dependency. See the
+[reference contract](benchmarks/entanglement-dynamics-bench.md).
+
 ## Later Work
 
 `RigidBodyHamiltonianBench` is a separate physical-AI follow-on. It does not

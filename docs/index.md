@@ -10,6 +10,7 @@ without making it part of the primary introduction.
 - [StructuredBench specification](structuredbench-spec.md)
 - [TT-Metalium qmul design](tt-metalium-qmul-design.md)
 - [SU2HamiltonianBench roadmap](hamiltonian-evolution-roadmap.md)
+- [EntanglementDynamicsBench reference foundation](benchmarks/entanglement-dynamics-bench.md)
 - [Complex/quaternion bridge](complex-quaternion-bridge.md)
 - [Phase-update plan](phase-update-tenstorrent-plan.md)
 

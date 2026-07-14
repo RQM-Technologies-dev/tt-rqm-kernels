@@ -44,6 +44,7 @@ current scalar RISC-V candidate: Stage A correctness baseline, not performance-e
 multicore/SFPU candidate: Stage B conformance and first official sweep present
 persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sessions
 SU2ComposeBench fused/unfused paths: N300 conformance and one comparison session present
+EntanglementDynamicsBench: CPU reference foundation only; no hardware claim or claim level
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
@@ -64,6 +65,11 @@ gates, supporting Claim Level 2 stable one-device performance.
 The [hardware evidence report](benchmarks/wormhole-qmul-hardware-evidence.md)
 separates stability evidence from device-parity, scaling, profiler, ceiling,
 and saturation diagnostics.
+
+The [EntanglementDynamicsBench foundation](benchmarks/entanglement-dynamics-bench.md)
+extends the reference layer from local U(2) operations to joint two-qubit state
+evolution and entanglement metrics. It is deliberately outside the hardware
+evidence ladder until a separate device contract is designed and qualified.
 
 ## Run It In 10 Minutes
 
@@ -150,6 +156,7 @@ a release-level stability claim.
 - [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
 - [Wormhole qmul hardware evidence](benchmarks/wormhole-qmul-hardware-evidence.md)
 - [Benchmark claim policy](benchmarks/claim-policy.md)
+- [EntanglementDynamicsBench reference foundation](benchmarks/entanglement-dynamics-bench.md)
 - [StructuredBench specification](structuredbench-spec.md)
 - [Tenstorrent RFC](tenstorrent-rfc.md)
 - [TT-Metalium qmul design](tt-metalium-qmul-design.md)

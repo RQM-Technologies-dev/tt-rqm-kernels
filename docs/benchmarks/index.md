@@ -25,6 +25,15 @@ and three-session stability. It is not a CPU comparison, acceleration claim,
 hardware-bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
+## Two-qubit reference foundation
+
+- [EntanglementDynamicsBench reference foundation](entanglement-dynamics-bench.md)
+- Family: `TwoQubitHamiltonianBench`; first stage: `EntanglementDynamicsBench`
+- Status: CPU reference implemented
+- Claim level: none
+- Hardware and performance evidence: none
+- [Preregistration](../../benchmarks/manifests/entanglement-dynamics-preregistration.json)
+
 ## Policy and next measurements
 
 - [Claim policy](claim-policy.md)
@@ -40,4 +49,5 @@ Validate the complete published release without hardware access:
 ```bash
 python scripts/reproduce_wormhole_qmul.py --check
 python scripts/reproduce_wormhole_su2_compose.py --check
+python scripts/validate_entanglement_dynamics_preregistration.py
 ```
