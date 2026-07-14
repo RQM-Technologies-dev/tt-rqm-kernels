@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import shlex
 import subprocess
 import sys
 
@@ -12,9 +13,11 @@ from tt_rqm_kernels.structuredbench import EXECUTION_LABELS
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_PLACEHOLDER = (
-    f"{sys.executable} "
-    f"{REPO_ROOT / 'experimental' / 'tt_metalium_qmul' / 'run_candidate.py'}"
+DEFAULT_PLACEHOLDER = shlex.join(
+    [
+        sys.executable,
+        str(REPO_ROOT / "experimental" / "tt_metalium_qmul" / "run_candidate.py"),
+    ]
 )
 
 
