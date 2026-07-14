@@ -81,6 +81,10 @@ def test_generated_summary_and_svgs_are_byte_deterministic(tmp_path: Path) -> No
     for relative in outputs:
         assert (first / relative).read_bytes() == (second / relative).read_bytes()
         assert (ROOT / relative).read_bytes() == (first / relative).read_bytes()
+        if relative.suffix == ".svg":
+            svg = (first / relative).read_text(encoding="utf-8")
+            assert re.search(r'id="[mp][0-9a-f]{10}"', svg) is None
+            assert "tt_rqm_" in svg
 
 
 def test_protected_stage_artifacts_are_unchanged() -> None:

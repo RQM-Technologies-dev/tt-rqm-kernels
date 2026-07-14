@@ -444,9 +444,15 @@ def _save_svg(fig: Any, path: Path, metadata: Mapping[str, Any]) -> None:
 
     fig.savefig(path, format="svg", metadata=metadata)
     plt.close(fig)
-    normalized = "\n".join(
-        line.rstrip() for line in path.read_text(encoding="utf-8").splitlines()
+    raw = path.read_text(encoding="utf-8")
+    generated_ids = list(
+        dict.fromkeys(re.findall(r'id="([mp][0-9a-f]{10})"', raw))
     )
+    for index, generated_id in enumerate(generated_ids):
+        canonical_id = f"{generated_id[0]}tt_rqm_{index:03d}"
+        raw = raw.replace(f'id="{generated_id}"', f'id="{canonical_id}"')
+        raw = raw.replace(f"#{generated_id}", f"#{canonical_id}")
+    normalized = "\n".join(line.rstrip() for line in raw.splitlines())
     path.write_text(normalized + "\n", encoding="utf-8")
 
 
