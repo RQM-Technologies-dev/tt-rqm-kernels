@@ -223,6 +223,7 @@ def test_tt_metalium_build_candidate_selection_defaults_to_scalar() -> None:
     assert module.CANDIDATE_TARGETS == {
         "scalar": "tt_rqm_metalium_qmul_candidate",
         "multicore": "tt_rqm_metalium_qmul_multicore_candidate",
+        "persistent": "tt_rqm_metalium_qmul_multicore_persistent_candidate",
     }
     assert module.DEFAULT_BINARY_NAME == module.CANDIDATE_TARGETS["scalar"]
 

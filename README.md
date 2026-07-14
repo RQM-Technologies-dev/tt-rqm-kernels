@@ -21,12 +21,19 @@ For Tenstorrent engineers:
    three-size sweep once.
 5. The Stage B report retains `stable_benchmark=false`; it is methodology
    evidence, not an acceleration claim or a comparison against another backend.
-6. Best current evidence link:
+6. A separate persistent-device Stage B path keeps one Wormhole device open
+   across the complete sweep; its first report also remains non-stable.
+7. Best current evidence link:
    [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md).
 
 The first hardware gate and first Stage B implementation pass are complete.
 Acceleration claims remain blocked on stable methodology and a defined
 comparison baseline.
+
+The evidence sequence is explicit: immutable scalar Stage A, first multicore
+Stage B, persistent-device Stage B, future multi-session stability, and future
+timing-scope-compatible CPU comparison. See
+[the preregistered stability methodology](docs/stage-b-stability-methodology.md).
 
 ## For Tenstorrent Reviewers
 

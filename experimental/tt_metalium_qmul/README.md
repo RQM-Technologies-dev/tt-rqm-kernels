@@ -194,6 +194,39 @@ performance reports are protected as
 `tt_hardware_qmul_stage_b_performance.*`, respectively. The canonical commands
 are in the [execution runbook](../../docs/tenstorrent-execution-runbook.md).
 
+### Persistent-device Stage B measurement
+
+The first Stage B report starts a new process and device lifecycle for each
+sample. A separate persistent executable measures all cases inside one process
+and one Wormhole device-0 lifetime without changing that existing report or
+its field meanings:
+
+```bash
+python experimental/tt_metalium_qmul/build_candidate.py \
+  --candidate persistent \
+  --tt-metal-root /path/to/tt-metal \
+  --cmake-prefix-path /path/to/tt-metal/build_n300 \
+  --build-dir experimental/tt_metalium_qmul/build_n300_persistent_candidate
+```
+
+The output is `tt_rqm_metalium_qmul_multicore_persistent_candidate`. It uses
+`tt-rqm-external-qmul-persistent.v1`, creates device 0 exactly once, reuses the
+same mesh across every case, and emits additive phase and lifecycle metadata.
+It reuses the audited Float32 reader, compute/SFPU, and writer kernels.
+Device 1 is out of scope.
+
+Protected persistent artifacts use
+`tt_hardware_qmul_stage_b_persistent_conformance.*` and
+`tt_hardware_qmul_stage_b_persistent_performance.*`. They do not overwrite the
+immutable Stage A record or first Stage B sample. The first persistent report
+must keep `stable_benchmark=false`; the preregistered future stability rule is
+in [stage-b-stability-methodology.md](../../docs/stage-b-stability-methodology.md).
+
+The evidence ladder is therefore: scalar Stage A conformance; first multicore
+Stage B conformance and sweep; persistent-device Stage B timing; future
+multi-session stability; and only then a separately defined future CPU
+comparison. No earlier rung is an acceleration claim.
+
 The scalar source follows TT-Metalium's public
 `add_2_integers_in_riscv` host/data-movement pattern. It maps one quaternion to
 one 16-byte page and evaluates the Hamilton equations on the scalar

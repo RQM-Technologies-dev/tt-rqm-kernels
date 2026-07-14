@@ -17,6 +17,7 @@ DEFAULT_BUILD_DIR = PACKAGE_DIR / "build_emule_candidate"
 CANDIDATE_TARGETS = {
     "scalar": "tt_rqm_metalium_qmul_candidate",
     "multicore": "tt_rqm_metalium_qmul_multicore_candidate",
+    "persistent": "tt_rqm_metalium_qmul_multicore_persistent_candidate",
 }
 DEFAULT_BINARY_NAME = CANDIDATE_TARGETS["scalar"]
 
