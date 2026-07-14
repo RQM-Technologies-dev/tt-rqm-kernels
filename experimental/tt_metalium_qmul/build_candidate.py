@@ -59,6 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     binary_name = CANDIDATE_TARGETS[args.candidate]
+    build_dir = args.build_dir.expanduser().resolve()
 
     check_args = []
     if args.tt_metal_root is not None:
@@ -107,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
         "-S",
         str(PACKAGE_DIR),
         "-B",
-        str(args.build_dir),
+        str(build_dir),
         f"-DCMAKE_PREFIX_PATH={';'.join(str(path) for path in _cmake_prefix_paths(prefix))}",
         f"-DTT-Metalium_DIR={metalium_dir}",
     ]
@@ -126,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         subprocess.run(configure, cwd=PACKAGE_DIR, check=True, env=env)
         subprocess.run(
-            [cmake, "--build", str(args.build_dir), "--target", binary_name],
+            [cmake, "--build", str(build_dir), "--target", binary_name],
             cwd=PACKAGE_DIR,
             check=True,
             env=env,
@@ -139,7 +140,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return exc.returncode or 2
 
-    binary = args.build_dir / binary_name
+    binary = build_dir / binary_name
     print(f"Built {args.candidate} candidate: {binary}")
     print("Validate with scripts/validate_qmul_candidate.py before reporting results.")
     return 0

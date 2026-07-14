@@ -173,6 +173,12 @@ def test_tt_metalium_build_candidate_selection_defaults_to_scalar() -> None:
     assert module.DEFAULT_BINARY_NAME == module.CANDIDATE_TARGETS["scalar"]
 
 
+def test_tt_metalium_default_build_directory_is_absolute() -> None:
+    module = _load_script("experimental/tt_metalium_qmul/build_candidate.py")
+
+    assert module.DEFAULT_BUILD_DIR.is_absolute()
+
+
 def test_tt_metalium_candidate_is_stage_a_baseline_with_split_timing() -> None:
     source = Path("experimental/tt_metalium_qmul/src/qmul_candidate.cpp").read_text()
 
