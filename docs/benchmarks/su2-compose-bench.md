@@ -102,4 +102,6 @@ lowering. This one session remains `stable_benchmark=false` and does not
 support an acceleration, CPU-comparison, measured-bandwidth, energy,
 dual-device, or Tenstorrent-endorsement claim. Level 2 requires three
 independent cold-start sessions with complete correctness and the
-preregistered coefficient-of-variation limits.
+[preregistered p95-relative dispersion and cross-session median-deviation
+limits](../su2-stability-methodology.md). This is not a
+coefficient-of-variation test.

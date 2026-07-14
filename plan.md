@@ -54,8 +54,12 @@ evolution -> nonlocal Hamiltonians -> entanglement metrics`.
 
 Collect three independent cold-start sessions with the same candidate,
 environment, input contract, paired ordering, and complete correctness. Do not
-discard failed or noisy designated sessions. Claim Level 2 remains unavailable
-until the preregistered coefficient-of-variation gates pass.
+discard failed or noisy designated sessions. Numerical gates are now frozen in
+the [SU2 stability methodology](docs/su2-stability-methodology.md): fused,
+unfused, and paired-ratio within-session p95-relative dispersion and
+cross-session median deviation must all pass. This is not a
+coefficient-of-variation test. Claim Level 2 remains unavailable until exactly
+three designated sessions pass the deterministic qualifier.
 
 ### Profiler attribution
 
