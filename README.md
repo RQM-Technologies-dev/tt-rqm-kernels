@@ -23,7 +23,9 @@ For Tenstorrent engineers:
    evidence, not an acceleration claim or a comparison against another backend.
 6. A separate persistent-device Stage B path keeps one Wormhole device open
    across the complete sweep; its first report also remains non-stable.
-7. Best current timing-methodology link:
+7. Public benchmark report:
+   [Structured FP32 Quaternion Kernels on Tenstorrent Wormhole](docs/benchmarks/wormhole-qmul.md).
+8. Best current timing-methodology link:
    [reports/tt_hardware_qmul_stage_b_persistent_performance.md](reports/tt_hardware_qmul_stage_b_persistent_performance.md).
 
 The first hardware gate and first Stage B implementation pass are complete.
@@ -51,6 +53,7 @@ The first persistent artifact passed its one-session gates and remains
 10. Persistent Stage B sample: [reports/tt_hardware_qmul_stage_b_persistent_performance.md](reports/tt_hardware_qmul_stage_b_persistent_performance.md)
 11. Persistent environment and timer audit: [environment](reports/tt_hardware_qmul_stage_b_persistent_environment.txt), [audit](reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
 12. Current status command: `python scripts/repo_status.py`
+13. Evidence-backed benchmark page: [docs/benchmarks/](docs/benchmarks/index.md)
 
 Current result: the scalar baseline remains the immutable Stage A record. The
 separate `multicore_tensix_sfpu_qmul` candidate passed whole-output N=128
