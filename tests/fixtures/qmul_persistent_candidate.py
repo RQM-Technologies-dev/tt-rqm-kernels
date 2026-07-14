@@ -34,6 +34,12 @@ def fnv1a64(payload: bytes) -> str:
 
 
 def main() -> int:
+    device_id = 0
+    if "--device" in sys.argv:
+        device_id = int(sys.argv[sys.argv.index("--device") + 1])
+    output_cb_depth = 2
+    if "--output-cb-depth" in sys.argv:
+        output_cb_depth = int(sys.argv[sys.argv.index("--output-cb-depth") + 1])
     workdir = Path(os.environ["TT_RQM_PERSISTENT_QMUL_DIR"])
     manifest = json.loads(
         Path(os.environ["TT_RQM_PERSISTENT_QMUL_MANIFEST"]).read_text()
@@ -57,6 +63,12 @@ def main() -> int:
         out_path = workdir / spec["outputs"]["out"]
         write_f32(out_path, out)
         tiles = (spec["items"] + 1023) // 1024
+        requested = int(spec.get("requested_max_cores", min(tiles, 56)))
+        active_cores = min(tiles, 56, requested)
+        tiles_1 = (tiles + active_cores - 1) // active_cores
+        group_1 = tiles % active_cores or active_cores
+        group_2 = active_cores - group_1
+        tiles_2 = tiles // active_cores if group_2 else 0
         timings = {
             "buffer_allocation": 0.000001,
             "program_build": 0.000001,
@@ -85,15 +97,22 @@ def main() -> int:
                 "timings_s": timings,
                 "work": {
                     "device_count": 1,
-                    "device_id": 0,
-                    "core_count": min(tiles, 56),
+                    "device_id": device_id,
+                    "core_count": active_cores,
+                    "requested_max_cores": requested,
                     "component_tiles": tiles,
                     "grid_x": 8,
                     "grid_y": 7,
                     "available_core_count": 56,
+                    "group_1_core_count": group_1,
+                    "group_2_core_count": group_2,
+                    "group_1_tiles_per_core": tiles_1,
+                    "group_2_tiles_per_core": tiles_2,
+                    "work_allocation_imbalance_tiles": tiles_1 - tiles_2 if group_2 else 0,
                     "layout": "planar_float32_tiles_32x32",
                     "work_split": "row_major",
                     "arithmetic_path": "tensix_compute_sfpu",
+                    "output_cb_depth": output_cb_depth,
                 },
             }
         )
@@ -111,7 +130,7 @@ def main() -> int:
         "schema": "tt-rqm-external-qmul-persistent-metrics.v1",
         "protocol": "tt-rqm-external-qmul-persistent.v1",
         "backend": "fixture",
-        "device": "tenstorrent/wormhole-device-0",
+        "device": f"tenstorrent/wormhole-device-{device_id}",
         "dtype": "float32",
         "execution_kind": "hardware",
         "implementation_class": "multicore_tensix_sfpu_qmul_persistent",
@@ -119,7 +138,7 @@ def main() -> int:
         "stable_benchmark": False,
         "lifecycle": {
             "device_count": 1,
-            "device_id": 0,
+            "device_id": device_id,
             "create_count": 1,
             "close_count": 1,
         },

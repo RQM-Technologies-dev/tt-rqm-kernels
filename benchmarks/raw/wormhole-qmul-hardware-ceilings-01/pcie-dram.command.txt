@@ -1,0 +1,1 @@
+/home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/3_pcie_transfer/test_rw_buffer --buffer-type 0 --transfer-size 268435456 --page-size 2048 --num-tests 10 --device 0 --bypass-check 

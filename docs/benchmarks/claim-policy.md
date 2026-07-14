@@ -13,11 +13,11 @@ higher evidence level.
 | 4 | Application workload result | Preregistered workload contract and end-to-end application evidence |
 | 5 | Reviewed upstream contribution | A concrete contribution reviewed or accepted through the upstream project |
 
-The current Wormhole qmul release is **Level 1**. Its implementation is
-`performance_eligible=true`, while the evidence remains
-`stable_benchmark=false`. Those fields answer different questions: the first
-describes the audited device architecture; the second describes whether the
-published measurement has passed the multi-session stability protocol.
+The current Wormhole qmul release is **Level 2**. Three independent device-0
+cold-start sessions passed the preregistered thresholds with identical
+candidate and environment provenance. Individual reports remain
+`stable_benchmark=false`; the cross-session qualification and release manifest
+set it to `true`.
 
 The release validator rejects Level 2 with fewer than three independent public
 sessions or without a hashed stability-qualification artifact.

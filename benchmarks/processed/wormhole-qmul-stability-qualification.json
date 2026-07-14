@@ -1,0 +1,332 @@
+{
+  "benchmark_id": "wormhole-qmul-fp32",
+  "rejected_gates": [],
+  "required_cold_start_sessions": 3,
+  "schema": "tt-rqm-benchmark-stability.v1",
+  "session_ids": [
+    "wormhole-qmul-stability-01",
+    "wormhole-qmul-stability-02",
+    "wormhole-qmul-stability-03"
+  ],
+  "session_manifests": [
+    "benchmarks/raw/wormhole-qmul-stability-01/session-manifest.json",
+    "benchmarks/raw/wormhole-qmul-stability-02/session-manifest.json",
+    "benchmarks/raw/wormhole-qmul-stability-03/session-manifest.json"
+  ],
+  "sessions": [
+    {
+      "candidate_sha256": "179a5cc3e6b146a1e8c61e61ab9ab173bbc543f88181b91c8621a7e959c98ce5",
+      "execution_source_commit": "3ae68815e8ac025e49f09d3797dbbac2f77245b3",
+      "hardware_report": "reports/tt_hardware_qmul_stage_b_persistent_performance.json",
+      "manifest": "benchmarks/raw/wormhole-qmul-stability-01/session-manifest.json",
+      "passed_input_gates": true,
+      "rejected_gates": [],
+      "session_id": "wormhole-qmul-stability-01",
+      "sizes": [
+        {
+          "items": 4096,
+          "median_s": 0.0016516274999999999,
+          "p95_s": 0.001724061,
+          "samples_s": [
+            0.001675492,
+            0.001675512,
+            0.001676682,
+            0.001639862,
+            0.001646013,
+            0.001644772,
+            0.001657242,
+            0.001724061,
+            0.001642502,
+            0.001618873
+          ],
+          "within_session_dispersion": 0.04385583311006881
+        },
+        {
+          "items": 65536,
+          "median_s": 0.0021010869999999997,
+          "p95_s": 0.002143976,
+          "samples_s": [
+            0.002115317,
+            0.002086868,
+            0.002143976,
+            0.002104347,
+            0.002105988,
+            0.002093387,
+            0.002095567,
+            0.002089598,
+            0.002097827,
+            0.002110147
+          ],
+          "within_session_dispersion": 0.020412767296166406
+        },
+        {
+          "items": 262144,
+          "median_s": 0.004231194000000001,
+          "p95_s": 0.004303374,
+          "samples_s": [
+            0.004235824,
+            0.004303374,
+            0.004232564,
+            0.004229134,
+            0.004268914,
+            0.004264204,
+            0.004213274,
+            0.004215394,
+            0.004178205,
+            0.004229824
+          ],
+          "within_session_dispersion": 0.017059014547666434
+        }
+      ],
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    {
+      "candidate_sha256": "179a5cc3e6b146a1e8c61e61ab9ab173bbc543f88181b91c8621a7e959c98ce5",
+      "execution_source_commit": "3ae68815e8ac025e49f09d3797dbbac2f77245b3",
+      "hardware_report": "benchmarks/raw/wormhole-qmul-stability-02/report.json",
+      "manifest": "benchmarks/raw/wormhole-qmul-stability-02/session-manifest.json",
+      "passed_input_gates": true,
+      "rejected_gates": [],
+      "session_id": "wormhole-qmul-stability-02",
+      "sizes": [
+        {
+          "items": 4096,
+          "median_s": 0.001578613,
+          "p95_s": 0.001616133,
+          "samples_s": [
+            0.001616133,
+            0.001606223,
+            0.001573913,
+            0.001602823,
+            0.001577893,
+            0.001563014,
+            0.001579673,
+            0.001576524,
+            0.001579333,
+            0.001561933
+          ],
+          "within_session_dispersion": 0.023767699873243214
+        },
+        {
+          "items": 65536,
+          "median_s": 0.002032284,
+          "p95_s": 0.002059298,
+          "samples_s": [
+            0.002059298,
+            0.002032269,
+            0.002028708,
+            0.002054639,
+            0.002026808,
+            0.002032449,
+            0.002025778,
+            0.002020979,
+            0.002036348,
+            0.002032299
+          ],
+          "within_session_dispersion": 0.013292433537832368
+        },
+        {
+          "items": 262144,
+          "median_s": 0.004188765,
+          "p95_s": 0.004227295,
+          "samples_s": [
+            0.004100187,
+            0.004185405,
+            0.004202926,
+            0.004196426,
+            0.004176545,
+            0.004216306,
+            0.004192125,
+            0.004168696,
+            0.004227295,
+            0.004167116
+          ],
+          "within_session_dispersion": 0.009198415284696126
+        }
+      ],
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    {
+      "candidate_sha256": "179a5cc3e6b146a1e8c61e61ab9ab173bbc543f88181b91c8621a7e959c98ce5",
+      "execution_source_commit": "3ae68815e8ac025e49f09d3797dbbac2f77245b3",
+      "hardware_report": "benchmarks/raw/wormhole-qmul-stability-03/report.json",
+      "manifest": "benchmarks/raw/wormhole-qmul-stability-03/session-manifest.json",
+      "passed_input_gates": true,
+      "rejected_gates": [],
+      "session_id": "wormhole-qmul-stability-03",
+      "sizes": [
+        {
+          "items": 4096,
+          "median_s": 0.001631023,
+          "p95_s": 0.001732282,
+          "samples_s": [
+            0.001656933,
+            0.001624012,
+            0.001732282,
+            0.001637823,
+            0.001609973,
+            0.001630013,
+            0.001634792,
+            0.001622023,
+            0.001632033,
+            0.001603443
+          ],
+          "within_session_dispersion": 0.06208312206510871
+        },
+        {
+          "items": 65536,
+          "median_s": 0.002082673,
+          "p95_s": 0.002122988,
+          "samples_s": [
+            0.002112737,
+            0.002076258,
+            0.002122988,
+            0.002080758,
+            0.002098878,
+            0.002084748,
+            0.002083108,
+            0.002070748,
+            0.002077108,
+            0.002082238
+          ],
+          "within_session_dispersion": 0.0193573355010604
+        },
+        {
+          "items": 262144,
+          "median_s": 0.0041926655,
+          "p95_s": 0.004244125,
+          "samples_s": [
+            0.004160566,
+            0.004244125,
+            0.004193035,
+            0.004230435,
+            0.004174536,
+            0.004192296,
+            0.004236935,
+            0.004190676,
+            0.004194525,
+            0.004189106
+          ],
+          "within_session_dispersion": 0.012273695576239023
+        }
+      ],
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    }
+  ],
+  "sizes": [
+    {
+      "cross_session_deviation": [
+        {
+          "relative_deviation": 0.012632869064384596,
+          "session_id": "wormhole-qmul-stability-01"
+        },
+        {
+          "relative_deviation": 0.03213320719572938,
+          "session_id": "wormhole-qmul-stability-02"
+        },
+        {
+          "relative_deviation": 0.0,
+          "session_id": "wormhole-qmul-stability-03"
+        }
+      ],
+      "items": 4096,
+      "limit": 0.104825,
+      "median_across_sessions_s": 0.001631023,
+      "passed": true,
+      "rejected_gates": [],
+      "session_medians_s": [
+        0.0016516274999999999,
+        0.001578613,
+        0.001631023
+      ],
+      "session_p95_s": [
+        0.001724061,
+        0.001616133,
+        0.001732282
+      ],
+      "within_session_dispersion": [
+        0.04385583311006881,
+        0.023767699873243214,
+        0.06208312206510871
+      ]
+    },
+    {
+      "cross_session_deviation": [
+        {
+          "relative_deviation": 0.008841522408942537,
+          "session_id": "wormhole-qmul-stability-01"
+        },
+        {
+          "relative_deviation": 0.024194388653427625,
+          "session_id": "wormhole-qmul-stability-02"
+        },
+        {
+          "relative_deviation": 0.0,
+          "session_id": "wormhole-qmul-stability-03"
+        }
+      ],
+      "items": 65536,
+      "limit": 0.05,
+      "median_across_sessions_s": 0.002082673,
+      "passed": true,
+      "rejected_gates": [],
+      "session_medians_s": [
+        0.0021010869999999997,
+        0.002032284,
+        0.002082673
+      ],
+      "session_p95_s": [
+        0.002143976,
+        0.002059298,
+        0.002122988
+      ],
+      "within_session_dispersion": [
+        0.020412767296166406,
+        0.013292433537832368,
+        0.0193573355010604
+      ]
+    },
+    {
+      "cross_session_deviation": [
+        {
+          "relative_deviation": 0.00918950009248316,
+          "session_id": "wormhole-qmul-stability-01"
+        },
+        {
+          "relative_deviation": 0.0009303150942997943,
+          "session_id": "wormhole-qmul-stability-02"
+        },
+        {
+          "relative_deviation": 0.0,
+          "session_id": "wormhole-qmul-stability-03"
+        }
+      ],
+      "items": 262144,
+      "limit": 0.05,
+      "median_across_sessions_s": 0.0041926655,
+      "passed": true,
+      "rejected_gates": [],
+      "session_medians_s": [
+        0.004231194000000001,
+        0.004188765,
+        0.0041926655
+      ],
+      "session_p95_s": [
+        0.004303374,
+        0.004227295,
+        0.004244125
+      ],
+      "within_session_dispersion": [
+        0.017059014547666434,
+        0.009198415284696126,
+        0.012273695576239023
+      ]
+    }
+  ],
+  "stable_benchmark": true,
+  "thresholds": {
+    "262144": 0.05,
+    "4096": 0.104825,
+    "65536": 0.05
+  }
+}

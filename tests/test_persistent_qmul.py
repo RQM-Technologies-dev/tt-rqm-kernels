@@ -61,6 +61,53 @@ def test_persistent_fixture_performance_is_one_session_and_strict_sweep() -> Non
     }
 
 
+def test_persistent_fixture_supports_deliberate_device_one_selection() -> None:
+    report = run_persistent_qmul(
+        command=shlex.join((sys.executable, str(FIXTURE))),
+        benchmark_stage="conformance",
+        methodology_note="Synthetic device-1 parity contract.",
+        device_id=1,
+    )
+    assert report["device"] == "tenstorrent/wormhole-device-1"
+    assert report["lifecycle"]["device_id"] == 1
+    assert report["results"][0]["candidate_metadata"]["device_id"] == 1
+
+
+def test_diagnostic_core_cap_selects_only_physically_active_cores() -> None:
+    report = run_persistent_qmul(
+        command=shlex.join((sys.executable, str(FIXTURE))),
+        benchmark_stage="diagnostic",
+        methodology_note="Synthetic controlled-core diagnostic.",
+        case_specs=[(4096, 30, 5, 10, 2)],
+    )
+    work = report["results"][0]["candidate_metadata"]
+    assert work["requested_max_cores"] == 2
+    assert work["core_count"] == 2
+    assert work["component_tiles"] == 4
+    assert work["group_1_core_count"] + work["group_2_core_count"] == 2
+
+
+def test_output_backpressure_ablation_changes_only_output_cb_depth() -> None:
+    report = run_persistent_qmul(
+        command=shlex.join((sys.executable, str(FIXTURE))),
+        benchmark_stage="diagnostic",
+        methodology_note="Synthetic output-backpressure ablation.",
+        case_specs=[(65536, 30, 5, 10, 56)],
+        output_cb_depth=4,
+    )
+    work = report["results"][0]["candidate_metadata"]
+    assert work["output_cb_depth"] == 4
+    assert work["core_count"] == 56
+
+    with pytest.raises(IntegrityError, match="output_cb_depth"):
+        run_persistent_qmul(
+            command=shlex.join((sys.executable, str(FIXTURE))),
+            benchmark_stage="conformance",
+            methodology_note="Invalid output depth.",
+            output_cb_depth=3,
+        )
+
+
 def test_strict_metrics_reject_stale_label_device_samples_hash_and_timing() -> None:
     manifest, metrics = _minimal_contract()
     valid = lambda payload: validate_persistent_metrics(
@@ -98,7 +145,7 @@ def test_persistent_source_owns_one_device_lifecycle_and_reuses_audited_kernels(
     assert "if (device_ && !closed_)" in source
     assert "for (const auto& spec : manifest.at(\"cases\"))" in source
     assert "session.close()" in source
-    assert "device_id != 0" in source
+    assert "device_id != 0 && device_id != 1" in source
     assert "multicore_tensix_sfpu_qmul_persistent" in source
     assert "tt_rqm_metalium_qmul_multicore_persistent_candidate" in cmake
 
@@ -154,6 +201,7 @@ def _minimal_contract() -> tuple[dict, dict]:
         "layout": "planar_float32_tiles_32x32",
         "work_split": "row_major",
         "arithmetic_path": "tensix_compute_sfpu",
+        "output_cb_depth": 2,
     }
     case = {
         "case_id": "case-128",

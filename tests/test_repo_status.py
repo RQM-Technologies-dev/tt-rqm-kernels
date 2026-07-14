@@ -36,9 +36,7 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["tt-emule candidate"] == "emulation report present"
     assert statuses["hardware report"] == "hardware conformance report present"
     assert statuses["Stage B hardware report"] == "first hardware sample present"
-    assert (
-        statuses["Persistent Stage B hardware report"] == "first persistent hardware sample present"
-    )
+    assert statuses["Persistent Stage B hardware report"] == "stable one-device performance present"
     assert statuses["SU2ComposeBench reference foundation"] == "implemented reference"
     assert statuses["SU2ComposeBench N300 conformance"] == "hardware conformance present"
     assert statuses["SU2ComposeBench first comparison"] == "qualified first comparison present"
@@ -59,7 +57,7 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
     assert "hardware report: hardware conformance report present" in completed.stdout
     assert "Stage B hardware report: first hardware sample present" in completed.stdout
     assert (
-        "Persistent Stage B hardware report: first persistent hardware sample present"
+        "Persistent Stage B hardware report: stable one-device performance present"
         in completed.stdout
     )
     assert "SU2ComposeBench reference foundation: implemented reference" in completed.stdout

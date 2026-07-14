@@ -20,6 +20,7 @@ from tt_rqm_kernels.benchmark_release import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
+LEVEL_ONE_MANIFEST = Path("benchmarks/manifests/wormhole-qmul.json")
 PROTECTED_HASHES = {
     "reports/tt_hardware_qmul_quickstart.json": "388188443535ef523cdf5c6b9c4f6223ee73fcb546f0900f0d3008a6db98254e",
     "reports/tt_hardware_qmul_quickstart.md": "9d12d5fdd57b2b924feffd04cb803d4714a99a3d17720b492b212b0088e566d5",
@@ -42,22 +43,27 @@ def test_release_manifest_and_canonical_report_validate() -> None:
     manifest = validate_release(ROOT / DEFAULT_MANIFEST, repo_root=ROOT)
     assert manifest["schema"] == "tt-rqm-benchmark-release.v1"
     assert manifest["claim"] == {
-        "level": 1,
-        "name": "qualified_first_performance_sample",
-        "public_session_count": 1,
-        "stable_benchmark": False,
+        "level": 2,
+        "name": "stable_one_device_performance",
+        "public_session_count": 3,
+        "stable_benchmark": True,
     }
 
 
+def test_archived_level_one_release_remains_valid() -> None:
+    manifest = validate_release(ROOT / LEVEL_ONE_MANIFEST, repo_root=ROOT)
+    assert manifest["claim"]["level"] == 1
+
+
 def test_artifact_hash_tampering_is_rejected() -> None:
-    manifest = copy.deepcopy(load_manifest(ROOT / DEFAULT_MANIFEST))
+    manifest = copy.deepcopy(load_manifest(ROOT / LEVEL_ONE_MANIFEST))
     manifest["artifacts"][0]["sha256"] = "0" * 64
     with pytest.raises(BenchmarkReleaseError, match="SHA-256 mismatch"):
         validate_manifest(manifest, repo_root=ROOT)
 
 
 def test_claim_level_two_requires_three_independent_sessions() -> None:
-    manifest = copy.deepcopy(load_manifest(ROOT / DEFAULT_MANIFEST))
+    manifest = copy.deepcopy(load_manifest(ROOT / LEVEL_ONE_MANIFEST))
     manifest["claim"].update({"level": 2, "stable_benchmark": True})
     with pytest.raises(BenchmarkReleaseError, match="at least three"):
         validate_manifest(manifest, repo_root=ROOT)
@@ -119,8 +125,8 @@ def test_one_command_release_check() -> None:
         capture_output=True,
         text=True,
     )
-    assert "Claim Level 1" in completed.stdout
-    assert "stable_benchmark=false" in completed.stdout
+    assert "Claim Level 2" in completed.stdout
+    assert "stable_benchmark=true" in completed.stdout
 
 
 def test_hardware_collection_requires_command_and_isolated_output() -> None:
@@ -141,9 +147,9 @@ def test_hardware_collection_requires_command_and_isolated_output() -> None:
 
 def test_processed_summary_uses_logical_traffic_terminology() -> None:
     payload = json.loads(
-        (ROOT / "benchmarks/processed/wormhole-qmul-summary.json").read_text()
+        (ROOT / "benchmarks/processed/wormhole-qmul-level2-summary.json").read_text()
     )
-    assert payload["claim"]["stable_benchmark"] is False
+    assert payload["claim"]["stable_benchmark"] is True
     assert len(payload["cases"]) == 3
     assert all("logical_traffic_gb_per_s" in case for case in payload["cases"])
     assert "measured_bandwidth_gb_per_s" not in json.dumps(payload)

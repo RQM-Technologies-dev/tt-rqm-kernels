@@ -62,9 +62,15 @@ struct Manifest {
 
 struct WorkloadMetadata {
     uint32_t core_count = 0;
+    uint32_t requested_max_cores = 0;
     uint32_t component_tiles = 0;
     uint32_t grid_x = 0;
     uint32_t grid_y = 0;
+    uint32_t group_1_core_count = 0;
+    uint32_t group_2_core_count = 0;
+    uint32_t group_1_tiles_per_core = 0;
+    uint32_t group_2_tiles_per_core = 0;
+    uint32_t output_cb_depth = 2;
 };
 
 struct PreparedWorkload {
@@ -236,11 +242,12 @@ Config parse_config(int argc, char** argv) {
     return config;
 }
 
-void create_float32_cb(Program& program, const CoreRangeSet& cores, tt::CBIndex cb) {
+void create_float32_cb(Program& program, const CoreRangeSet& cores, tt::CBIndex cb, uint32_t depth = 2) {
+    if (depth < 2) throw std::runtime_error("circular-buffer depth must be at least two tiles");
     CreateCircularBuffer(
         program,
         cores,
-        CircularBufferConfig(2 * kTileBytes, {{cb, DataFormat::Float32}}).set_page_size(cb, kTileBytes));
+        CircularBufferConfig(depth * kTileBytes, {{cb, DataFormat::Float32}}).set_page_size(cb, kTileBytes));
 }
 
 PreparedWorkload build_workload(
@@ -248,17 +255,24 @@ PreparedWorkload build_workload(
     const std::shared_ptr<distributed::MeshBuffer>& a,
     const std::shared_ptr<distributed::MeshBuffer>& b,
     const std::shared_ptr<distributed::MeshBuffer>& out,
-    uint32_t component_tiles) {
+    uint32_t component_tiles,
+    uint32_t requested_max_cores = 0,
+    uint32_t output_cb_depth = 2) {
     Program program = CreateProgram();
     const CoreCoord grid = mesh_device->compute_with_storage_grid_size();
+    const uint32_t available_cores = grid.x * grid.y;
+    const uint32_t core_limit = requested_max_cores == 0 ? available_cores : requested_max_cores;
+    const uint32_t active_core_limit = std::min({component_tiles, available_cores, core_limit});
+    if (active_core_limit == 0) throw std::runtime_error("active core limit must be positive");
+    const CoreRangeSet requested_cores = num_cores_to_corerangeset(active_core_limit, grid, true);
     const auto [core_count, all_cores, group_1, group_2, tiles_1, tiles_2] =
-        split_work_to_cores(grid, component_tiles, true);
+        split_work_to_cores(requested_cores, component_tiles, true);
 
     for (uint32_t lane = 0; lane < 8; ++lane) {
         create_float32_cb(program, all_cores, static_cast<tt::CBIndex>(static_cast<uint32_t>(tt::CBIndex::c_0) + lane));
     }
     for (uint32_t lane = 0; lane < 4; ++lane) {
-        create_float32_cb(program, all_cores, static_cast<tt::CBIndex>(static_cast<uint32_t>(tt::CBIndex::c_16) + lane));
+        create_float32_cb(program, all_cores, static_cast<tt::CBIndex>(static_cast<uint32_t>(tt::CBIndex::c_16) + lane), output_cb_depth);
     }
 
     std::vector<uint32_t> reader_args;
@@ -314,9 +328,15 @@ PreparedWorkload build_workload(
         .workload = std::move(workload),
         .metadata = {
             .core_count = core_count,
+            .requested_max_cores = requested_max_cores == 0 ? active_core_limit : requested_max_cores,
             .component_tiles = component_tiles,
             .grid_x = grid.x,
             .grid_y = grid.y,
+            .group_1_core_count = group_1.num_cores(),
+            .group_2_core_count = group_2.num_cores(),
+            .group_1_tiles_per_core = tiles_1,
+            .group_2_tiles_per_core = tiles_2,
+            .output_cb_depth = output_cb_depth,
         },
     };
 }

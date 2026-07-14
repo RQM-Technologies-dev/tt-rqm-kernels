@@ -56,13 +56,15 @@ def validate_execution_policy(
             "external-qmul reports should use cpu, emulation, or hardware; "
             "use tt-lang-sim for simulator reports"
         )
-    if stage in {"conformance", "performance"} and execution_label != "hardware":
+    if stage in {"conformance", "performance", "diagnostic"} and execution_label != "hardware":
         raise IntegrityError("explicit qmul benchmark stages are only allowed on real hardware")
     validate_stability(execution_label, stable_benchmark=stable_benchmark)
     if execution_label == "hardware":
         validate_label_command(execution_label, command=command)
-        if stage not in {"conformance", "performance"}:
+        if stage not in {"conformance", "performance", "diagnostic"}:
             raise IntegrityError("hardware reports require an explicit benchmark stage")
+    if stage == "diagnostic" and stable_benchmark:
+        raise IntegrityError("diagnostic hardware reports must keep stable_benchmark=false")
     if stage == "conformance":
         if (
             list(items) != [128]

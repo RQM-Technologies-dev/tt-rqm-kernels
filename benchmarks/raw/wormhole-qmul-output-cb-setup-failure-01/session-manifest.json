@@ -1,0 +1,90 @@
+{
+  "artifacts": [
+    {
+      "path": "candidate.sha256",
+      "role": "candidate-identity",
+      "sha256": "8c0faf4da32718f0111b8295a2c96a321a75e21fada8153a4bd0c43fbfc9ac00"
+    },
+    {
+      "path": "command.txt",
+      "role": "exact-command",
+      "sha256": "fdd3ee557d03f55d73bd461721932712f8c8f2d84f87a507de5544353219b5bf"
+    },
+    {
+      "path": "environment.json",
+      "role": "environment",
+      "sha256": "d8d82ce870d20edc64c84deb29092fa70714a0b7efc1ef18940c8e86fb231a01"
+    },
+    {
+      "path": "post-device-health.txt",
+      "role": "post-device-health",
+      "sha256": "3dffa0021881991ed7ccc5019d0d6ad22d44ca120ffe44b096885cd1a5ded604"
+    },
+    {
+      "path": "pre-device-health.txt",
+      "role": "pre-device-health",
+      "sha256": "db8133cb7c4a85c2ecdd9770b0f3dbf2bc82b2ab66919f7a2757fe7126b34429"
+    },
+    {
+      "path": "stderr.txt",
+      "role": "candidate-stderr",
+      "sha256": "b788d5b3ab122f9558671d45b4efa4b324d91bbe67c59ea66a6eea4f310f69e3"
+    },
+    {
+      "path": "stdout.txt",
+      "role": "candidate-stdout",
+      "sha256": "21ed9fe49be048db155d933076ca6c263be9b5888e1ad9d9819a9935ac898413"
+    }
+  ],
+  "benchmark_stage": "diagnostic",
+  "candidate_sha256": "8bc0d15e7856ee2035a488568af98f560997d737dc84fe9ceb41dbd0d01e9656",
+  "case_items": [],
+  "cold_start_host_session": true,
+  "collection_status": "failed",
+  "device_count": 1,
+  "device_id": 0,
+  "execution_source_commit": "e19fc6f6046c95b294e8c1db3b67f045023703e2",
+  "failure": "IntegrityError: persistent qmul candidate failed\nstdout:\n2026-07-14 22:20:09.886 | critical |           Metal | Failed to determine TT-Metal root directory. Root directory must be set via one of the following methods:\n1. Automatically determined when using a package install\n2. Set TT_METAL_RUNTIME_ROOT environment variable to the path containing tt_metal/\n3. Call RunTimeOptions::set_root_dir() API before creating RunTimeOptions\n4. Run from the root of the repository\nCurrent working directory: /home/user/src/tt-rqm-kernels (rtoptions.cpp:343)\n2026-07-14 22:20:09.886 | critical |          Always | TT_FATAL: Root Directory is not set. (assert.hpp:104)\n\nstderr:\ntt_rqm_metalium_qmul_multicore_persistent_candidate failed: TT_FATAL @ /home/user/src/tt-metal/tt_metal/llrt/rtoptions.cpp:346: !this->root_dir.empty()\ninfo:\nRoot Directory is not set.\nbacktrace:\n --- /home/user/src/tt-metal/build_n300/lib/libtt_metal.so(+0x403b49) [0x7a67ec603b49]\n --- tt::llrt::RunTimeOptions::RunTimeOptions()\n --- tt::tt_metal::MetalEnvImpl::initialize_base_objects()\n --- tt::tt_metal::MetalEnvImpl::MetalEnvImpl(tt::tt_metal::MetalEnvDescriptor)\n --- std::__detail::_MakeUniq<tt::tt_metal::MetalEnvImpl>::__single_object std::make_unique<tt::tt_metal::MetalEnvImpl, tt::tt_metal::MetalEnvDescriptor>(tt::tt_metal::MetalEnvDescriptor&&)\n --- tt::tt_metal::MetalEnv::MetalEnv(tt::tt_metal::MetalEnvDescriptor)\n --- tt::tt_metal::MetalContext::create_default_instance_implicit_locked()\n --- tt::tt_metal::MetalContext::instance(ttsl::StrongType<int, tt::tt_metal::ContextIdTag>)\n --- tt::tt_metal::distributed::MeshDeviceImpl::create_unit_meshes(ttsl::StrongType<int, tt::tt_metal::ContextIdTag>, std::vector<int, std::allocator<int> > const&, unsigned long, unsigned long, unsigned long, tt::tt_metal::DispatchCoreConfig const&, std::span<unsigned int const, 18446744073709551615ul>, unsigned long)\n --- tt::tt_metal::distributed::MeshDeviceImpl::create_unit_mesh(ttsl::StrongType<int, tt::tt_metal::ContextIdTag>, int, unsigned long, unsigned long, unsigned long, tt::tt_metal::DispatchCoreConfig const&, std::span<unsigned int const, 18446744073709551615ul>, unsigned long)\n --- tt::tt_metal::distributed::MeshDevice::create_unit_mesh(int, unsigned long, unsigned long, unsigned long, tt::tt_metal::DispatchCoreConfig const&, std::span<unsigned int const, 18446744073709551615ul>, unsigned long)\n --- persistent_qmul::run(int, char**)\n --- /home/user/tt-rqm-diagnostic-build-ulfm/tt_rqm_metalium_qmul_multicore_persistent_candidate(main+0x11) [0x5b263a0195d1]\n --- /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7a67eb629d90]\n --- /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80) [0x7a67eb629e40]\n --- /home/user/tt-rqm-diagnostic-build-ulfm/tt_rqm_metalium_qmul_multicore_persistent_candidate(_start+0x25) [0x5b263a019665]\n\n",
+  "lifecycle": null,
+  "output_cb_depth": 2,
+  "post_health": {
+    "devices": [
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 L",
+        "boot_date": "0x670e0237",
+        "bus_id": "0000:e1:00.0",
+        "device_id": 0,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 138420,
+        "runtime_seconds": "0x112ac",
+        "temperature_c": 40.1,
+        "throttler": "0x0"
+      },
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 R",
+        "boot_date": "0x670e0237",
+        "bus_id": "N/A",
+        "device_id": 1,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 138419,
+        "runtime_seconds": "0x112ac",
+        "temperature_c": 34.6,
+        "throttler": "0x0"
+      }
+    ],
+    "selected_device_id": 0,
+    "visible_device_count": 2
+  },
+  "schema": "tt-rqm-benchmark-session.v2",
+  "seed": 0,
+  "session_id": "wormhole-qmul-output-cb-depth-2-01",
+  "source_tree_sha256": "a38698b1184c6e7a7b9ca76e85b9121aaf4cecee4355d6588b50aee13a56bd6e",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

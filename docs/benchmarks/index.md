@@ -15,13 +15,14 @@ artifact and a versioned release manifest.
 ## Quaternion kernel report
 
 - [Structured FP32 Quaternion Kernels on Tenstorrent Wormhole](wormhole-qmul.md)
-- Qualification: **Claim Level 1 — qualified first performance sample**
-- Stability: `stable_benchmark=false`
-- Public persistent sessions: **1**
+- [Wormhole qmul hardware evidence](wormhole-qmul-hardware-evidence.md)
+- Qualification: **Claim Level 2 — stable one-device performance**
+- Stability: `stable_benchmark=true` for the aggregate release
+- Public persistent sessions: **3**
 
-The current report records real Wormhole device-0 execution and whole-output
-correctness. It is not a stability result, CPU comparison, acceleration claim,
-hardware bandwidth result, energy result, application speedup, dual-device
+The release records real Wormhole device-0 execution, whole-output correctness,
+and three-session stability. It is not a CPU comparison, acceleration claim,
+hardware-bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
 ## Policy and next measurements
@@ -29,7 +30,9 @@ result, or Tenstorrent endorsement.
 - [Claim policy](claim-policy.md)
 - [Preregistered evidence program](methodology.md)
 - [Stage B stability thresholds](../stage-b-stability-methodology.md)
-- [Machine-readable release manifest](../../benchmarks/manifests/wormhole-qmul.json)
+- [Wormhole qmul hardware evidence](wormhole-qmul-hardware-evidence.md)
+- [Level 2 release manifest](../../benchmarks/manifests/wormhole-qmul-level2.json)
+- [Archived Level 1 release manifest](../../benchmarks/manifests/wormhole-qmul.json)
 - [SU2ComposeBench release manifest](../../benchmarks/manifests/wormhole-su2-compose.json)
 
 Validate the complete published release without hardware access:

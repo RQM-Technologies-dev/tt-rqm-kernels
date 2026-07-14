@@ -42,16 +42,14 @@ Tenstorrent N300 hardware report: Stage A conformance present
 qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
-persistent multicore/SFPU path: implemented; hardware qualification is separate
+persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sessions
 SU2ComposeBench fused/unfused paths: N300 conformance and one comparison session present
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
 The scalar N300 report is real-hardware correctness evidence. The separate
-Stage B report is performance-eligible architecture evidence, but its first
-sample is explicitly not stable and is not an acceleration comparison.
-The persistent-device path removes repeated process/device creation from the
-measurement session while preserving that non-claim.
+Stage B report is performance-eligible architecture evidence. The persistent
+path removes repeated process/device creation from each measurement session.
 
 The [SU2ComposeBench report](benchmarks/su2-compose-bench.md) adds fused,
 time-ordered SU(2) evolution. Its fused and unfused paths passed whole-output
@@ -60,8 +58,12 @@ Claim Level 1 with `stable_benchmark=false`, not an acceleration claim.
 
 The public [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
 packages the current evidence, deterministic charts, claim policy, provenance,
-and limitations. It classifies the single persistent session as Claim Level 1,
-not as a stable result.
+and limitations. Three independent device-0 sessions pass the preregistered
+gates, supporting Claim Level 2 stable one-device performance.
+
+The [hardware evidence report](benchmarks/wormhole-qmul-hardware-evidence.md)
+separates stability evidence from device-parity, scaling, profiler, ceiling,
+and saturation diagnostics.
 
 ## Run It In 10 Minutes
 
@@ -96,18 +98,13 @@ and [first official Stage B sweep](../reports/tt_hardware_qmul_stage_b_performan
 on Wormhole device 0. The first sweep keeps `stable_benchmark=false`; no
 acceleration claim is made.
 
-The next evidence rung is the separate persistent-device conformance and
-three-size timing path. Its lifecycle, timing phases, and future stability
-thresholds are defined in
-[the preregistered methodology](stage-b-stability-methodology.md). It does not
-modify the Stage A or first Stage B records and does not use device 1.
-
-That path has now completed its first
+The persistent path completed
 [persistent conformance](../reports/tt_hardware_qmul_stage_b_persistent_conformance.md)
-and [persistent performance](../reports/tt_hardware_qmul_stage_b_persistent_performance.md)
-sessions. The [timing audit](../reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
-records exact synchronization boundaries and nonclaims. The result remains a
-single-session, non-stable methodology artifact.
+and three independent performance sessions. The
+[timing audit](../reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
+records exact synchronization boundaries. The
+[stability qualification](../benchmarks/processed/wormhole-qmul-stability-qualification.json)
+passes the published Level 2 gates.
 
 Access state for RQM Technologies:
 
@@ -120,9 +117,10 @@ Access state for RQM Technologies:
 ## How A Tenstorrent Engineer Can Help
 
 The remaining engineering ask is review of the one-device multicore/SFPU
-architecture and its measurement scope before any stable or comparative
-performance claim. Placement guidance remains welcome but is independent of
-the external candidate evidence.
+architecture, diagnostic evidence, and next optimization choices. The qmul
+release supports stable one-device performance, but no acceleration or
+matched-baseline claim. Placement guidance remains welcome but is independent
+of the external candidate evidence.
 
 The copy/paste handoff is:
 
@@ -143,12 +141,14 @@ reports/tt_hardware_qmul_stage_b_persistent_performance.json
 reports/tt_hardware_qmul_stage_b_persistent_performance.md
 ```
 
-The first hardware sample should use `execution_label=hardware` and
-`stable_benchmark=false`.
+Every new individual hardware sample should use `execution_label=hardware` and
+`stable_benchmark=false`; only a separate aggregate qualification may promote
+a release-level stability claim.
 
 ## Key Links
 
 - [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
+- [Wormhole qmul hardware evidence](benchmarks/wormhole-qmul-hardware-evidence.md)
 - [Benchmark claim policy](benchmarks/claim-policy.md)
 - [StructuredBench specification](structuredbench-spec.md)
 - [Tenstorrent RFC](tenstorrent-rfc.md)

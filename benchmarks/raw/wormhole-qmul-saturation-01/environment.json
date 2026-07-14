@@ -1,0 +1,65 @@
+{
+  "candidate": {
+    "execution_source_commit": "7145479cfbc2395cce60715e8b99f0184dd907b6",
+    "path": "/home/user/tt-rqm-diagnostic-build-ulfm/tt_rqm_metalium_qmul_multicore_persistent_candidate",
+    "sha256": "f0aed35906ee33515e7b4f6b6284a8326e4c92d87f1b25ae566503f9933b7ff2",
+    "source_tree_sha256": "9a7813f7121483a2bc62a24cf4a6787ad51b3b4ec544254e3b959d7fefd96211"
+  },
+  "captured_at_utc": "2026-07-14T21:54:42.937726+00:00",
+  "cmake_version": "cmake version 4.0.2",
+  "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+  "device_id": 0,
+  "host": "f05cs07",
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "pre_health": {
+    "devices": [
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 L",
+        "boot_date": "0x670e0237",
+        "bus_id": "0000:e1:00.0",
+        "device_id": 0,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 135395,
+        "runtime_seconds": "0x10cab",
+        "temperature_c": 39.9,
+        "throttler": "0x0"
+      },
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 R",
+        "boot_date": "0x670e0237",
+        "bus_id": "N/A",
+        "device_id": 1,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 135395,
+        "runtime_seconds": "0x10cab",
+        "temperature_c": 34.6,
+        "throttler": "0x0"
+      }
+    ],
+    "selected_device_id": 0,
+    "visible_device_count": 2
+  },
+  "python_version": "3.10.12",
+  "repository": {
+    "branch": "main",
+    "head": "7145479cfbc2395cce60715e8b99f0184dd907b6",
+    "path": "/home/user/src/tt-rqm-kernels",
+    "tracked_status": ""
+  },
+  "schema": "tt-rqm-hardware-environment.v1",
+  "torch_version": "2.13.0+cu130",
+  "tt_metal": {
+    "branch": "HEAD",
+    "head": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+    "path": "/home/user/src/tt-metal",
+    "tracked_status": ""
+  },
+  "tt_smi_version": "5.3.0",
+  "visible_device_count": 2
+}

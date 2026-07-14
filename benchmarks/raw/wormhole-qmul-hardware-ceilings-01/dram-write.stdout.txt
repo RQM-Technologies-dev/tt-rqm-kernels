@@ -1,0 +1,726 @@
+2026-07-14 21:49:48.606 | info     |          Device | Opening user mode device driver (tt_cluster.cpp:228)
+2026-07-14 21:49:48.606 | info     |             UMD | Cluster constructor started. (cluster.cpp:348)
+2026-07-14 21:49:48.606 | info     |             UMD | Creating TopologyDiscovery for architecture: wormhole_b0 (topology_discovery.cpp:95)
+2026-07-14 21:49:48.606 | info     |             UMD | Starting topology discovery. (topology_discovery.cpp:114)
+2026-07-14 21:49:48.609 | info     |             UMD | Established firmware bundle version: 19.6.0 (topology_discovery.cpp:574)
+2026-07-14 21:49:48.616 | info     |             UMD | Completed topology discovery. (topology_discovery.cpp:118)
+2026-07-14 21:49:49.769 | warning  |             UMD | Sysmem (0x80000000 bytes) using regular pages; pre-allocate hugepages for better DMA performance (e.g. 2 × 1GB or 1024 × 2MB; on AArch64 also 4 × 512MB). (silicon_sysmem_manager.cpp:106)
+2026-07-14 21:49:49.772 | info     |             UMD | Opening local chip ids/PCIe ids: {0}/[0] and remote chip ids {1} (cluster.cpp:168)
+2026-07-14 21:49:49.772 | info     |             UMD | IOMMU: enabled (cluster.cpp:142)
+2026-07-14 21:49:49.772 | info     |             UMD | KMD version: 2.10.0 (cluster.cpp:145)
+2026-07-14 21:49:49.772 | info     |             UMD | Cluster constructor completed. (cluster.cpp:520)
+2026-07-14 21:49:49.775 | info     |             UMD | Starting devices in cluster (cluster.cpp:1024)
+2026-07-14 21:49:49.928 | info     |             UMD | Starting devices in cluster completed. (cluster.cpp:1032)
+2026-07-14 21:49:50.054 | info     |     Distributed | Using auto discovery to generate mesh graph. (metal_env.cpp:408)
+2026-07-14 21:49:50.054 | info     |     Distributed | Constructing control plane using auto-discovery (no mesh graph descriptor). (metal_env.cpp:470)
+2026-07-14 21:49:50.054 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=1 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:49:50.054 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=0 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:49:50.054 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=1 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:49:50.054 | warning  |          Always | Unknown motherboard 'H12DSG-O-CPU' for chip_id=0 (bus_id=0xe1) — falling back to bus_id as tray_id. Add this motherboard and its bus IDs to mobo_to_bus_ids in physical_system_discovery.cpp. (physical_system_discovery.cpp:89)
+2026-07-14 21:49:50.055 | info     |          Fabric | Logical multi-mesh adjacency: intermesh degree histogram {0:1}; intra-mesh degree histograms mesh0 {1:2} (topology_mapper_utils.cpp:2342)
+2026-07-14 21:49:50.055 | info     |          Fabric | Physical multi-mesh adjacency: intermesh degree histogram {0:1}; intra-mesh degree histograms mesh0 {1:2} (topology_mapper_utils.cpp:2350)
+2026-07-14 21:49:50.162 | info     |           Metal | Profiler started on device 0 (profiler_initializer.cpp:49)
+2026-07-14 21:49:50.231 | info     |           Metal | ShmResourceTracker: removed orphaned shm '/tt_device_10226921853_memory' (shm_resource_tracker.cpp:282)
+2026-07-14 21:49:50.828 | info     |           Metal | [Real-time profiler] Device 0 sync complete: 100 samples, frequency=0.985498 GHz, device_time_at_sync=33152276240782 cycles (realtime_profiler_manager.cpp:1127)
+2026-07-14 21:49:50.866 | info     |            Test | Measuring DRAM bandwidth for input_size = 268435456 bytes (256.000 MB, 131072 tiles), using 56 cores (test_dram_offchip.cpp:205)
+2026-07-14 21:49:51.974 | info     |            Test | Num tests 10 (test_dram_offchip.cpp:270)
+2026-07-14 21:49:52.323 | error    |    BuildKernels | brisc compile failure -- cmd: cd /home/user/.cache/tt-metal-cache/5436408107378298848/kernels/writer_dram/3760104735491490428/brisc/ && /home/user/src/tt-metal/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O2 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=auto -ffast-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function -mcpu=tt-wh -fno-tree-loop-distribute-patterns -I. -I.. -I/home/user/src/tt-metal/ -I/home/user/src/tt-metal/ttnn -I/home/user/src/tt-metal/ttnn/cpp -I/home/user/src/tt-metal/tt_metal -I/home/user/src/tt-metal/tt_metal/hw/inc -I/home/user/src/tt-metal/tt_metal/tt-llk/common -I/home/user/src/tt-metal/tt_metal/hostdevcommon/api -I/home/user/src/tt-metal/tt_metal/api/ -I/home/user/src/tt-metal/tt_metal/hw/ckernels/wormhole_b0/metal/common -I/home/user/src/tt-metal/tt_metal/hw/ckernels/wormhole_b0/metal/llk_io -I/home/user/src/tt-metal/tt_metal/hw/inc/internal/tt-1xx -I/home/user/src/tt-metal/tt_metal/hw/inc/internal/tt-1xx/wormhole -I/home/user/src/tt-metal/tt_metal/hw/inc/internal/tt-1xx/wormhole/wormhole_b0_defines -I/home/user/src/tt-metal/tt_metal/hw/inc/internal/tt-1xx/wormhole/noc -I/home/user/src/tt-metal/tt_metal/tt-llk/tt_llk_wormhole_b0/common/inc -I/home/user/src/tt-metal/tt_metal/tt-llk/tt_llk_wormhole_b0/llk_lib -I/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx -I/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels -c -o /home/user/.cache/tt-metal-cache/5436408107378298848/kernels/writer_dram/3760104735491490428/brisc/brisck.10922151438152516601.o /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc -MF /home/user/.cache/tt-metal-cache/5436408107378298848/kernels/writer_dram/3760104735491490428/brisc/brisck.10922151438152516601.d -DIS_NOT_POW2_NUM_DRAM_BANKS=1 -DIS_NOT_POW2_NUM_L1_BANKS=1 -DNUM_DRAM_BANKS=12 -DNUM_L1_BANKS=56 -DPCIE_NOC_X=0 -DPCIE_NOC_Y=3 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DPROFILE_KERNEL=1 -DPROFILER_FULL_HOST_BUFFER_SIZE_PER_RISC=48000 -DROUTING_FW_ENABLED -DPROCESSOR_INDEX=0 -DCOMPILE_FOR_BRISC -DARCH_WORMHOLE -DDISPATCH_MESSAGE_ADDR=4290183304 -DKERNEL_BUILD -DFULL_KERNEL_NAME="\"writer_dram/3760104735491490428/\"" -DNOC_INDEX='0' -DNOC_MODE='0'  (build.cpp:60)
+2026-07-14 21:49:52.323 | critical |          Always | TT_THROW: brisc build failed. Log: In file included from /home/user/src/tt-metal/tt_metal/hw/inc/api/dataflow/dataflow_api.h:27,
+                 from /home/user/src/tt-metal/tt_metal/hw/inc/internal/firmware_common.h:24,
+                 from /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:17:
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp: In function 'void kernel_profiler::quick_push()':
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:25:22: note: '#pragma message: PROFILER-NOC-QUICK-PUSH,/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp,409,KERNEL_PROFILER'
+   25 | #define DO_PRAGMA(x) _Pragma(#x)
+      |                      ^~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:35:5: note: in expansion of macro 'DO_PRAGMA'
+   35 |     DO_PRAGMA(message(PROFILER_MSG_NAME(name))); \
+      |     ^~~~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:409:5: note: in expansion of macro 'SrcLocNameToHash'
+  409 |     SrcLocNameToHash("PROFILER-NOC-QUICK-PUSH");
+      |     ^~~~~~~~~~~~~~~~
+In file included from /home/user/src/tt-metal/tt_metal/hw/inc/internal/firmware_common.h:14:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h: In instantiation of 'constexpr uint32_t get_ct_arg() [with long unsigned int Idx = 0; uint32_t = long unsigned int]':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:23:62:   required from 'constexpr const Flags<tensor_accessor::ArgConfig> TensorAccessorArgs<0>::args_config'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:25:40:   required from 'constexpr const bool TensorAccessorArgs<0>::is_sharded'
+   25 |     static constexpr bool is_sharded = args_config.test(tensor_accessor::ArgConfig::Sharded);
+      |                                        ^~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:37:10:   required from 'struct TensorAccessorArgs<0>'
+   37 |         !is_sharded || !rank_is_crta || (rank_is_crta && tensor_shape_is_crta && shard_shape_is_crta),
+      |          ^~~~~~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:27:23: error: static assertion failed: Index out of range
+   27 |     static_assert(Idx < kernel_compile_time_args.size(), "Index out of range");
+      |                   ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:27:23: note: the comparison reduces to '(0 < 0)'
+In file included from /home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:8,
+                 from /home/user/src/tt-metal/tt_metal/hw/inc/api/dataflow/dataflow_api.h:26:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:37:38: error: non-constant condition for static assertion
+   37 |         !is_sharded || !rank_is_crta || (rank_is_crta && tensor_shape_is_crta && shard_shape_is_crta),
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:40:43: error: non-constant condition for static assertion
+   40 |         !is_sharded || !num_banks_is_crta || (num_banks_is_crta && bank_coords_is_crta),
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:46:21: error: non-constant condition for static assertion
+   46 |         !is_sharded || !page_size_is_crta,
+      |         ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'constexpr const uint32_t TensorAccessorArgs<0>::RankCT':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:97:50:   required from 'struct TensorAccessorArgs<0>'
+   97 |     static_assert(!is_sharded || rank_is_crta || RankCT > 0, "Rank must be greater than 0!");
+      |                                                  ^~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: error: no matching function for call to 'get_ct_arg<TensorAccessorArgs<0>::RankCTAOffset>()'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:74:20: note: in expansion of macro 'get_compile_time_arg_val'
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: note: there is 1 candidate
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:74:20: note: in expansion of macro 'get_compile_time_arg_val'
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: candidate 1: 'template<long unsigned int Idx> constexpr uint32_t get_ct_arg()'
+   26 | constexpr uint32_t get_ct_arg() {
+      |                    ^~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:76:6: error: 'TensorAccessorArgs<0>::<lambda()>' called in a constant expression
+   70 |     static constexpr uint32_t RankCT = [] {
+      |                                        ~~~~
+   71 |         if constexpr (!is_sharded || rank_is_crta) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   72 |             return 0;
+      |             ~~~~~~~~~
+   73 |         } else {
+      |         ~~~~~~~~
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   75 |         }
+      |         ~
+   76 |     }();
+      |     ~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:70:40: note: 'TensorAccessorArgs<0>::<lambda()>' is not usable as a 'constexpr' function because:
+   70 |     static constexpr uint32_t RankCT = [] {
+      |                                        ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:97:47: error: non-constant condition for static assertion
+   97 |     static_assert(!is_sharded || rank_is_crta || RankCT > 0, "Rank must be greater than 0!");
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'constexpr const uint32_t TensorAccessorArgs<0>::NumBanksRawCT':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:88:78:   required from 'constexpr const uint32_t TensorAccessorArgs<0>::NumBanksCT'
+   88 |     static constexpr uint32_t NumBanksCT = tensor_accessor::unpack_num_banks(NumBanksRawCT);
+      |                                                                              ^~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:98:55:   required from 'struct TensorAccessorArgs<0>'
+   98 |     static_assert(!is_sharded || num_banks_is_crta || NumBanksCT > 0, "Number of banks must be greater than 0!");
+      |                                                       ^~~~~~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: error: no matching function for call to 'get_ct_arg<TensorAccessorArgs<0>::NumBanksCTAOffset>()'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:84:20: note: in expansion of macro 'get_compile_time_arg_val'
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: note: there is 1 candidate
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:84:20: note: in expansion of macro 'get_compile_time_arg_val'
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: candidate 1: 'template<long unsigned int Idx> constexpr uint32_t get_ct_arg()'
+   26 | constexpr uint32_t get_ct_arg() {
+      |                    ^~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:86:6: error: 'TensorAccessorArgs<0>::<lambda()>' called in a constant expression
+   80 |     static constexpr uint32_t NumBanksRawCT = [] {
+      |                                               ~~~~
+   81 |         if constexpr (!is_sharded || num_banks_is_crta) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   82 |             return 0;
+      |             ~~~~~~~~~
+   83 |         } else {
+      |         ~~~~~~~~
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   85 |         }
+      |         ~
+   86 |     }();
+      |     ~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:80:47: note: 'TensorAccessorArgs<0>::<lambda()>' is not usable as a 'constexpr' function because:
+   80 |     static constexpr uint32_t NumBanksRawCT = [] {
+      |                                               ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:98:52: error: non-constant condition for static assertion
+   98 |     static_assert(!is_sharded || num_banks_is_crta || NumBanksCT > 0, "Number of banks must be greater than 0!");
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+In file included from ../kernel_includes.hpp:1,
+                 from /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:21:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp: In function 'void kernel_main()':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: error: class template argument deduction failed:
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: error: no matching function for call to 'TensorAccessor(const TensorAccessorArgs<0>&, uint32_t&)'
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note: there are 9 candidates
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:97:5: note: candidate 1: 'template<class DSpecT, long unsigned int CTA_OFFSET, long unsigned int ADDR_CRTA_OFFSET> TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) -> TensorAccessor<DSpecT>'
+   97 |     TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) :
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:97:5: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:81:5: note: candidate 2: 'template<class DSpecT, unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   81 |     TensorAccessor(
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:81:5: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:77:5: note: candidate 3: 'template<class DSpecT, class DSpec_, typename std::enable_if<DSpec_::is_static, int>::type <anonymous> > TensorAccessor(size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   77 |     TensorAccessor(const size_t bank_base_address_in = 0, uint32_t page_size_in = 0) :
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:77:5: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:70:24: note: candidate 4: 'template<class DSpecT, class DSpec_, typename std::enable_if<is_same_v<typename std::decay<_Tp2>::type, DSpecT>, int>::type <anonymous> > TensorAccessor(DSpec_&&, size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   70 |     constexpr explicit TensorAccessor(
+      |                        ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:70:24: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:56:8: note: candidate 5: 'template<class DSpecT> TensorAccessor(TensorAccessor<DSpecT>) -> TensorAccessor<DSpecT>'
+   56 | struct TensorAccessor {
+      |        ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:56:8: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:602:1: note: candidate 6: 'template<long unsigned int RankCT, long unsigned int NumBanksCT, class TensorShapeWrapper, class ShardShapeWrapper, class BankCoordsWrapper, bool IsInterleaved, bool IsDram, bool IsShardContiguous> TensorAccessor(tensor_accessor::DistributionSpec<RankCT, NumBanksCT, TensorShapeWrapper, ShardShapeWrapper, BankCoordsWrapper, IsInterleaved, IsDram, IsShardContiguous>, size_t, uint32_t) -> TensorAccessor<tensor_accessor::DistributionSpec<RankCT, NumBanksCT, TensorShapeWrapper, ShardShapeWrapper, BankCoordsWrapper, IsInterleaved, IsDram, IsShardContiguous> >'
+  602 | TensorAccessor(
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:602:1: note: candidate expects 3 arguments, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:570:1: note: candidate 7: 'template<unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t, uint32_t) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_sharded), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_dram, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_shard_contiguous> >'
+  570 | TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>& args, size_t, uint32_t)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:570:1: note: candidate expects 3 arguments, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:545:1: note: candidate 8: 'template<long unsigned int CTA_OFFSET, long unsigned int ADDR_CRTA_OFFSET> TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_sharded), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_dram, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_shard_contiguous> >'
+  545 | TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:545:1: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:517:1: note: candidate 9: 'template<unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_sharded), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_dram, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_shard_contiguous> >'
+  517 | TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>& args, size_t)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:517:1: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc: In function 'uint32_t _start()':
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:25:22: note: '#pragma message: BRISC-KERNEL,/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc,77,KERNEL_PROFILER'
+   25 | #define DO_PRAGMA(x) _Pragma(#x)
+      |                      ^~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:716:5: note: in expansion of macro 'DO_PRAGMA'
+  716 |     DO_PRAGMA(message(PROFILER_MSG_NAME(name)));                               \
+      |     ^~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:77:9: note: in expansion of macro 'DeviceZoneScopedMainChildN'
+   77 |         DeviceZoneScopedMainChildN("BRISC-KERNEL");
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+ (assert.hpp:104)
+2026-07-14 21:49:52.328 | critical |          Always | TT_THROW: Failed to generate binaries for writer_dram TT_THROW @ /home/user/src/tt-metal/tt_metal/jit_build/build.cpp:67: tt::exception
+info:
+brisc build failed. Log: In file included from /home/user/src/tt-metal/tt_metal/hw/inc/api/dataflow/dataflow_api.h:27,
+                 from /home/user/src/tt-metal/tt_metal/hw/inc/internal/firmware_common.h:24,
+                 from /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:17:
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp: In function 'void kernel_profiler::quick_push()':
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:25:22: note: '#pragma message: PROFILER-NOC-QUICK-PUSH,/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp,409,KERNEL_PROFILER'
+   25 | #define DO_PRAGMA(x) _Pragma(#x)
+      |                      ^~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:35:5: note: in expansion of macro 'DO_PRAGMA'
+   35 |     DO_PRAGMA(message(PROFILER_MSG_NAME(name))); \
+      |     ^~~~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:409:5: note: in expansion of macro 'SrcLocNameToHash'
+  409 |     SrcLocNameToHash("PROFILER-NOC-QUICK-PUSH");
+      |     ^~~~~~~~~~~~~~~~
+In file included from /home/user/src/tt-metal/tt_metal/hw/inc/internal/firmware_common.h:14:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h: In instantiation of 'constexpr uint32_t get_ct_arg() [with long unsigned int Idx = 0; uint32_t = long unsigned int]':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:23:62:   required from 'constexpr const Flags<tensor_accessor::ArgConfig> TensorAccessorArgs<0>::args_config'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:25:40:   required from 'constexpr const bool TensorAccessorArgs<0>::is_sharded'
+   25 |     static constexpr bool is_sharded = args_config.test(tensor_accessor::ArgConfig::Sharded);
+      |                                        ^~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:37:10:   required from 'struct TensorAccessorArgs<0>'
+   37 |         !is_sharded || !rank_is_crta || (rank_is_crta && tensor_shape_is_crta && shard_shape_is_crta),
+      |          ^~~~~~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:27:23: error: static assertion failed: Index out of range
+   27 |     static_assert(Idx < kernel_compile_time_args.size(), "Index out of range");
+      |                   ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:27:23: note: the comparison reduces to '(0 < 0)'
+In file included from /home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:8,
+                 from /home/user/src/tt-metal/tt_metal/hw/inc/api/dataflow/dataflow_api.h:26:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:37:38: error: non-constant condition for static assertion
+   37 |         !is_sharded || !rank_is_crta || (rank_is_crta && tensor_shape_is_crta && shard_shape_is_crta),
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:40:43: error: non-constant condition for static assertion
+   40 |         !is_sharded || !num_banks_is_crta || (num_banks_is_crta && bank_coords_is_crta),
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:46:21: error: non-constant condition for static assertion
+   46 |         !is_sharded || !page_size_is_crta,
+      |         ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'constexpr const uint32_t TensorAccessorArgs<0>::RankCT':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:97:50:   required from 'struct TensorAccessorArgs<0>'
+   97 |     static_assert(!is_sharded || rank_is_crta || RankCT > 0, "Rank must be greater than 0!");
+      |                                                  ^~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: error: no matching function for call to 'get_ct_arg<TensorAccessorArgs<0>::RankCTAOffset>()'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:74:20: note: in expansion of macro 'get_compile_time_arg_val'
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: note: there is 1 candidate
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:74:20: note: in expansion of macro 'get_compile_time_arg_val'
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: candidate 1: 'template<long unsigned int Idx> constexpr uint32_t get_ct_arg()'
+   26 | constexpr uint32_t get_ct_arg() {
+      |                    ^~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:76:6: error: 'TensorAccessorArgs<0>::<lambda()>' called in a constant expression
+   70 |     static constexpr uint32_t RankCT = [] {
+      |                                        ~~~~
+   71 |         if constexpr (!is_sharded || rank_is_crta) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   72 |             return 0;
+      |             ~~~~~~~~~
+   73 |         } else {
+      |         ~~~~~~~~
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   75 |         }
+      |         ~
+   76 |     }();
+      |     ~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:70:40: note: 'TensorAccessorArgs<0>::<lambda()>' is not usable as a 'constexpr' function because:
+   70 |     static constexpr uint32_t RankCT = [] {
+      |                                        ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:97:47: error: non-constant condition for static assertion
+   97 |     static_assert(!is_sharded || rank_is_crta || RankCT > 0, "Rank must be greater than 0!");
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'constexpr const uint32_t TensorAccessorArgs<0>::NumBanksRawCT':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:88:78:   required from 'constexpr const uint32_t TensorAccessorArgs<0>::NumBanksCT'
+   88 |     static constexpr uint32_t NumBanksCT = tensor_accessor::unpack_num_banks(NumBanksRawCT);
+      |                                                                              ^~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:98:55:   required from 'struct TensorAccessorArgs<0>'
+   98 |     static_assert(!is_sharded || num_banks_is_crta || NumBanksCT > 0, "Number of banks must be greater than 0!");
+      |                                                       ^~~~~~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: error: no matching function for call to 'get_ct_arg<TensorAccessorArgs<0>::NumBanksCTAOffset>()'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:84:20: note: in expansion of macro 'get_compile_time_arg_val'
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: note: there is 1 candidate
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:84:20: note: in expansion of macro 'get_compile_time_arg_val'
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: candidate 1: 'template<long unsigned int Idx> constexpr uint32_t get_ct_arg()'
+   26 | constexpr uint32_t get_ct_arg() {
+      |                    ^~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:86:6: error: 'TensorAccessorArgs<0>::<lambda()>' called in a constant expression
+   80 |     static constexpr uint32_t NumBanksRawCT = [] {
+      |                                               ~~~~
+   81 |         if constexpr (!is_sharded || num_banks_is_crta) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   82 |             return 0;
+      |             ~~~~~~~~~
+   83 |         } else {
+      |         ~~~~~~~~
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   85 |         }
+      |         ~
+   86 |     }();
+      |     ~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:80:47: note: 'TensorAccessorArgs<0>::<lambda()>' is not usable as a 'constexpr' function because:
+   80 |     static constexpr uint32_t NumBanksRawCT = [] {
+      |                                               ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:98:52: error: non-constant condition for static assertion
+   98 |     static_assert(!is_sharded || num_banks_is_crta || NumBanksCT > 0, "Number of banks must be greater than 0!");
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+In file included from ../kernel_includes.hpp:1,
+                 from /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:21:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp: In function 'void kernel_main()':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: error: class template argument deduction failed:
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: error: no matching function for call to 'TensorAccessor(const TensorAccessorArgs<0>&, uint32_t&)'
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note: there are 9 candidates
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:97:5: note: candidate 1: 'template<class DSpecT, long unsigned int CTA_OFFSET, long unsigned int ADDR_CRTA_OFFSET> TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) -> TensorAccessor<DSpecT>'
+   97 |     TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) :
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:97:5: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:81:5: note: candidate 2: 'template<class DSpecT, unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   81 |     TensorAccessor(
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:81:5: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:77:5: note: candidate 3: 'template<class DSpecT, class DSpec_, typename std::enable_if<DSpec_::is_static, int>::type <anonymous> > TensorAccessor(size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   77 |     TensorAccessor(const size_t bank_base_address_in = 0, uint32_t page_size_in = 0) :
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:77:5: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:70:24: note: candidate 4: 'template<class DSpecT, class DSpec_, typename std::enable_if<is_same_v<typename std::decay<_Tp2>::type, DSpecT>, int>::type <anonymous> > TensorAccessor(DSpec_&&, size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   70 |     constexpr explicit TensorAccessor(
+      |                        ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:70:24: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:56:8: note: candidate 5: 'template<class DSpecT> TensorAccessor(TensorAccessor<DSpecT>) -> TensorAccessor<DSpecT>'
+   56 | struct TensorAccessor {
+      |        ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:56:8: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:602:1: note: candidate 6: 'template<long unsigned int RankCT, long unsigned int NumBanksCT, class TensorShapeWrapper, class ShardShapeWrapper, class BankCoordsWrapper, bool IsInterleaved, bool IsDram, bool IsShardContiguous> TensorAccessor(tensor_accessor::DistributionSpec<RankCT, NumBanksCT, TensorShapeWrapper, ShardShapeWrapper, BankCoordsWrapper, IsInterleaved, IsDram, IsShardContiguous>, size_t, uint32_t) -> TensorAccessor<tensor_accessor::DistributionSpec<RankCT, NumBanksCT, TensorShapeWrapper, ShardShapeWrapper, BankCoordsWrapper, IsInterleaved, IsDram, IsShardContiguous> >'
+  602 | TensorAccessor(
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:602:1: note: candidate expects 3 arguments, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:570:1: note: candidate 7: 'template<unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t, uint32_t) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_sharded), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_dram, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_shard_contiguous> >'
+  570 | TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>& args, size_t, uint32_t)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:570:1: note: candidate expects 3 arguments, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:545:1: note: candidate 8: 'template<long unsigned int CTA_OFFSET, long unsigned int ADDR_CRTA_OFFSET> TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_sharded), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_dram, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_shard_contiguous> >'
+  545 | TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:545:1: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:517:1: note: candidate 9: 'template<unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_sharded), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_dram, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_shard_contiguous> >'
+  517 | TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>& args, size_t)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:517:1: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc: In function 'uint32_t _start()':
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:25:22: note: '#pragma message: BRISC-KERNEL,/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc,77,KERNEL_PROFILER'
+   25 | #define DO_PRAGMA(x) _Pragma(#x)
+      |                      ^~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:716:5: note: in expansion of macro 'DO_PRAGMA'
+  716 |     DO_PRAGMA(message(PROFILER_MSG_NAME(name)));                               \
+      |     ^~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:77:9: note: in expansion of macro 'DeviceZoneScopedMainChildN'
+   77 |         DeviceZoneScopedMainChildN("BRISC-KERNEL");
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+
+backtrace:
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x77c668) [0x76536e37c668]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb0474f) [0x76536e70474f]
+ --- tt::tt_metal::JitBuildState::compile_one(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tt::tt_metal::JitBuildSettings const*, unsigned long) const
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb204f8) [0x76536e7204f8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb2047e) [0x76536e72047e]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x787b7f) [0x76536e387b7f]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x99ee8) [0x76536ce99ee8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x7879d9) [0x76536e3879d9]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb202ce) [0x76536e7202ce]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x9302c5) [0x76536e5302c5]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x92edd0) [0x76536e52edd0]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x92e2b8) [0x76536e52e2b8]
+ --- /lib/x86_64-linux-gnu/libstdc++.so.6(+0xdc253) [0x76536d2dc253]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x94ac3) [0x76536ce94ac3]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x1268d0) [0x76536cf268d0]
+ (assert.hpp:104)
+2026-07-14 21:49:52.548 | error    |            Test | TT_THROW @ /home/user/src/tt-metal/tt_metal/impl/program/program.cpp:259: tt::exception
+info:
+Failed to generate binaries for writer_dram TT_THROW @ /home/user/src/tt-metal/tt_metal/jit_build/build.cpp:67: tt::exception
+info:
+brisc build failed. Log: In file included from /home/user/src/tt-metal/tt_metal/hw/inc/api/dataflow/dataflow_api.h:27,
+                 from /home/user/src/tt-metal/tt_metal/hw/inc/internal/firmware_common.h:24,
+                 from /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:17:
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp: In function 'void kernel_profiler::quick_push()':
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:25:22: note: '#pragma message: PROFILER-NOC-QUICK-PUSH,/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp,409,KERNEL_PROFILER'
+   25 | #define DO_PRAGMA(x) _Pragma(#x)
+      |                      ^~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:35:5: note: in expansion of macro 'DO_PRAGMA'
+   35 |     DO_PRAGMA(message(PROFILER_MSG_NAME(name))); \
+      |     ^~~~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:409:5: note: in expansion of macro 'SrcLocNameToHash'
+  409 |     SrcLocNameToHash("PROFILER-NOC-QUICK-PUSH");
+      |     ^~~~~~~~~~~~~~~~
+In file included from /home/user/src/tt-metal/tt_metal/hw/inc/internal/firmware_common.h:14:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h: In instantiation of 'constexpr uint32_t get_ct_arg() [with long unsigned int Idx = 0; uint32_t = long unsigned int]':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:23:62:   required from 'constexpr const Flags<tensor_accessor::ArgConfig> TensorAccessorArgs<0>::args_config'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:25:40:   required from 'constexpr const bool TensorAccessorArgs<0>::is_sharded'
+   25 |     static constexpr bool is_sharded = args_config.test(tensor_accessor::ArgConfig::Sharded);
+      |                                        ^~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:37:10:   required from 'struct TensorAccessorArgs<0>'
+   37 |         !is_sharded || !rank_is_crta || (rank_is_crta && tensor_shape_is_crta && shard_shape_is_crta),
+      |          ^~~~~~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:27:23: error: static assertion failed: Index out of range
+   27 |     static_assert(Idx < kernel_compile_time_args.size(), "Index out of range");
+      |                   ~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:27:23: note: the comparison reduces to '(0 < 0)'
+In file included from /home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:8,
+                 from /home/user/src/tt-metal/tt_metal/hw/inc/api/dataflow/dataflow_api.h:26:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:37:38: error: non-constant condition for static assertion
+   37 |         !is_sharded || !rank_is_crta || (rank_is_crta && tensor_shape_is_crta && shard_shape_is_crta),
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:40:43: error: non-constant condition for static assertion
+   40 |         !is_sharded || !num_banks_is_crta || (num_banks_is_crta && bank_coords_is_crta),
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:46:21: error: non-constant condition for static assertion
+   46 |         !is_sharded || !page_size_is_crta,
+      |         ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'constexpr const uint32_t TensorAccessorArgs<0>::RankCT':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:97:50:   required from 'struct TensorAccessorArgs<0>'
+   97 |     static_assert(!is_sharded || rank_is_crta || RankCT > 0, "Rank must be greater than 0!");
+      |                                                  ^~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: error: no matching function for call to 'get_ct_arg<TensorAccessorArgs<0>::RankCTAOffset>()'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:74:20: note: in expansion of macro 'get_compile_time_arg_val'
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: note: there is 1 candidate
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:74:20: note: in expansion of macro 'get_compile_time_arg_val'
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: candidate 1: 'template<long unsigned int Idx> constexpr uint32_t get_ct_arg()'
+   26 | constexpr uint32_t get_ct_arg() {
+      |                    ^~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:76:6: error: 'TensorAccessorArgs<0>::<lambda()>' called in a constant expression
+   70 |     static constexpr uint32_t RankCT = [] {
+      |                                        ~~~~
+   71 |         if constexpr (!is_sharded || rank_is_crta) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   72 |             return 0;
+      |             ~~~~~~~~~
+   73 |         } else {
+      |         ~~~~~~~~
+   74 |             return get_compile_time_arg_val(RankCTAOffset);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   75 |         }
+      |         ~
+   76 |     }();
+      |     ~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:70:40: note: 'TensorAccessorArgs<0>::<lambda()>' is not usable as a 'constexpr' function because:
+   70 |     static constexpr uint32_t RankCT = [] {
+      |                                        ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:97:47: error: non-constant condition for static assertion
+   97 |     static_assert(!is_sharded || rank_is_crta || RankCT > 0, "Rank must be greater than 0!");
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'constexpr const uint32_t TensorAccessorArgs<0>::NumBanksRawCT':
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:88:78:   required from 'constexpr const uint32_t TensorAccessorArgs<0>::NumBanksCT'
+   88 |     static constexpr uint32_t NumBanksCT = tensor_accessor::unpack_num_banks(NumBanksRawCT);
+      |                                                                              ^~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:98:55:   required from 'struct TensorAccessorArgs<0>'
+   98 |     static_assert(!is_sharded || num_banks_is_crta || NumBanksCT > 0, "Number of banks must be greater than 0!");
+      |                                                       ^~~~~~~~~~
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: error: no matching function for call to 'get_ct_arg<TensorAccessorArgs<0>::NumBanksCTAOffset>()'
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:84:20: note: in expansion of macro 'get_compile_time_arg_val'
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:64:62: note: there is 1 candidate
+   64 | #define get_compile_time_arg_val(arg_idx) get_ct_arg<arg_idx>()
+      |                                           ~~~~~~~~~~~~~~~~~~~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:84:20: note: in expansion of macro 'get_compile_time_arg_val'
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: candidate 1: 'template<long unsigned int Idx> constexpr uint32_t get_ct_arg()'
+   26 | constexpr uint32_t get_ct_arg() {
+      |                    ^~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/compile_time_args.h:26:20: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:86:6: error: 'TensorAccessorArgs<0>::<lambda()>' called in a constant expression
+   80 |     static constexpr uint32_t NumBanksRawCT = [] {
+      |                                               ~~~~
+   81 |         if constexpr (!is_sharded || num_banks_is_crta) {
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   82 |             return 0;
+      |             ~~~~~~~~~
+   83 |         } else {
+      |         ~~~~~~~~
+   84 |             return get_compile_time_arg_val(NumBanksCTAOffset);
+      |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   85 |         }
+      |         ~
+   86 |     }();
+      |     ~^~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:80:47: note: 'TensorAccessorArgs<0>::<lambda()>' is not usable as a 'constexpr' function because:
+   80 |     static constexpr uint32_t NumBanksRawCT = [] {
+      |                                               ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h: In instantiation of 'struct TensorAccessorArgs<0>':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:18:51:   required from here
+   18 |     constexpr auto s_args = TensorAccessorArgs<0>();
+      |                                                   ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor_args.h:98:52: error: non-constant condition for static assertion
+   98 |     static_assert(!is_sharded || num_banks_is_crta || NumBanksCT > 0, "Number of banks must be greater than 0!");
+      |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+In file included from ../kernel_includes.hpp:1,
+                 from /home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:21:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp: In function 'void kernel_main()':
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: error: class template argument deduction failed:
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: error: no matching function for call to 'TensorAccessor(const TensorAccessorArgs<0>&, uint32_t&)'
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note: there are 9 candidates
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:97:5: note: candidate 1: 'template<class DSpecT, long unsigned int CTA_OFFSET, long unsigned int ADDR_CRTA_OFFSET> TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) -> TensorAccessor<DSpecT>'
+   97 |     TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) :
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:97:5: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:81:5: note: candidate 2: 'template<class DSpecT, unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   81 |     TensorAccessor(
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:81:5: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:77:5: note: candidate 3: 'template<class DSpecT, class DSpec_, typename std::enable_if<DSpec_::is_static, int>::type <anonymous> > TensorAccessor(size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   77 |     TensorAccessor(const size_t bank_base_address_in = 0, uint32_t page_size_in = 0) :
+      |     ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:77:5: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:70:24: note: candidate 4: 'template<class DSpecT, class DSpec_, typename std::enable_if<is_same_v<typename std::decay<_Tp2>::type, DSpecT>, int>::type <anonymous> > TensorAccessor(DSpec_&&, size_t, uint32_t) -> TensorAccessor<DSpecT>'
+   70 |     constexpr explicit TensorAccessor(
+      |                        ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:70:24: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tests/tt_metal/tt_metal/perf_microbenchmark/6_dram_offchip/kernels/writer_dram.cpp:19:53: note:   couldn't deduce template parameter 'DSpecT'
+   19 |     const auto s = TensorAccessor(s_args, input_addr);
+      |                                                     ^
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:56:8: note: candidate 5: 'template<class DSpecT> TensorAccessor(TensorAccessor<DSpecT>) -> TensorAccessor<DSpecT>'
+   56 | struct TensorAccessor {
+      |        ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:56:8: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:602:1: note: candidate 6: 'template<long unsigned int RankCT, long unsigned int NumBanksCT, class TensorShapeWrapper, class ShardShapeWrapper, class BankCoordsWrapper, bool IsInterleaved, bool IsDram, bool IsShardContiguous> TensorAccessor(tensor_accessor::DistributionSpec<RankCT, NumBanksCT, TensorShapeWrapper, ShardShapeWrapper, BankCoordsWrapper, IsInterleaved, IsDram, IsShardContiguous>, size_t, uint32_t) -> TensorAccessor<tensor_accessor::DistributionSpec<RankCT, NumBanksCT, TensorShapeWrapper, ShardShapeWrapper, BankCoordsWrapper, IsInterleaved, IsDram, IsShardContiguous> >'
+  602 | TensorAccessor(
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:602:1: note: candidate expects 3 arguments, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:570:1: note: candidate 7: 'template<unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t, uint32_t) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_sharded), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_dram, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_shard_contiguous> >'
+  570 | TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>& args, size_t, uint32_t)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:570:1: note: candidate expects 3 arguments, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:545:1: note: candidate 8: 'template<long unsigned int CTA_OFFSET, long unsigned int ADDR_CRTA_OFFSET> TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_sharded), TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_dram, TensorAccessorArgs<CTA_OFFSET, ((ADDR_CRTA_OFFSET / sizeof (long unsigned int)) + 1)>::is_shard_contiguous> >'
+  545 | TensorAccessor(tensor_accessor::TensorBindingToken<CTA_OFFSET, ADDR_CRTA_OFFSET>)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:545:1: note: candidate expects 1 argument, 2 provided
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:517:1: note: candidate 9: 'template<unsigned int CTA_OFFSET, unsigned int CRTA_OFFSET> TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>&, size_t) -> TensorAccessor<tensor_accessor::DistributionSpec<TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::tensor_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::TensorShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorU32<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::shard_shape_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::ShardShapeCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::RankCT>::type, typename tensor_accessor::ArrayWrapperTypeSelectorPackedU16<(! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::bank_coords_is_crta), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::BankCoordsCTAOffset, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::NumBanksCT>::type, (! TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_sharded), TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_dram, TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>::is_shard_contiguous> >'
+  517 | TensorAccessor(const TensorAccessorArgs<CTA_OFFSET, CRTA_OFFSET>& args, size_t)
+      | ^~~~~~~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/inc/api/tensor/tensor_accessor.h:517:1: note: template argument deduction/substitution failed:
+/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc: In function 'uint32_t _start()':
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:25:22: note: '#pragma message: BRISC-KERNEL,/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc,77,KERNEL_PROFILER'
+   25 | #define DO_PRAGMA(x) _Pragma(#x)
+      |                      ^~~~~~~
+/home/user/src/tt-metal/tt_metal/tools/profiler/kernel_profiler.hpp:716:5: note: in expansion of macro 'DO_PRAGMA'
+  716 |     DO_PRAGMA(message(PROFILER_MSG_NAME(name)));                               \
+      |     ^~~~~~~~~
+/home/user/src/tt-metal/tt_metal/hw/firmware/src/tt-1xx/brisck.cc:77:9: note: in expansion of macro 'DeviceZoneScopedMainChildN'
+   77 |         DeviceZoneScopedMainChildN("BRISC-KERNEL");
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+
+backtrace:
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x77c668) [0x76536e37c668]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb0474f) [0x76536e70474f]
+ --- tt::tt_metal::JitBuildState::compile_one(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, tt::tt_metal::JitBuildSettings const*, unsigned long) const
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb204f8) [0x76536e7204f8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb2047e) [0x76536e72047e]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x787b7f) [0x76536e387b7f]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x99ee8) [0x76536ce99ee8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x7879d9) [0x76536e3879d9]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb202ce) [0x76536e7202ce]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x9302c5) [0x76536e5302c5]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x92edd0) [0x76536e52edd0]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x92e2b8) [0x76536e52e2b8]
+ --- /lib/x86_64-linux-gnu/libstdc++.so.6(+0xdc253) [0x76536d2dc253]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x94ac3) [0x76536ce94ac3]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x1268d0) [0x76536cf268d0]
+
+backtrace:
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x9441f8) [0x76536e5441f8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x915f0b) [0x76536e515f0b]
+ --- tt::tt_metal::JitBuildCache::build_once(unsigned long, std::function<void ()> const&)
+ --- tt::tt_metal::jit_build_once(unsigned long, std::function<void ()> const&)
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x915a62) [0x76536e515a62]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb204f8) [0x76536e7204f8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb2047e) [0x76536e72047e]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x787b7f) [0x76536e387b7f]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x99ee8) [0x76536ce99ee8]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x7879d9) [0x76536e3879d9]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0xb202ce) [0x76536e7202ce]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x9302c5) [0x76536e5302c5]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x92edd0) [0x76536e52edd0]
+ --- /home/user/src/tt-metal/build_n300_microbench/tt_metal/libtt_metal.so(+0x92e2b8) [0x76536e52e2b8]
+ --- /lib/x86_64-linux-gnu/libstdc++.so.6(+0xdc253) [0x76536d2dc253]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x94ac3) [0x76536ce94ac3]
+ --- /lib/x86_64-linux-gnu/libc.so.6(+0x1268d0) [0x76536cf268d0]
+ (test_dram_offchip.cpp:323)
+2026-07-14 21:49:52.548 | error    |            Test | System error message: No such file or directory (test_dram_offchip.cpp:325)
+2026-07-14 21:49:52.548 | info     |            Test | CSV_MICROBENCHMARK:title:test_dram_offchip (test_dram_offchip.cpp:345)
+2026-07-14 21:49:52.548 | info     |            Test | CSV_INPUT:input-size:268435456:access-type:WRITE:use-device-profiler:true (test_dram_offchip.cpp:351)
+2026-07-14 21:49:52.548 | info     |            Test | CSV_OUTPUT:Bandwidth(GB/s):0.000 (test_dram_offchip.cpp:352)
+2026-07-14 21:49:52.548 | info     |            Test | CSV_RESULT:pass:false (test_dram_offchip.cpp:353)
+2026-07-14 21:49:52.548 | error    |            Test | Test Failed (test_dram_offchip.cpp:358)
+2026-07-14 21:49:52.548 | info     |    BuildKernels | JIT cache stats: 16/16 hits (100.0%) [16 cached, 1 build-once dedup, 0 merged artifacts, 0 merged genfiles] (build_cache_telemetry.cpp:207)
+2026-07-14 21:49:52.548 | info     |    BuildKernels | JIT telemetry: 3 registered TelemetryTokens (build_cache_telemetry.cpp:230)
+2026-07-14 21:49:52.554 | info     |          Device | Closing user mode device drivers (tt_cluster.cpp:513)
+2026-07-14 21:49:52.554 | info     |             UMD | Closing devices in cluster (cluster.cpp:1037)
+2026-07-14 21:49:52.994 | info     |             UMD | Closing devices in cluster completed. (cluster.cpp:1046)
+2026-07-14 21:49:52.994 | info     |             UMD | Cluster destructor started. (cluster.cpp:754)
+2026-07-14 21:49:52.994 | info     |             UMD | Cluster destructor completed. (cluster.cpp:757)

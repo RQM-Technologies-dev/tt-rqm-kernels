@@ -27,6 +27,11 @@ Current local status:
   sweep once on Wormhole device 0.
 - The first Stage B sample is `performance_eligible=true` and
   `stable_benchmark=false`; it is not an acceleration claim.
+- Three device-0 cold-start sessions pass the preregistered stability
+  qualification and support the Level 2 release.
+- Device-1 parity, controlled core scaling, initialization-order diagnostics,
+  profiler/ceiling evidence, and a nine-size saturation sweep are preserved as
+  diagnostic artifacts under `benchmarks/raw` and `benchmarks/processed`.
 - Tenstorrent approved SSH access to the N300 used for the first report.
 
 Placement guidance is tracked separately in the public `tt-metal` issue and the
@@ -340,6 +345,32 @@ that process creates device 0 once, runs every case, and closes it once. It
 must not open device 1. See
 [the preregistered stability methodology](stage-b-stability-methodology.md)
 before collecting the first persistent sample.
+
+### Isolated session collection and diagnostics
+
+The hardened collector accepts explicit device selection and diagnostic case
+specifications while always creating a new isolated session directory:
+
+```bash
+python scripts/reproduce_wormhole_qmul.py \
+  --collect-stage diagnostic \
+  --command /absolute/path/to/persistent_candidate \
+  --session-id unique-session-id \
+  --device-id 0 \
+  --tt-metal-root /absolute/path/to/tt-metal \
+  --case-spec 65536,30,5,10,56
+```
+
+Each session contains the report pair, manifest, environment, pre/post health,
+exact command, candidate hash, stdout, and stderr. Collection fails closed on
+dirty tracked source, hash or commit mismatch, lifecycle/provenance failure,
+wrong device, health faults, invalid timing, or correctness failure.
+
+Regenerate the processed diagnostic reports without changing raw evidence:
+
+```bash
+python scripts/generate_qmul_hardware_evidence.py
+```
 
 Label this result as either:
 

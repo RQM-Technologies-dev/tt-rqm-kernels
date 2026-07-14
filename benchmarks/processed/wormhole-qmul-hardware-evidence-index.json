@@ -1,0 +1,50 @@
+{
+  "current_public_claim_level": 2,
+  "entries": [
+    {
+      "evidence_type": "device-1-parity",
+      "json": "benchmarks/processed/wormhole-qmul-device1-parity.json",
+      "json_sha256": "15d5caa1c6f0f71084866ffa82cfb5c68f3a1c959c89b0484bff8b69f7910b04",
+      "markdown": "benchmarks/processed/wormhole-qmul-device1-parity.md",
+      "markdown_sha256": "d40885d0816b714d1e2505866645762724aa4aa38921f0cc77b1f271ce14f5ff"
+    },
+    {
+      "evidence_type": "controlled-core-scaling",
+      "json": "benchmarks/processed/wormhole-qmul-core-scaling.json",
+      "json_sha256": "394e7826950a4c652957707929ae5f81fc050ef3156ef014e66f35a55ab30345",
+      "markdown": "benchmarks/processed/wormhole-qmul-core-scaling.md",
+      "markdown_sha256": "47e0951c6ccaf73237f7c8863863aac0483f73cf88d1610734fc202ec7da9171"
+    },
+    {
+      "evidence_type": "initialization-diagnostics",
+      "json": "benchmarks/processed/wormhole-qmul-initialization-diagnostics.json",
+      "json_sha256": "f002edc456be9bff562668faa3ee108cd14fa7112d1b5805ec27a26e4f38e65c",
+      "markdown": "benchmarks/processed/wormhole-qmul-initialization-diagnostics.md",
+      "markdown_sha256": "da6eb9df93b2a7bbc758fe98ecebb7955c7d160ebed8c281720e66a094d25b56"
+    },
+    {
+      "evidence_type": "profiler-and-same-device-ceilings",
+      "json": "benchmarks/processed/wormhole-qmul-profiler-and-ceilings.json",
+      "json_sha256": "dbc4bdaf966a21e6054693eecae851cb96a2a305472bad047407a83c9d492012",
+      "markdown": "benchmarks/processed/wormhole-qmul-profiler-and-ceilings.md",
+      "markdown_sha256": "c1f96bcf1c858a24933aa7ae18e33d8e562ce4f24851cbc6d41918587ef2518d"
+    },
+    {
+      "evidence_type": "larger-size-saturation",
+      "json": "benchmarks/processed/wormhole-qmul-saturation.json",
+      "json_sha256": "9459d8fa7ee80d78dc2d70277fc578b94d74eb502ef9877612b4365ec1911110",
+      "markdown": "benchmarks/processed/wormhole-qmul-saturation.md",
+      "markdown_sha256": "236e59293af5f3d82b84c8d896dcce2bddb810e7f297ecf88d121b633ec3b904"
+    },
+    {
+      "evidence_type": "output-circular-buffer-backpressure-ablation",
+      "json": "benchmarks/processed/wormhole-qmul-output-backpressure.json",
+      "json_sha256": "67497b09bd20f9a5e8feb27a0e359af58fbcd6bda8e49f80484d74be39b661b1",
+      "markdown": "benchmarks/processed/wormhole-qmul-output-backpressure.md",
+      "markdown_sha256": "0157635ff70db13086ca051f1231f155146c411fab436b41eee98e7dc46279d3"
+    }
+  ],
+  "public_claim_updated": true,
+  "schema": "tt-rqm-qmul-hardware-evidence-index.v1",
+  "stability_qualification_passed": true
+}

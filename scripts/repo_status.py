@@ -17,6 +17,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from tt_rqm_kernels.su2_benchmark import validate_su2_preregistration
 from tt_rqm_kernels.su2_benchmark_release import validate_release as validate_su2_release
+from tt_rqm_kernels.benchmark_release import validate_release as validate_qmul_release
 
 TT_LANG_AVAILABILITY_PATH = (
     REPO_ROOT / "tt_rqm_kernels" / "backends" / "tt_lang" / "availability.py"
@@ -255,6 +256,7 @@ def _stage_b_report_status() -> tuple[str, str]:
 
 
 def _persistent_stage_b_report_status() -> tuple[str, str]:
+    release_path = REPO_ROOT / "benchmarks/manifests/wormhole-qmul-level2.json"
     conformance_path = (
         REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_conformance.json"
     )
@@ -268,7 +270,8 @@ def _persistent_stage_b_report_status() -> tuple[str, str]:
         REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_timing_audit.md",
     )
     if (
-        not conformance_path.exists()
+        not release_path.exists()
+        or not conformance_path.exists()
         or not performance_path.exists()
         or not all(path.exists() for path in companions)
     ):
@@ -276,9 +279,21 @@ def _persistent_stage_b_report_status() -> tuple[str, str]:
     try:
         conformance = json.loads(conformance_path.read_text(encoding="utf-8"))
         performance = json.loads(performance_path.read_text(encoding="utf-8"))
+        release = validate_qmul_release(
+            release_path,
+            repo_root=REPO_ROOT,
+            verify_generated=False,
+        )
         results = performance.get("results", [])
         valid = (
-            conformance.get("measurement_mode") == "persistent_device_session.v1"
+            release.get("claim")
+            == {
+                "level": 2,
+                "name": "stable_one_device_performance",
+                "public_session_count": 3,
+                "stable_benchmark": True,
+            }
+            and conformance.get("measurement_mode") == "persistent_device_session.v1"
             and conformance.get("stable_benchmark") is False
             and conformance.get("lifecycle", {}).get("create_count") == 1
             and conformance.get("lifecycle", {}).get("close_count") == 1
@@ -296,7 +311,7 @@ def _persistent_stage_b_report_status() -> tuple[str, str]:
                 for result in results
             )
         )
-    except (json.JSONDecodeError, OSError, TypeError, AttributeError):
+    except (json.JSONDecodeError, OSError, TypeError, AttributeError, ValueError):
         valid = False
     if not valid:
         return (
@@ -304,8 +319,8 @@ def _persistent_stage_b_report_status() -> tuple[str, str]:
             "The persistent evidence failed lifecycle or report checks.",
         )
     return (
-        "first persistent hardware sample present",
-        "One device-0 lifecycle completed the full sweep with whole-output validation and stable_benchmark=false; it is not an acceleration claim.",
+        "stable one-device performance present",
+        "Three qualified device-0 sessions support aggregate Claim Level 2 with stable_benchmark=true; each source session remains false and this is not an acceleration claim.",
     )
 
 

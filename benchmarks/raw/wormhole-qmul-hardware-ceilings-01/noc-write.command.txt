@@ -1,0 +1,1 @@
+/home/user/src/tt-metal/build_n300_microbench/test/tt_metal/perf_microbenchmark/2_noc_adjacent/test_noc_adjacent --num-tiles 204800 --tiles-per-transfer 8 --noc-index 0 --noc-direction 0 --access-type 1 --use-device-profiler --num-tests 10 --bypass-check 

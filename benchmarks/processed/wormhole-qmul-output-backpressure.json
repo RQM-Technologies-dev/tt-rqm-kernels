@@ -1,0 +1,64 @@
+{
+  "candidate_sha256": "8bc0d15e7856ee2035a488568af98f560997d737dc84fe9ceb41dbd0d01e9656",
+  "classification": "one-change diagnostic; not a new qualified release candidate",
+  "controlled_change": "output circular-buffer depth: 2 tiles versus 4 tiles",
+  "decision": "retain output_cb_depth=2; depth 4 did not improve both published sizes",
+  "evidence_type": "output-circular-buffer-backpressure-ablation",
+  "held_fixed": [
+    "candidate binary",
+    "arithmetic",
+    "layout",
+    "core allocation",
+    "protocol",
+    "timing contract"
+  ],
+  "rows": [
+    {
+      "depth_2_correctness_passed": true,
+      "depth_2_median_s": 0.002065414,
+      "depth_2_p95_s": 0.002090238,
+      "depth_4_correctness_passed": true,
+      "depth_4_median_s": 0.002064508,
+      "depth_4_p95_s": 0.002094109,
+      "depth_4_to_2_median_ratio": 0.9995613470229214,
+      "depth_4_to_2_p95_ratio": 1.00185194221902,
+      "items": 65536
+    },
+    {
+      "depth_2_correctness_passed": true,
+      "depth_2_median_s": 0.0041823115,
+      "depth_2_p95_s": 0.004250616,
+      "depth_4_correctness_passed": true,
+      "depth_4_median_s": 0.0042116165,
+      "depth_4_p95_s": 0.004258526,
+      "depth_4_to_2_median_ratio": 1.0070068908066747,
+      "depth_4_to_2_p95_ratio": 1.0018609067485749,
+      "items": 262144
+    }
+  ],
+  "same_candidate": true,
+  "schema": "tt-rqm-qmul-hardware-evidence.v1",
+  "setup_failure_disclosed": true,
+  "sources": [
+    {
+      "path": "benchmarks/raw/wormhole-qmul-output-cb-depth-2-01/report.json",
+      "sha256": "aad080375deab464d0a0884309763071e866af3c39b575303285f289505170ee"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-output-cb-depth-2-01/session-manifest.json",
+      "sha256": "9b0eb88daaf289cc1e537bb93ee7ba0138c9d4db7bf9879dbefd92d0e0d9a9c9"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-output-cb-depth-4-01/report.json",
+      "sha256": "ba335887176bd78342ea4b41c62a96764dbb57fb30eda5f30760916e21e0d936"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-output-cb-depth-4-01/session-manifest.json",
+      "sha256": "795d0efe630171f8a4c2b88591650ac5d3a014afb3142121d52ef1a8c09ec52c"
+    },
+    {
+      "path": "benchmarks/raw/wormhole-qmul-output-cb-setup-failure-01/session-manifest.json",
+      "sha256": "335a1841a8d3ade2eda316716916bd48ac03f601bb48712e7ba7831a8fbef5db"
+    }
+  ]
+}
