@@ -26,6 +26,14 @@ The scalar candidate is a correctness baseline only. It has
 run it with Stage B sizes, iterations, warmups, or repetitions. Stage B uses a
 separate multicore compute/SFPU candidate and separate protected artifacts.
 
+The separate Float32 `multicore_tensix_sfpu_qmul` candidate has passed its
+[N=128 hardware gate](../../reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
+and [architecture audit](../../reports/tt_hardware_qmul_stage_b_architecture_audit.md).
+It was promoted to `performance_eligible=true` and completed the
+[official Stage B sweep once](../../reports/tt_hardware_qmul_stage_b_performance.md)
+on Wormhole device 0. That first sample keeps `stable_benchmark=false`; it is
+not an acceleration claim.
+
 The Tenstorrent placement Discussion remains open at
 <https://github.com/tenstorrent/tt-metal/discussions/48871>. Candidate work
 stays external to `tt-metal` unless actionable placement guidance arrives.
@@ -95,6 +103,12 @@ non-empty. Setup may be zero; device time must be positive and finite. Hardware
 runs require every provenance field shown above. The harness independently
 records end-to-end time, the repository commit, and the observed candidate
 binary hash; any candidate-provided hash must match that observed binary.
+
+The multicore candidate additionally emits a validated `work` object containing
+`device_count`, `device_id`, `core_count`, `component_tiles`, `grid_x`,
+`grid_y`, `available_core_count`, `layout`, `work_split`, and
+`arithmetic_path`. StructuredBench preserves this metadata in each report
+result as `candidate_metadata`.
 
 See the canonical
 [hardware command contract](../../docs/tenstorrent-hardware-command-contract.md)

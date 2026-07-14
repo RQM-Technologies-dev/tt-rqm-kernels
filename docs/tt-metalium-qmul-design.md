@@ -22,8 +22,8 @@ This workload is useful because it is compact but not scalar-trivial:
 The scalar version is explicitly `scalar_riscv_correctness_baseline` with
 `performance_eligible=false`. It is suitable for Stage A silicon conformance,
 not acceleration claims. The separate Stage B implementation identifies itself
-as `multicore_tensix_sfpu_qmul` and remains `performance_eligible=false` until
-hardware conformance and architecture audits pass.
+as `multicore_tensix_sfpu_qmul`; it became `performance_eligible=true` only
+after hardware conformance and architecture/hash audits passed.
 
 ## Operator Contract
 
@@ -139,12 +139,31 @@ row-major to `min(component_tiles, available Tensix cores)`. Each selected core
 runs three roles:
 
 - reader RISC-V: DMA four A and four B component tiles into CBs 0-7;
-- compute/SFPU: unpack all eight Float32 tiles into FP32 destination registers,
-  evaluate the four Hamilton equations, and pack CBs 16-19;
+- compute/SFPU: evaluate each output component as one product plus three signed
+  product accumulations through three FP32 destination registers, then pack CBs
+  16-19;
 - writer RISC-V: DMA the four output component tiles to planar DRAM.
 
 Only the compute kernel and its SFPU helper contain Hamilton arithmetic. The
 data-movement kernels contain addressing and DMA control only.
+
+## Stage B Hardware Evidence
+
+The protected N=128 candidate report validates 512 values with zero failing or
+non-finite values and maximum absolute error `9.686581936563243e-08`. The
+architecture audit confirms device 0 only, an 8x7 compute grid, DMA-only
+reader/writer roles, compute/SFPU arithmetic, and projected Stage B core counts
+of 4, 56, and 56.
+
+The first official sweep used N=4096/65536/262144, 30 measured iterations, 5
+warmups, 10 repetitions, and seed 0. Each result retains all ten setup, device,
+and end-to-end samples plus median and nearest-rank p95. Whole-output validation
+passed at every size. The report remains `stable_benchmark=false`, so these
+measurements establish a reproducible first sample, not an acceleration claim.
+
+- [candidate conformance](../reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
+- [architecture and eligibility audit](../reports/tt_hardware_qmul_stage_b_architecture_audit.md)
+- [first performance sample](../reports/tt_hardware_qmul_stage_b_performance.md)
 
 ## StructuredBench Report Fields
 

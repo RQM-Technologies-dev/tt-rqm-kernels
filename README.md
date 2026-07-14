@@ -14,16 +14,19 @@ For Tenstorrent engineers:
 
 1. What this is: structured `[N, 4]` float tensor kernels, starting with `qmul`.
 2. Why it matters: compact benchmark between scalar elementwise ops and matmul.
-3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, tt-emule, and one
-   N300 Stage A hardware conformance report.
-4. Current milestone: Stage A silicon correctness passed; the next accelerator
-   step is a performance-eligible multicore/SFPU Stage B implementation.
-5. Stage A proves silicon conformance; acceleration claims require a later
-   performance-eligible multicore/SFPU Stage B implementation.
-6. Best evidence link: [reports/tt_hardware_qmul_quickstart.md](reports/tt_hardware_qmul_quickstart.md).
+3. Current evidence: CPU/PyTorch reference, TT-Lang simulator, tt-emule, Stage
+   A N300 conformance, and a first multicore/SFPU Stage B N300 sample.
+4. Current milestone: the one-device Float32 Stage B architecture passed
+   conformance, was audited as performance-eligible, and completed the official
+   three-size sweep once.
+5. The Stage B report retains `stable_benchmark=false`; it is methodology
+   evidence, not an acceleration claim or a comparison against another backend.
+6. Best current evidence link:
+   [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md).
 
-The first hardware gate is complete. Its single N=128 sample proves conformance,
-not accelerator performance; throughput claims remain blocked on Stage B.
+The first hardware gate and first Stage B implementation pass are complete.
+Acceleration claims remain blocked on stable methodology and a defined
+comparison baseline.
 
 ## For Tenstorrent Reviewers
 
@@ -33,11 +36,16 @@ not accelerator performance; throughput claims remain blocked on Stage B.
 4. Emulation evidence: [docs/tt-emule-qmul-validation-plan.md](docs/tt-emule-qmul-validation-plan.md)
 5. Outreach packet: [reports/tenstorrent_packet.md](reports/tenstorrent_packet.md)
 6. N300 environment record: [reports/tt_hardware_qmul_environment.txt](reports/tt_hardware_qmul_environment.txt)
-7. Current status command: `python scripts/repo_status.py`
+7. Stage B architecture audit: [reports/tt_hardware_qmul_stage_b_architecture_audit.md](reports/tt_hardware_qmul_stage_b_architecture_audit.md)
+8. Stage B conformance: [reports/tt_hardware_qmul_stage_b_candidate_conformance.md](reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
+9. Stage B first sample: [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md)
+10. Current status command: `python scripts/repo_status.py`
 
-Current result: the experimental TT-Metalium scalar RISC-V `qmul` candidate
-built and passed whole-output conformance on an N300. The committed report is
-hardware-labeled, `stable_benchmark=false`, and `performance_eligible=false`.
+Current result: the scalar baseline remains the immutable Stage A record. The
+separate `multicore_tensix_sfpu_qmul` candidate passed whole-output N=128
+conformance, was architecture-audited, and completed the official Stage B
+sweep on Wormhole device 0. The first sample is hardware-labeled,
+`performance_eligible=true`, and `stable_benchmark=false`.
 
 ## Functional Tenstorrent Path
 
@@ -346,14 +354,18 @@ The Tenstorrent-facing surfaces are:
 - [reports/tt_emule_qmul_candidate.md](reports/tt_emule_qmul_candidate.md)
 - [reports/tt_hardware_qmul_quickstart.md](reports/tt_hardware_qmul_quickstart.md)
 - [reports/tt_hardware_qmul_environment.txt](reports/tt_hardware_qmul_environment.txt)
+- [reports/tt_hardware_qmul_stage_b_candidate_conformance.md](reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
+- [reports/tt_hardware_qmul_stage_b_architecture_audit.md](reports/tt_hardware_qmul_stage_b_architecture_audit.md)
+- [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md)
 
 Proposed backend path:
 
 - optional TT-Lang simulator `qmul` for `[N, 4]` quaternion tensors
 - tt-emule validation for the experimental TT-Metalium `qmul` candidate
-- implemented scalar RISC-V TT-Metalium `qmul` Stage A correctness baseline for
-  `[N, 4]` quaternion tensors, now validated on N300 hardware; a later
-  multicore/SFPU kernel is required for Stage B
+- immutable scalar RISC-V TT-Metalium `qmul` Stage A correctness baseline for
+  `[N, 4]` quaternion tensors, validated on N300 hardware
+- separate Float32 multicore/SFPU Stage B candidate on one Wormhole device,
+  conformance-qualified and sampled once with `stable_benchmark=false`
 - CPU/PyTorch physical-AI pose stream demo using `qrotate_vector`
 - future ComplexTensor-to-QuaternionTensor bridge experiments after lower-stack
   evidence is clearer

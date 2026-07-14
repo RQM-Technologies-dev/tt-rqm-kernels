@@ -32,11 +32,13 @@ tt-emule TT-Metalium candidate: implemented, emulation-only
 Tenstorrent N300 hardware report: Stage A conformance present
 qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
+multicore/SFPU candidate: Stage B conformance and first official sweep present
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
-The N300 report is real-hardware correctness evidence, but it is explicitly not
-a stable or performance-eligible benchmark.
+The scalar N300 report is real-hardware correctness evidence. The separate
+Stage B report is performance-eligible architecture evidence, but its first
+sample is explicitly not stable and is not an acceleration comparison.
 
 ## Run It In 10 Minutes
 
@@ -64,23 +66,27 @@ The existing `[N, 4]` `qmul` path passed its first real N300 Stage A gate. See
 [the StructuredBench report](../reports/tt_hardware_qmul_quickstart.md) and
 [environment record](../reports/tt_hardware_qmul_environment.txt).
 
-The next accelerator milestone is a multicore/SFPU Stage B implementation that
-can qualify for the repository's performance methodology. No performance claim
-is made from the scalar Stage A result.
+The Float32 multicore/SFPU implementation then passed its protected
+[N=128 conformance gate](../reports/tt_hardware_qmul_stage_b_candidate_conformance.md),
+[architecture audit](../reports/tt_hardware_qmul_stage_b_architecture_audit.md),
+and [first official Stage B sweep](../reports/tt_hardware_qmul_stage_b_performance.md)
+on Wormhole device 0. The first sweep keeps `stable_benchmark=false`; no
+acceleration claim is made.
 
 Access state for RQM Technologies:
 
 - Tenstorrent approved SSH access to an N300 host.
-- The pinned TT-Metalium source build and scalar candidate ran successfully.
+- The pinned TT-Metalium source build, scalar candidate, and separate Stage B
+  multicore/SFPU candidate ran successfully.
 - The committed report records exact repo, TT-Metalium, compiler, runtime, and
   candidate-binary provenance.
 
 ## How A Tenstorrent Engineer Can Help
 
-The narrow ask is to run the existing candidate in a real Tenstorrent
-environment and return one hardware-labeled StructuredBench report. Placement
-guidance is welcome if offered, but the active validation plan does not depend
-on it.
+The remaining engineering ask is review of the one-device multicore/SFPU
+architecture and its measurement scope before any stable or comparative
+performance claim. Placement guidance remains welcome but is independent of
+the external candidate evidence.
 
 The copy/paste handoff is:
 
@@ -91,6 +97,10 @@ Expected returned artifacts:
 ```text
 reports/tt_hardware_qmul_quickstart.json
 reports/tt_hardware_qmul_quickstart.md
+reports/tt_hardware_qmul_stage_b_candidate_conformance.json
+reports/tt_hardware_qmul_stage_b_candidate_conformance.md
+reports/tt_hardware_qmul_stage_b_performance.json
+reports/tt_hardware_qmul_stage_b_performance.md
 ```
 
 The first hardware sample should use `execution_label=hardware` and
