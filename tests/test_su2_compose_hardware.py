@@ -77,6 +77,12 @@ def test_arithmetic_is_confined_to_compute_sfpu_sources() -> None:
     assert "fused_accumulator_storage" in (PACKAGE / "src/su2_compose_candidate.cpp").read_text()
 
 
+def test_audited_candidate_is_performance_eligible_but_not_stable() -> None:
+    source = (PACKAGE / "src/su2_compose_candidate.cpp").read_text()
+    assert "constexpr bool kPerformanceEligible = true;" in source
+    assert '{"stable_benchmark", false}' in source
+
+
 def test_preregistered_case_specs_are_exact() -> None:
     assert _case_specs("conformance") == ((32, 8, 1, 0, 1), (2048, 8, 1, 0, 1))
     performance = _case_specs("performance")

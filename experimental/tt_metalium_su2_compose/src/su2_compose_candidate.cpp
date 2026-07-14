@@ -37,7 +37,7 @@ constexpr std::string_view kImplementation = "fused_tensix_sfpu_su2_compose";
 constexpr uint32_t kLanes = 6;
 constexpr uint32_t kTileBytes = 32 * 32 * sizeof(uint32_t);
 constexpr uint32_t kElementsPerTile = 32 * 32;
-constexpr bool kPerformanceEligible = false;
+constexpr bool kPerformanceEligible = true;
 
 struct Assignment {
     CoreCoord core;

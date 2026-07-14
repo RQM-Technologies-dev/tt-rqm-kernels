@@ -20,5 +20,7 @@ python experimental/tt_metalium_su2_compose/build_candidate.py \
   --cmake-prefix-path /path/to/tt-metal/build_Release
 ```
 
-The initial source constant is `performance_eligible=false`. It may change only
-after both conformance cases pass and the architecture audit is committed.
+The audited source constant is `performance_eligible=true`. It was promoted
+only after both N300 conformance cases passed and the architecture audit was
+committed. This architecture qualification does not imply benchmark stability
+or an acceleration claim; emitted metrics retain `stable_benchmark=false`.
