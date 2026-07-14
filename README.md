@@ -23,8 +23,8 @@ For Tenstorrent engineers:
    evidence, not an acceleration claim or a comparison against another backend.
 6. A separate persistent-device Stage B path keeps one Wormhole device open
    across the complete sweep; its first report also remains non-stable.
-7. Best current evidence link:
-   [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md).
+7. Best current timing-methodology link:
+   [reports/tt_hardware_qmul_stage_b_persistent_performance.md](reports/tt_hardware_qmul_stage_b_persistent_performance.md).
 
 The first hardware gate and first Stage B implementation pass are complete.
 Acceleration claims remain blocked on stable methodology and a defined
@@ -34,6 +34,8 @@ The evidence sequence is explicit: immutable scalar Stage A, first multicore
 Stage B, persistent-device Stage B, future multi-session stability, and future
 timing-scope-compatible CPU comparison. See
 [the preregistered stability methodology](docs/stage-b-stability-methodology.md).
+The first persistent artifact passed its one-session gates and remains
+`stable_benchmark=false`.
 
 ## For Tenstorrent Reviewers
 
@@ -46,7 +48,9 @@ timing-scope-compatible CPU comparison. See
 7. Stage B architecture audit: [reports/tt_hardware_qmul_stage_b_architecture_audit.md](reports/tt_hardware_qmul_stage_b_architecture_audit.md)
 8. Stage B conformance: [reports/tt_hardware_qmul_stage_b_candidate_conformance.md](reports/tt_hardware_qmul_stage_b_candidate_conformance.md)
 9. Stage B first sample: [reports/tt_hardware_qmul_stage_b_performance.md](reports/tt_hardware_qmul_stage_b_performance.md)
-10. Current status command: `python scripts/repo_status.py`
+10. Persistent Stage B sample: [reports/tt_hardware_qmul_stage_b_persistent_performance.md](reports/tt_hardware_qmul_stage_b_persistent_performance.md)
+11. Persistent environment and timer audit: [environment](reports/tt_hardware_qmul_stage_b_persistent_environment.txt), [audit](reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
+12. Current status command: `python scripts/repo_status.py`
 
 Current result: the scalar baseline remains the immutable Stage A record. The
 separate `multicore_tensix_sfpu_qmul` candidate passed whole-output N=128

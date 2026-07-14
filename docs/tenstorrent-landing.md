@@ -82,6 +82,13 @@ thresholds are defined in
 [the preregistered methodology](stage-b-stability-methodology.md). It does not
 modify the Stage A or first Stage B records and does not use device 1.
 
+That path has now completed its first
+[persistent conformance](../reports/tt_hardware_qmul_stage_b_persistent_conformance.md)
+and [persistent performance](../reports/tt_hardware_qmul_stage_b_persistent_performance.md)
+sessions. The [timing audit](../reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
+records exact synchronization boundaries and nonclaims. The result remains a
+single-session, non-stable methodology artifact.
+
 Access state for RQM Technologies:
 
 - Tenstorrent approved SSH access to an N300 host.

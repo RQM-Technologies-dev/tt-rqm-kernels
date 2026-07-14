@@ -33,6 +33,7 @@ def build_status() -> dict[str, Any]:
     tt_emule_report = REPO_ROOT / "reports" / "tt_emule_qmul_candidate.json"
     hardware_report_status, hardware_report_detail = _hardware_report_status()
     stage_b_status, stage_b_detail = _stage_b_report_status()
+    persistent_status, persistent_detail = _persistent_stage_b_report_status()
 
     return {
         "schema": "tt-rqm-repo-status.v1",
@@ -91,6 +92,11 @@ def build_status() -> dict[str, Any]:
                 "Stage B hardware report",
                 stage_b_status,
                 stage_b_detail,
+            ),
+            _item(
+                "Persistent Stage B hardware report",
+                persistent_status,
+                persistent_detail,
             ),
         ],
     }
@@ -216,6 +222,53 @@ def _stage_b_report_status() -> tuple[str, str]:
     return (
         "first hardware sample present",
         "The one-device multicore/SFPU sweep passed whole-output validation with performance_eligible=true and stable_benchmark=false; it is not an acceleration claim.",
+    )
+
+
+def _persistent_stage_b_report_status() -> tuple[str, str]:
+    conformance_path = REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_conformance.json"
+    performance_path = REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_performance.json"
+    companions = (
+        REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_conformance.md",
+        REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_performance.md",
+        REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_environment.txt",
+        REPO_ROOT / "reports" / "tt_hardware_qmul_stage_b_persistent_timing_audit.md",
+    )
+    if not conformance_path.exists() or not performance_path.exists() or not all(
+        path.exists() for path in companions
+    ):
+        return "not implemented", "The protected persistent-device evidence set is incomplete."
+    try:
+        conformance = json.loads(conformance_path.read_text(encoding="utf-8"))
+        performance = json.loads(performance_path.read_text(encoding="utf-8"))
+        results = performance.get("results", [])
+        valid = (
+            conformance.get("measurement_mode") == "persistent_device_session.v1"
+            and conformance.get("stable_benchmark") is False
+            and conformance.get("lifecycle", {}).get("create_count") == 1
+            and conformance.get("lifecycle", {}).get("close_count") == 1
+            and performance.get("benchmark_stage") == "performance"
+            and performance.get("case_items") == [4096, 65536, 262144]
+            and performance.get("stable_benchmark") is False
+            and performance.get("lifecycle")
+            == {"close_count": 1, "create_count": 1, "device_count": 1, "device_id": 0}
+            and len(results) == 3
+            and all(
+                result.get("correctness", {}).get("passed") is True
+                and result.get("implementation_class")
+                == "multicore_tensix_sfpu_qmul_persistent"
+                and result.get("performance_eligible") is True
+                and result.get("timing", {}).get("repetitions") == 10
+                for result in results
+            )
+        )
+    except (json.JSONDecodeError, OSError, TypeError, AttributeError):
+        valid = False
+    if not valid:
+        return "invalid persistent hardware report", "The persistent evidence failed lifecycle or report checks."
+    return (
+        "first persistent hardware sample present",
+        "One device-0 lifecycle completed the full sweep with whole-output validation and stable_benchmark=false; it is not an acceleration claim.",
     )
 
 
