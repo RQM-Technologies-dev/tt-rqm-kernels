@@ -23,6 +23,7 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["tt-emule candidate"] == "emulation report present"
     assert statuses["hardware report"] == "hardware conformance report present"
     assert statuses["Stage B hardware report"] == "first hardware sample present"
+    assert statuses["Persistent Stage B hardware report"] == "first persistent hardware sample present"
 
 
 def test_repo_status_text_is_maintainer_scannable() -> None:
@@ -38,5 +39,6 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
     assert "tt-emule candidate: emulation report present" in completed.stdout
     assert "hardware report: hardware conformance report present" in completed.stdout
     assert "Stage B hardware report: first hardware sample present" in completed.stdout
+    assert "Persistent Stage B hardware report: first persistent hardware sample present" in completed.stdout
     assert "not performance-eligible" in completed.stdout
     assert "not an acceleration claim" in completed.stdout

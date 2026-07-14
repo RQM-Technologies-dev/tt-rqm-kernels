@@ -33,12 +33,15 @@ Tenstorrent N300 hardware report: Stage A conformance present
 qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
+persistent multicore/SFPU path: implemented; hardware qualification is separate
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
 The scalar N300 report is real-hardware correctness evidence. The separate
 Stage B report is performance-eligible architecture evidence, but its first
 sample is explicitly not stable and is not an acceleration comparison.
+The persistent-device path removes repeated process/device creation from the
+measurement session while preserving that non-claim.
 
 ## Run It In 10 Minutes
 
@@ -73,6 +76,19 @@ and [first official Stage B sweep](../reports/tt_hardware_qmul_stage_b_performan
 on Wormhole device 0. The first sweep keeps `stable_benchmark=false`; no
 acceleration claim is made.
 
+The next evidence rung is the separate persistent-device conformance and
+three-size timing path. Its lifecycle, timing phases, and future stability
+thresholds are defined in
+[the preregistered methodology](stage-b-stability-methodology.md). It does not
+modify the Stage A or first Stage B records and does not use device 1.
+
+That path has now completed its first
+[persistent conformance](../reports/tt_hardware_qmul_stage_b_persistent_conformance.md)
+and [persistent performance](../reports/tt_hardware_qmul_stage_b_persistent_performance.md)
+sessions. The [timing audit](../reports/tt_hardware_qmul_stage_b_persistent_timing_audit.md)
+records exact synchronization boundaries and nonclaims. The result remains a
+single-session, non-stable methodology artifact.
+
 Access state for RQM Technologies:
 
 - Tenstorrent approved SSH access to an N300 host.
@@ -101,6 +117,10 @@ reports/tt_hardware_qmul_stage_b_candidate_conformance.json
 reports/tt_hardware_qmul_stage_b_candidate_conformance.md
 reports/tt_hardware_qmul_stage_b_performance.json
 reports/tt_hardware_qmul_stage_b_performance.md
+reports/tt_hardware_qmul_stage_b_persistent_conformance.json
+reports/tt_hardware_qmul_stage_b_persistent_conformance.md
+reports/tt_hardware_qmul_stage_b_persistent_performance.json
+reports/tt_hardware_qmul_stage_b_persistent_performance.md
 ```
 
 The first hardware sample should use `execution_label=hardware` and

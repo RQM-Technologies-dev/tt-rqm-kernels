@@ -300,6 +300,47 @@ The performance binary ran from promotion commit `debdce2`; commit `635f41b`
 then added the resulting report. This is the same normal execution-source then
 evidence-commit sequence used by Stage A.
 
+## Persistent-device Stage B path
+
+Do not replace or regenerate the first Stage B artifacts. Build the separate
+persistent target, then qualify N=128 through its protected output names:
+
+```bash
+python experimental/tt_metalium_qmul/build_candidate.py \
+  --candidate persistent \
+  --tt-metal-root /home/user/src/tt-metal \
+  --cmake-prefix-path /home/user/src/tt-metal/build_n300 \
+  --build-dir experimental/tt_metalium_qmul/build_n300_persistent_candidate
+
+python scripts/validate_qmul_persistent_candidate.py \
+  --command "/absolute/path/tt_rqm_metalium_qmul_multicore_persistent_candidate" \
+  --benchmark-stage conformance \
+  --seed 0 \
+  --methodology-note "One persistent Wormhole device-0 session; N=128 conformance; stable_benchmark=false." \
+  --json-output reports/tt_hardware_qmul_stage_b_persistent_conformance.json \
+  --markdown-output reports/tt_hardware_qmul_stage_b_persistent_conformance.md
+```
+
+Only after conformance, source, binary-hash, lifecycle, timer, and device-health
+gates pass, run the official persistent sweep once:
+
+```bash
+python scripts/validate_qmul_persistent_candidate.py \
+  --command "/absolute/path/tt_rqm_metalium_qmul_multicore_persistent_candidate" \
+  --benchmark-stage performance \
+  --seed 0 \
+  --methodology-note "One persistent Wormhole device-0 session; first three-size timing sample; stable_benchmark=false." \
+  --json-output reports/tt_hardware_qmul_stage_b_persistent_performance.json \
+  --markdown-output reports/tt_hardware_qmul_stage_b_persistent_performance.md
+```
+
+The performance mode fixes N=4096/65536/262144, five warmups, 30 iterations
+per sample, ten samples, and seed 0. The command launches the candidate once;
+that process creates device 0 once, runs every case, and closes it once. It
+must not open device 1. See
+[the preregistered stability methodology](stage-b-stability-methodology.md)
+before collecting the first persistent sample.
+
 Label this result as either:
 
 ```text

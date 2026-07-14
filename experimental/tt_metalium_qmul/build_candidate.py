@@ -17,6 +17,7 @@ DEFAULT_BUILD_DIR = PACKAGE_DIR / "build_emule_candidate"
 CANDIDATE_TARGETS = {
     "scalar": "tt_rqm_metalium_qmul_candidate",
     "multicore": "tt_rqm_metalium_qmul_multicore_candidate",
+    "persistent": "tt_rqm_metalium_qmul_multicore_persistent_candidate",
 }
 DEFAULT_BINARY_NAME = CANDIDATE_TARGETS["scalar"]
 
@@ -142,7 +143,12 @@ def main(argv: list[str] | None = None) -> int:
 
     binary = build_dir / binary_name
     print(f"Built {args.candidate} candidate: {binary}")
-    print("Validate with scripts/validate_qmul_candidate.py before reporting results.")
+    validator = (
+        "scripts/validate_qmul_persistent_candidate.py"
+        if args.candidate == "persistent"
+        else "scripts/validate_qmul_candidate.py"
+    )
+    print(f"Validate with {validator} before reporting results.")
     return 0
 
 
