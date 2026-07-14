@@ -1,8 +1,10 @@
 # QuantumIR Roadmap
 
 This roadmap describes a future QuantumIR layer above the existing
-`tt-rqm-kernels` foundation. It is not an implementation commitment for the
-current backend milestone.
+`tt-rqm-kernels` foundation. Its former broad Hamiltonian phase is now refined
+by the concrete [SU2HamiltonianBench roadmap](hamiltonian-evolution-roadmap.md):
+CPU-lowered `SU2ComposeBench` first, device-side coefficient lowering only
+after stable H1 evidence.
 
 The current active backend path remains:
 
@@ -81,8 +83,8 @@ Exit criteria:
 
 Goal:
 
-- explore selected Hamiltonian evolution and batched spin-system workloads that
-  can preserve useful SU(2), quaternionic, spectral, or factored structure
+- implement the focused `SU2ComposeBench` contract for ordered noncommuting
+  two-level evolution before considering broader spin-system workloads
 
 Candidate checks:
 

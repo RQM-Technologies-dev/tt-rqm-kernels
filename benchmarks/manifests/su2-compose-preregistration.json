@@ -1,0 +1,79 @@
+{
+  "benchmark_id": "wormhole-su2-compose-fp32",
+  "claims": {
+    "current_level": null,
+    "public_pre_conformance": "RQM is building quantum Hamiltonian simulation benchmarks for Tenstorrent.",
+    "public_post_conformance": "RQM runs quantum Hamiltonian simulations on Tenstorrent.",
+    "stable_benchmark": false
+  },
+  "conformance_cases": [
+    {"B": 32, "K": 8, "kind": "crafted_and_seeded"},
+    {"B": 2048, "K": 8, "kind": "multicore_seeded"}
+  ],
+  "dtype": "float32",
+  "generator": {
+    "coefficient_distribution": "torch_standard_normal",
+    "dt": 0.05,
+    "hbar": 1.0,
+    "seed": 0
+  },
+  "input": {
+    "phase_lane_order": ["real", "imag"],
+    "phase_shape": "[B, K, 2]",
+    "rotor_lane_order": ["w", "x", "y", "z"],
+    "rotor_shape": "[B, K, 4]"
+  },
+  "methodology": {
+    "device_count": 1,
+    "device_id": 0,
+    "fused_dispatches_per_chain": 1,
+    "fused_logical_bytes": "24*B*K + 24*B",
+    "minimum_steps_per_sample": 2621440,
+    "paired_order": "alternate_fused_first_by_sample_index",
+    "samples": 10,
+    "unfused_dispatches_per_chain": "K - 1",
+    "unfused_logical_bytes": "72*B*(K - 1)",
+    "warmup_pairs": 2
+  },
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_energy_claim",
+    "no_dual_device_claim",
+    "no_full_device_side_hamiltonian_lowering_claim",
+    "no_tenstorrent_endorsement"
+  ],
+  "operation": {
+    "composition_order": "step[K-1] * ... * step[0]",
+    "family": "SU2HamiltonianBench",
+    "normalization": "none",
+    "stage": "SU2ComposeBench"
+  },
+  "output": {
+    "phase_shape": "[B, 2]",
+    "rotor_shape": "[B, 4]"
+  },
+  "performance_cases": [
+    {"B": 32768, "K": 8, "series": "balanced"},
+    {"B": 8192, "K": 32, "series": "balanced"},
+    {"B": 2048, "K": 128, "series": "balanced"},
+    {"B": 512, "K": 512, "series": "balanced"},
+    {"B": 1024, "K": 128, "series": "scaling"},
+    {"B": 4096, "K": 128, "series": "scaling"},
+    {"B": 16384, "K": 128, "series": "scaling"},
+    {"B": 65536, "K": 128, "series": "scaling"}
+  ],
+  "pinned_tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+  "schema": "tt-rqm-su2-compose-preregistration.v1",
+  "status": "pre_hardware",
+  "tolerances": {
+    "cpu_oracle_atol": 1e-11,
+    "cpu_oracle_rtol": 1e-11,
+    "hardware_atol": 0.0001,
+    "hardware_rtol": 0.0001,
+    "nonfinite_values": 0
+  },
+  "title": "Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole"
+}

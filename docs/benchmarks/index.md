@@ -16,6 +16,12 @@ correctness. It is not a stability result, CPU comparison, acceleration claim,
 hardware bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
+## Preregistered next benchmark
+
+- [Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole](su2-compose-bench.md)
+- Current state: CPU contract and preregistration; no SU(2) hardware result yet
+- Family: `SU2HamiltonianBench`; first stage: `SU2ComposeBench`
+
 ## Policy and next measurements
 
 - [Claim policy](claim-policy.md)
