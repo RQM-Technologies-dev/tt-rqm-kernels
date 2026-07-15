@@ -78,6 +78,13 @@ The frozen Level 2 thresholds default to 5% for both within-session dispersion
 and cross-session median deviation. No case-specific threshold may exceed 10%,
 and no threshold may be derived from designated data.
 
+Before session 1, run the designated collector in preflight mode from a clean
+checkout containing the frozen manifest. Supply a separate clean execution
+source subtree that byte-matches the frozen candidate commit. Preflight rejects
+candidate/source/runtime/host mismatches without creating a session package.
+Only its three fixed session IDs are accepted; each completed package is
+retained, including a failure, and no ID may be retried or replaced.
+
 ## Host and cache controls
 
 The collector records inherited and requested CPU affinity, process nice value,
@@ -114,6 +121,20 @@ python scripts/assess_su2_compose_v3_pilots.py \
 The assessment always retains `stable_benchmark=false` and
 `qualification_passed=false`; `ready_to_freeze_v3` is only a pilot-readiness
 decision.
+
+The next collector invocation is intentionally distinct from the pilot tool:
+
+```bash
+python scripts/collect_su2_compose_v3_designated.py \
+  --command /absolute/path/to/tt_rqm_metalium_su2_compose_candidate \
+  --repository-root /clean/collector-checkout \
+  --execution-source-root /clean/frozen-source/experimental/tt_metalium_su2_compose \
+  --tt-metal-root /clean/tt-metal \
+  --preflight
+```
+
+After a successful preflight, invoke the same command once for each fixed
+`--session-id` under `su2-v3-level2-session-1` through `-3`.
 
 The first N300 implementation and pilot pass is recorded in the
 [v3 foundation audit](../reports/tt_hardware_su2_compose_v3_foundation_audit.md).

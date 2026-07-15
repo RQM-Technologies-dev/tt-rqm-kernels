@@ -21,6 +21,7 @@ from tt_rqm_kernels.su2_benchmark_release import (
     LEVEL2_NONCLAIMS,
     validate_manifest,
 )
+import tt_rqm_kernels.su2_stability as su2_stability
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,6 +60,95 @@ def test_v3_frozen_evidence_hash_is_tamper_evident() -> None:
     payload["pilot_evidence"]["assessment_sha256"] = "0" * 64
     with pytest.raises(IntegrityError, match="pilot assessment hash mismatch"):
         validate_stability_preregistration(payload, repo_root=ROOT)
+
+
+def test_v3_qualification_requires_frozen_candidate_source_and_host(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    candidate = {
+        "sha256": "candidate",
+        "source_commit": "source",
+        "source_tree_sha256": "tree",
+        "tt_metal_commit": "metal",
+        "compiler_version": "compiler",
+        "runtime_version": "runtime",
+    }
+    host = {
+        "cpu_model": "cpu",
+        "inherited_cpu_affinity": [0],
+        "requested_candidate_cpu_affinity": [24, 25, 26, 27],
+        "process_nice": 0,
+        "cpu_governors": ["schedutil"],
+        "numa_nodes": ["node0"],
+        "profiler_watcher_debug_disabled": True,
+        "timing_environment": {},
+    }
+    preregistration = {
+        "schema": PREREGISTRATION_SCHEMA_V3,
+        "status": "frozen_before_designated_session_1",
+        "benchmark_id": "test-v3",
+        "candidate": candidate,
+        "host_contract": host,
+        "session_contract": {"required_designated_sessions": 3},
+        "statistic": {"required_metrics": ["fused"]},
+        "raw_sample_duration_s": {"minimum": 0.025, "maximum": 0.05},
+        "cases": [
+            {
+                "B": batch,
+                "K": steps,
+                "limits": {"fused": {"within_session_dispersion": 0.05, "cross_session_deviation": 0.05}},
+            }
+            for batch, steps in su2_stability.CASES
+        ],
+    }
+    host_identity = tuple(
+        json.dumps(host[key], sort_keys=True) for key in su2_stability.V3_HOST_IDENTITY_KEYS
+    )
+    identity = ("candidate", "source", "metal", "compiler", "runtime")
+
+    def fake_analyze(path: Path, *, root: Path, require_designated: bool):
+        index = int(path.name[-1])
+        analysis = {
+            "session_id": f"session-{index}",
+            "performance_report": f"report-{index}.json",
+            "passed_input_gates": True,
+            "rejected_gates": [],
+            "host_identity": host_identity,
+            "source_tree_sha256": "tree",
+            "timing_environment": {},
+            "profiler_watcher_debug_disabled": True,
+            "runtime_cache_path": f"cache-{index}",
+            "cases": [
+                {
+                    "B": batch,
+                    "K": steps,
+                    "fused": {"median_s": 0.001, "p95_s": 0.00101, "dispersion": 0.01},
+                    "raw_fused_samples_s": [0.03] * 10,
+                }
+                for batch, steps in su2_stability.CASES
+            ],
+        }
+        return analysis, identity, ("inputs",)
+
+    monkeypatch.setattr(
+        su2_stability, "load_stability_preregistration", lambda *args, **kwargs: preregistration
+    )
+    monkeypatch.setattr(su2_stability, "_analyze_session", fake_analyze)
+    paths = [Path("session-1"), Path("session-2"), Path("session-3")]
+    passed = qualify_stability(paths, preregistration_path=Path("v3.json"), repo_root=ROOT)
+    assert passed["qualification_passed"] is True
+    assert passed["stable_benchmark"] is True
+
+    def wrong_source(path: Path, *, root: Path, require_designated: bool):
+        analysis, observed_identity, inputs = fake_analyze(path, root=root, require_designated=require_designated)
+        if path.name == "session-2":
+            analysis["source_tree_sha256"] = "wrong"
+        return analysis, observed_identity, inputs
+
+    monkeypatch.setattr(su2_stability, "_analyze_session", wrong_source)
+    rejected = qualify_stability(paths, preregistration_path=Path("v3.json"), repo_root=ROOT)
+    assert rejected["qualification_passed"] is False
+    assert "designated source tree differs from frozen v3 candidate" in rejected["rejected_gates"]
 
 
 def test_v3_pilot_repeat_plan_is_disclosed_and_hash_bound() -> None:

@@ -51,6 +51,14 @@ V3_REQUIRED_ROLES = REQUIRED_ROLES | {
     "host-state-pre",
     "runtime-cache-inventory",
 }
+V3_HOST_IDENTITY_KEYS = (
+    "cpu_model",
+    "inherited_cpu_affinity",
+    "requested_candidate_cpu_affinity",
+    "process_nice",
+    "cpu_governors",
+    "numa_nodes",
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -531,23 +539,37 @@ def qualify_stability(
         if not valid_inputs or valid_inputs[0] != expected_inputs:
             rejected.append("designated session inputs differ from v2 preregistration")
     if preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3:
+        expected_candidate = preregistration["candidate"]
+        expected_identity = (
+            expected_candidate["sha256"],
+            expected_candidate["source_commit"],
+            expected_candidate["tt_metal_commit"],
+            expected_candidate["compiler_version"],
+            expected_candidate["runtime_version"],
+        )
+        if not valid_identities or valid_identities[0] != expected_identity:
+            rejected.append("designated session identity differs from frozen v3 candidate")
+        source_tree_hashes = [analysis.get("source_tree_sha256") for analysis in analyses]
+        if (
+            None in source_tree_hashes
+            or len(set(source_tree_hashes)) != 1
+            or source_tree_hashes[0] != expected_candidate["source_tree_sha256"]
+        ):
+            rejected.append("designated source tree differs from frozen v3 candidate")
         host_identities = [analysis.get("host_identity") for analysis in analyses]
         if None in host_identities or len(set(tuple(value) for value in host_identities if value)) != 1:
             rejected.append("frozen host parameters differ between designated sessions")
         host_contract = preregistration["host_contract"]
         expected_host_identity = tuple(
             json.dumps(host_contract[key], sort_keys=True)
-            for key in (
-                "cpu_model",
-                "inherited_cpu_affinity",
-                "requested_candidate_cpu_affinity",
-                "process_nice",
-                "cpu_governors",
-                "numa_nodes",
-            )
+            for key in V3_HOST_IDENTITY_KEYS
         )
         if not host_identities or host_identities[0] != expected_host_identity:
             rejected.append("designated sessions differ from the frozen host contract")
+        if any(analysis.get("timing_environment") != host_contract["timing_environment"] for analysis in analyses):
+            rejected.append("designated timing environment differs from frozen host contract")
+        if any(analysis.get("profiler_watcher_debug_disabled") is not True for analysis in analyses):
+            rejected.append("designated profiler, watcher, or debug contract changed")
         cache_paths = [analysis.get("runtime_cache_path") for analysis in analyses]
         if None in cache_paths or len(cache_paths) != len(set(cache_paths)):
             rejected.append("designated sessions did not use distinct runtime cache roots")
@@ -800,6 +822,9 @@ def _analyze_session(
     modern = manifest.get("schema") in {"tt-rqm-su2-compose-session.v2", "tt-rqm-su2-compose-session.v3"}
     v3 = manifest.get("schema") == "tt-rqm-su2-compose-session.v3"
     host_identity: tuple[Any, ...] | None = None
+    source_tree_sha256: str | None = None
+    timing_environment: Any = None
+    profiler_watcher_debug_disabled: Any = None
     rejected: list[str] = []
     if modern and manifest.get("collection_status") != "passed":
         rejected.append(f"designated collection failed: {manifest.get('failure')}")
@@ -877,6 +902,9 @@ def _analyze_session(
             rejected.append(f"device-health validation failed: {exc}")
         try:
             environment = json.loads(role_paths["environment"].read_text(encoding="utf-8"))
+            source_tree_sha256 = environment.get("candidate", {}).get("source_tree_sha256")
+            timing_environment = environment.get("timing_environment")
+            profiler_watcher_debug_disabled = environment.get("profiler_watcher_debug_disabled")
             if require_designated and environment.get("repository", {}).get("status"):
                 rejected.append("collector repository was dirty")
             if require_designated and environment.get("tt_metal", {}).get("status"):
@@ -903,7 +931,10 @@ def _analyze_session(
                 cache = json.loads(role_paths["runtime-cache-inventory"].read_text(encoding="utf-8"))
                 if cache.get("file_count", 0) <= 0:
                     rejected.append("runtime cache inventory is empty after collection")
+                _validate_imported_cache_inventory(manifest_path.parent)
             except (KeyError, OSError, json.JSONDecodeError, TypeError) as exc:
+                rejected.append(f"v3 host/cache validation failed: {exc}")
+            except IntegrityError as exc:
                 rejected.append(f"v3 host/cache validation failed: {exc}")
 
     candidate = report["provenance"]["candidate"]
@@ -983,6 +1014,9 @@ def _analyze_session(
             "runtime_version": identity[4],
             "input_case_ids": list(input_identity),
             "host_identity": host_identity,
+            "source_tree_sha256": source_tree_sha256,
+            "timing_environment": timing_environment,
+            "profiler_watcher_debug_disabled": profiler_watcher_debug_disabled,
             "runtime_cache_path": manifest.get("runtime_cache_path") if v3 else None,
             "cases": cases,
         },
