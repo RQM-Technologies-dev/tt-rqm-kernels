@@ -7,6 +7,9 @@ kernel for Tenstorrent Wormhole. This RFC asks one placement question: should a
 minimal upstream version live as a TT-Metalium programming example or as an
 experimental TT-NN device operation using `ProgramDescriptor`?
 
+The request is open as
+[tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
+
 This is an independent community proposal, not an endorsement claim or a
 request for a native quaternion datatype or hardware feature.
 

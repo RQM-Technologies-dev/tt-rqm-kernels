@@ -35,6 +35,12 @@ example rather than a request for a new datatype or hardware feature.
   TT-Metalium path or a small TT-NN custom-op boundary. The latter remains a
   design discussion, not an implementation request.
 
+That placement decision is now tracked in
+[tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
+No upstream implementation PR will be opened until maintainers indicate whether
+the minimal `qmul` path belongs as a TT-Metalium programming example or an
+experimental TT-NN `ProgramDescriptor` operation.
+
 The evidence is intentionally separated from broader application claims. The
 [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) records the qualified
 one-device result; [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)

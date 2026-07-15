@@ -72,10 +72,12 @@ its own sequence of FP32 tiles. A TT-NN form could preserve logical `[N, 4]`
 through an internal layout adapter or expose the device-native planar layout at
 the experimental boundary.
 
-The current placement request is tracked in the
+The current placement request is tracked in
+[tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
+It supersedes the earlier unanswered
 [Tenstorrent discussion](https://github.com/tenstorrent/tt-metal/discussions/48871).
-A feature-support issue should supersede that unanswered discussion before any
-upstream PR is proposed.
+No upstream implementation PR will be proposed before maintainers answer the
+placement and layout questions.
 
 ## Repository Roles
 
