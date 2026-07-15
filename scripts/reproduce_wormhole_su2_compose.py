@@ -41,8 +41,10 @@ def _check() -> None:
         load_stability_preregistration(V2_PREREGISTRATION, repo_root=REPO_ROOT)
     if (REPO_ROOT / V3_PREREGISTRATION).is_file():
         v3 = load_stability_preregistration(V3_PREREGISTRATION, repo_root=REPO_ROOT)
-        if v3["status"] != "pilot_foundation_not_frozen":
+        if v3["status"] != "frozen_before_designated_session_1":
             raise ValueError("unexpected v3 campaign status")
+        if v3["candidate"]["source_commit"] != "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6":
+            raise ValueError("unexpected frozen v3 source identity")
         load_v3_pilot_repeat_counts(
             Path("benchmarks/manifests/su2-compose-v3-pilot-repeat-counts.json"),
             repo_root=REPO_ROOT,

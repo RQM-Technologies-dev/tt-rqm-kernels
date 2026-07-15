@@ -112,7 +112,7 @@ def validate_stability_preregistration(
         "SU2 stability schema mismatch",
     )
     if schema == PREREGISTRATION_SCHEMA_V3:
-        return _validate_v3_preregistration(data)
+        return _validate_v3_preregistration(data, root=root)
     expected_status = (
         "frozen_before_designated_session_2"
         if schema == PREREGISTRATION_SCHEMA
@@ -189,7 +189,7 @@ def validate_stability_preregistration(
     return data
 
 
-def _validate_v3_preregistration(data: dict[str, Any]) -> dict[str, Any]:
+def _validate_v3_preregistration(data: dict[str, Any], *, root: Path) -> dict[str, Any]:
     status = data.get("status")
     _require(
         status in {"pilot_foundation_not_frozen", "frozen_before_designated_session_1"},
@@ -248,12 +248,168 @@ def _validate_v3_preregistration(data: dict[str, Any]) -> dict[str, Any]:
         _require(candidate is None and pilots == [], "pilot-only v3 cannot freeze candidate or pilot evidence")
     else:
         _require(isinstance(candidate, dict), "frozen v3 candidate identity is missing")
-        for key in ("sha256", "source_commit", "source_tree_sha256", "tt_metal_commit"):
+        for key in (
+            "sha256",
+            "source_commit",
+            "source_tree_sha256",
+            "tt_metal_commit",
+            "compiler_version",
+            "runtime_version",
+            "device",
+            "pilot_collection_base_commit",
+        ):
             _require(isinstance(candidate.get(key), str) and candidate[key], f"frozen v3 candidate {key} is missing")
-        _require(isinstance(pilots, list) and len(pilots) == 3, "frozen v3 requires three pilot sessions")
+        _require(
+            pilots == ["pilot-1", "pilot-2", "pilot-3"],
+            "frozen v3 requires the three retained pilot sessions",
+        )
+        frozen_at = data.get("frozen_at_utc")
+        _require(
+            isinstance(frozen_at, str) and frozen_at.endswith("+00:00"),
+            "frozen v3 timestamp is missing or not UTC",
+        )
+        repeat_plan = load_v3_pilot_repeat_counts(Path(str(data.get("pilot_repeat_plan"))), repo_root=root)
+        _require(
+            [case["repeat_count"] for case in cases]
+            == [repeat_plan[(batch, steps)] for batch, steps in CASES],
+            "frozen v3 repeat counts differ from the retained pilot plan",
+        )
+        _validate_v3_host_contract(data)
+        _validate_v3_pilot_evidence(data, root=root)
     invalid = data.get("invalid_session_rules")
     _require(isinstance(invalid, list) and len(invalid) == len(set(invalid)) >= 12, "v3 invalid-session rules are incomplete")
     return data
+
+
+def _validate_v3_host_contract(data: Mapping[str, Any]) -> None:
+    host = data.get("host_contract")
+    _require(isinstance(host, dict), "frozen v3 host contract is missing")
+    required = {
+        "cpu_model",
+        "inherited_cpu_affinity",
+        "requested_candidate_cpu_affinity",
+        "process_nice",
+        "cpu_governors",
+        "numa_nodes",
+        "profiler_watcher_debug_disabled",
+        "timing_environment",
+    }
+    _require(set(host) == required, "frozen v3 host contract changed")
+    _require(host["requested_candidate_cpu_affinity"] == [24, 25, 26, 27], "v3 CPU affinity changed")
+    _require(host["process_nice"] == 0, "v3 process nice changed")
+    _require(host["profiler_watcher_debug_disabled"] is True, "v3 debug contract changed")
+    _require(host["timing_environment"] == {}, "v3 timing environment changed")
+
+
+def _validate_v3_pilot_evidence(data: Mapping[str, Any], *, root: Path) -> None:
+    candidate = data["candidate"]
+    assert isinstance(candidate, Mapping)
+    evidence = data.get("pilot_evidence")
+    _require(isinstance(evidence, dict), "frozen v3 pilot evidence is missing")
+    assessment_path = _resolve(root, Path(str(evidence.get("assessment"))))
+    _require(assessment_path.is_file(), "frozen v3 pilot assessment is missing")
+    _require(
+        sha256_file(assessment_path) == evidence.get("assessment_sha256"),
+        "frozen v3 pilot assessment hash mismatch",
+    )
+    assessment = json.loads(assessment_path.read_text(encoding="utf-8"))
+    _require(
+        assessment.get("schema") == "tt-rqm-su2-compose-v3-pilot-assessment.v1",
+        "frozen v3 pilot assessment schema mismatch",
+    )
+    _require(
+        assessment.get("non_designated_pilot_only") is True
+        and assessment.get("stable_benchmark") is False
+        and assessment.get("qualification_passed") is False,
+        "pilot assessment makes an invalid stability claim",
+    )
+    _require(
+        assessment.get("ready_to_freeze_v3") is True
+        and assessment.get("all_cases_within_preferred_5_percent") is True
+        and assessment.get("rejected_gates") == [],
+        "pilot assessment did not pass the frozen readiness gate",
+    )
+    pilots = evidence.get("sessions")
+    _require(isinstance(pilots, list) and len(pilots) == 3, "frozen v3 pilot evidence is incomplete")
+    ids = [str(pilot.get("id")) for pilot in pilots if isinstance(pilot, dict)]
+    _require(ids == ["pilot-1", "pilot-2", "pilot-3"], "frozen v3 pilot IDs changed")
+    _require(assessment.get("session_ids") == ids, "pilot assessment session IDs changed")
+    for pilot in pilots:
+        _require(isinstance(pilot, dict), "frozen v3 pilot entry is malformed")
+        manifest_path = _resolve(root, Path(str(pilot.get("manifest"))))
+        _require(manifest_path.is_file(), "frozen v3 pilot manifest is missing")
+        _require(
+            sha256_file(manifest_path) == pilot.get("manifest_sha256"),
+            "frozen v3 pilot manifest hash mismatch",
+        )
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        _require(manifest.get("session_id") == pilot.get("id"), "pilot manifest ID mismatch")
+        _require(
+            manifest.get("collection_status") == "passed"
+            and manifest.get("designated_stability_session") is False
+            and manifest.get("benchmark_mode") == "fused_stability",
+            "pilot manifest contract mismatch",
+        )
+        _require(manifest.get("candidate_sha256") == candidate.get("sha256"), "pilot candidate hash mismatch")
+        _require(
+            manifest.get("tt_metal_commit") == candidate.get("tt_metal_commit"),
+            "pilot TT-Metal commit mismatch",
+        )
+        _require(
+            manifest.get("execution_source_commit") == candidate.get("pilot_collection_base_commit"),
+            "pilot collection base commit mismatch",
+        )
+        _validate_imported_cache_inventory(manifest_path.parent)
+    conformance = evidence.get("fused_conformance")
+    _require(isinstance(conformance, dict), "frozen v3 conformance evidence is missing")
+    manifest_path = _resolve(root, Path(str(conformance.get("manifest"))))
+    _require(manifest_path.is_file(), "frozen v3 conformance manifest is missing")
+    _require(
+        sha256_file(manifest_path) == conformance.get("manifest_sha256"),
+        "frozen v3 conformance manifest hash mismatch",
+    )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    _require(
+        manifest.get("collection_status") == "passed"
+        and manifest.get("designated_stability_session") is False
+        and manifest.get("benchmark_mode") == "fused_stability",
+        "fused conformance manifest contract mismatch",
+    )
+    _require(manifest.get("candidate_sha256") == candidate.get("sha256"), "conformance candidate hash mismatch")
+    report = json.loads((manifest_path.parent / "report.json").read_text(encoding="utf-8"))
+    _require(
+        report.get("benchmark_stage") == "conformance"
+        and report.get("benchmark_mode") == "fused_stability"
+        and all("unfused" not in result for result in report.get("results", [])),
+        "fused conformance report contract mismatch",
+    )
+    remote = evidence.get("remote_assessment")
+    _require(isinstance(remote, dict), "retained remote pilot assessment is missing")
+    remote_path = _resolve(root, Path(str(remote.get("path"))))
+    _require(remote_path.is_file(), "retained remote pilot assessment file is missing")
+    _require(
+        sha256_file(remote_path) == remote.get("sha256"),
+        "retained remote pilot assessment hash mismatch",
+    )
+
+
+def _validate_imported_cache_inventory(session_dir: Path) -> None:
+    cache_root = session_dir / "tt-metal-cache"
+    inventory_path = session_dir / "cache-inventory.json"
+    _require(cache_root.is_dir() and inventory_path.is_file(), "imported runtime cache evidence is missing")
+    inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
+    files = inventory.get("files")
+    _require(isinstance(files, list) and len(files) == inventory.get("file_count"), "runtime cache inventory is malformed")
+    for entry in files:
+        _require(isinstance(entry, dict), "runtime cache inventory entry is malformed")
+        path = (cache_root / str(entry.get("path"))).resolve()
+        try:
+            path.relative_to(cache_root.resolve())
+        except ValueError as exc:
+            raise IntegrityError("runtime cache inventory path escapes session") from exc
+        _require(path.is_file(), "imported runtime cache file is missing")
+        _require(path.stat().st_size == entry.get("size_bytes"), "imported runtime cache size mismatch")
+        _require(sha256_file(path) == entry.get("sha256"), "imported runtime cache hash mismatch")
 
 
 def _validate_v2_identity_and_inputs(data: Mapping[str, Any], report: Mapping[str, Any]) -> None:
@@ -378,6 +534,20 @@ def qualify_stability(
         host_identities = [analysis.get("host_identity") for analysis in analyses]
         if None in host_identities or len(set(tuple(value) for value in host_identities if value)) != 1:
             rejected.append("frozen host parameters differ between designated sessions")
+        host_contract = preregistration["host_contract"]
+        expected_host_identity = tuple(
+            json.dumps(host_contract[key], sort_keys=True)
+            for key in (
+                "cpu_model",
+                "inherited_cpu_affinity",
+                "requested_candidate_cpu_affinity",
+                "process_nice",
+                "cpu_governors",
+                "numa_nodes",
+            )
+        )
+        if not host_identities or host_identities[0] != expected_host_identity:
+            rejected.append("designated sessions differ from the frozen host contract")
         cache_paths = [analysis.get("runtime_cache_path") for analysis in analyses]
         if None in cache_paths or len(cache_paths) != len(set(cache_paths)):
             rejected.append("designated sessions did not use distinct runtime cache roots")

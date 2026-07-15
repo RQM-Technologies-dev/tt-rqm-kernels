@@ -3,10 +3,9 @@
 ## Status and claim boundary
 
 This file defines the v3 measurement foundation. The accompanying
-preregistration is currently `pilot_foundation_not_frozen`: it cannot qualify
-designated sessions, and it contains no frozen candidate identity or final
-repeat counts. Three non-designated pilots must pass before those fields can be
-frozen.
+preregistration is `frozen_before_designated_session_1`: it binds the clean
+candidate source identity, final repeat counts, host contract, and retained
+non-designated pilot packages. No designated session has been collected.
 
 Level 2 asks one question: is the fused H1 implementation stable on one
 Wormhole device? Its gates are fused whole-output correctness, fused timing
@@ -43,7 +42,7 @@ the frozen repeat count.
 
 The disclosed initial pilot repeat plan targets 37.5 ms using the retained v2
 calibration report. It is not designated evidence and may be revised between
-pilots. Run three separate non-designated pilots and assess:
+pilots. Three separate non-designated pilots were assessed for:
 
 - exact eight-case order and deterministic inputs;
 - ten complete raw samples after five warmups;
@@ -55,10 +54,9 @@ pilots. Run three separate non-designated pilots and assess:
 - distinct empty-start `TT_METAL_CACHE` roots.
 
 If any case exceeds 10%, improve the harness and repeat the non-designated pilot
-sequence. Do not expand a case threshold. Only after three pilots pass may the
-v3 preregistration be changed to `frozen_before_designated_session_1`, bind the
-candidate/source/runtime identity, bind the final repeat counts, and hash-bind
-the three pilot packages.
+sequence. Do not expand a case threshold. The retained pilots passed the
+preferred 5% gate, and the frozen preregistration hash-binds their packages,
+candidate/source/runtime identity, and final repeat counts.
 
 ## Designated session contract
 

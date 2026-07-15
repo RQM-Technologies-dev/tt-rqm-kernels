@@ -83,10 +83,11 @@ The retained remote foundation evidence is under
 
 ## Freeze gate
 
-The pilot data support freezing the measured repeat counts and 5% fused gates,
-but the checked-in preregistration intentionally remains
-`pilot_foundation_not_frozen`. Before changing it to
-`frozen_before_designated_session_1`, commit the v3 implementation so the
-candidate can bind a clean execution-source commit and source-tree hash, then
-retain or import the pilot evidence at stable repository paths. Only after that
-freeze may designated Level 2 collection begin.
+The v3 implementation is committed as `cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6`.
+Its clean archived source tree is bound by SHA-256
+`98204ca4dbe04986bcb35cc4aef3fa7332d6310f869bec7fc399f68ec21566ff`.
+The retained pilot reports record their pre-commit collection base
+`4c820d74495ae872de089a768d9c463f98117d31`; their candidate binary, runtime,
+and complete cache inventories are hash-bound in the frozen v3 preregistration.
+That preregistration now has status `frozen_before_designated_session_1`.
+No designated Level 2 collection has been started.

@@ -38,16 +38,27 @@ def test_v2_stability_preregistration_is_frozen_before_session_one() -> None:
     assert len(preregistration["inputs"]) == 8
 
 
-def test_v3_foundation_is_fused_only_and_not_freezable_yet() -> None:
+def test_v3_foundation_is_fused_only_and_frozen_before_collection() -> None:
     path = Path("benchmarks/manifests/su2-compose-stability-preregistration-v3.json")
     preregistration = load_stability_preregistration(path, repo_root=ROOT)
     assert preregistration["schema"] == PREREGISTRATION_SCHEMA_V3
-    assert preregistration["status"] == "pilot_foundation_not_frozen"
+    assert preregistration["status"] == "frozen_before_designated_session_1"
     assert preregistration["statistic"]["required_metrics"] == ["fused"]
     assert preregistration["statistic"]["diagnostic_metrics"] == ["unfused", "ratio"]
-    assert all(case["repeat_count"] is None for case in preregistration["cases"])
-    with pytest.raises(IntegrityError, match="not frozen"):
-        qualify_stability([], preregistration_path=path, repo_root=ROOT)
+    assert [case["repeat_count"] for case in preregistration["cases"]] == [267, 90, 24, 7, 24, 24, 24, 12]
+    assert preregistration["candidate"]["source_commit"] == "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6"
+    assert preregistration["pilot_sessions"] == ["pilot-1", "pilot-2", "pilot-3"]
+    qualification = qualify_stability([], preregistration_path=path, repo_root=ROOT)
+    assert qualification["qualification_passed"] is False
+    assert "exactly 3 designated cold-start sessions are required" in qualification["rejected_gates"]
+
+
+def test_v3_frozen_evidence_hash_is_tamper_evident() -> None:
+    path = ROOT / "benchmarks/manifests/su2-compose-stability-preregistration-v3.json"
+    payload = json.loads(path.read_text())
+    payload["pilot_evidence"]["assessment_sha256"] = "0" * 64
+    with pytest.raises(IntegrityError, match="pilot assessment hash mismatch"):
+        validate_stability_preregistration(payload, repo_root=ROOT)
 
 
 def test_v3_pilot_repeat_plan_is_disclosed_and_hash_bound() -> None:
