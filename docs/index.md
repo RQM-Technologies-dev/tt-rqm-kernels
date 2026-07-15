@@ -20,6 +20,8 @@ without making it part of the primary introduction.
 - [Claim policy](benchmarks/claim-policy.md)
 - [SU2ComposeBench claim policy](benchmarks/su2-compose-claim-policy.md)
 - [SU2ComposeBench stability methodology](su2-stability-methodology.md)
+- [Retained SU2 candidate experiment](benchmarks/su2-compose-candidate-54b91b.md)
+- [Retained SU2 v2 qualification result](../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
 - [Stage B stability methodology](stage-b-stability-methodology.md)
 - [Tenstorrent execution runbook](tenstorrent-execution-runbook.md)
 - [Functional quickstart](tenstorrent-functional-quickstart.md)
@@ -41,7 +43,8 @@ without making it part of the primary introduction.
 
 These pages preserve setup and access history. Approved N300 execution has
 already produced the committed Stage A, Stage B, persistent qmul, and H1 SU(2)
-evidence.
+evidence. The retained three-session SU2 v2 campaign did not qualify for Level
+2; it does not alter the public Claim Level 1 release.
 
 ## Integration and contribution paths
 

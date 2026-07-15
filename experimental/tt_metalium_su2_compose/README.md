@@ -24,3 +24,14 @@ The audited source constant is `performance_eligible=true`. It was promoted
 only after both N300 conformance cases passed and the architecture audit was
 committed. This architecture qualification does not imply benchmark stability
 or an acceleration claim; emitted metrics retain `stable_benchmark=false`.
+
+The retained candidate executable is SHA-256 `54b91b…`, built from source
+`3238299…` against pinned TT-Metal `dd2849…`. Device Program Profiler and Tracy
+captures retained this exact candidate: reader, compute, and writer scopes
+overlap, and no semantics-preserving architectural correction was isolated.
+
+Three separately frozen N300 cold-start stability sessions were then collected
+without replacement. Their [deterministic qualification](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+rejected five cases under the preregistered variability gates. This candidate
+therefore remains performance-eligible diagnostic evidence, not a stable or
+accelerated SU2 result.

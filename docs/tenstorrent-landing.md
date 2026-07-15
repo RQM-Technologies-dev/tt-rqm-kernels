@@ -43,7 +43,7 @@ qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
 persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sessions
-SU2ComposeBench fused/unfused paths: N300 conformance and one comparison session present
+SU2ComposeBench fused/unfused paths: Claim Level 1 release plus retained non-qualifying v2 campaign
 EntanglementDynamicsBench: CPU reference foundation only; no hardware claim or claim level
 ```
 
@@ -54,8 +54,16 @@ path removes repeated process/device creation from each measurement session.
 
 The [SU2ComposeBench report](benchmarks/su2-compose-bench.md) adds fused,
 time-ordered SU(2) evolution. Its fused and unfused paths passed whole-output
-conformance and completed one paired N300 device-0 session. That result is
-Claim Level 1 with `stable_benchmark=false`, not an acceleration claim.
+conformance and one paired N300 device-0 comparison, producing a Claim Level 1
+release with `stable_benchmark=false`. A later, separately frozen v2 campaign
+retained three fresh N300 cold-start sessions for candidate `54b91b…`; the
+deterministic qualifier rejected five cases under the frozen variability gates.
+No session was replaced and no Level 2 SU2 release exists.
+
+The [v2 preregistration](../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
+and [qualification artifact](../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+preserve the candidate identity, inputs, session packages, and non-qualifying
+outcome. This remains neither an acceleration nor a stable-performance claim.
 
 The public [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
 packages the current evidence, deterministic charts, claim policy, provenance,
