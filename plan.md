@@ -25,7 +25,9 @@ SU2 profiler attribution: pending
 CPU timing-scope-compatible comparison: pending
 Energy measurement: pending
 H2 device-side coefficient lowering: pending
-TT-NN integration: deferred
+qmul upstream placement: pending Tenstorrent guidance in tt-metal#49887
+SU2ComposeBench TT-NN integration: deferred until H1 stability
+Broader RQM TT-NN operator family: deferred
 TT-MLIR lowering discussion: deferred until the backend evidence is sufficiently mature
 ```
 
@@ -65,17 +67,22 @@ A separate real-N300 candidate experiment is retained under
 `benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-*`.
 It validates candidate `54b91b…` for two conformance cases and one complete
 eight-case paired performance run, but it is not a designated session in the
-existing hash-bound campaign. The next SU2 evidence decision is to either
-recover the original frozen candidate or explicitly freeze `54b91b…` under a
-new preregistration, then collect three designated cold-start sessions. Do not
-combine those campaigns or promote either one-session result to Level 2.
+existing hash-bound campaign. Its packages are now protected by a dedicated
+fail-closed candidate-experiment manifest and validator. Profiler attribution
+in [issue #27](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/27)
+must finish before candidate selection. Only then may the new three-session
+campaign in [issue #28](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/28)
+be frozen. Do not combine campaigns or promote either one-session result to
+Level 2.
 
 ### Profiler attribution
 
 Capture Device Program Profiler and Tracy evidence for the fused and unfused
 paths. Attribute dispatch, compute, data movement, and synchronization costs
-before selecting additional optimizations. Logical-byte formulas must remain
-distinct from measured hardware bandwidth.
+before selecting additional optimizations or freezing a stability candidate.
+Logical-byte formulas must remain distinct from measured hardware bandwidth.
+This work is tracked in
+[issue #27](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/27).
 
 ### Matched comparisons and energy
 
@@ -86,12 +93,24 @@ protocol. Neither result exists today.
 
 ## Deferred integration work
 
-### TT-NN
+### qmul upstream placement
 
-TT-NN integration is deferred until the lower-level H1 implementation and
-evidence are stable. A wrapper must preserve ordered composition, whole-output
-validation, provenance, and timing boundaries rather than hiding them behind a
-higher-level API.
+The qmul-only placement question is pending Tenstorrent guidance in
+[tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
+No upstream implementation begins until maintainers choose between a Metalium
+example and an experimental TT-NN operation.
+
+### SU2ComposeBench TT-NN integration
+
+SU2ComposeBench TT-NN integration is deferred until the lower-level H1
+implementation and evidence are stable. A wrapper must preserve ordered
+composition, whole-output validation, provenance, and timing boundaries rather
+than hiding them behind a higher-level API.
+
+### Broader RQM TT-NN operator family
+
+A broader RQM operator family remains deferred. It must not inherit qmul or SU2
+evidence and is not part of the current upstream placement request.
 
 ### TT-MLIR
 
