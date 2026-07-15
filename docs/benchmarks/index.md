@@ -20,6 +20,15 @@ artifact and a versioned release manifest.
 - This is not part of the hash-bound Level 1 release or its frozen Level 2
   stability campaign.
 
+## Retained SU2 stability campaign
+
+- [V2 preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
+- [Deterministic qualification result](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+- Outcome: three complete designated N300 sessions retained; five cases failed
+  preregistered variability gates; `stable_benchmark=false`
+- Public release remains Claim Level 1; no replacement session or Level 2
+  manifest was created.
+
 ## Quaternion kernel report
 
 - [Structured FP32 Quaternion Kernels on Tenstorrent Wormhole](wormhole-qmul.md)
@@ -53,6 +62,7 @@ result, or Tenstorrent endorsement.
 - [SU2ComposeBench release manifest](../../benchmarks/manifests/wormhole-su2-compose.json)
 - [SU2 stability methodology](../su2-stability-methodology.md)
 - [Frozen SU2 stability preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration.json)
+- [Frozen retained-candidate SU2 stability preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
 
 Validate the complete published release without hardware access:
 

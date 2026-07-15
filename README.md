@@ -30,10 +30,10 @@ example rather than a request for a new datatype or hardware feature.
 - **What is proven:** the one-device `qmul` release passed three independent
   qualified N300 sessions; fused and unfused `SU2ComposeBench` paths passed
   whole-output conformance and one paired N300 comparison session.
-- **The next engineering decision:** review profiler attribution and choose
-  whether the next optimization should be fusion/layout work in the
-  TT-Metalium path or a small TT-NN custom-op boundary. The latter remains a
-  design discussion, not an implementation request.
+- **The current engineering decisions:** the SU2 profiler did not isolate a
+  semantics-preserving fusion/layout correction, while the separate qmul
+  placement question remains a design discussion rather than an
+  implementation request.
 
 That placement decision is now tracked in
 [tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
@@ -67,20 +67,21 @@ contracts, results, and limitations.
 ### SU2 stability status
 
 The published SU2 evidence remains **Claim Level 1** with
-`stable_benchmark=false`. Its Level 2 qualification contract is now frozen:
-three independent cold-start sessions must use the same candidate and
-environment, retain every designated run, pass whole-output correctness, and
-satisfy preregistered per-path and fused/unfused comparison-variability gates
-across all eight benchmark cases. No fresh v2 designated session has been
-collected yet, so the repository makes no stable SU2 performance claim.
+`stable_benchmark=false`. The frozen v2 campaign retained three independent
+cold-start N300 sessions with the same candidate and environment. All three
+passed collection, provenance, lifecycle, input, correctness, nonfinite, and
+sample-retention gates, but the deterministic qualifier rejected five of the
+eight cases under the preregistered variability limits. No session was
+replaced, and the repository makes no stable SU2 performance claim.
 
 The original [stability preregistration](benchmarks/manifests/su2-compose-stability-preregistration.json)
 remains historical. After profiler review retained candidate `54b91b…`, the
 [new v2 preregistration](benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
 froze its exact candidate, source, runtime, input hashes, case order, and gates
-before designated session 1. The collector and deterministic qualifier fail
-closed on candidate, environment, session, correctness, or timing
-inconsistencies.
+before designated session 1. The [retained qualification result](benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+records the rejected dispersion and cross-session gates. The collector and
+deterministic qualifier fail closed on candidate, environment, session,
+correctness, or timing inconsistencies.
 
 ### Separate candidate experiment
 
@@ -88,12 +89,12 @@ A separate, hash-preserved N300 device-0 experiment evaluated a newly rebuilt
 SU2 candidate (`54b91b…`) with two conformance cases and eight paired
 performance cases. It retained two warmup pairs and ten measured pairs per
 case, passed the recorded correctness checks, and remains
-`stable_benchmark=false`. It is **not** session 2 of the frozen Level 2
-campaign: that campaign is bound to a different candidate identity. See the
+`stable_benchmark=false`. It is **not** a designated session in either
+stability campaign. See the
 [candidate experiment record](docs/benchmarks/su2-compose-candidate-54b91b.md)
-and its retained raw evidence. The new candidate contract is now frozen, but
-the retained experiment is not designated session 1; three fresh cold-start
-sessions are still required.
+and its retained raw evidence. It served only as disclosed threshold
+calibration for v2. Three fresh sessions were collected after the new contract
+was frozen, and their non-qualifying outcome is retained separately.
 
 The sibling `TwoQubitHamiltonianBench` now has a CPU-only
 [EntanglementDynamicsBench reference foundation](docs/benchmarks/entanglement-dynamics-bench.md).

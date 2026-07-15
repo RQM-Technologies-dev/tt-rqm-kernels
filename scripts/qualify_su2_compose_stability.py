@@ -18,6 +18,12 @@ def main() -> int:
         type=Path,
         default=Path("benchmarks/manifests/su2-compose-stability-preregistration.json"),
     )
+    parser.add_argument(
+        "--expected-outcome",
+        choices=("passed", "failed"),
+        default="passed",
+        help="Expected deterministic qualification outcome (default: passed).",
+    )
     args = parser.parse_args()
     qualification = qualify_stability(
         args.session_manifests,
@@ -26,7 +32,8 @@ def main() -> int:
     write_qualification(args.output, qualification)
     print(args.output)
     print(f"qualification_passed={str(qualification['qualification_passed']).lower()}")
-    return 0 if qualification["qualification_passed"] else 1
+    expected_passed = args.expected_outcome == "passed"
+    return 0 if qualification["qualification_passed"] is expected_passed else 1
 
 
 if __name__ == "__main__":

@@ -155,5 +155,6 @@ def test_readme_summarizes_two_aggregate_benchmark_releases() -> None:
     ]
     assert "Stage A qmul conformance" not in table
     assert "Stage B qmul" not in table
-    assert "Sessions 2 and 3 have not been collected" in text
+    assert "deterministic qualifier rejected five of the" in text
+    assert "No session was\nreplaced" in text
     assert "no stable SU2 performance claim" in text

@@ -1,0 +1,62 @@
+{
+  "cases": [
+    {
+      "B": 32768,
+      "K": 8,
+      "case_id": "su2-f32-seed-0-b-32768-k-8-70b5fc8cfde3-8d9082e7c83c",
+      "phases_sha256": "8d9082e7c83c6d92b45ed32199504d221e12e36e44df34231f82434dce0ac531",
+      "rotors_sha256": "70b5fc8cfde3de4d30bda82e1174be8c5542a9f96ada2850a03bf26ce1fa734b"
+    },
+    {
+      "B": 8192,
+      "K": 32,
+      "case_id": "su2-f32-seed-0-b-8192-k-32-ca915ad4461d-026fee0c3a38",
+      "phases_sha256": "026fee0c3a38a197c1ae35b41f9f08929849c6ad27bc7bb7251a5373fdfe58e2",
+      "rotors_sha256": "ca915ad4461d4dae81239aa1ab1ad1efc49bdf58866795fcdea70a7505ab3998"
+    },
+    {
+      "B": 2048,
+      "K": 128,
+      "case_id": "su2-f32-seed-0-b-2048-k-128-24db7051806a-4c929edd8228",
+      "phases_sha256": "4c929edd822809d67bc7a6610a44f504d9228125e73dba1f36b963ec581d75e0",
+      "rotors_sha256": "24db7051806a13b5dbe4dc490272306af7adb4a7fdb147c061caacb6d0dab56b"
+    },
+    {
+      "B": 512,
+      "K": 512,
+      "case_id": "su2-f32-seed-0-b-512-k-512-361de3d0fe83-166d7a094303",
+      "phases_sha256": "166d7a094303f4a659c6acdeb4be64c0cf562971a3022121cc0e4838b6ebb758",
+      "rotors_sha256": "361de3d0fe83ed9d0c75c116309b414854df001b1644aed114d10aae63f9beab"
+    },
+    {
+      "B": 1024,
+      "K": 128,
+      "case_id": "su2-f32-seed-0-b-1024-k-128-a44407ee1ee7-20e4ec757ca1",
+      "phases_sha256": "20e4ec757ca1c78bf1702ec856ac5e4c4c08febf230f237756a5818d2f8154fe",
+      "rotors_sha256": "a44407ee1ee7de751aa71c13c5a95682fcb4d5de9edec7268d10c34af4e713cd"
+    },
+    {
+      "B": 4096,
+      "K": 128,
+      "case_id": "su2-f32-seed-0-b-4096-k-128-b0c874a4975b-7ef2d9adb058",
+      "phases_sha256": "7ef2d9adb0583bdaf0fb7d1b3d40ed78e0a764b19287bf730704b315736c5e64",
+      "rotors_sha256": "b0c874a4975b0684d2a16a1cc243626d79d6e359784557582f9d6db877bd425f"
+    },
+    {
+      "B": 16384,
+      "K": 128,
+      "case_id": "su2-f32-seed-0-b-16384-k-128-19105bb009b2-c2b2a7ae843c",
+      "phases_sha256": "c2b2a7ae843c5c596ad52fcac3c29d6e6b6fc350a8b49797d79835d8eaca02aa",
+      "rotors_sha256": "19105bb009b23df39c7430535456e66a9f6ce377b4e15007a196c6fd3d1d348e"
+    },
+    {
+      "B": 65536,
+      "K": 128,
+      "case_id": "su2-f32-seed-0-b-65536-k-128-a58869066f63-102f942393fe",
+      "phases_sha256": "102f942393fe3695ddcc67fe17e4ab9182a27fa8409de3b4c3fd51d4da674903",
+      "rotors_sha256": "a58869066f638fe88d16c6d778d60bba0f00046b942e17e42ae4c7492c33b498"
+    }
+  ],
+  "schema": "tt-rqm-su2-compose-input-hashes.v1",
+  "seed": 0
+}

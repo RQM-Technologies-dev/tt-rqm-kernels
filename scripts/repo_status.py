@@ -549,6 +549,24 @@ def _su2_stability_status(root: Path) -> tuple[str, str]:
             raise ValueError("release is inconsistent with one non-stable Claim Level 1 session")
     except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
         return "invalid stability status", f"SU2 stability claim validation failed: {exc}"
+    qualification_path = (
+        root / "benchmarks/processed/wormhole-su2-compose-stability-qualification.json"
+    )
+    if qualification_path.is_file():
+        try:
+            qualification = json.loads(qualification_path.read_text(encoding="utf-8"))
+            if (
+                qualification.get("qualification_passed") is not False
+                or qualification.get("stable_benchmark") is not False
+                or len(qualification.get("session_ids", [])) != 3
+            ):
+                raise ValueError("retained non-qualifying campaign shape mismatch")
+        except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+            return "invalid stability status", f"SU2 campaign validation failed: {exc}"
+        return (
+            "not established",
+            "Three designated v2 sessions were retained, but the deterministic qualifier rejected frozen variability gates.",
+        )
     return (
         "not established",
         "Only one public cold-start comparison session exists; Level 2 requires three qualified independent sessions.",

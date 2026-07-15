@@ -1,0 +1,1188 @@
+{
+  "benchmark": "SU2ComposeBench",
+  "benchmark_stage": "performance",
+  "device": "tenstorrent/wormhole-device-0",
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "family": "SU2HamiltonianBench",
+  "generated_at_utc": "2026-07-15T02:43:50.885822+00:00",
+  "lifecycle": {
+    "close_count": 1,
+    "create_count": 1,
+    "device_count": 1,
+    "device_id": 0
+  },
+  "methodology_note": "Designated SU2ComposeBench stability session; frozen eight-case order, two warmup pairs, ten measured pairs, and no discarded runs.",
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_full_device_side_hamiltonian_lowering_claim"
+  ],
+  "performance_eligible": true,
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "protocol": "tt-rqm-external-su2-compose-persistent.v1",
+  "provenance": {
+    "candidate": {
+      "build_id": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+      "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+      "chip_type": "wormhole_b0",
+      "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+      "runtime_version": "tt-metal-dd2849b5",
+      "timer_scope": "one persistent device session; paired prepared enqueue-through-Finish samples",
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+    "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7"
+  },
+  "python_version": "3.10.12",
+  "results": [
+    {
+      "B": 32768,
+      "K": 8,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 32,
+        "core_count": 32,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 7,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-32768-k-8-70b5fc8cfde3-8d9082e7c83c",
+      "comparison": {
+        "fused_logical_bytes": 7077888,
+        "fused_over_unfused_median": 0.21618762255815008,
+        "qmul_per_s_fused": 1629890805.7860782,
+        "steps_per_s_fused": 1862732349.4698038,
+        "trajectories_per_s_fused": 232841543.68372548,
+        "unfused_logical_bytes": 16515072
+      },
+      "cpu_oracle_max_abs_error": 2.5559253454202264e-15,
+      "end_to_end_matrix_max_abs_error": 5.908821856884424e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 1.181272579753312e-06,
+          "failing_values": 0,
+          "max_abs_error": 3.699903572407237e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.869965206597769e-07,
+          "quaternion_norm_drift": 4.43049884557567e-07,
+          "rms_error": 4.65296989714254e-08,
+          "su2_determinant_error": 8.860999656246094e-07,
+          "u2_phase_consistency_error": 8.861002271920474e-07,
+          "unitarity_frobenius_error": 1.6705717031465872e-06,
+          "validated_values": 196608
+        },
+        "timing_s": {
+          "median": 0.0001407309,
+          "p95": 0.0001415045,
+          "samples": [
+            0.00013866250000000002,
+            0.0001406224,
+            0.0001414315,
+            0.0001377975,
+            0.0001415045,
+            0.00014096250000000002,
+            0.0001413865,
+            0.0001408394,
+            0.0001392465,
+            0.0001394925
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "8d9082e7c83c6d92b45ed32199504d221e12e36e44df34231f82434dce0ac531",
+        "rotors_sha256": "70b5fc8cfde3de4d30bda82e1174be8c5542a9f96ada2850a03bf26ce1fa734b"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 0.000247747,
+        "d2h": 0.003263524,
+        "fused_samples": [
+          0.001386625,
+          0.001406224,
+          0.001414315,
+          0.001377975,
+          0.001415045,
+          0.001409625,
+          0.001413865,
+          0.001408394,
+          0.001392465,
+          0.001394925
+        ],
+        "h2d": 0.008754195,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.001336835,
+        "unfused_samples": [
+          0.006495929,
+          0.00649969,
+          0.006533519,
+          0.00645368,
+          0.006534059,
+          0.006485829,
+          0.006557088,
+          0.00651964,
+          0.006533439,
+          0.00647527
+        ],
+        "warmup": 0.050367764
+      },
+      "repeat_count": 10,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 1.181272579753312e-06,
+          "failing_values": 0,
+          "max_abs_error": 3.699903572407237e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.869965206597769e-07,
+          "quaternion_norm_drift": 4.43049884557567e-07,
+          "rms_error": 4.65296989714254e-08,
+          "su2_determinant_error": 8.860999656246094e-07,
+          "u2_phase_consistency_error": 8.861002271920474e-07,
+          "unitarity_frobenius_error": 1.6705717031465872e-06,
+          "validated_values": 196608
+        },
+        "timing_s": {
+          "median": 0.0006509665,
+          "p95": 0.0006557088,
+          "samples": [
+            0.0006495929,
+            0.000649969,
+            0.0006533519,
+            0.000645368,
+            0.0006534059,
+            0.0006485829000000001,
+            0.0006557088,
+            0.000651964,
+            0.0006533439,
+            0.000647527
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 8192,
+      "K": 32,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 8,
+        "core_count": 8,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 31,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-8192-k-32-ca915ad4461d-026fee0c3a38",
+      "comparison": {
+        "fused_logical_bytes": 6488064,
+        "fused_over_unfused_median": 0.2130048874705306,
+        "qmul_per_s_fused": 603541915.8876673,
+        "steps_per_s_fused": 623011009.9485598,
+        "trajectories_per_s_fused": 19469094.060892493,
+        "unfused_logical_bytes": 18284544
+      },
+      "cpu_oracle_max_abs_error": 7.221139395610517e-15,
+      "end_to_end_matrix_max_abs_error": 9.306866930755009e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 1.9001566057275099e-06,
+          "failing_values": 0,
+          "max_abs_error": 7.395548915489769e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 6.782865265009264e-07,
+          "quaternion_norm_drift": 7.840253242186179e-07,
+          "rms_error": 1.0379131294962449e-07,
+          "su2_determinant_error": 1.5680512632787469e-06,
+          "u2_phase_consistency_error": 1.5680510662357454e-06,
+          "unitarity_frobenius_error": 2.6872272426881844e-06,
+          "validated_values": 49152
+        },
+        "timing_s": {
+          "median": 0.00042076945,
+          "p95": 0.0004238744,
+          "samples": [
+            0.0004159495,
+            0.0004147634,
+            0.0004159385,
+            0.0004231294,
+            0.00042232140000000005,
+            0.0004200764,
+            0.0004196025,
+            0.00042146249999999995,
+            0.0004238744,
+            0.00042351840000000003
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "026fee0c3a38a197c1ae35b41f9f08929849c6ad27bc7bb7251a5373fdfe58e2",
+        "rotors_sha256": "ca915ad4461d4dae81239aa1ab1ad1efc49bdf58866795fcdea70a7505ab3998"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 5.0819e-05,
+        "d2h": 0.00088773,
+        "fused_samples": [
+          0.004159495,
+          0.004147634,
+          0.004159385,
+          0.004231294,
+          0.004223214,
+          0.004200764,
+          0.004196025,
+          0.004214625,
+          0.004238744,
+          0.004235184
+        ],
+        "h2d": 0.000510385,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000451175,
+        "unfused_samples": [
+          0.016472321,
+          0.016347343,
+          0.019746826,
+          0.019756136,
+          0.019764225,
+          0.019768946,
+          0.019851944,
+          0.019813485,
+          0.019739676,
+          0.019751826
+        ],
+        "warmup": 0.042499109
+      },
+      "repeat_count": 10,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 1.9001566057275099e-06,
+          "failing_values": 0,
+          "max_abs_error": 7.395548915489769e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 6.782865265009264e-07,
+          "quaternion_norm_drift": 7.840253242186179e-07,
+          "rms_error": 1.0379131294962449e-07,
+          "su2_determinant_error": 1.5680512632787469e-06,
+          "u2_phase_consistency_error": 1.5680510662357454e-06,
+          "unitarity_frobenius_error": 2.6872272426881844e-06,
+          "validated_values": 49152
+        },
+        "timing_s": {
+          "median": 0.0019753981,
+          "p95": 0.0019851944,
+          "samples": [
+            0.0016472321000000002,
+            0.0016347343,
+            0.0019746826,
+            0.0019756136,
+            0.0019764225,
+            0.0019768946,
+            0.0019851944,
+            0.0019813484999999997,
+            0.0019739676000000003,
+            0.0019751826
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 2048,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 2,
+        "core_count": 2,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 127,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-2048-k-128-24db7051806a-4c929edd8228",
+      "comparison": {
+        "fused_logical_bytes": 6340608,
+        "fused_over_unfused_median": 0.21473098910178542,
+        "qmul_per_s_fused": 164920538.59146056,
+        "steps_per_s_fused": 166219125.50950354,
+        "trajectories_per_s_fused": 1298586.9180429964,
+        "unfused_logical_bytes": 18726912
+      },
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "end_to_end_matrix_max_abs_error": 1.7996826671595804e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.954650645399127e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.2693600500712776e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.2104933903023252e-06,
+          "quaternion_norm_drift": 1.51532292935741e-06,
+          "rms_error": 2.3714147230336486e-07,
+          "su2_determinant_error": 3.030648155100124e-06,
+          "u2_phase_consistency_error": 3.030648155100124e-06,
+          "unitarity_frobenius_error": 5.5927205774849774e-06,
+          "validated_values": 12288
+        },
+        "timing_s": {
+          "median": 0.0015770989000000002,
+          "p95": 0.0015782509,
+          "samples": [
+            0.0015771459000000002,
+            0.0015765409,
+            0.0015760519,
+            0.0015766199000000001,
+            0.0015775839,
+            0.0015771938,
+            0.0015757548999999998,
+            0.0015775739,
+            0.0015770519,
+            0.0015782509
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "4c929edd822809d67bc7a6610a44f504d9228125e73dba1f36b963ec581d75e0",
+        "rotors_sha256": "24db7051806a13b5dbe4dc490272306af7adb4a7fdb147c061caacb6d0dab56b"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 5.35e-05,
+        "d2h": 0.000460515,
+        "fused_samples": [
+          0.015771459,
+          0.015765409,
+          0.015760519,
+          0.015766199,
+          0.015775839,
+          0.015771938,
+          0.015757549,
+          0.015775739,
+          0.015770519,
+          0.015782509
+        ],
+        "h2d": 0.000562354,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000521914,
+        "unfused_samples": [
+          0.073474923,
+          0.073623281,
+          0.073114067,
+          0.072973758,
+          0.073415743,
+          0.073240276,
+          0.073382034,
+          0.073536272,
+          0.073874169,
+          0.076548319
+        ],
+        "warmup": 0.179799689
+      },
+      "repeat_count": 10,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 3.954650645399127e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.2693600500712776e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.2104933903023252e-06,
+          "quaternion_norm_drift": 1.51532292935741e-06,
+          "rms_error": 2.3714147230336486e-07,
+          "su2_determinant_error": 3.030648155100124e-06,
+          "u2_phase_consistency_error": 3.030648155100124e-06,
+          "unitarity_frobenius_error": 5.5927205774849774e-06,
+          "validated_values": 12288
+        },
+        "timing_s": {
+          "median": 0.0073445333,
+          "p95": 0.007654831900000001,
+          "samples": [
+            0.007347492299999999,
+            0.0073623281,
+            0.0073114067,
+            0.0072973758,
+            0.0073415743000000006,
+            0.0073240276000000005,
+            0.0073382034,
+            0.0073536272,
+            0.007387416900000001,
+            0.007654831900000001
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 512,
+      "K": 512,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 1,
+        "core_count": 1,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 511,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-512-k-512-361de3d0fe83-166d7a094303",
+      "comparison": {
+        "fused_logical_bytes": 6303744,
+        "fused_over_unfused_median": 0.22934506497146365,
+        "qmul_per_s_fused": 42325714.46907555,
+        "steps_per_s_fused": 42408543.65590349,
+        "trajectories_per_s_fused": 82829.1868279365,
+        "unfused_logical_bytes": 18837504
+      },
+      "cpu_oracle_max_abs_error": 1.1345425528553143e-13,
+      "end_to_end_matrix_max_abs_error": 4.884496341190804e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 9.76552851739143e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.8679868443172154e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.469994546672183e-06,
+          "quaternion_norm_drift": 4.882752338009055e-06,
+          "rms_error": 5.078289492686717e-07,
+          "su2_determinant_error": 9.76552851739143e-06,
+          "u2_phase_consistency_error": 9.76552851739143e-06,
+          "unitarity_frobenius_error": 1.3810542873036185e-05,
+          "validated_values": 3072
+        },
+        "timing_s": {
+          "median": 0.00618139595,
+          "p95": 0.0061823549,
+          "samples": [
+            0.006182144,
+            0.0061815540000000006,
+            0.0061823549,
+            0.0061819339000000004,
+            0.006181281,
+            0.006180644,
+            0.0061815109,
+            0.006179594,
+            0.0061806999,
+            0.0061802878999999995
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "166d7a094303f4a659c6acdeb4be64c0cf562971a3022121cc0e4838b6ebb758",
+        "rotors_sha256": "361de3d0fe83ed9d0c75c116309b414854df001b1644aed114d10aae63f9beab"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 6.9879e-05,
+        "d2h": 0.000167038,
+        "fused_samples": [
+          0.06182144,
+          0.06181554,
+          0.061823549,
+          0.061819339,
+          0.06181281,
+          0.06180644,
+          0.061815109,
+          0.06179594,
+          0.061806999,
+          0.061802879
+        ],
+        "h2d": 0.001113358,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000480535,
+        "unfused_samples": [
+          0.267938274,
+          0.280683455,
+          0.270020981,
+          0.270315647,
+          0.27092906,
+          0.270328837,
+          0.269026672,
+          0.266971853,
+          0.26644163,
+          0.266375261
+        ],
+        "warmup": 0.70603993
+      },
+      "repeat_count": 10,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 9.76552851739143e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.8679868443172154e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.469994546672183e-06,
+          "quaternion_norm_drift": 4.882752338009055e-06,
+          "rms_error": 5.078289492686717e-07,
+          "su2_determinant_error": 9.76552851739143e-06,
+          "u2_phase_consistency_error": 9.76552851739143e-06,
+          "unitarity_frobenius_error": 1.3810542873036185e-05,
+          "validated_values": 3072
+        },
+        "timing_s": {
+          "median": 0.026952382650000002,
+          "p95": 0.0280683455,
+          "samples": [
+            0.026793827399999998,
+            0.0280683455,
+            0.0270020981,
+            0.0270315647,
+            0.027092906,
+            0.0270328837,
+            0.0269026672,
+            0.0266971853,
+            0.026644163,
+            0.026637526099999996
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 1024,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 1,
+        "core_count": 1,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 127,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-1024-k-128-a44407ee1ee7-20e4ec757ca1",
+      "comparison": {
+        "fused_logical_bytes": 3170304,
+        "fused_over_unfused_median": 0.21807503008801163,
+        "qmul_per_s_fused": 82555605.3563002,
+        "steps_per_s_fused": 83205649.49296398,
+        "trajectories_per_s_fused": 650044.1366637811,
+        "unfused_logical_bytes": 9363456
+      },
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "end_to_end_matrix_max_abs_error": 1.838196737454564e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.6056105050530363e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.0284030744767136e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.0077924164075824e-06,
+          "quaternion_norm_drift": 1.51532292935741e-06,
+          "rms_error": 2.3584974353517263e-07,
+          "su2_determinant_error": 3.030648155100124e-06,
+          "u2_phase_consistency_error": 3.030648155100124e-06,
+          "unitarity_frobenius_error": 5.09910327656689e-06,
+          "validated_values": 6144
+        },
+        "timing_s": {
+          "median": 0.00157527765,
+          "p95": 0.0015759059,
+          "samples": [
+            0.0015757134,
+            0.0015759059,
+            0.0015755194,
+            0.0015752493999999998,
+            0.0015748789,
+            0.0015753059,
+            0.0015744244000000002,
+            0.0015750804,
+            0.00157538095,
+            0.0015745944
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "20e4ec757ca1c78bf1702ec856ac5e4c4c08febf230f237756a5818d2f8154fe",
+        "rotors_sha256": "a44407ee1ee7de751aa71c13c5a95682fcb4d5de9edec7268d10c34af4e713cd"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 5.387e-05,
+        "d2h": 0.000183358,
+        "fused_samples": [
+          0.031514268,
+          0.031518118,
+          0.031510388,
+          0.031504988,
+          0.031497578,
+          0.031506118,
+          0.031488488,
+          0.031501608,
+          0.031507619,
+          0.031491888
+        ],
+        "h2d": 0.000359316,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000645033,
+        "unfused_samples": [
+          0.145308494,
+          0.145079926,
+          0.144556782,
+          0.144382714,
+          0.143393455,
+          0.143339045,
+          0.144859869,
+          0.144484002,
+          0.144458322,
+          0.144269675
+        ],
+        "warmup": 0.350887913
+      },
+      "repeat_count": 20,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 3.6056105050530363e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.0284030744767136e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.0077924164075824e-06,
+          "quaternion_norm_drift": 1.51532292935741e-06,
+          "rms_error": 2.3584974353517263e-07,
+          "su2_determinant_error": 3.030648155100124e-06,
+          "u2_phase_consistency_error": 3.030648155100124e-06,
+          "unitarity_frobenius_error": 5.09910327656689e-06,
+          "validated_values": 6144
+        },
+        "timing_s": {
+          "median": 0.007223558099999999,
+          "p95": 0.0072654247,
+          "samples": [
+            0.0072654247,
+            0.0072539963,
+            0.007227839099999999,
+            0.0072191357,
+            0.00716967275,
+            0.00716695225,
+            0.0072429934500000005,
+            0.0072242001,
+            0.0072229161,
+            0.007213483750000001
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 4096,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 4,
+        "core_count": 4,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 127,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-4096-k-128-b0c874a4975b-7ef2d9adb058",
+      "comparison": {
+        "fused_logical_bytes": 12681216,
+        "fused_over_unfused_median": 0.2084859558528291,
+        "qmul_per_s_fused": 329097971.7333266,
+        "steps_per_s_fused": 331689294.3454001,
+        "trajectories_per_s_fused": 2591322.6120734382,
+        "unfused_logical_bytes": 37453824
+      },
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "end_to_end_matrix_max_abs_error": 1.7517297087550726e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.819494062806683e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.4362062472628168e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.265659441473943e-06,
+          "quaternion_norm_drift": 1.6250510463944323e-06,
+          "rms_error": 2.396277369368002e-07,
+          "su2_determinant_error": 3.2501047337873956e-06,
+          "u2_phase_consistency_error": 3.2501020572189917e-06,
+          "unitarity_frobenius_error": 5.401580304710707e-06,
+          "validated_values": 24576
+        },
+        "timing_s": {
+          "median": 0.0015806599999999998,
+          "p95": 0.0015839487999999998,
+          "samples": [
+            0.001580917,
+            0.0015839487999999998,
+            0.0015808429999999997,
+            0.0015778148,
+            0.0015804769999999998,
+            0.0015782628,
+            0.0015828447999999998,
+            0.0015791788000000001,
+            0.0015790447999999998,
+            0.0015812848000000001
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "7ef2d9adb0583bdaf0fb7d1b3d40ed78e0a764b19287bf730704b315736c5e64",
+        "rotors_sha256": "b0c874a4975b0684d2a16a1cc243626d79d6e359784557582f9d6db877bd425f"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 7.524e-05,
+        "d2h": 0.000296037,
+        "fused_samples": [
+          0.007904585,
+          0.007919744,
+          0.007904215,
+          0.007889074,
+          0.007902385,
+          0.007891314,
+          0.007914224,
+          0.007895894,
+          0.007895224,
+          0.007906424
+        ],
+        "h2d": 0.001034689,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000538004,
+        "unfused_samples": [
+          0.039142945,
+          0.038844578,
+          0.038960917,
+          0.037683751,
+          0.037582552,
+          0.037533513,
+          0.03776375,
+          0.037940309,
+          0.037875829,
+          0.037956769
+        ],
+        "warmup": 0.093754262
+      },
+      "repeat_count": 5,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 3.819494062806683e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.4362062472628168e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.265659441473943e-06,
+          "quaternion_norm_drift": 1.6250510463944323e-06,
+          "rms_error": 2.396277369368002e-07,
+          "su2_determinant_error": 3.2501047337873956e-06,
+          "u2_phase_consistency_error": 3.2501020572189917e-06,
+          "unitarity_frobenius_error": 5.401580304710707e-06,
+          "validated_values": 24576
+        },
+        "timing_s": {
+          "median": 0.0075816137999999995,
+          "p95": 0.007828589,
+          "samples": [
+            0.007828589,
+            0.0077689156,
+            0.0077921833999999995,
+            0.0075367502,
+            0.0075165104,
+            0.0075067026,
+            0.00755275,
+            0.0075880617999999995,
+            0.0075751658,
+            0.007591353800000001
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 16384,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 16,
+        "core_count": 16,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 127,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-16384-k-128-19105bb009b2-c2b2a7ae843c",
+      "comparison": {
+        "fused_logical_bytes": 50724864,
+        "fused_over_unfused_median": 0.2052667130797081,
+        "qmul_per_s_fused": 1312125110.3543952,
+        "steps_per_s_fused": 1322456804.1367133,
+        "trajectories_per_s_fused": 10331693.782318072,
+        "unfused_logical_bytes": 149815296
+      },
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "end_to_end_matrix_max_abs_error": 2.1676687747349307e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 4.6574166192581146e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.455134109207279e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.4191327519785801e-06,
+          "quaternion_norm_drift": 1.5211340650411742e-06,
+          "rms_error": 2.3707821684022425e-07,
+          "su2_determinant_error": 3.0422658161555205e-06,
+          "u2_phase_consistency_error": 3.0422656736323325e-06,
+          "unitarity_frobenius_error": 6.5865817485766745e-06,
+          "validated_values": 98304
+        },
+        "timing_s": {
+          "median": 0.0015858,
+          "p95": 0.0015901375,
+          "samples": [
+            0.001580458,
+            0.001583943,
+            0.0015861125,
+            0.001583238,
+            0.0015854875,
+            0.001586788,
+            0.0015901375,
+            0.001586113,
+            0.0015884925,
+            0.0015850325
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "c2b2a7ae843c5c596ad52fcac3c29d6e6b6fc350a8b49797d79835d8eaca02aa",
+        "rotors_sha256": "19105bb009b23df39c7430535456e66a9f6ce377b4e15007a196c6fd3d1d348e"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 7.7829e-05,
+        "d2h": 0.000640883,
+        "fused_samples": [
+          0.003160916,
+          0.003167886,
+          0.003172225,
+          0.003166476,
+          0.003170975,
+          0.003173576,
+          0.003180275,
+          0.003172226,
+          0.003176985,
+          0.003170065
+        ],
+        "h2d": 0.003885708,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000654793,
+        "unfused_samples": [
+          0.015403262,
+          0.015498972,
+          0.015323584,
+          0.015281924,
+          0.015301304,
+          0.015303744,
+          0.015818869,
+          0.015521321,
+          0.015518802,
+          0.01571595
+        ],
+        "warmup": 0.034375397
+      },
+      "repeat_count": 2,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 4.6574166192581146e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.455134109207279e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.4191327519785801e-06,
+          "quaternion_norm_drift": 1.5211340650411742e-06,
+          "rms_error": 2.3707821684022425e-07,
+          "su2_determinant_error": 3.0422658161555205e-06,
+          "u2_phase_consistency_error": 3.0422656736323325e-06,
+          "unitarity_frobenius_error": 6.5865817485766745e-06,
+          "validated_values": 98304
+        },
+        "timing_s": {
+          "median": 0.0077255585,
+          "p95": 0.0079094345,
+          "samples": [
+            0.007701631,
+            0.007749486,
+            0.007661792,
+            0.007640962,
+            0.007650652,
+            0.007651872,
+            0.0079094345,
+            0.0077606605,
+            0.007759401,
+            0.007857975
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    },
+    {
+      "B": 65536,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 64,
+        "core_count": 56,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 127,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-65536-k-128-a58869066f63-102f942393fe",
+      "comparison": {
+        "fused_logical_bytes": 202899456,
+        "fused_over_unfused_median": 0.21332385910664906,
+        "qmul_per_s_fused": 2641598516.6805205,
+        "steps_per_s_fused": 2662398505.000839,
+        "trajectories_per_s_fused": 20799988.320319057,
+        "unfused_logical_bytes": 599261184
+      },
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "end_to_end_matrix_max_abs_error": 2.3765624989172803e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 4.76205016575193e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.6439139745028086e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.5777769637459471e-06,
+          "quaternion_norm_drift": 1.7722451581825283e-06,
+          "rms_error": 2.3736141198243936e-07,
+          "su2_determinant_error": 3.5444934574080378e-06,
+          "u2_phase_consistency_error": 3.5444906720998717e-06,
+          "unitarity_frobenius_error": 6.734555929264434e-06,
+          "validated_values": 393216
+        },
+        "timing_s": {
+          "median": 0.003150771,
+          "p95": 0.003172725,
+          "samples": [
+            0.003133146,
+            0.003145136,
+            0.003149716,
+            0.003151826,
+            0.003149235,
+            0.003140486,
+            0.003154566,
+            0.003172725,
+            0.003162126,
+            0.003158186
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "102f942393fe3695ddcc67fe17e4ab9182a27fa8409de3b4c3fd51d4da674903",
+        "rotors_sha256": "a58869066f638fe88d16c6d778d60bba0f00046b942e17e42ae4c7492c33b498"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 7.9279e-05,
+        "d2h": 0.002652381,
+        "fused_samples": [
+          0.003133146,
+          0.003145136,
+          0.003149716,
+          0.003151826,
+          0.003149235,
+          0.003140486,
+          0.003154566,
+          0.003172725,
+          0.003162126,
+          0.003158186
+        ],
+        "h2d": 0.014615672,
+        "paired_order": [
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first",
+          "fused_first",
+          "unfused_first"
+        ],
+        "program_build": 0.000958079,
+        "unfused_samples": [
+          0.014170696,
+          0.014466763,
+          0.014527002,
+          0.014671301,
+          0.014868489,
+          0.014561832,
+          0.017097374,
+          0.017260313,
+          0.01757002,
+          0.017278463
+        ],
+        "warmup": 0.032887623
+      },
+      "repeat_count": 1,
+      "samples": 10,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 4.76205016575193e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.6439139745028086e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.5777769637459471e-06,
+          "quaternion_norm_drift": 1.7722451581825283e-06,
+          "rms_error": 2.3736141198243936e-07,
+          "su2_determinant_error": 3.5444934574080378e-06,
+          "u2_phase_consistency_error": 3.5444906720998717e-06,
+          "unitarity_frobenius_error": 6.734555929264434e-06,
+          "validated_values": 393216
+        },
+        "timing_s": {
+          "median": 0.014769895,
+          "p95": 0.01757002,
+          "samples": [
+            0.014170696,
+            0.014466763,
+            0.014527002,
+            0.014671301,
+            0.014868489,
+            0.014561832,
+            0.017097374,
+            0.017260313,
+            0.01757002,
+            0.017278463
+          ]
+        }
+      },
+      "warmup_pairs": 2
+    }
+  ],
+  "schema": "tt-rqm-su2-compose-report.v1",
+  "seed": 0,
+  "session_timing": {
+    "candidate_session": 13.80068673,
+    "device_close": 0.126772895,
+    "device_create": 2.065926958,
+    "host_process_end_to_end": 14.433417934997124
+  },
+  "stable_benchmark": false
+}

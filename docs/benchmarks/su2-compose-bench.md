@@ -17,6 +17,20 @@ The historical report Markdown is hash-bound release evidence and remains
 byte-for-byte unchanged. This page and the claim policy provide the current,
 more precise public framing; future generated reports use the same wording.
 
+## Stability campaign outcome
+
+After profiler review retained candidate `54b91b…`, a new v2 contract was
+frozen before any designated session. Three fresh N300 device-0 cold-start
+sessions passed the collection, correctness, provenance, lifecycle, input,
+nonfinite, and sample-retention gates. The deterministic qualifier nevertheless
+rejected five cases under the frozen variability thresholds, so no session was
+replaced and no Level 2 release was created.
+
+The complete [qualification result](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+and [v2 preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
+are retained for reproducibility. Every individual session and the aggregate
+result remain `stable_benchmark=false`.
+
 ## Kernel Architecture
 
 H1 lowers time-dependent two-level Hamiltonians into FP32 rotors and phase

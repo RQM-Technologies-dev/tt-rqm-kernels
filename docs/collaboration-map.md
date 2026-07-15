@@ -18,7 +18,8 @@ statement of Tenstorrent endorsement.
   compute, and writer execution. The evidence is diagnostic and is not a
   measured-bandwidth or acceleration claim.
 - `SU2ComposeBench` has correct fused and unfused Wormhole implementations and
-  one qualified Claim Level 1 comparison. It remains
+  one qualified Claim Level 1 comparison. A later three-session v2 campaign
+  was retained but failed frozen variability gates, so it remains
   `stable_benchmark=false` and is not part of the first upstream request.
 
 The [qmul release report](benchmarks/wormhole-qmul.md),
@@ -104,9 +105,9 @@ golden tests, validate representative Wormhole shapes, and capture one
 diagnostic profiler report for the upstream-shaped implementation. A new port
 does not inherit the existing release's stability label.
 
-Inside this repository, SU2 stability and profiler collection remain separate
-evidence work. H2, two-qubit hardware execution, and broader benchmark families
-remain deferred.
+Inside this repository, the retained SU2 profiler work and non-qualifying v2
+stability campaign are complete evidence records, not a Level 2 release. H2,
+two-qubit hardware execution, and broader benchmark families remain deferred.
 
 ## Nonclaims
 

@@ -65,6 +65,14 @@ jobs:
           python scripts/validate_su2_compose_profile.py
           python scripts/validate_su2_compose_stability_preregistration.py
           python scripts/validate_su2_compose_stability_preregistration.py --manifest benchmarks/manifests/su2-compose-stability-preregistration-v2.json
+          python scripts/qualify_su2_compose_stability.py \
+            benchmarks/raw/su2-compose/2026-07-15-n300-device0-su2-v2-session-1/session-manifest.json \
+            benchmarks/raw/su2-compose/2026-07-15-n300-device0-su2-v2-session-2/session-manifest.json \
+            benchmarks/raw/su2-compose/2026-07-15-n300-device0-su2-v2-session-3/session-manifest.json \
+            --preregistration benchmarks/manifests/su2-compose-stability-preregistration-v2.json \
+            --expected-outcome failed \
+            --output /tmp/wormhole-su2-compose-stability-qualification.json
+          cmp /tmp/wormhole-su2-compose-stability-qualification.json benchmarks/processed/wormhole-su2-compose-stability-qualification.json
           python scripts/validate_su2_compose_release.py
           python scripts/reproduce_wormhole_su2_compose.py --check
 

@@ -17,7 +17,7 @@ Independent qmul multi-session stability: complete
 SU2ComposeBench H1 foundation: complete
 SU2ComposeBench H1 Wormhole implementation: present
 SU2ComposeBench first fused/unfused session: Claim Level 1
-Independent SU2 multi-session stability: pending
+Independent SU2 multi-session stability: not established; v2 campaign did not qualify
 EntanglementDynamicsBench CPU reference foundation: complete
 EntanglementDynamicsBench hardware implementation: not started
 qmul profiler and ceiling diagnostics: present
@@ -54,14 +54,12 @@ evolution -> nonlocal Hamiltonians -> entanglement metrics`.
 
 ### SU2ComposeBench stability
 
-Collect three independent cold-start sessions with the same candidate,
-environment, input contract, paired ordering, and complete correctness. Do not
-discard failed or noisy designated sessions. Numerical gates are now frozen in
-the [SU2 stability methodology](docs/su2-stability-methodology.md): fused,
-unfused, and paired-ratio within-session p95-relative dispersion and
-cross-session median deviation must all pass. This is not a
-coefficient-of-variation test. Claim Level 2 remains unavailable until exactly
-three designated sessions pass the deterministic qualifier.
+The frozen v2 campaign collected all three independent cold-start sessions
+with the same candidate, environment, input contract, paired ordering, and
+complete correctness. No designated result was discarded or replaced. The
+deterministic qualifier rejected five cases under the preregistered fused,
+unfused, and paired-ratio variability gates, so Claim Level 2 remains
+unavailable and the public release remains Level 1.
 
 A separate real-N300 candidate experiment is retained under
 `benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-*`.
@@ -71,10 +69,12 @@ existing hash-bound campaign. Its packages are now protected by a dedicated
 fail-closed candidate-experiment manifest and validator. Profiler attribution
 in [issue #27](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/27)
 retained the exact candidate because reader, compute, and writer scopes overlap
-and no isolated architectural correction was supported. The new v2 stability
-contract is frozen before designated session 1; collection is tracked in
-[issue #28](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/28).
-Do not combine campaigns or promote either one-session result to Level 2.
+and no isolated architectural correction was supported. The v2 contract was
+frozen before designated session 1. The three retained packages and
+[failed qualification](benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+complete [issue #28](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/28)
+without promoting the release. Do not combine campaigns or replace a
+designated result.
 
 ### Profiler attribution
 

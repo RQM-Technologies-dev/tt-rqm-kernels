@@ -60,7 +60,7 @@ contract. The conformance package did not capture a separate execution-source
 status file; that historical provenance limitation is explicit in the manifest
 and is not reconstructed after the fact.
 
-## Next gate
+## Profiler and stability outcome
 
 Device Program Profiler and Tracy evidence now covers four representative
 cases: many trajectories with a short chain, balanced work, a one-core long
@@ -74,7 +74,11 @@ pinned profiler.
 The exact `54b91b…` candidate is therefore retained. See the
 [profiler evidence manifest](../../benchmarks/manifests/su2-compose-profile-54b91b.json)
 and [processed attribution](../../benchmarks/raw/su2-compose/2026-07-15-n300-device0-su2-profile-54b91b-03/profile-attribution.md).
-The next gate is to freeze a new hash-bound stability preregistration before
-collecting three fresh designated cold-start sessions. The retained experiment
-and profiler captures are not designated sessions, and every individual report
-remains `stable_benchmark=false`.
+A new [hash-bound v2 stability preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
+was then frozen before collecting three fresh designated cold-start sessions.
+The retained experiment and profiler captures were not designated sessions.
+All three designated packages passed their input and integrity gates, but the
+[deterministic qualification](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+rejected five cases under the frozen variability limits. No session was
+replaced; every individual report and the aggregate qualification remain
+`stable_benchmark=false`.
