@@ -38,11 +38,13 @@ jobs:
           tt_rqm_kernels/su2_benchmark.py
           tt_rqm_kernels/su2_candidate_experiment.py
           tt_rqm_kernels/su2_hardware_session.py
+          tt_rqm_kernels/su2_profile.py
           tt_rqm_kernels/su2_stability.py
           tests/test_entanglement_benchmark.py
           tests/test_repo_status.py
           tests/test_su2_candidate_experiment.py
           tests/test_su2_hardware_session.py
+          tests/test_su2_profile.py
           tests/test_su2_stability.py
 
       - name: Run Python tests

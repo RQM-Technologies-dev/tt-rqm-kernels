@@ -86,6 +86,7 @@ def run_su2_compose(
     expected_candidate_sha256: str | None = None,
     expected_repository_commit: str | None = None,
     process_capture: MutableMapping[str, str] | None = None,
+    case_specs: tuple[tuple[int, int, int, int, int], ...] | None = None,
 ) -> dict[str, object]:
     """Run both hardware paths and validate every returned value."""
 
@@ -96,7 +97,17 @@ def run_su2_compose(
         raise IntegrityError(
             "SU2ComposeBench command must name the candidate directly so its SHA-256 identifies the binary"
         )
-    specs = _case_specs(stage)
+    if case_specs is None:
+        specs = _case_specs(stage)
+    else:
+        if stage != "profile":
+            raise IntegrityError("custom SU2ComposeBench cases are diagnostic profile cases only")
+        if len(case_specs) != 1:
+            raise IntegrityError("a profiler process must contain exactly one SU2ComposeBench case")
+        specs = case_specs
+        batch, steps, repeats, warmups, samples = specs[0]
+        if min(batch, steps, repeats, samples) <= 0 or warmups != 0:
+            raise IntegrityError("invalid SU2ComposeBench profiler case")
     candidate_hash = command_sha256(command, Path.cwd())
     if expected_candidate_sha256 is not None and candidate_hash != expected_candidate_sha256:
         raise IntegrityError("SU2ComposeBench candidate SHA-256 differs from frozen identity")
@@ -167,7 +178,7 @@ def run_su2_compose(
         normalized = validate_su2_metrics(metrics, manifest, candidate_hash, host_s)
         if normalized["provenance"]["repository_commit"] != source_commit:
             raise IntegrityError("SU2ComposeBench execution-source commit mismatch")
-        if stage == "performance" and not normalized["performance_eligible"]:
+        if stage in {"performance", "profile"} and not normalized["performance_eligible"]:
             raise IntegrityError("performance collection requires performance_eligible=true")
 
         results: list[dict[str, object]] = []
