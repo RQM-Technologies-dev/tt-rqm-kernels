@@ -104,6 +104,7 @@ def collect_profile_session(
             source_root=execution_source_root,
             source_commit=expected_source_commit,
         )
+        compiler_version = _run(["c++", "--version"]).stdout.splitlines()[0]
         environment = {
             "schema": "tt-rqm-su2-compose-profile-environment.v1",
             "captured_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -123,6 +124,12 @@ def collect_profile_session(
                 "TT_METAL_PROFILER_MID_RUN_DUMP": "1",
                 "TT_METAL_RUNTIME_ROOT": str(tt_metal_root),
                 "TRACY_NO_INVARIANT_CHECK": "1",
+            },
+            "candidate_environment": {
+                "TT_RQM_CHIP_TYPE": "wormhole_b0",
+                "TT_RQM_COMPILER_VERSION": compiler_version,
+                "TT_RQM_RUNTIME_VERSION": f"tt-metal-{expected_tt_metal_commit[:8]}",
+                "TT_RQM_TT_METAL_COMMIT": expected_tt_metal_commit,
             },
         }
         _write_json(session_dir / "environment.json", environment)
@@ -144,6 +151,7 @@ def collect_profile_session(
                     expected_source_commit=expected_source_commit,
                     expected_tt_metal_commit=expected_tt_metal_commit,
                     expected_source_tree_sha256=source_tree_sha256,
+                    compiler_version=compiler_version,
                 )
             )
         processed, markdown = process_profile_session(session_dir)
@@ -198,6 +206,7 @@ def _collect_case(
     expected_source_commit: str,
     expected_tt_metal_commit: str,
     expected_source_tree_sha256: str,
+    compiler_version: str,
 ) -> dict[str, Any]:
     case_id = f"b{batch}-k{steps}-{label}"
     case_dir = session_dir / "cases" / case_id
@@ -273,6 +282,10 @@ def _collect_case(
             "TT_METAL_DEVICE_PROFILER": "1",
             "TT_METAL_PROFILER_MID_RUN_DUMP": "1",
             "TRACY_NO_INVARIANT_CHECK": "1",
+            "TT_RQM_CHIP_TYPE": "wormhole_b0",
+            "TT_RQM_COMPILER_VERSION": compiler_version,
+            "TT_RQM_RUNTIME_VERSION": f"tt-metal-{expected_tt_metal_commit[:8]}",
+            "TT_RQM_TT_METAL_COMMIT": expected_tt_metal_commit,
         }
     )
     runner = subprocess.run(
@@ -293,11 +306,18 @@ def _collect_case(
     (profiler_dir / "tracy-capture.stdout.txt").write_text(capture_stdout)
     (profiler_dir / "tracy-capture.stderr.txt").write_text(capture_stderr)
     (profiler_dir / "tracy-capture.exit-status.txt").write_text(f"{capture.returncode}\n")
-    _require(runner.returncode == 0, f"profile runner failed for {case_id}")
+    missing_profiler_artifacts: list[str] = []
     for name in ("profile_log_device.csv", "zone_src_locations.log", "new_zone_src_locations.log"):
         source = generated_logs / name
-        _require(source.is_file(), f"missing device profiler artifact: {name}")
-        shutil.copy2(source, profiler_dir / name)
+        if source.is_file():
+            shutil.copy2(source, profiler_dir / name)
+        else:
+            missing_profiler_artifacts.append(name)
+    _require(runner.returncode == 0, f"profile runner failed for {case_id}")
+    _require(
+        not missing_profiler_artifacts,
+        f"missing device profiler artifacts: {', '.join(missing_profiler_artifacts)}",
+    )
     _require(trace_path.is_file() and trace_path.stat().st_size > 0, "Tracy trace is missing")
     for name, flags in (
         ("tracy-zone-events.csv", ["-u"]),
