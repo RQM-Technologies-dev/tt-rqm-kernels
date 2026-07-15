@@ -1,0 +1,2 @@
+/home/user/su2-compose-experiments/2026-07-15-candidate-54b91b-performance-04/performance.json
+/home/user/su2-compose-experiments/2026-07-15-candidate-54b91b-performance-04/performance.md

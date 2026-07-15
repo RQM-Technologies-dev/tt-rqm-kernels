@@ -12,6 +12,14 @@ artifact and a versioned release manifest.
 - Public cold-start sessions: **1**
 - Family: `SU2HamiltonianBench`; first stage: `SU2ComposeBench`
 
+## Separate candidate experiment
+
+- [N300 candidate experiment: `54b91b…`](su2-compose-candidate-54b91b.md)
+- Status: real hardware conformance plus one eight-case paired performance
+  experiment; `stable_benchmark=false`
+- This is not part of the hash-bound Level 1 release or its frozen Level 2
+  stability campaign.
+
 ## Quaternion kernel report
 
 - [Structured FP32 Quaternion Kernels on Tenstorrent Wormhole](wormhole-qmul.md)

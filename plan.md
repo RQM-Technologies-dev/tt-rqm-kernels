@@ -61,6 +61,15 @@ cross-session median deviation must all pass. This is not a
 coefficient-of-variation test. Claim Level 2 remains unavailable until exactly
 three designated sessions pass the deterministic qualifier.
 
+A separate real-N300 candidate experiment is retained under
+`benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-*`.
+It validates candidate `54b91b…` for two conformance cases and one complete
+eight-case paired performance run, but it is not a designated session in the
+existing hash-bound campaign. The next SU2 evidence decision is to either
+recover the original frozen candidate or explicitly freeze `54b91b…` under a
+new preregistration, then collect three designated cold-start sessions. Do not
+combine those campaigns or promote either one-session result to Level 2.
+
 ### Profiler attribution
 
 Capture Device Program Profiler and Tracy evidence for the fused and unfused

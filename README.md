@@ -73,6 +73,18 @@ The [stability methodology](docs/su2-stability-methodology.md) and
 define the gates. The collector and deterministic qualifier fail closed on
 candidate, environment, session, correctness, or timing inconsistencies.
 
+### Separate candidate experiment
+
+A separate, hash-preserved N300 device-0 experiment evaluated a newly rebuilt
+SU2 candidate (`54b91b…`) with two conformance cases and eight paired
+performance cases. It retained two warmup pairs and ten measured pairs per
+case, passed the recorded correctness checks, and remains
+`stable_benchmark=false`. It is **not** session 2 of the frozen Level 2
+campaign: that campaign is bound to a different candidate identity. See the
+[candidate experiment record](docs/benchmarks/su2-compose-candidate-54b91b.md)
+and its retained raw evidence. A new stability campaign requires a new frozen
+candidate contract and three designated cold-start sessions.
+
 The sibling `TwoQubitHamiltonianBench` now has a CPU-only
 [EntanglementDynamicsBench reference foundation](docs/benchmarks/entanglement-dynamics-bench.md).
 It adds joint-state evolution and entanglement diagnostics, but has no

@@ -1,0 +1,246 @@
+{
+  "benchmark": "SU2ComposeBench",
+  "benchmark_stage": "conformance",
+  "device": "tenstorrent/wormhole-device-0",
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "family": "SU2HamiltonianBench",
+  "generated_at_utc": "2026-07-15T01:11:51.766066+00:00",
+  "lifecycle": {
+    "close_count": 1,
+    "create_count": 1,
+    "device_count": 1,
+    "device_id": 0
+  },
+  "methodology_note": "New candidate conformance experiment on real N300 device 0; candidate SHA-256 54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16; no stability or acceleration claim.",
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_full_device_side_hamiltonian_lowering_claim"
+  ],
+  "performance_eligible": true,
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "protocol": "tt-rqm-external-su2-compose-persistent.v1",
+  "provenance": {
+    "candidate": {
+      "build_id": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+      "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+      "chip_type": "wormhole_b0",
+      "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+      "runtime_version": "tt-metal-dd2849b5",
+      "timer_scope": "one persistent device session; paired prepared enqueue-through-Finish samples",
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+    "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7"
+  },
+  "python_version": "3.10.12",
+  "results": [
+    {
+      "B": 32,
+      "K": 8,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 1,
+        "core_count": 1,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 7,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-32-k-8-f41e00430466-1baa45e1df7d",
+      "comparison": {
+        "fused_logical_bytes": 6912,
+        "fused_over_unfused_median": 1.066253817405891,
+        "qmul_per_s_fused": 12585.528922865822,
+        "steps_per_s_fused": 14383.461626132366,
+        "trajectories_per_s_fused": 1797.9327032665458,
+        "unfused_logical_bytes": 16128
+      },
+      "cpu_oracle_max_abs_error": 1.793620188084545e-15,
+      "end_to_end_matrix_max_abs_error": 1.745776506450751e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.494738686216081e-07,
+          "failing_values": 0,
+          "max_abs_error": 1.416818484756277e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.8840073190418138e-07,
+          "quaternion_norm_drift": 1.898053079152362e-07,
+          "rms_error": 3.627482621270524e-08,
+          "su2_determinant_error": 3.796106518016984e-07,
+          "u2_phase_consistency_error": 3.79610531973183e-07,
+          "unitarity_frobenius_error": 4.942306850136898e-07,
+          "validated_values": 192
+        },
+        "timing_s": {
+          "median": 0.017798219,
+          "p95": 0.017798219,
+          "samples": [
+            0.017798219
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "1baa45e1df7dd8e3f985f5cdb0add5016c315957c1805ecfa596a197463806d9",
+        "rotors_sha256": "f41e00430466adeed57b21025a35f56e072be03b3071be0a8b366d81cd8d5b14"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 0.000226298,
+        "d2h": 0.000225728,
+        "fused_samples": [
+          0.017798219
+        ],
+        "h2d": 0.013620354,
+        "paired_order": [
+          "fused_first"
+        ],
+        "program_build": 0.001100278,
+        "unfused_samples": [
+          0.016692291
+        ],
+        "warmup": 7e-08
+      },
+      "repeat_count": 1,
+      "samples": 1,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 3.494738686216081e-07,
+          "failing_values": 0,
+          "max_abs_error": 1.416818484756277e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.8840073190418138e-07,
+          "quaternion_norm_drift": 1.898053079152362e-07,
+          "rms_error": 3.627482621270524e-08,
+          "su2_determinant_error": 3.796106518016984e-07,
+          "u2_phase_consistency_error": 3.79610531973183e-07,
+          "unitarity_frobenius_error": 4.942306850136898e-07,
+          "validated_values": 192
+        },
+        "timing_s": {
+          "median": 0.016692291,
+          "p95": 0.016692291,
+          "samples": [
+            0.016692291
+          ]
+        }
+      },
+      "warmup_pairs": 0
+    },
+    {
+      "B": 2048,
+      "K": 8,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 2,
+        "core_count": 2,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 7,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-2048-k-8-5ffebe96333b-aa8a82b8f117",
+      "comparison": {
+        "fused_logical_bytes": 442368,
+        "fused_over_unfused_median": 0.6292864191569212,
+        "qmul_per_s_fused": 19165467.93366951,
+        "steps_per_s_fused": 21903391.92419373,
+        "trajectories_per_s_fused": 2737923.990524216,
+        "unfused_logical_bytes": 1032192
+      },
+      "cpu_oracle_max_abs_error": 2.1094950746721547e-15,
+      "end_to_end_matrix_max_abs_error": 4.865089161758163e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 9.681562503915941e-07,
+          "failing_values": 0,
+          "max_abs_error": 2.9693578051936953e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.48261810886774e-07,
+          "quaternion_norm_drift": 4.1826441021797223e-07,
+          "rms_error": 4.640655701528637e-08,
+          "su2_determinant_error": 8.365289954070931e-07,
+          "u2_phase_consistency_error": 8.365288956995924e-07,
+          "unitarity_frobenius_error": 1.3691796995645605e-06,
+          "validated_values": 12288
+        },
+        "timing_s": {
+          "median": 0.000748012,
+          "p95": 0.000748012,
+          "samples": [
+            0.000748012
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "aa8a82b8f1172b3986796b8ccce9caa1b3ebc36ecfccbf160bcfc9239e80c6c6",
+        "rotors_sha256": "5ffebe96333b4d19db08e3283ba806771da8e86ca2ee301273e190dae42e3db9"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 3.3729e-05,
+        "d2h": 0.000241777,
+        "fused_samples": [
+          0.000748012
+        ],
+        "h2d": 0.000138439,
+        "paired_order": [
+          "fused_first"
+        ],
+        "program_build": 0.000564044,
+        "unfused_samples": [
+          0.001188667
+        ],
+        "warmup": 7e-08
+      },
+      "repeat_count": 1,
+      "samples": 1,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 9.681562503915941e-07,
+          "failing_values": 0,
+          "max_abs_error": 2.9693578051936953e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.48261810886774e-07,
+          "quaternion_norm_drift": 4.1826441021797223e-07,
+          "rms_error": 4.640655701528637e-08,
+          "su2_determinant_error": 8.365289954070931e-07,
+          "u2_phase_consistency_error": 8.365288956995924e-07,
+          "unitarity_frobenius_error": 1.3691796995645605e-06,
+          "validated_values": 12288
+        },
+        "timing_s": {
+          "median": 0.001188667,
+          "p95": 0.001188667,
+          "samples": [
+            0.001188667
+          ]
+        }
+      },
+      "warmup_pairs": 0
+    }
+  ],
+  "schema": "tt-rqm-su2-compose-report.v1",
+  "seed": 0,
+  "session_timing": {
+    "candidate_session": 2.281849225,
+    "device_close": 0.128552084,
+    "device_create": 2.094023697,
+    "host_process_end_to_end": 2.952316435999819
+  },
+  "stable_benchmark": false
+}

@@ -1,0 +1,1 @@
+New candidate experiment on real N300 device 0; candidate SHA-256 54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16; execution source 3238299a9eea2a44dccd6826a947cac3266dd2f7; conformance before performance; no stability or acceleration claim.
