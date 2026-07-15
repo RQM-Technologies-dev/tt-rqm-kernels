@@ -141,6 +141,8 @@ def collect_su2_session(
             expected_repository_commit=expected_execution_source_commit,
             process_capture=process_capture,
             candidate_environment={
+                "TT_METAL_HOME": str(tt_metal_root),
+                "TT_METAL_RUNTIME_ROOT": str(tt_metal_root),
                 "TT_RQM_CHIP_TYPE": "wormhole_b0",
                 "TT_RQM_TT_METAL_COMMIT": expected_tt_metal_commit,
                 "TT_RQM_COMPILER_VERSION": compiler_version,
