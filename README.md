@@ -2,10 +2,10 @@
 
 [![CI](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml/badge.svg)](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml)
 
-`tt-rqm-kernels` develops structured floating-point tensor kernels for
-Tenstorrent hardware. Quaternions, rotors, complex phase pairs, and SU(2) state
-remain ordinary tensors; the structure comes from their lane conventions and
-the operators applied to them.
+`tt-rqm-kernels` is a hardware-validated TT-Metalium kernel path for structured
+FP32 tensor math on Tenstorrent hardware. Quaternions, rotors, complex phase
+pairs, and SU(2) state remain ordinary tensors; the structure comes from their
+lane conventions and the operators applied to them.
 
 This is an independent open-source RQM Technologies LLC project. It is not an
 official Tenstorrent repository or a statement of Tenstorrent endorsement.
@@ -17,6 +17,28 @@ rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
 H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
 stage of a Hamiltonian-simulation pipeline, not the complete device-side
 pipeline.
+
+## For Tenstorrent engineers
+
+This repository is designed to be a compact, reproducible structured-kernel
+example rather than a request for a new datatype or hardware feature.
+
+- **Why it maps:** `qmul` has fixed four-lane cross-dependencies,
+  noncommutative ordering, explicit data movement, multicore Tensix
+  compute/SFPU arithmetic, and concrete opportunities for register/L1 reuse
+  and fusion.
+- **What is proven:** the one-device `qmul` release passed three independent
+  qualified N300 sessions; fused and unfused `SU2ComposeBench` paths passed
+  whole-output conformance and one paired N300 comparison session.
+- **The next engineering decision:** review profiler attribution and choose
+  whether the next optimization should be fusion/layout work in the
+  TT-Metalium path or a small TT-NN custom-op boundary. The latter remains a
+  design discussion, not an implementation request.
+
+The evidence is intentionally separated from broader application claims. The
+[Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) records the qualified
+one-device result; [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
+records the current Level 1 composition evidence.
 
 ## Current proven result
 
