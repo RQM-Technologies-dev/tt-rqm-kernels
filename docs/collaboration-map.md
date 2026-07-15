@@ -1,194 +1,113 @@
 # Collaboration Map
 
-This document maps how `tt-rqm-kernels` can fit into the Tenstorrent ecosystem
-as an independent RQM Technologies LLC project.
+This document maps the current, evidence-backed path from `tt-rqm-kernels` to
+an upstream-reviewable Tenstorrent integration. The project is maintained by
+RQM Technologies LLC and is not an official Tenstorrent repository or a
+statement of Tenstorrent endorsement.
 
-The public frame is structured computation on open accelerators: compact tensor
-operators for rotation, phase, orientation, geometry, wave state, and scientific
-workloads represented inside ordinary floating-point tensors.
+## Current State
 
-This is not an official Tenstorrent repository unless and until accepted or
-co-developed by Tenstorrent.
+`tt-rqm-kernels` has completed its initial real-hardware proof phase:
 
-## Current Assets
+- `qmul` has a Claim Level 2 one-device release from three qualified N300
+  device-0 sessions. The aggregate release is `stable_benchmark=true`; each
+  individual session remains `false`.
+- The multicore implementation uses Tensix compute/SFPU kernels, component-
+  planar FP32 tiles, row-major work splitting, and a persistent device session.
+- Device Program Profiler and Tracy evidence attribute the current reader,
+  compute, and writer execution. The evidence is diagnostic and is not a
+  measured-bandwidth or acceleration claim.
+- `SU2ComposeBench` has correct fused and unfused Wormhole implementations and
+  one qualified Claim Level 1 comparison. It remains
+  `stable_benchmark=false` and is not part of the first upstream request.
 
-`tt-rqm-kernels` already provides:
+The [qmul release report](benchmarks/wormhole-qmul.md),
+[hardware evidence](benchmarks/wormhole-qmul-hardware-evidence.md), and
+[operator contract](operator-contracts.md#qmul) are the primary review
+surfaces.
 
-- CPU/PyTorch reference kernels for quaternion, rotor, inverse, normalization,
-  dot-product, and phase/orientation utilities
-- independent scalar reference checks for small deterministic correctness
-  samples
-- StructuredBench reports with latency, throughput, numerical error, estimated
-  FLOPs/sec, effective GB/sec, and arithmetic intensity
-- an optional TT-Lang functional simulator `qmul` prototype for `[N, 4]`
-  row-major float32 tensors
-- Tenstorrent-facing documentation for operator contracts, benchmark shape, and
-  first integration questions
-- CI that runs tests and a lightweight CPU/PyTorch smoke benchmark
+## Why qmul Is Ready For Placement Review
 
-The TT-Lang result is a simulator result only. It validates kernel logic and
-report shape, not hardware performance.
-
-## Why StructuredBench Is The Reusable Asset
-
-StructuredBench is the part of the repo that can become useful beyond this
-specific quaternion reference library. It defines a compact benchmark class
-between scalar elementwise operations and large matrix multiplication:
+The public operation is deliberately small:
 
 ```text
-ordinary float tensors
--> structured 4-lane values
--> fixed cross-lane operators
--> correctness checks
--> backend-comparable reports
-```
-
-The first target is `qmul` over `[N, 4]` tensors. It is small enough to verify
-carefully, but structured enough to exercise fixed multiply/add/sign patterns,
-data movement, cross-lane dependencies, register reuse, fusion opportunities,
-and arithmetic-intensity reporting.
-
-The same report schema can compare:
-
-- CPU/PyTorch reference output
-- TT-Lang functional simulation
-- future TT-Metalium kernels
-- future TT-NN custom-operation wrappers
-- future compiler-lowering experiments
-- future hardware runs on Tenstorrent systems
-
-## Scientific/HPC Kernel Adjacency
-
-Tenstorrent is already surfacing non-LLM scientific workloads in public ecosystem
-channels, including spectral element method work on Wormhole-class hardware. That
-is useful context for `tt-rqm-kernels`, but it is not a claim that spectral
-element methods require quaternion kernels.
-
-`tt-rqm-kernels` complements that direction with a smaller structured-kernel
-benchmark class: `[N, 4]` floating-point tensor values, fixed cross-lane
-operators, CPU/PyTorch references, scalar spot checks, TT-Lang simulator output,
-and future TT-Metalium comparison. The shared concern is lower-stack scientific
-and HPC-style kernel behavior: data layout, data movement, lane structure,
-fusion, register reuse, numerical error, and arithmetic intensity.
-
-The first RQM contribution should remain `qmul` as a compact structured-kernel
-benchmark, not a proposed Nekbone or spectral-element integration.
-
-## Collaboration Lanes
-
-### tt-awesome
-
-Goal:
-
-- make `tt-rqm-kernels` discoverable as a community structured-kernel benchmark
-  project
-
-Useful placement:
-
-- primary category: `kernels`
-- secondary category: `research`
-- hardware: `ttsim`, because the current Tenstorrent-adjacent proof point is
-  TT-Lang simulation
-
-### TT-Lang
-
-Goal:
-
-- keep the current simulator `qmul` path as the fastest bridge from PyTorch
-  reference code to Tenstorrent-style custom-operation logic
-
-Current status:
-
-- `qmul` runs through the TT-Lang functional simulator
-- output is compared against CPU/PyTorch and scalar references
-- report output is compatible with `structuredbench.v1`
-
-Next useful question:
-
-- whether the simulator layout should remain row-major `[N, 4]` or evolve
-  toward a tile-aware layout before lower-stack work
-
-### TT-Metalium
-
-Goal:
-
-- implement the first real lower-stack `qmul` backend for `[N, 4]` tensors
-
-Minimal useful target:
-
-```text
-input a: [N, 4] float tensor
-input b: [N, 4] float tensor
-output:  [N, 4] float tensor
+input a: FP32 [N, 4]
+input b: FP32 [N, 4]
+output:  FP32 [N, 4]
+lanes:   [real, i, j, k]
 operation: Hamilton product
-validation: compare against CPU/PyTorch and scalar references
-metrics: throughput, latency, numerical error, FLOPs/sec, GB/sec, arithmetic intensity
 ```
 
-This should follow maintainer guidance from the existing `tenstorrent/tt-metal`
-Discussion before a PR or example is opened.
+It provides a compact test of fixed cross-lane dependencies,
+noncommutative ordering, data movement, multicore work allocation, SFPU
+arithmetic, register/L1 reuse, and potential fusion. It requires no new
+datatype, compiler primitive, or hardware feature.
 
-### TT-NN
+The repository now supplies what an upstream placement discussion needs:
 
-Goal:
+- PyTorch and independent Float64 golden references;
+- basis and noncommutative-order tests;
+- whole-output FP32 validation with nonfinite rejection;
+- three-session one-device stability evidence;
+- profiler and controlled scaling diagnostics; and
+- Apache-2.0 host and kernel source.
 
-- expose structured kernels in a way ordinary Tenstorrent developers can call
-  after a lower-stack `qmul` proof exists
+## Current Tenstorrent-Facing Decision
 
-Potential path:
+The immediate question is where the minimal upstream form belongs:
 
-- add a Python-facing wrapper with a clear golden/reference comparison
-- keep CPU/PyTorch as the correctness source
-- avoid adding a TT-NN wrapper before lower-stack evidence is reproducible
+1. a TT-Metalium programming example; or
+2. an experimental TT-NN device operation using the current
+   `ProgramDescriptor` pattern, a Python binding, and a PyTorch golden
+   function.
 
-### TT-MLIR / TT-Forge
+The existing standalone candidate directly creates programs, circular
+buffers, kernels, runtime arguments, buffers, and a `MeshWorkload`. That is a
+useful evidence harness, but it is not yet an idiomatic operation that ordinary
+TT-NN callers can invoke.
 
-Goal:
+There is also a layout decision for maintainers. `[N, 4]` is the public host
+contract, while the qualified device path packs each quaternion component into
+its own sequence of FP32 tiles. A TT-NN form could preserve logical `[N, 4]`
+through an internal layout adapter or expose the device-native planar layout at
+the experimental boundary.
 
-- explore whether structured operators should lower as fused kernels instead of
-  expanding into scalar multiply/add operations
+The current placement request is tracked in the
+[Tenstorrent discussion](https://github.com/tenstorrent/tt-metal/discussions/48871).
+A feature-support issue should supersede that unanswered discussion before any
+upstream PR is proposed.
 
-Useful question:
+## Repository Roles
 
-```text
-Should qmul lower as a fused structured operator rather than scalar expansion?
-```
+### `tt-rqm-kernels`
 
-This discussion should come after working backend evidence, not before it.
+Remains the source of the operator contract, references, release evidence,
+diagnostic reports, and experimental standalone candidate.
 
-### Tenstorrent Cloud
+### `tt-metal`
 
-Goal:
+Owns the placement decision and, if accepted, the minimal implementation in
+Tenstorrent's current source structure. Work must occur in a separate fork and
+current-`main` worktree; the pinned release checkout remains unchanged.
 
-- eventually publish a real Tenstorrent hardware report
+### `tt-awesome`
 
-Requirements:
+Provides discovery for the external community project. It does not imply that
+the kernel is part of `tt-metal` or endorsed by Tenstorrent.
 
-- distinguish CPU reference, TT-Lang simulation, emulation if used, and hardware
-  execution
-- include exact commands and methodology
-- avoid presenting sample outputs as stable hardware performance claims
+## Follow-On Work
 
-## Current Ask
+After maintainers choose placement and layout, port only `qmul`, preserve its
+golden tests, validate representative Wormhole shapes, and capture one
+diagnostic profiler report for the upstream-shaped implementation. A new port
+does not inherit the existing release's stability label.
 
-The immediate ask is ecosystem placement, not endorsement:
+Inside this repository, SU2 stability and profiler collection remain separate
+evidence work. H2, two-qubit hardware execution, and broader benchmark families
+remain deferred.
 
-- list `tt-rqm-kernels` in `tt-awesome` as a community project
-- keep the project framed as structured-kernel benchmarking
-- use maintainer feedback to choose the right path for a minimal TT-Metalium
-  `qmul` example
+## Nonclaims
 
-## Non-Goals
-
-`tt-rqm-kernels` is not asking Tenstorrent to:
-
-- add a native quaternion datatype
-- add a new chip feature
-- treat quaternion math as special hardware
-- endorse RQM Technologies theory or research claims
-- frame the project as defense-first
-- accept hardware-performance claims from CPU or simulator outputs
-
-Defense is a downstream application area. The public lead is lower-stack
-structured numerical infrastructure for robotics, graphics, wireless, imaging,
-wave simulation, physical AI, scientific computing, and signal processing.
+This collaboration path does not claim CPU acceleration, measured hardware
+bandwidth, application speedup, energy efficiency, dual-device scaling,
+stable SU2 performance, or Tenstorrent endorsement.
