@@ -142,3 +142,18 @@ def test_public_hardware_claim_is_immediately_qualified() -> None:
         claim = text.index("RQM runs fused time-ordered SU(2) evolution")
         qualification = text.index("on the CPU", claim)
         assert qualification - claim < 500
+
+
+def test_readme_summarizes_two_aggregate_benchmark_releases() -> None:
+    text = Path("README.md").read_text()
+    table = text.split("| Evidence | Implementation | Claim | Stable benchmark |", 1)[1]
+    table = table.split("\n\n", 1)[0].strip()
+    assert table.splitlines() == [
+        "|---|---|---|---|",
+        "| qmul | multicore Tensix compute/SFPU on one Wormhole device; Stage A baseline retained | Level 2 | `true` |",
+        "| SU2ComposeBench H1 | fused and unfused time-ordered SU(2) composition on one Wormhole device | Level 1 | `false` |",
+    ]
+    assert "Stage A qmul conformance" not in table
+    assert "Stage B qmul" not in table
+    assert "Sessions 2 and 3 have not been collected" in text
+    assert "no stable SU2 performance claim" in text
