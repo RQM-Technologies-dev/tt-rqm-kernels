@@ -43,8 +43,8 @@ without making it part of the primary introduction.
 
 These pages preserve setup and access history. Approved N300 execution has
 already produced the committed Stage A, Stage B, persistent qmul, and H1 SU(2)
-evidence. The retained three-session SU2 v2 campaign did not qualify for Level
-2; it does not alter the public Claim Level 1 release.
+evidence. The retained v2 SU2 campaign did not qualify, while the separate
+fused-only v3 campaign established the public Claim Level 2 release.
 
 ## Integration and contribution paths
 

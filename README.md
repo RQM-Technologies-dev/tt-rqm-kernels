@@ -44,7 +44,7 @@ experimental TT-NN `ProgramDescriptor` operation.
 The evidence is intentionally separated from broader application claims. The
 [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) records the qualified
 one-device result; [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
-records the current Level 1 composition evidence.
+records the current fused-only Level 2 composition evidence.
 
 ## Current proven result
 
@@ -55,24 +55,22 @@ fused/unfused comparison session. Neither result is an acceleration claim.
 | Evidence | Implementation | Claim | Stable benchmark |
 |---|---|---|---|
 | qmul | multicore Tensix compute/SFPU on one Wormhole device; Stage A baseline retained | Level 2 | `true` |
-| SU2ComposeBench H1 | fused and unfused time-ordered SU(2) composition on one Wormhole device | Level 1 | `false` |
+| SU2ComposeBench H1 | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |
 
-The individual Stage A and first Stage B qmul reports remain
-`stable_benchmark=false`; qmul's aggregate release is `true` because three
-qualified sessions passed. SU2 has one qualified comparison session and remains
-`false`. See the [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) and
-[SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the exact
-contracts, results, and limitations.
+The individual qmul and SU2 source-session reports remain
+`stable_benchmark=false`; each aggregate release is `true` only because three
+qualified designated sessions passed. See the [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md)
+and [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the
+exact contracts, results, and limitations.
 
 ### SU2 stability status
 
-The published SU2 evidence remains **Claim Level 1** with
-`stable_benchmark=false`. The frozen v2 campaign retained three independent
-cold-start N300 sessions with the same candidate and environment. All three
-passed collection, provenance, lifecycle, input, correctness, nonfinite, and
-sample-retention gates, but the deterministic qualifier rejected five of the
-eight cases under the preregistered variability limits. No session was
-replaced, and the repository makes no stable SU2 performance claim.
+SU2ComposeBench now has a **Claim Level 2** fused-only one-device result with
+`stable_benchmark=true`. Three designated v3 cold-start N300 sessions passed
+the hash-bound candidate/source/runtime, host, cache, lifecycle, correctness,
+raw-duration, and 5% fused-stability gates. Each individual session remains
+`stable_benchmark=false`; the aggregate makes no fused/unfused comparison or
+acceleration claim.
 
 The original [stability preregistration](benchmarks/manifests/su2-compose-stability-preregistration.json)
 remains historical. After profiler review retained candidate `54b91b…`, the

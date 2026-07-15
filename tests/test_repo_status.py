@@ -41,8 +41,8 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["Persistent Stage B hardware report"] == "stable one-device performance present"
     assert statuses["SU2ComposeBench reference foundation"] == "implemented reference"
     assert statuses["SU2ComposeBench N300 conformance"] == "hardware conformance present"
-    assert statuses["SU2ComposeBench first comparison"] == "qualified first comparison present"
-    assert statuses["SU2ComposeBench stability"] == "not established"
+    assert statuses["SU2ComposeBench first comparison"] == "stable one-device fused performance present"
+    assert statuses["SU2ComposeBench stability"] == "established"
     assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
     assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
 
@@ -67,9 +67,9 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
     assert "SU2ComposeBench reference foundation: implemented reference" in completed.stdout
     assert "SU2ComposeBench N300 conformance: hardware conformance present" in completed.stdout
     assert (
-        "SU2ComposeBench first comparison: qualified first comparison present" in completed.stdout
+        "SU2ComposeBench first comparison: stable one-device fused performance present" in completed.stdout
     )
-    assert "SU2ComposeBench stability: not established" in completed.stdout
+    assert "SU2ComposeBench stability: established" in completed.stdout
     assert (
         "EntanglementDynamicsBench reference foundation: implemented reference" in completed.stdout
     )

@@ -1,0 +1,173 @@
+{
+  "all_expected_fused_samples_retained": true,
+  "all_expected_paired_samples_retained": true,
+  "artifacts": [
+    {
+      "path": "cache-inventory.json",
+      "role": "runtime-cache-inventory",
+      "sha256": "9182c00036eae5bc97a0819bf3513c032003e3906b8d3dc47c9085cb3d05f7e8"
+    },
+    {
+      "path": "candidate.sha256",
+      "role": "candidate-identity",
+      "sha256": "da2cf14d8e122c68a93351990a4258fb1b6a6f369e1f06ab023502ca810841b6"
+    },
+    {
+      "path": "command.txt",
+      "role": "exact-command",
+      "sha256": "ac032a508aeed0036f7c0f8f86bb131a333928a453dde9b2243c2ab4a5a17b23"
+    },
+    {
+      "path": "environment.json",
+      "role": "environment",
+      "sha256": "68049ce7120e2efbe1de13dad8e8e6da90aad5ff8ae76740190c26e05ec5260f"
+    },
+    {
+      "path": "host-state-post.json",
+      "role": "host-state-post",
+      "sha256": "fe0b6aab9f0c25abc6b61ec39f6d70d41407a46ecbc722f612dfedb004604e53"
+    },
+    {
+      "path": "host-state-pre.json",
+      "role": "host-state-pre",
+      "sha256": "92e0a80a28f6bfe6ccb57d2af1ff7a186a924bba1bd9b4d914df8546b88632fe"
+    },
+    {
+      "path": "input-hashes.json",
+      "role": "input-hashes",
+      "sha256": "29fe568659920a19c05afeec274be65c500f872daa94fac6daea47f74be924b5"
+    },
+    {
+      "path": "post-device-health.txt",
+      "role": "post-device-health",
+      "sha256": "11b78adf12e3a309b82af50d8e9bf7eaf5b49295867e15624e2057bf55f87c34"
+    },
+    {
+      "path": "pre-device-health.txt",
+      "role": "pre-device-health",
+      "sha256": "64ccc295cfb5c7c2c4bb127638e9af0a3b63d05ceac90a9cd5a2712efc8b4969"
+    },
+    {
+      "path": "report.json",
+      "role": "hardware-report",
+      "sha256": "7be5843bd89bc6af5d6c13f021a679f1cc22880f46b9c5e3d734f3060b278e8d"
+    },
+    {
+      "path": "report.md",
+      "role": "hardware-report-summary",
+      "sha256": "ed40e00e1adaeb3f7a09d9b3fd9a1ef824f611e78ad6ee02bc930eadeb44d0c8"
+    },
+    {
+      "path": "stderr.txt",
+      "role": "candidate-stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "stdout.txt",
+      "role": "candidate-stdout",
+      "sha256": "81b754093ad60080e5857ea274c4acb6760202a76634734da8614db85b1d1b1f"
+    }
+  ],
+  "benchmark_mode": "fused_stability",
+  "benchmark_stage": "performance",
+  "candidate_sha256": "785fa452345ad340413dae4d59bd0bb3ac0c0398aa81e8f98250cf4a0c82c6a0",
+  "case_order": [
+    [
+      32768,
+      8
+    ],
+    [
+      8192,
+      32
+    ],
+    [
+      2048,
+      128
+    ],
+    [
+      512,
+      512
+    ],
+    [
+      1024,
+      128
+    ],
+    [
+      4096,
+      128
+    ],
+    [
+      16384,
+      128
+    ],
+    [
+      65536,
+      128
+    ]
+  ],
+  "cold_start_host_session": true,
+  "collection_status": "passed",
+  "collector_repository_commit": "c39e64c9d0d07fd2ee6f4ab4d4ad99e381778be8",
+  "cpu_affinity": [
+    24,
+    25,
+    26,
+    27
+  ],
+  "designated_stability_session": true,
+  "device_count": 1,
+  "device_id": 0,
+  "execution_source_commit": "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6",
+  "failure": null,
+  "isolated_runtime_cache": true,
+  "lifecycle": {
+    "close_count": 1,
+    "create_count": 1,
+    "device_count": 1,
+    "device_id": 0
+  },
+  "no_discarded_performance_runs": true,
+  "post_health": {
+    "devices": [
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 L",
+        "boot_date": "0x670e0237",
+        "bus_id": "0000:e1:00.0",
+        "device_id": 0,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 316414,
+        "runtime_seconds": "0x273e0",
+        "temperature_c": 40.6,
+        "throttler": "0x0"
+      },
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 R",
+        "boot_date": "0x670e0237",
+        "bus_id": "N/A",
+        "device_id": 1,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 316414,
+        "runtime_seconds": "0x273e0",
+        "temperature_c": 35.3,
+        "throttler": "0x0"
+      }
+    ],
+    "selected_device_id": 0,
+    "visible_device_count": 2
+  },
+  "runtime_cache_path": "/home/user/su2-v3-designated/su2-v3-level2-session-1/tt-metal-cache",
+  "schema": "tt-rqm-su2-compose-session.v3",
+  "seed": 0,
+  "session_id": "su2-v3-level2-session-1",
+  "source_tree_sha256": "98204ca4dbe04986bcb35cc4aef3fa7332d6310f869bec7fc399f68ec21566ff",
+  "source_trees_clean": true,
+  "stability_preregistration": "benchmarks/manifests/su2-compose-stability-preregistration-v3.json",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

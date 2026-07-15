@@ -7,9 +7,9 @@ artifact and a versioned release manifest.
 ## Flagship H1 report
 
 - [Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole](su2-compose-bench.md)
-- Qualification: **Claim Level 1 — qualified first comparison sample**
-- Stability: `stable_benchmark=false`
-- Public cold-start sessions: **1**
+- Qualification: **Claim Level 2 — stable one-device fused performance**
+- Stability: `stable_benchmark=true` for the aggregate release
+- Public cold-start sessions: **3**
 - Family: `SU2HamiltonianBench`; first stage: `SU2ComposeBench`
 
 ## Separate candidate experiment
@@ -17,17 +17,17 @@ artifact and a versioned release manifest.
 - [N300 candidate experiment: `54b91b…`](su2-compose-candidate-54b91b.md)
 - Status: real hardware conformance plus one eight-case paired performance
   experiment; `stable_benchmark=false`
-- This is not part of the hash-bound Level 1 release or its frozen Level 2
-  stability campaign.
+- This is not part of the hash-bound Level 2 release.
 
-## Retained SU2 stability campaign
+## Current and retained SU2 stability campaigns
 
-- [V2 preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
-- [Deterministic qualification result](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
-- Outcome: three complete designated N300 sessions retained; five cases failed
-  preregistered variability gates; `stable_benchmark=false`
-- Public release remains Claim Level 1; no replacement session or Level 2
-  manifest was created.
+- [V3 preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v3.json)
+- [V3 deterministic qualification](../../benchmarks/processed/wormhole-su2-compose-v3-stability-qualification.json)
+- [Level 2 release manifest](../../benchmarks/manifests/wormhole-su2-compose-level2.json)
+- Outcome: three designated N300 sessions passed all fused stability gates;
+  aggregate `stable_benchmark=true`, source sessions `false`.
+- The [retained v2 campaign](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+  remains a historical non-qualifying record.
 
 ## Quaternion kernel report
 

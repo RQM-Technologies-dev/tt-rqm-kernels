@@ -9,9 +9,11 @@ stage of a Hamiltonian-simulation pipeline, not the complete device-side
 pipeline.
 
 The fused and unfused paths passed N300 device-0 conformance before and after
-the audited eligibility promotion. The first comparison is **Claim Level 1: a
-qualified first comparison sample**. It remains `stable_benchmark=false` and
-does not establish an acceleration or stability claim.
+the audited eligibility promotion. The historical first comparison remains
+**Claim Level 1** and `stable_benchmark=false`. The current release is **Claim
+Level 2: stable one-device fused performance**, established only by the three
+designated v3 sessions described below; it is not an acceleration or stable
+fused/unfused-comparison claim.
 
 The historical report Markdown is hash-bound release evidence and remains
 byte-for-byte unchanged. This page and the claim policy provide the current,
@@ -19,17 +21,19 @@ more precise public framing; future generated reports use the same wording.
 
 ## Stability campaign outcome
 
-After profiler review retained candidate `54b91b…`, a new v2 contract was
-frozen before any designated session. Three fresh N300 device-0 cold-start
-sessions passed the collection, correctness, provenance, lifecycle, input,
-nonfinite, and sample-retention gates. The deterministic qualifier nevertheless
-rejected five cases under the frozen variability thresholds, so no session was
-replaced and no Level 2 release was created.
+The retained v2 campaign remains historical and non-qualifying: its three
+sessions failed five frozen variability gates and were not replaced. The later
+fused-only v3 campaign froze its candidate, host controls, repeat counts, and
+pilot evidence before collection. Its three designated N300 device-0 cold-start
+sessions passed whole-output correctness, provenance, lifecycle, host/cache,
+raw-duration, and 5% fused within/cross-session gates.
 
-The complete [qualification result](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
+The historical [v2 qualification result](../../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
 and [v2 preregistration](../../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
-are retained for reproducibility. Every individual session and the aggregate
-result remain `stable_benchmark=false`.
+remain retained. The [v3 qualification](../../benchmarks/processed/wormhole-su2-compose-v3-stability-qualification.json)
+and [Level 2 release manifest](../../benchmarks/manifests/wormhole-su2-compose-level2.json)
+set `stable_benchmark=true` only for the aggregate; every source session remains
+`stable_benchmark=false`.
 
 ## Kernel Architecture
 
@@ -112,10 +116,8 @@ python scripts/reproduce_wormhole_su2_compose.py --check
 
 H1 composes pre-lowered evolution operators. It is a real stage of a quantum
 Hamiltonian simulation pipeline, but it is not yet device-side coefficient
-lowering. This one session remains `stable_benchmark=false` and does not
-support an acceleration, CPU-comparison, measured-bandwidth, energy,
-dual-device, or Tenstorrent-endorsement claim. Level 2 requires three
-independent cold-start sessions with complete correctness and the
-[preregistered p95-relative dispersion and cross-session median-deviation
-limits](../su2-stability-methodology.md). This is not a
-coefficient-of-variation test.
+lowering. The aggregate Level 2 result supports stable one-device fused
+performance only. It does not support an acceleration, stable fused/unfused
+comparison, CPU-comparison, measured-bandwidth, energy, dual-device, or
+Tenstorrent-endorsement claim. Its frozen 5% within-session and cross-session
+gates are documented in the [v3 methodology](../su2-stability-methodology-v3.md).

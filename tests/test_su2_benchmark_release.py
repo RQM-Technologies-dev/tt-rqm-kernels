@@ -10,9 +10,11 @@ import pytest
 
 from tt_rqm_kernels.su2_benchmark_release import (
     DEFAULT_MANIFEST,
+    LEVEL2_MANIFEST,
     SU2ReleaseError,
     generate_release,
     load_manifest,
+    published_manifest_path,
     validate_manifest,
     validate_release,
 )
@@ -29,6 +31,18 @@ def test_su2_release_and_hardware_report_validate() -> None:
         "public_session_count": 1,
         "stable_benchmark": False,
     }
+
+
+def test_su2_level_two_release_is_the_published_fused_only_claim() -> None:
+    release = validate_release(ROOT / LEVEL2_MANIFEST, repo_root=ROOT)
+    assert published_manifest_path(ROOT) == LEVEL2_MANIFEST
+    assert release["claim"] == {
+        "level": 2,
+        "name": "stable_one_device_performance",
+        "public_session_count": 3,
+        "stable_benchmark": True,
+    }
+    assert release["stability_qualification"].endswith("v3-stability-qualification.json")
 
 
 def test_su2_artifact_tampering_is_rejected() -> None:
@@ -81,8 +95,8 @@ def test_su2_one_command_check_is_read_only() -> None:
         ["git", "status", "--porcelain"], cwd=ROOT, check=True, capture_output=True, text=True
     ).stdout
     assert before == after
-    assert "Claim Level 1" in completed.stdout
-    assert "stable_benchmark=false" in completed.stdout
+    assert "Claim Level 2" in completed.stdout
+    assert "stable_benchmark=true" in completed.stdout
 
 
 def test_su2_collection_requires_direct_candidate_command() -> None:

@@ -674,7 +674,17 @@ def qualify_stability(
         "session_ids": ids,
         "session_manifests": normalized_manifest_paths,
         "identity": None if not valid_identities else list(valid_identities[0]),
-        "sessions": analyses,
+        "sessions": [
+            {
+                **analysis,
+                "host_identity": (
+                    None
+                    if analysis.get("host_identity") is None
+                    else list(analysis["host_identity"])
+                ),
+            }
+            for analysis in analyses
+        ],
         "cases": qualified_cases,
         "rejected_gates": rejected,
         "qualification_passed": passed,

@@ -1,0 +1,736 @@
+{
+  "benchmark": "SU2ComposeBench",
+  "benchmark_mode": "fused_stability",
+  "benchmark_stage": "performance",
+  "device": "tenstorrent/wormhole-device-0",
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "family": "SU2HamiltonianBench",
+  "generated_at_utc": "2026-07-15T23:18:26.624935+00:00",
+  "lifecycle": {
+    "close_count": 1,
+    "create_count": 1,
+    "device_count": 1,
+    "device_id": 0
+  },
+  "methodology_note": "Designated SU2ComposeBench Level 2 v3 fused-only stability session; frozen candidate, source/runtime identity, host contract, five warmups, ten raw-duration samples, isolated runtime cache, and no individual stability claim.",
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_stable_fused_unfused_comparison_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_full_device_side_hamiltonian_lowering_claim",
+    "no_energy_claim",
+    "no_tenstorrent_endorsement"
+  ],
+  "performance_eligible": true,
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "protocol": "tt-rqm-external-su2-compose-persistent.v1",
+  "provenance": {
+    "candidate": {
+      "build_id": "785fa452345ad340413dae4d59bd0bb3ac0c0398aa81e8f98250cf4a0c82c6a0",
+      "candidate_sha256": "785fa452345ad340413dae4d59bd0bb3ac0c0398aa81e8f98250cf4a0c82c6a0",
+      "chip_type": "wormhole_b0",
+      "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "repository_commit": "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6",
+      "runtime_version": "tt-metal-dd2849b5",
+      "timer_scope": "one persistent device session; fused-only prepared enqueue-through-one-Finish samples",
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    "candidate_sha256": "785fa452345ad340413dae4d59bd0bb3ac0c0398aa81e8f98250cf4a0c82c6a0",
+    "repository_commit": "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6"
+  },
+  "python_version": "3.10.12",
+  "results": [
+    {
+      "B": 32768,
+      "K": 8,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 32,
+        "core_count": 32,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-32768-k-8-70b5fc8cfde3-8d9082e7c83c",
+      "cpu_oracle_max_abs_error": 2.5559253454202264e-15,
+      "derived": {
+        "fused_logical_bytes": 7077888,
+        "qmul_per_s_fused": 2336911820.73048,
+        "steps_per_s_fused": 2670756366.5491204,
+        "trajectories_per_s_fused": 333844545.81864005
+      },
+      "end_to_end_matrix_max_abs_error": 5.908821856884424e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 1.181272579753312e-06,
+          "failing_values": 0,
+          "max_abs_error": 3.699903572407237e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.869965206597769e-07,
+          "quaternion_norm_drift": 4.43049884557567e-07,
+          "rms_error": 4.65296989714254e-08,
+          "su2_determinant_error": 8.860999656246094e-07,
+          "u2_phase_consistency_error": 8.861002271920474e-07,
+          "unitarity_frobenius_error": 1.6705717031465872e-06,
+          "validated_values": 196608
+        },
+        "timing_s": {
+          "median": 9.815346816479401e-05,
+          "p95": 9.817623970037453e-05,
+          "samples": [
+            9.816493258426966e-05,
+            9.812519475655431e-05,
+            9.816050936329588e-05,
+            9.812421722846442e-05,
+            9.812260674157303e-05,
+            9.816702621722846e-05,
+            9.810796254681648e-05,
+            9.814642696629213e-05,
+            9.816736329588015e-05,
+            9.817623970037453e-05
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "8d9082e7c83c6d92b45ed32199504d221e12e36e44df34231f82434dce0ac531",
+        "rotors_sha256": "70b5fc8cfde3de4d30bda82e1174be8c5542a9f96ada2850a03bf26ce1fa734b"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 0.000207798,
+        "d2h": 0.001697094,
+        "fused_samples": [
+          0.026210037,
+          0.026199427,
+          0.026208856,
+          0.026199166,
+          0.026198736,
+          0.026210596,
+          0.026194826,
+          0.026205096,
+          0.026210686,
+          0.026213056
+        ],
+        "h2d": 0.013457219,
+        "program_build": 0.000799542,
+        "warmup": 2.758064506
+      },
+      "repeat_count": 267,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 8192,
+      "K": 32,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 8,
+        "core_count": 8,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-8192-k-32-ca915ad4461d-026fee0c3a38",
+      "cpu_oracle_max_abs_error": 7.221139395610517e-15,
+      "derived": {
+        "fused_logical_bytes": 6488064,
+        "qmul_per_s_fused": 668728452.2163336,
+        "steps_per_s_fused": 690300337.7716992,
+        "trajectories_per_s_fused": 21571885.5553656
+      },
+      "end_to_end_matrix_max_abs_error": 9.306866930755009e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 1.9001566057275099e-06,
+          "failing_values": 0,
+          "max_abs_error": 7.395548915489769e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 6.782865265009264e-07,
+          "quaternion_norm_drift": 7.840253242186179e-07,
+          "rms_error": 1.0379131294962449e-07,
+          "su2_determinant_error": 1.5680512632787469e-06,
+          "u2_phase_consistency_error": 1.5680510662357454e-06,
+          "unitarity_frobenius_error": 2.6872272426881844e-06,
+          "validated_values": 49152
+        },
+        "timing_s": {
+          "median": 0.0003797535444444445,
+          "p95": 0.00037982842222222216,
+          "samples": [
+            0.0003791351,
+            0.0003790338777777778,
+            0.00037955065555555557,
+            0.0003797427666666667,
+            0.00037956709999999996,
+            0.0003798269888888889,
+            0.00037982842222222216,
+            0.00037976432222222226,
+            0.0003797932111111111,
+            0.00037982132222222223
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "026fee0c3a38a197c1ae35b41f9f08929849c6ad27bc7bb7251a5373fdfe58e2",
+        "rotors_sha256": "ca915ad4461d4dae81239aa1ab1ad1efc49bdf58866795fcdea70a7505ab3998"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 5.356e-05,
+        "d2h": 0.000430475,
+        "fused_samples": [
+          0.034122159,
+          0.034113049,
+          0.034159559,
+          0.034176849,
+          0.034161039,
+          0.034184429,
+          0.034184558,
+          0.034178789,
+          0.034181389,
+          0.034183919
+        ],
+        "h2d": 0.000524815,
+        "program_build": 0.000412156,
+        "warmup": 0.17129115
+      },
+      "repeat_count": 90,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 2048,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 2,
+        "core_count": 2,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-2048-k-128-24db7051806a-4c929edd8228",
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "derived": {
+        "fused_logical_bytes": 6340608,
+        "qmul_per_s_fused": 169523976.52812877,
+        "steps_per_s_fused": 170858810.98898017,
+        "trajectories_per_s_fused": 1334834.4608514076
+      },
+      "end_to_end_matrix_max_abs_error": 1.7996826671595804e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.954650645399127e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.2693600500712776e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.2104933903023252e-06,
+          "quaternion_norm_drift": 1.51532292935741e-06,
+          "rms_error": 2.3714147230336486e-07,
+          "su2_determinant_error": 3.030648155100124e-06,
+          "u2_phase_consistency_error": 3.030648155100124e-06,
+          "unitarity_frobenius_error": 5.5927205774849774e-06,
+          "validated_values": 12288
+        },
+        "timing_s": {
+          "median": 0.0015342726458333331,
+          "p95": 0.0015349817916666666,
+          "samples": [
+            0.001534246375,
+            0.001534347625,
+            0.0015342730833333333,
+            0.0015343776249999999,
+            0.0015342722083333332,
+            0.001534347625,
+            0.0015342509583333335,
+            0.0015342651249999999,
+            0.001534131375,
+            0.0015349817916666666
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "4c929edd822809d67bc7a6610a44f504d9228125e73dba1f36b963ec581d75e0",
+        "rotors_sha256": "24db7051806a13b5dbe4dc490272306af7adb4a7fdb147c061caacb6d0dab56b"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 5.0129e-05,
+        "d2h": 0.000136319,
+        "fused_samples": [
+          0.036821913,
+          0.036824343,
+          0.036822554,
+          0.036825063,
+          0.036822533,
+          0.036824343,
+          0.036822023,
+          0.036822363,
+          0.036819153,
+          0.036839563
+        ],
+        "h2d": 0.000641194,
+        "program_build": 0.000414266,
+        "warmup": 0.184586421
+      },
+      "repeat_count": 24,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 512,
+      "K": 512,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 1,
+        "core_count": 1,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-512-k-512-361de3d0fe83-166d7a094303",
+      "cpu_oracle_max_abs_error": 1.1345425528553143e-13,
+      "derived": {
+        "fused_logical_bytes": 6303744,
+        "qmul_per_s_fused": 42536311.75897607,
+        "steps_per_s_fused": 42619553.0735729,
+        "trajectories_per_s_fused": 83241.31459682206
+      },
+      "end_to_end_matrix_max_abs_error": 4.884496341190804e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 9.76552851739143e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.8679868443172154e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 2.469994546672183e-06,
+          "quaternion_norm_drift": 4.882752338009055e-06,
+          "rms_error": 5.078289492686717e-07,
+          "su2_determinant_error": 9.76552851739143e-06,
+          "u2_phase_consistency_error": 9.76552851739143e-06,
+          "unitarity_frobenius_error": 1.3810542873036185e-05,
+          "validated_values": 3072
+        },
+        "timing_s": {
+          "median": 0.006150791857142858,
+          "p95": 0.006151627428571428,
+          "samples": [
+            0.006151221714285714,
+            0.006150817571428571,
+            0.006149820428571429,
+            0.006151077571428571,
+            0.006149421714285714,
+            0.006150923285714286,
+            0.006149357571428571,
+            0.006151627428571428,
+            0.006149601857142857,
+            0.006150766142857143
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "166d7a094303f4a659c6acdeb4be64c0cf562971a3022121cc0e4838b6ebb758",
+        "rotors_sha256": "361de3d0fe83ed9d0c75c116309b414854df001b1644aed114d10aae63f9beab"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 7.226e-05,
+        "d2h": 0.000123059,
+        "fused_samples": [
+          0.043058552,
+          0.043055723,
+          0.043048743,
+          0.043057543,
+          0.043045952,
+          0.043056463,
+          0.043045503,
+          0.043061392,
+          0.043047213,
+          0.043055363
+        ],
+        "h2d": 0.001142069,
+        "program_build": 0.000424606,
+        "warmup": 0.215714089
+      },
+      "repeat_count": 7,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 1024,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 1,
+        "core_count": 1,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-1024-k-128-a44407ee1ee7-20e4ec757ca1",
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "derived": {
+        "fused_logical_bytes": 3170304,
+        "qmul_per_s_fused": 84766961.82111958,
+        "steps_per_s_fused": 85434418.21341185,
+        "trajectories_per_s_fused": 667456.3922922801
+      },
+      "end_to_end_matrix_max_abs_error": 1.838196737454564e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.6056105050530363e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.0284030744767136e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.0077924164075824e-06,
+          "quaternion_norm_drift": 1.51532292935741e-06,
+          "rms_error": 2.3584974353517263e-07,
+          "su2_determinant_error": 3.030648155100124e-06,
+          "u2_phase_consistency_error": 3.030648155100124e-06,
+          "unitarity_frobenius_error": 5.09910327656689e-06,
+          "validated_values": 6144
+        },
+        "timing_s": {
+          "median": 0.001534182625,
+          "p95": 0.0015353172083333335,
+          "samples": [
+            0.0015340522083333334,
+            0.0015340880416666667,
+            0.0015342772083333331,
+            0.0015344905416666667,
+            0.0015343209583333333,
+            0.0015340663750000002,
+            0.0015340547499999998,
+            0.0015353172083333335,
+            0.0015328997500000001,
+            0.0015342834583333333
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "20e4ec757ca1c78bf1702ec856ac5e4c4c08febf230f237756a5818d2f8154fe",
+        "rotors_sha256": "a44407ee1ee7de751aa71c13c5a95682fcb4d5de9edec7268d10c34af4e713cd"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 2.977e-05,
+        "d2h": 0.000138119,
+        "fused_samples": [
+          0.036817253,
+          0.036818113,
+          0.036822653,
+          0.036827773,
+          0.036823703,
+          0.036817593,
+          0.036817314,
+          0.036847613,
+          0.036789594,
+          0.036822803
+        ],
+        "h2d": 0.000317317,
+        "program_build": 0.000335867,
+        "warmup": 0.184462752
+      },
+      "repeat_count": 24,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 4096,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 4,
+        "core_count": 4,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-4096-k-128-b0c874a4975b-7ef2d9adb058",
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "derived": {
+        "fused_logical_bytes": 12681216,
+        "qmul_per_s_fused": 338996034.6401016,
+        "steps_per_s_fused": 341665294.755378,
+        "trajectories_per_s_fused": 2669260.1152763907
+      },
+      "end_to_end_matrix_max_abs_error": 1.7517297087550726e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 3.819494062806683e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.4362062472628168e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.265659441473943e-06,
+          "quaternion_norm_drift": 1.6250510463944323e-06,
+          "rms_error": 2.396277369368002e-07,
+          "su2_determinant_error": 3.2501047337873956e-06,
+          "u2_phase_consistency_error": 3.2501020572189917e-06,
+          "unitarity_frobenius_error": 5.401580304710707e-06,
+          "validated_values": 24576
+        },
+        "timing_s": {
+          "median": 0.001534507625,
+          "p95": 0.0015355022083333334,
+          "samples": [
+            0.0015332484583333334,
+            0.0015344180416666667,
+            0.0015345067916666666,
+            0.0015355022083333334,
+            0.0015345742916666667,
+            0.0015345084583333333,
+            0.0015345588749999999,
+            0.001534452625,
+            0.001534431375,
+            0.0015352530416666667
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "7ef2d9adb0583bdaf0fb7d1b3d40ed78e0a764b19287bf730704b315736c5e64",
+        "rotors_sha256": "b0c874a4975b0684d2a16a1cc243626d79d6e359784557582f9d6db877bd425f"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 7.0079e-05,
+        "d2h": 0.000174258,
+        "fused_samples": [
+          0.036797963,
+          0.036826033,
+          0.036828163,
+          0.036852053,
+          0.036829783,
+          0.036828203,
+          0.036829413,
+          0.036826863,
+          0.036826353,
+          0.036846073
+        ],
+        "h2d": 0.00108314,
+        "program_build": 0.000502485,
+        "warmup": 0.184555531
+      },
+      "repeat_count": 24,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 16384,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 16,
+        "core_count": 16,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-16384-k-128-19105bb009b2-c2b2a7ae843c",
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "derived": {
+        "fused_logical_bytes": 50724864,
+        "qmul_per_s_fused": 1353832548.7802687,
+        "steps_per_s_fused": 1364492647.589562,
+        "trajectories_per_s_fused": 10660098.809293453
+      },
+      "end_to_end_matrix_max_abs_error": 2.1676687747349307e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 4.6574166192581146e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.455134109207279e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.4191327519785801e-06,
+          "quaternion_norm_drift": 1.5211340650411742e-06,
+          "rms_error": 2.3707821684022425e-07,
+          "su2_determinant_error": 3.0422658161555205e-06,
+          "u2_phase_consistency_error": 3.0422656736323325e-06,
+          "unitarity_frobenius_error": 6.5865817485766745e-06,
+          "validated_values": 98304
+        },
+        "timing_s": {
+          "median": 0.0015369463541666669,
+          "p95": 0.0015372750833333333,
+          "samples": [
+            0.001534721375,
+            0.0015347159583333333,
+            0.0015364567916666665,
+            0.0015372750833333333,
+            0.0015368734166666667,
+            0.0015370192916666669,
+            0.0015367446666666668,
+            0.0015370517916666667,
+            0.0015371296666666665,
+            0.001537203
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "c2b2a7ae843c5c596ad52fcac3c29d6e6b6fc350a8b49797d79835d8eaca02aa",
+        "rotors_sha256": "19105bb009b23df39c7430535456e66a9f6ce377b4e15007a196c6fd3d1d348e"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 6.662e-05,
+        "d2h": 0.000418336,
+        "fused_samples": [
+          0.036833313,
+          0.036833183,
+          0.036874963,
+          0.036894602,
+          0.036884962,
+          0.036888463,
+          0.036881872,
+          0.036889243,
+          0.036891112,
+          0.036892872
+        ],
+        "h2d": 0.00413887,
+        "program_build": 0.000415165,
+        "warmup": 0.185090606
+      },
+      "repeat_count": 24,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    },
+    {
+      "B": 65536,
+      "K": 128,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 64,
+        "core_count": 56,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "synchronization_boundaries_per_sample": 1,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-65536-k-128-a58869066f63-102f942393fe",
+      "cpu_oracle_max_abs_error": 2.7400264323775922e-14,
+      "derived": {
+        "fused_logical_bytes": 202899456,
+        "qmul_per_s_fused": 2700711445.3798637,
+        "steps_per_s_fused": 2721976889.8316736,
+        "trajectories_per_s_fused": 21265444.45180995
+      },
+      "end_to_end_matrix_max_abs_error": 2.3765624989172803e-06,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 4.76205016575193e-06,
+          "failing_values": 0,
+          "max_abs_error": 1.6439139745028086e-06,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 1.5777769637459471e-06,
+          "quaternion_norm_drift": 1.7722451581825283e-06,
+          "rms_error": 2.3736141198243936e-07,
+          "su2_determinant_error": 3.5444934574080378e-06,
+          "u2_phase_consistency_error": 3.5444906720998717e-06,
+          "unitarity_frobenius_error": 6.734555929264434e-06,
+          "validated_values": 393216
+        },
+        "timing_s": {
+          "median": 0.0030818072083333334,
+          "p95": 0.0030823051666666666,
+          "samples": [
+            0.0030767218333333335,
+            0.0030795092499999997,
+            0.0030818135000000003,
+            0.0030820909166666666,
+            0.003081911833333333,
+            0.003081985916666667,
+            0.003081491,
+            0.003081758416666667,
+            0.0030818009166666666,
+            0.0030823051666666666
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "102f942393fe3695ddcc67fe17e4ab9182a27fa8409de3b4c3fd51d4da674903",
+        "rotors_sha256": "a58869066f638fe88d16c6d778d60bba0f00046b942e17e42ae4c7492c33b498"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 6.7329e-05,
+        "d2h": 0.001369066,
+        "fused_samples": [
+          0.036920662,
+          0.036954111,
+          0.036981762,
+          0.036985091,
+          0.036982942,
+          0.036983831,
+          0.036977892,
+          0.036981101,
+          0.036981611,
+          0.036987662
+        ],
+        "h2d": 0.015109783,
+        "program_build": 0.000596785,
+        "warmup": 0.185487642
+      },
+      "repeat_count": 12,
+      "samples": 10,
+      "stable_benchmark": false,
+      "warmup_count": 5
+    }
+  ],
+  "schema": "tt-rqm-su2-compose-report.v1",
+  "seed": 0,
+  "session_timing": {
+    "candidate_session": 16.438830614,
+    "device_close": 0.128747151,
+    "device_create": 6.621220975,
+    "host_process_end_to_end": 17.21516089499346
+  },
+  "stable_benchmark": false
+}

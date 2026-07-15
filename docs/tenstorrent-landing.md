@@ -43,7 +43,7 @@ qmul integrity gate: whole-output float64 conformance and strict metrics v2
 current scalar RISC-V candidate: Stage A correctness baseline, not performance-eligible
 multicore/SFPU candidate: Stage B conformance and first official sweep present
 persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sessions
-SU2ComposeBench fused/unfused paths: Claim Level 1 release plus retained non-qualifying v2 campaign
+SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release plus retained historical v2 campaign
 EntanglementDynamicsBench: CPU reference foundation only; no hardware claim or claim level
 ```
 
@@ -53,17 +53,16 @@ Stage B report is performance-eligible architecture evidence. The persistent
 path removes repeated process/device creation from each measurement session.
 
 The [SU2ComposeBench report](benchmarks/su2-compose-bench.md) adds fused,
-time-ordered SU(2) evolution. Its fused and unfused paths passed whole-output
-conformance and one paired N300 device-0 comparison, producing a Claim Level 1
-release with `stable_benchmark=false`. A later, separately frozen v2 campaign
-retained three fresh N300 cold-start sessions for candidate `54b91b…`; the
-deterministic qualifier rejected five cases under the frozen variability gates.
-No session was replaced and no Level 2 SU2 release exists.
+time-ordered SU(2) evolution. Its historical fused/unfused comparison remains
+Level 1 and non-stable. A separately frozen fused-only v3 campaign retained
+three fresh N300 cold-start sessions and passed every frozen 5% stability gate,
+supporting the aggregate Claim Level 2 release with `stable_benchmark=true`.
 
-The [v2 preregistration](../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
+The historical [v2 preregistration](../benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
 and [qualification artifact](../benchmarks/processed/wormhole-su2-compose-stability-qualification.json)
-preserve the candidate identity, inputs, session packages, and non-qualifying
-outcome. This remains neither an acceleration nor a stable-performance claim.
+preserve the earlier non-qualifying outcome. The [v3 qualification](../benchmarks/processed/wormhole-su2-compose-v3-stability-qualification.json)
+is reproducible from the designated packages. Neither release makes an
+acceleration claim.
 
 The public [Wormhole qmul benchmark report](benchmarks/wormhole-qmul.md)
 packages the current evidence, deterministic charts, claim policy, provenance,

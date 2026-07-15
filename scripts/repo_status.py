@@ -491,16 +491,18 @@ def _su2_comparison_status(root: Path) -> tuple[str, str]:
         report = json.loads((root / release["primary_report"]).read_text(encoding="utf-8"))
         if not _valid_su2_report_header(report, stage="performance", eligible=True):
             raise ValueError("comparison report header or device scope mismatch")
+        fused_only = report.get("benchmark_mode") == "fused_stability"
         if not all(
-            _valid_su2_result(result, samples=10, eligible=True) for result in report["results"]
+            _valid_su2_result(result, samples=10, eligible=True, fused_only=fused_only)
+            for result in report["results"]
         ):
             raise ValueError("comparison result validation failed")
     except (KeyError, OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
         return "invalid comparison evidence", f"SU2 Claim Level 1 validation failed: {exc}"
     if claim["level"] == 2:
         return (
-            "stable one-device comparison present",
-            "Three designated device-0 sessions passed the hash-bound SU2 Level 2 stability qualification; this is not an acceleration result.",
+            "stable one-device fused performance present",
+            "Three designated device-0 sessions passed the hash-bound SU2 Level 2 fused stability qualification; this is not an acceleration result.",
         )
     return (
         "qualified first comparison present",
@@ -633,7 +635,9 @@ def _valid_su2_report_header(report: dict[str, Any], *, stage: str, eligible: bo
     )
 
 
-def _valid_su2_result(result: dict[str, Any], *, samples: int, eligible: bool) -> bool:
+def _valid_su2_result(
+    result: dict[str, Any], *, samples: int, eligible: bool, fused_only: bool = False
+) -> bool:
     batch = result.get("B")
     metadata = result.get("candidate_metadata", {})
     if not isinstance(batch, int) or batch <= 0:
@@ -648,7 +652,8 @@ def _valid_su2_result(result: dict[str, Any], *, samples: int, eligible: bool) -
         or metadata.get("fused_accumulator_storage") != "tensix_l1_ping_pong"
     ):
         return False
-    for path in ("fused", "unfused"):
+    paths = ("fused",) if fused_only else ("fused", "unfused")
+    for path in paths:
         correctness = result.get(path, {}).get("correctness", {})
         if (
             correctness.get("validated_values") != 6 * batch

@@ -218,10 +218,10 @@ def test_readme_summarizes_two_aggregate_benchmark_releases() -> None:
     assert table.splitlines() == [
         "|---|---|---|---|",
         "| qmul | multicore Tensix compute/SFPU on one Wormhole device; Stage A baseline retained | Level 2 | `true` |",
-        "| SU2ComposeBench H1 | fused and unfused time-ordered SU(2) composition on one Wormhole device | Level 1 | `false` |",
+        "| SU2ComposeBench H1 | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |",
     ]
     assert "Stage A qmul conformance" not in table
     assert "Stage B qmul" not in table
-    assert "deterministic qualifier rejected five of the" in text
-    assert "No session was\nreplaced" in text
-    assert "no stable SU2 performance claim" in text
+    assert "Three designated v3 cold-start N300 sessions passed" in text
+    assert "stable_benchmark=true" in text
+    assert "no fused/unfused comparison or" in text
