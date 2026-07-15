@@ -20,24 +20,21 @@ pipeline.
 
 ## Current proven result
 
-The repository contains real N300 device-0 evidence for quaternion
-multiplication and `SU2ComposeBench`. Three independent persistent qmul
-sessions support a stable one-device release; the SU2 comparison remains a
-single non-stable session. Neither result is an acceleration claim.
+The repository has two public N300 device-0 benchmark releases. qmul has a
+three-session stable one-device release; `SU2ComposeBench` has one qualified
+fused/unfused comparison session. Neither result is an acceleration claim.
 
 | Evidence | Implementation | Claim | Stable benchmark |
 |---|---|---|---|
-| Stage A qmul conformance | scalar RISC-V correctness baseline | Level 0 | `false` |
-| Stage B qmul | multicore Tensix compute/SFPU | Level 1 | `false` |
-| Persistent qmul | three qualified device-0 sessions | Level 2 | `true` |
-| SU2ComposeBench H1 conformance | fused and unfused ordered composition | Level 0 | `false` |
-| SU2ComposeBench H1 comparison | one qualified fused/unfused session | Level 1 | `false` |
+| qmul | multicore Tensix compute/SFPU on one Wormhole device; Stage A baseline retained | Level 2 | `true` |
+| SU2ComposeBench H1 | fused and unfused time-ordered SU(2) composition on one Wormhole device | Level 1 | `false` |
 
-The SU(2) comparison validates every output against independent CPU oracles.
-The fused path retains rotor and phase accumulators in Tensix L1; the unfused
-path uses repeated qmul-plus-phase dispatches with DRAM ping-pong storage. See
-the [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the exact
-contract, results, and limitations.
+The individual Stage A and first Stage B qmul reports remain
+`stable_benchmark=false`; qmul's aggregate release is `true` because three
+qualified sessions passed. SU2 has one qualified comparison session and remains
+`false`. See the [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) and
+[SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the exact
+contracts, results, and limitations.
 
 ### SU2 stability status
 
