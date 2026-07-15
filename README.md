@@ -74,6 +74,35 @@ measured hardware bandwidth, energy efficiency, application speedup, full
 device-side Hamiltonian lowering, dual-device scaling, or Tenstorrent
 endorsement.
 
+## What you can use `qmul` for
+
+`qmul(a, b)` is the batched Hamilton product of ordinary floating-point
+quaternion tensors with final lane layout `[real, i, j, k]`. It is useful when
+each four-lane value represents a structured transformation and the order of
+composition matters:
+
+- **Rotation and pose pipelines:** compose unit quaternions that encode 3D
+  orientations, then fuse normalization, conjugation, or vector rotation into
+  a larger tensor program.
+- **Two-level Hamiltonian simulation:** compose the unit-quaternion rotors and
+  phase pairs produced by CPU lowering of piecewise-constant Hamiltonian
+  coefficients. This is the H1 stage implemented by `SU2ComposeBench`.
+- **Structured-kernel development:** use the compact `[N, 4]` contract as a
+  reproducible target for testing cross-lane arithmetic, noncommutative order,
+  layout choices, and fusion on a Tenstorrent backend.
+
+The reference operator supports normal PyTorch broadcasting over leading
+dimensions, so it can serve as a building block inside batched simulations and
+tensor pipelines rather than only as a standalone benchmark. See the
+[operator contract](docs/operator-contracts.md#qmul) for its exact equation,
+shapes, and SU(2) matrix convention.
+
+The present device result proves the `qmul` kernel contract and its
+one-device benchmark stability; it does not yet prove end-to-end speedup for a
+rotation, scientific-simulation, or physical-AI application. Device-side
+Hamiltonian coefficient lowering, broader physical-AI benchmarks, and
+two-qubit execution remain future work.
+
 ## Five-minute local quickstart
 
 The default developer path is hardware-free:
