@@ -31,22 +31,24 @@ def main() -> int:
     parser.add_argument("--candidate-stderr", type=Path, required=True)
     args = parser.parse_args()
     capture: dict[str, str] = {}
-    report = run_su2_compose(
-        command=args.command,
-        stage="profile",
-        methodology_note=(
-            "Diagnostic Device Program Profiler and Tracy capture; one fused/unfused pair, "
-            "no timing warmups, no stability or acceleration claim."
-        ),
-        expected_candidate_sha256=args.expected_candidate_sha256,
-        expected_repository_commit=args.expected_source_commit,
-        process_capture=capture,
-        case_specs=((args.batch, args.steps, 1, 0, 1),),
-    )
+    try:
+        report = run_su2_compose(
+            command=args.command,
+            stage="profile",
+            methodology_note=(
+                "Diagnostic Device Program Profiler and Tracy capture; one fused/unfused pair, "
+                "no timing warmups, no stability or acceleration claim."
+            ),
+            expected_candidate_sha256=args.expected_candidate_sha256,
+            expected_repository_commit=args.expected_source_commit,
+            process_capture=capture,
+            case_specs=((args.batch, args.steps, 1, 0, 1),),
+        )
+    finally:
+        args.candidate_stdout.write_text(capture.get("stdout", ""))
+        args.candidate_stderr.write_text(capture.get("stderr", ""))
     args.json_output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     args.markdown_output.write_text(render_su2_markdown(report))
-    args.candidate_stdout.write_text(capture.get("stdout", ""))
-    args.candidate_stderr.write_text(capture.get("stderr", ""))
     return 0
 
 

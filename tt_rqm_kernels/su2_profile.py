@@ -121,6 +121,7 @@ def collect_profile_session(
             "profiler_environment": {
                 "TT_METAL_DEVICE_PROFILER": "1",
                 "TT_METAL_PROFILER_MID_RUN_DUMP": "1",
+                "TT_METAL_RUNTIME_ROOT": str(tt_metal_root),
                 "TRACY_NO_INVARIANT_CHECK": "1",
             },
         }
@@ -268,6 +269,7 @@ def _collect_case(
     env.update(
         {
             "TT_METAL_HOME": str(tt_metal_root),
+            "TT_METAL_RUNTIME_ROOT": str(tt_metal_root),
             "TT_METAL_DEVICE_PROFILER": "1",
             "TT_METAL_PROFILER_MID_RUN_DUMP": "1",
             "TRACY_NO_INVARIANT_CHECK": "1",
@@ -291,6 +293,7 @@ def _collect_case(
     (profiler_dir / "tracy-capture.stdout.txt").write_text(capture_stdout)
     (profiler_dir / "tracy-capture.stderr.txt").write_text(capture_stderr)
     (profiler_dir / "tracy-capture.exit-status.txt").write_text(f"{capture.returncode}\n")
+    _require(runner.returncode == 0, f"profile runner failed for {case_id}")
     for name in ("profile_log_device.csv", "zone_src_locations.log", "new_zone_src_locations.log"):
         source = generated_logs / name
         _require(source.is_file(), f"missing device profiler artifact: {name}")
@@ -311,7 +314,6 @@ def _collect_case(
     _require(post.returncode == 0, "post-capture tt-smi failed")
     validate_device_health(post.stdout, device_id=0)
     compare_device_health(pre.stdout, post.stdout, device_id=0)
-    _require(runner.returncode == 0, f"profile runner failed for {case_id}")
     _require(capture.returncode == 0, f"Tracy capture failed for {case_id}")
     _require(report_path.is_file(), f"profile report missing for {case_id}")
     report = json.loads(report_path.read_text())
