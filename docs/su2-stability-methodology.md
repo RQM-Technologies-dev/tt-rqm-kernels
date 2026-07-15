@@ -1,5 +1,9 @@
 # SU2ComposeBench Stability Methodology
 
+> Historical v1/v2 record. These campaigns are closed and must not be rerun or
+> repaired. New Level 2 work follows the separate
+> [v3 methodology](su2-stability-methodology-v3.md).
+
 The historical v1 methodology was frozen before its designated session 2. The
 retained-candidate v2 methodology was frozen before designated session 1. Both
 apply to the same eight fused/unfused H1 cases on Wormhole device 0; the v2

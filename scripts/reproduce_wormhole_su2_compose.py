@@ -21,13 +21,17 @@ from tt_rqm_kernels.su2_benchmark_release import (
     validate_release,
 )
 from tt_rqm_kernels.su2_hardware_session import collect_su2_session
-from tt_rqm_kernels.su2_stability import load_stability_preregistration
+from tt_rqm_kernels.su2_stability import (
+    load_stability_preregistration,
+    load_v3_pilot_repeat_counts,
+)
 
 
 FROZEN_CANDIDATE_SHA256 = "d8237f2e5b05885167085d87a0400daf8b5feb0318d906285a1d263035294441"
 FROZEN_EXECUTION_SOURCE = "3238299a9eea2a44dccd6826a947cac3266dd2f7"
 FROZEN_TT_METAL = "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
 V2_PREREGISTRATION = Path("benchmarks/manifests/su2-compose-stability-preregistration-v2.json")
+V3_PREREGISTRATION = Path("benchmarks/manifests/su2-compose-stability-preregistration-v3.json")
 
 
 def _check() -> None:
@@ -35,6 +39,14 @@ def _check() -> None:
     load_stability_preregistration(repo_root=REPO_ROOT)
     if (REPO_ROOT / V2_PREREGISTRATION).is_file():
         load_stability_preregistration(V2_PREREGISTRATION, repo_root=REPO_ROOT)
+    if (REPO_ROOT / V3_PREREGISTRATION).is_file():
+        v3 = load_stability_preregistration(V3_PREREGISTRATION, repo_root=REPO_ROOT)
+        if v3["status"] != "pilot_foundation_not_frozen":
+            raise ValueError("unexpected v3 campaign status")
+        load_v3_pilot_repeat_counts(
+            Path("benchmarks/manifests/su2-compose-v3-pilot-repeat-counts.json"),
+            repo_root=REPO_ROOT,
+        )
     release_path = REPO_ROOT / "benchmarks/manifests/su2-compose-conformance.json"
     release = json.loads(release_path.read_text())
     if release.get("schema") != "tt-rqm-su2-compose-conformance-release.v1":

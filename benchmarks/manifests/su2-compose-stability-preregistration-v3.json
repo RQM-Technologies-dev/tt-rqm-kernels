@@ -1,0 +1,70 @@
+{
+  "benchmark_id": "wormhole-su2-compose-fp32-v3",
+  "benchmark_mode": "fused_stability",
+  "candidate": null,
+  "cases": [
+    {"B": 32768, "K": 8, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 8192, "K": 32, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 2048, "K": 128, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 512, "K": 512, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 1024, "K": 128, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 4096, "K": 128, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 16384, "K": 128, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null},
+    {"B": 65536, "K": 128, "limits": {"fused": {"cross_session_deviation": 0.05, "within_session_dispersion": 0.05}}, "repeat_count": null}
+  ],
+  "claim_scope": {
+    "level_2": "stable_one_device_fused_performance",
+    "level_2_diagnostics": ["unfused", "ratio", "estimated_logical_traffic", "profiler_attribution"],
+    "level_3": "stable_matched_scope_fused_unfused_comparison"
+  },
+  "invalid_session_rules": [
+    "collection_failure",
+    "discarded_designated_run",
+    "correctness_failure",
+    "nonfinite_value",
+    "device_fault_or_reset",
+    "thermal_throttling",
+    "missing_or_reordered_case",
+    "missing_or_reordered_sample",
+    "provenance_mismatch",
+    "input_identity_mismatch",
+    "lifecycle_mismatch",
+    "timing_integrity_failure",
+    "dirty_source_tree",
+    "reused_runtime_cache",
+    "host_parameter_change",
+    "profiler_watcher_or_debug_enabled",
+    "raw_sample_duration_out_of_range",
+    "replacement_designated_session"
+  ],
+  "pilot_repeat_plan": "benchmarks/manifests/su2-compose-v3-pilot-repeat-counts.json",
+  "pilot_sessions": [],
+  "raw_sample_duration_s": {
+    "maximum": 0.05,
+    "minimum": 0.025,
+    "record_before_normalization": true
+  },
+  "schema": "tt-rqm-su2-compose-stability-preregistration.v3",
+  "session_contract": {
+    "all_designated_sessions_retained": true,
+    "cold_start_host_process": true,
+    "device_count": 1,
+    "device_id": 0,
+    "isolated_empty_runtime_cache_per_session": true,
+    "measured_samples_per_case": 10,
+    "no_discarded_performance_runs": true,
+    "one_synchronization_boundary_per_sample": true,
+    "required_designated_sessions": 3,
+    "separate_collector_invocations": true,
+    "warmups_per_case": 5
+  },
+  "statistic": {
+    "absolute_maximum_limit": 0.1,
+    "cross_session_deviation": "abs(session_median - median_across_sessions) / median_across_sessions",
+    "diagnostic_metrics": ["unfused", "ratio"],
+    "nearest_rank_p95": "sorted_samples[ceil(0.95 * sample_count) - 1]",
+    "required_metrics": ["fused"],
+    "within_session_dispersion": "(nearest_rank_p95 - median) / median"
+  },
+  "status": "pilot_foundation_not_frozen"
+}

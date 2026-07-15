@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "B": 32,
+      "K": 8,
+      "case_id": "su2-f32-seed-0-b-32-k-8-f41e00430466-1baa45e1df7d",
+      "phases_sha256": "1baa45e1df7dd8e3f985f5cdb0add5016c315957c1805ecfa596a197463806d9",
+      "rotors_sha256": "f41e00430466adeed57b21025a35f56e072be03b3071be0a8b366d81cd8d5b14"
+    },
+    {
+      "B": 2048,
+      "K": 8,
+      "case_id": "su2-f32-seed-0-b-2048-k-8-5ffebe96333b-aa8a82b8f117",
+      "phases_sha256": "aa8a82b8f1172b3986796b8ccce9caa1b3ebc36ecfccbf160bcfc9239e80c6c6",
+      "rotors_sha256": "5ffebe96333b4d19db08e3283ba806771da8e86ca2ee301273e190dae42e3db9"
+    }
+  ],
+  "schema": "tt-rqm-su2-compose-input-hashes.v1",
+  "seed": 0
+}

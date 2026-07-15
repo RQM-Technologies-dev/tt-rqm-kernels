@@ -119,8 +119,10 @@ def test_collector_writes_complete_hash_bound_package(
         "environment",
         "exact-command",
         "hardware-report",
-        "hardware-report-summary",
-        "input-hashes",
+            "hardware-report-summary",
+            "host-state-post",
+            "host-state-pre",
+            "input-hashes",
         "post-device-health",
         "pre-device-health",
     }

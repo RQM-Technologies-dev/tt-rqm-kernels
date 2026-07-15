@@ -9,7 +9,9 @@ import pytest
 
 from tt_rqm_kernels.benchmark_integrity import IntegrityError
 from tt_rqm_kernels.su2_stability import (
+    PREREGISTRATION_SCHEMA_V3,
     load_stability_preregistration,
+    load_v3_pilot_repeat_counts,
     qualify_stability,
     sha256_file,
     validate_stability_preregistration,
@@ -17,7 +19,6 @@ from tt_rqm_kernels.su2_stability import (
 )
 from tt_rqm_kernels.su2_benchmark_release import (
     LEVEL2_NONCLAIMS,
-    generate_release,
     validate_manifest,
 )
 
@@ -35,6 +36,32 @@ def test_v2_stability_preregistration_is_frozen_before_session_one() -> None:
     assert preregistration["calibration_experiment"]["designated_stability_session"] is False
     assert preregistration["candidate"]["sha256"].startswith("54b91b")
     assert len(preregistration["inputs"]) == 8
+
+
+def test_v3_foundation_is_fused_only_and_not_freezable_yet() -> None:
+    path = Path("benchmarks/manifests/su2-compose-stability-preregistration-v3.json")
+    preregistration = load_stability_preregistration(path, repo_root=ROOT)
+    assert preregistration["schema"] == PREREGISTRATION_SCHEMA_V3
+    assert preregistration["status"] == "pilot_foundation_not_frozen"
+    assert preregistration["statistic"]["required_metrics"] == ["fused"]
+    assert preregistration["statistic"]["diagnostic_metrics"] == ["unfused", "ratio"]
+    assert all(case["repeat_count"] is None for case in preregistration["cases"])
+    with pytest.raises(IntegrityError, match="not frozen"):
+        qualify_stability([], preregistration_path=path, repo_root=ROOT)
+
+
+def test_v3_pilot_repeat_plan_is_disclosed_and_hash_bound() -> None:
+    repeats = load_v3_pilot_repeat_counts(
+        Path("benchmarks/manifests/su2-compose-v3-pilot-repeat-counts.json"),
+        repo_root=ROOT,
+    )
+    assert repeats[(32768, 8)] == 267
+    assert repeats[(512, 512)] == 7
+    assert len(repeats) == 8
+    audit = (ROOT / "reports/tt_hardware_su2_compose_v3_foundation_audit.md").read_text()
+    assert "ready_to_freeze_v3=true" in audit
+    assert "stable_benchmark=false" in audit
+    assert "No `su2-v3-level2-session-*` collection was performed" in audit
 
 
 def _health() -> str:
@@ -316,7 +343,7 @@ def test_discarded_run_and_manual_stability_flag_cannot_qualify(tmp_path: Path) 
     assert any("stable_benchmark=false" in reason for reason in result["rejected_gates"])
 
 
-def test_level_two_release_requires_and_recomputes_qualification(tmp_path: Path) -> None:
+def test_historical_paired_qualification_cannot_publish_as_v3_level_two(tmp_path: Path) -> None:
     manifests = [_session(tmp_path, value) for value in ("one", "two", "three")]
     qualification = _qualify(tmp_path, manifests)
     qualification_path = tmp_path / "benchmarks/processed/su2-stability.json"
@@ -401,34 +428,5 @@ def test_level_two_release_requires_and_recomputes_qualification(tmp_path: Path)
         ],
     }
 
-    validate_manifest(release, repo_root=tmp_path)
-    release_path = tmp_path / "benchmarks/manifests/wormhole-su2-compose-level2.json"
-    release_path.write_text(json.dumps(release, indent=2) + "\n")
-    first_output = tmp_path / "generated-first"
-    second_output = tmp_path / "generated-second"
-    outputs = generate_release(
-        release_path,
-        repo_root=tmp_path,
-        destination_root=first_output,
-    )
-    assert outputs == generate_release(
-        release_path,
-        repo_root=tmp_path,
-        destination_root=second_output,
-    )
-    assert all(
-        (first_output / path).read_bytes() == (second_output / path).read_bytes()
-        for path in outputs
-    )
-
-    release["artifacts"] = [
-        artifact
-        for artifact in release["artifacts"]
-        if artifact["role"] != "stability-qualification"
-    ]
-    try:
+    with pytest.raises(ValueError, match="fused_stability"):
         validate_manifest(release, repo_root=tmp_path)
-    except ValueError as exc:
-        assert "governance" in str(exc) or "qualification" in str(exc)
-    else:
-        raise AssertionError("Level 2 release accepted without hash-bound qualification")

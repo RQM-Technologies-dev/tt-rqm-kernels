@@ -26,7 +26,9 @@ CASES = (
     (16384, 128),
     (65536, 128),
 )
-CHART_IDS = {"latency", "throughput", "error_drift", "raw_paired_samples", "timing_breakdown"}
+LEVEL1_CHART_IDS = {"latency", "throughput", "error_drift", "raw_paired_samples", "timing_breakdown"}
+LEVEL2_CHART_IDS = {"latency", "throughput", "error_drift", "raw_fused_samples", "timing_breakdown", "stability"}
+LEVEL3_CHART_IDS = LEVEL1_CHART_IDS | {"stability"}
 LEVEL1_NONCLAIMS = {
     "no_stability_claim",
     "no_acceleration_claim",
@@ -37,7 +39,10 @@ LEVEL1_NONCLAIMS = {
     "no_full_device_side_hamiltonian_lowering_claim",
     "no_tenstorrent_endorsement",
 }
-LEVEL2_NONCLAIMS = LEVEL1_NONCLAIMS - {"no_stability_claim"}
+LEVEL2_NONCLAIMS = (LEVEL1_NONCLAIMS - {"no_stability_claim"}) | {
+    "no_stable_fused_unfused_comparison_claim"
+}
+LEVEL3_NONCLAIMS = LEVEL1_NONCLAIMS - {"no_stability_claim"}
 
 
 class SU2ReleaseError(ValueError):
@@ -198,7 +203,7 @@ def validate_manifest(manifest: Mapping[str, Any], *, repo_root: Path | None = N
             "SU2 Claim Level 1 name mismatch",
         )
         _require(claim.get("stable_benchmark") is False, "SU2 Claim Level 1 must be non-stable")
-    if level >= 2:
+    if level == 2:
         _require(len(sessions) == 3, "SU2 Claim Level 2 requires exactly three designated sessions")
         _require(
             claim.get("name") == "stable_one_device_performance", "SU2 Claim Level 2 name mismatch"
@@ -207,6 +212,17 @@ def validate_manifest(manifest: Mapping[str, Any], *, repo_root: Path | None = N
             claim.get("stable_benchmark") is True,
             "SU2 Claim Level 2 requires stable_benchmark=true",
         )
+    if level == 3:
+        _require(len(sessions) == 3, "SU2 Claim Level 3 requires exactly three designated sessions")
+        _require(
+            claim.get("name") == "stable_matched_scope_baseline_comparison",
+            "SU2 Claim Level 3 name mismatch",
+        )
+        _require(
+            claim.get("stable_benchmark") is True,
+            "SU2 Claim Level 3 requires stable_benchmark=true",
+        )
+    if level >= 2:
         roles = {str(artifact.get("role")) for artifact in artifacts}
         required_roles = {
             "preregistration",
@@ -244,11 +260,42 @@ def validate_manifest(manifest: Mapping[str, Any], *, repo_root: Path | None = N
 
         recomputed = qualify_stability(
             [Path(str(session["session_manifest"])) for session in sessions],
+            preregistration_path=Path(str(qualification["preregistration"])),
             repo_root=root,
         )
         _require(recomputed == qualification, "SU2 stability qualification is not reproducible")
+        if level == 2:
+            _require(
+                report.get("benchmark_mode") == "fused_stability",
+                "SU2 Claim Level 2 requires fused_stability reports",
+            )
+            _require(
+                all("unfused" not in result and "comparison" not in result for result in report["results"]),
+                "SU2 Claim Level 2 cannot gate or synthesize comparison metrics",
+            )
+            _require(
+                qualification["sessions"]
+                and all(
+                    set(case["metrics"]) == {"fused"}
+                    for case in qualification["cases"]
+                ),
+                "SU2 Claim Level 2 qualification must gate fused timing only",
+            )
+        if level == 3:
+            _require(
+                report.get("benchmark_mode", "paired_comparison") == "paired_comparison",
+                "SU2 Claim Level 3 requires paired_comparison reports",
+            )
+            _require(
+                all(set(case["metrics"]) == {"fused", "unfused", "ratio"} for case in qualification["cases"]),
+                "SU2 Claim Level 3 must qualify fused, unfused, and ratio metrics",
+            )
 
-    expected_nonclaims = LEVEL1_NONCLAIMS if level == 1 else LEVEL2_NONCLAIMS
+    expected_nonclaims = {
+        1: LEVEL1_NONCLAIMS,
+        2: LEVEL2_NONCLAIMS,
+        3: LEVEL3_NONCLAIMS,
+    }.get(level, LEVEL1_NONCLAIMS)
     _require(
         set(manifest.get("nonclaims", [])) == expected_nonclaims,
         "SU2 release nonclaims are not level-aware",
@@ -263,7 +310,11 @@ def validate_manifest(manifest: Mapping[str, Any], *, repo_root: Path | None = N
                 raise SU2ReleaseError("measured bandwidth requires a hash-bound ceiling artifact")
     charts = manifest.get("charts")
     _require(isinstance(charts, list), "SU2 release requires charts")
-    expected_charts = CHART_IDS if level == 1 else CHART_IDS | {"stability"}
+    expected_charts = {
+        1: LEVEL1_CHART_IDS,
+        2: LEVEL2_CHART_IDS,
+        3: LEVEL3_CHART_IDS,
+    }.get(level, LEVEL1_CHART_IDS)
     _require(
         {chart.get("id") for chart in charts} == expected_charts,
         "SU2 release chart contract mismatch",
@@ -287,17 +338,28 @@ def validate_su2_report(report: Mapping[str, Any]) -> None:
         "SU2 lifecycle mismatch",
     )
     results = report.get("results")
+    benchmark_mode = report.get("benchmark_mode", "paired_comparison")
+    _require(
+        benchmark_mode in {"paired_comparison", "fused_stability"},
+        "SU2 report benchmark mode mismatch",
+    )
     _require(
         isinstance(results, list) and [(r["B"], r["K"]) for r in results] == list(CASES),
         "SU2 case sweep mismatch",
     )
     for result in results:
         batch, steps = int(result["B"]), int(result["K"])
-        repeats = max(1, math.ceil(2_621_440 / (batch * steps)))
-        _require(result["repeat_count"] == repeats, "SU2 repeat count mismatch")
-        _require(
-            result["warmup_pairs"] == 2 and result["samples"] == 10, "SU2 timing contract mismatch"
-        )
+        if benchmark_mode == "fused_stability":
+            _require(result["repeat_count"] > 0, "SU2 fused repeat count must be positive")
+            _require(
+                result.get("warmup_count") == 5 and result["samples"] == 10,
+                "SU2 fused stability timing contract mismatch",
+            )
+        else:
+            repeats = max(1, math.ceil(2_621_440 / (batch * steps)))
+            _require(result["repeat_count"] == repeats, "SU2 repeat count mismatch")
+            warmups = result.get("warmup_count", result.get("warmup_pairs"))
+            _require(warmups == 2 and result["samples"] == 10, "SU2 timing contract mismatch")
         metadata = result["candidate_metadata"]
         _require(
             metadata["device_count"] == 1 and metadata["device_id"] == 0, "SU2 case device mismatch"
@@ -306,24 +368,35 @@ def validate_su2_report(report: Mapping[str, Any]) -> None:
             metadata["core_count"] == min(math.ceil(batch / 1024), 56), "SU2 core split mismatch"
         )
         _require(metadata["fused_dispatches_per_chain"] == 1, "SU2 fused dispatch mismatch")
-        _require(
-            metadata["unfused_dispatches_per_chain"] == steps - 1, "SU2 unfused dispatch mismatch"
-        )
+        if benchmark_mode == "fused_stability":
+            _require("unfused_dispatches_per_chain" not in metadata, "SU2 fused report contains unfused dispatches")
+            _require(
+                metadata.get("synchronization_boundaries_per_sample") == 1,
+                "SU2 fused timing requires one synchronization boundary per sample",
+            )
+        else:
+            _require(
+                metadata["unfused_dispatches_per_chain"] == steps - 1,
+                "SU2 unfused dispatch mismatch",
+            )
         _require(
             metadata["fused_accumulator_storage"] == "tensix_l1_ping_pong",
             "SU2 fused storage mismatch",
         )
         raw = result["raw_candidate_timings_s"]
-        _require(
-            len(raw["fused_samples"]) == len(raw["unfused_samples"]) == 10,
-            "SU2 raw sample count mismatch",
-        )
-        _require(
-            raw["paired_order"]
-            == ["fused_first" if i % 2 == 0 else "unfused_first" for i in range(10)],
-            "SU2 paired order mismatch",
-        )
-        for path in ("fused", "unfused"):
+        _require(len(raw["fused_samples"]) == 10, "SU2 raw fused sample count mismatch")
+        if benchmark_mode == "fused_stability":
+            _require("unfused_samples" not in raw and "paired_order" not in raw, "SU2 fused report synthesized paired samples")
+            paths = ("fused",)
+        else:
+            _require(len(raw["unfused_samples"]) == 10, "SU2 raw unfused sample count mismatch")
+            _require(
+                raw["paired_order"]
+                == ["fused_first" if i % 2 == 0 else "unfused_first" for i in range(10)],
+                "SU2 paired order mismatch",
+            )
+            paths = ("fused", "unfused")
+        for path in paths:
             correctness = result[path]["correctness"]
             _require(
                 correctness["validated_values"] == 6 * batch, "SU2 whole-output count mismatch"
@@ -392,24 +465,29 @@ def generate_release(
 def _processed(manifest: Mapping[str, Any], report: Mapping[str, Any]) -> dict[str, Any]:
     cases = []
     for result in report["results"]:
-        cases.append(
-            {
+        derived = result.get("derived", result.get("comparison", {}))
+        case = {
                 "B": result["B"],
                 "K": result["K"],
                 "repeat_count": result["repeat_count"],
                 "core_count": result["candidate_metadata"]["core_count"],
                 "fused_median_s": result["fused"]["timing_s"]["median"],
-                "unfused_median_s": result["unfused"]["timing_s"]["median"],
-                "fused_over_unfused_median": result["comparison"]["fused_over_unfused_median"],
-                "steps_per_s_fused": result["comparison"]["steps_per_s_fused"],
-                "trajectories_per_s_fused": result["comparison"]["trajectories_per_s_fused"],
-                "qmul_per_s_fused": result["comparison"]["qmul_per_s_fused"],
-                "fused_logical_bytes": result["comparison"]["fused_logical_bytes"],
-                "unfused_logical_bytes": result["comparison"]["unfused_logical_bytes"],
+                "steps_per_s_fused": derived["steps_per_s_fused"],
+                "trajectories_per_s_fused": derived["trajectories_per_s_fused"],
+                "qmul_per_s_fused": derived["qmul_per_s_fused"],
+                "fused_logical_bytes": derived["fused_logical_bytes"],
                 "fused_correctness": result["fused"]["correctness"],
-                "unfused_correctness": result["unfused"]["correctness"],
             }
-        )
+        if "unfused" in result:
+            case.update(
+                {
+                    "unfused_median_s": result["unfused"]["timing_s"]["median"],
+                    "fused_over_unfused_median": result["comparison"]["fused_over_unfused_median"],
+                    "unfused_logical_bytes": derived["unfused_logical_bytes"],
+                    "unfused_correctness": result["unfused"]["correctness"],
+                }
+            )
+        cases.append(case)
     return {
         "schema": "tt-rqm-su2-compose-processed.v1",
         "benchmark_id": manifest["benchmark_id"],
@@ -429,11 +507,17 @@ def _raw_samples(report: Mapping[str, Any]) -> dict[str, Any]:
                 "B": r["B"],
                 "K": r["K"],
                 "repeat_count": r["repeat_count"],
-                "paired_order": r["raw_candidate_timings_s"]["paired_order"],
                 "fused_batch_samples_s": r["raw_candidate_timings_s"]["fused_samples"],
-                "unfused_batch_samples_s": r["raw_candidate_timings_s"]["unfused_samples"],
                 "fused_per_chain_samples_s": r["fused"]["timing_s"]["samples"],
-                "unfused_per_chain_samples_s": r["unfused"]["timing_s"]["samples"],
+                **(
+                    {
+                        "paired_order": r["raw_candidate_timings_s"]["paired_order"],
+                        "unfused_batch_samples_s": r["raw_candidate_timings_s"]["unfused_samples"],
+                        "unfused_per_chain_samples_s": r["unfused"]["timing_s"]["samples"],
+                    }
+                    if "unfused" in r
+                    else {}
+                ),
             }
             for r in report["results"]
         ],
@@ -463,14 +547,16 @@ def _aggregate_report(
     report = copy.deepcopy(primary)
     for result, case in zip(report["results"], qualification["cases"], strict=True):
         fused = float(case["metrics"]["fused"]["median_across_sessions_s"])
-        unfused = float(case["metrics"]["unfused"]["median_across_sessions_s"])
-        ratio = float(case["metrics"]["ratio"]["median_across_sessions_s"])
         result["fused"]["timing_s"]["median"] = fused
-        result["unfused"]["timing_s"]["median"] = unfused
-        result["comparison"]["fused_over_unfused_median"] = ratio
-        result["comparison"]["steps_per_s_fused"] = result["B"] * result["K"] / fused
-        result["comparison"]["trajectories_per_s_fused"] = result["B"] / fused
-        result["comparison"]["qmul_per_s_fused"] = result["B"] * (result["K"] - 1) / fused
+        derived = result.get("derived", result.get("comparison"))
+        derived["steps_per_s_fused"] = result["B"] * result["K"] / fused
+        derived["trajectories_per_s_fused"] = result["B"] / fused
+        derived["qmul_per_s_fused"] = result["B"] * (result["K"] - 1) / fused
+        if "unfused" in case["metrics"]:
+            unfused = float(case["metrics"]["unfused"]["median_across_sessions_s"])
+            ratio = float(case["metrics"]["ratio"]["median_across_sessions_s"])
+            result["unfused"]["timing_s"]["median"] = unfused
+            result["comparison"]["fused_over_unfused_median"] = ratio
     return report
 
 
@@ -503,27 +589,29 @@ def _render(
     metadata = {"Date": None, "Creator": "tt-rqm-kernels deterministic SU2 generator"}
 
     fig, ax = plt.subplots(figsize=(10.2, 4.4), constrained_layout=True)
-    width = 0.38
+    fused_only = all("unfused" not in result for result in results)
+    width = 0.62 if fused_only else 0.38
     ax.bar(
-        [v - width / 2 for v in x],
+        x if fused_only else [v - width / 2 for v in x],
         [r["fused"]["timing_s"]["median"] * 1e3 for r in results],
         width,
         label="fused",
         color=blue,
     )
-    ax.bar(
-        [v + width / 2 for v in x],
-        [r["unfused"]["timing_s"]["median"] * 1e3 for r in results],
-        width,
-        label="unfused",
-        color=orange,
-    )
+    if not fused_only:
+        ax.bar(
+            [v + width / 2 for v in x],
+            [r["unfused"]["timing_s"]["median"] * 1e3 for r in results],
+            width,
+            label="unfused",
+            color=orange,
+        )
     ax.set_xticks(x, labels, rotation=25, ha="right")
     ax.set_ylabel("Median per-chain latency (ms)")
     ax.set_title(
         "Fused and unfused latency - one session, not stability"
         if qualification is None
-        else "Fused and unfused latency - three-session median"
+        else ("Fused latency - three-session median" if fused_only else "Fused and unfused latency - three-session median")
     )
     ax.legend()
     ax.grid(axis="y", alpha=0.25)
@@ -532,7 +620,7 @@ def _render(
     fig, ax = plt.subplots(figsize=(10.2, 4.4), constrained_layout=True)
     ax.plot(
         labels,
-        [r["comparison"]["steps_per_s_fused"] / 1e6 for r in results],
+        [r.get("derived", r.get("comparison"))["steps_per_s_fused"] / 1e6 for r in results],
         marker="o",
         color=blue,
     )
@@ -581,37 +669,49 @@ def _render(
     fig, ax = plt.subplots(figsize=(10.2, 4.4), constrained_layout=True)
     raw_reports = session_reports if qualification is not None else [report]
     for index in range(len(results)):
-        all_pairs = []
-        for source in raw_reports:
-            source_result = source["results"][index]
-            all_pairs.extend(
-                zip(
-                    source_result["fused"]["timing_s"]["samples"],
-                    source_result["unfused"]["timing_s"]["samples"],
-                    strict=True,
+        if fused_only:
+            all_fused = [
+                sample
+                for source in raw_reports
+                for sample in source["results"][index]["fused"]["timing_s"]["samples"]
+            ]
+            for sample, fused in enumerate(all_fused):
+                spacing = 0.018 if len(all_fused) == 10 else 0.008
+                offset = (sample - (len(all_fused) - 1) / 2) * spacing
+                ax.scatter(index + offset, fused * 1e3, s=11, color=blue)
+        else:
+            all_pairs = []
+            for source in raw_reports:
+                source_result = source["results"][index]
+                all_pairs.extend(
+                    zip(
+                        source_result["fused"]["timing_s"]["samples"],
+                        source_result["unfused"]["timing_s"]["samples"],
+                        strict=True,
+                    )
                 )
-            )
-        for sample, (fused, unfused) in enumerate(all_pairs):
-            spacing = 0.018 if len(all_pairs) == 10 else 0.008
-            offset = (sample - (len(all_pairs) - 1) / 2) * spacing
-            ax.plot(
-                [index + offset - 0.09, index + offset + 0.09],
-                [fused * 1e3, unfused * 1e3],
-                color="#999999",
-                alpha=0.45,
-                linewidth=0.7,
-            )
-            ax.scatter(index + offset - 0.09, fused * 1e3, s=9, color=blue)
-            ax.scatter(index + offset + 0.09, unfused * 1e3, s=9, color=orange)
+            for sample, (fused, unfused) in enumerate(all_pairs):
+                spacing = 0.018 if len(all_pairs) == 10 else 0.008
+                offset = (sample - (len(all_pairs) - 1) / 2) * spacing
+                ax.plot(
+                    [index + offset - 0.09, index + offset + 0.09],
+                    [fused * 1e3, unfused * 1e3],
+                    color="#999999",
+                    alpha=0.45,
+                    linewidth=0.7,
+                )
+                ax.scatter(index + offset - 0.09, fused * 1e3, s=9, color=blue)
+                ax.scatter(index + offset + 0.09, unfused * 1e3, s=9, color=orange)
     ax.set_xticks(x, labels, rotation=25, ha="right")
     ax.set_ylabel("Per-chain time (ms)")
     ax.set_title(
         "Ten raw paired samples per case - one session, not stability"
         if qualification is None
-        else "Thirty retained paired samples per case - three sessions"
+        else ("Thirty retained fused samples per case - three sessions" if fused_only else "Thirty retained paired samples per case - three sessions")
     )
     ax.grid(axis="y", alpha=0.25)
-    _save_svg(fig, root / charts["raw_paired_samples"], metadata)
+    raw_chart = "raw_fused_samples" if fused_only else "raw_paired_samples"
+    _save_svg(fig, root / charts[raw_chart], metadata)
 
     fig, ax = plt.subplots(figsize=(10.2, 4.4), constrained_layout=True)
     phase_names = ("buffer_allocation", "program_build", "h2d", "warmup", "d2h")
@@ -629,7 +729,9 @@ def _render(
 
     if qualification is not None:
         fig, ax = plt.subplots(figsize=(10.2, 4.8), constrained_layout=True)
-        for metric, color in (("fused", blue), ("unfused", orange), ("ratio", green)):
+        metric_colors = (("fused", blue), ("unfused", orange), ("ratio", green))
+        available_metrics = qualification["cases"][0]["metrics"]
+        for metric, color in (item for item in metric_colors if item[0] in available_metrics):
             maxima = []
             limits = []
             for case in qualification["cases"]:
@@ -638,7 +740,7 @@ def _render(
                     item["within_session_dispersion"] for item in values["session_statistics"]
                 ] + [item["relative_deviation"] for item in values["cross_session_deviation"]]
                 maxima.append(max(observed))
-                limits.append(values["limit"])
+                limits.append(max(values["within_session_limit"], values["cross_session_limit"]))
             ax.plot(labels, maxima, marker="o", color=color, label=f"{metric} observed max")
             ax.plot(
                 labels,

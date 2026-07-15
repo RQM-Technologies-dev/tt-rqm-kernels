@@ -39,6 +39,9 @@ REPORT_SCHEMA = "tt-rqm-su2-compose-report.v1"
 DEVICE = "tenstorrent/wormhole-device-0"
 IMPLEMENTATION = "fused_tensix_sfpu_su2_compose"
 TT_METAL_COMMIT = "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+PAIRED_COMPARISON = "paired_comparison"
+FUSED_STABILITY = "fused_stability"
+BENCHMARK_MODES = {PAIRED_COMPARISON, FUSED_STABILITY, "conformance"}
 PERFORMANCE_CASES = (
     (32768, 8),
     (8192, 32),
@@ -60,6 +63,22 @@ def _case_specs(stage: str) -> tuple[tuple[int, int, int, int, int], ...]:
             for batch, steps in PERFORMANCE_CASES
         )
     raise IntegrityError("SU2ComposeBench stage must be conformance or performance")
+
+
+def fused_stability_case_specs(
+    repeat_counts: Mapping[tuple[int, int], int],
+) -> tuple[tuple[int, int, int, int, int], ...]:
+    """Build the frozen v3 case order with five warmups and ten samples."""
+
+    if set(repeat_counts) != set(PERFORMANCE_CASES):
+        raise IntegrityError("fused stability repeat counts must cover the exact eight-case sweep")
+    specs = tuple(
+        (batch, steps, int(repeat_counts[(batch, steps)]), 5, 10)
+        for batch, steps in PERFORMANCE_CASES
+    )
+    if any(repeats <= 0 for _, _, repeats, _, _ in specs):
+        raise IntegrityError("fused stability repeat counts must be positive")
+    return specs
 
 
 def _coefficients(batch: int, steps: int, seed: int) -> torch.Tensor:
@@ -88,8 +107,10 @@ def run_su2_compose(
     process_capture: MutableMapping[str, str] | None = None,
     case_specs: tuple[tuple[int, int, int, int, int], ...] | None = None,
     candidate_environment: Mapping[str, str] | None = None,
+    benchmark_mode: str = PAIRED_COMPARISON,
+    cpu_affinity: frozenset[int] | None = None,
 ) -> dict[str, object]:
-    """Run both hardware paths and validate every returned value."""
+    """Run the requested hardware surface and validate every returned value."""
 
     if not methodology_note.strip():
         raise IntegrityError("SU2ComposeBench reports require a methodology note")
@@ -98,17 +119,33 @@ def run_su2_compose(
         raise IntegrityError(
             "SU2ComposeBench command must name the candidate directly so its SHA-256 identifies the binary"
         )
+    if benchmark_mode not in BENCHMARK_MODES:
+        raise IntegrityError(f"unsupported SU2ComposeBench benchmark mode: {benchmark_mode}")
+    if stage == "conformance" and benchmark_mode == PAIRED_COMPARISON:
+        benchmark_mode = "conformance"
     if case_specs is None:
         specs = _case_specs(stage)
     else:
-        if stage != "profile":
-            raise IntegrityError("custom SU2ComposeBench cases are diagnostic profile cases only")
-        if len(case_specs) != 1:
+        if stage == "profile" and len(case_specs) != 1:
             raise IntegrityError("a profiler process must contain exactly one SU2ComposeBench case")
+        if stage not in {"profile", "pilot", "performance"}:
+            raise IntegrityError("custom SU2ComposeBench cases require profile, pilot, or performance")
+        if stage in {"pilot", "performance"} and benchmark_mode != FUSED_STABILITY:
+            raise IntegrityError(
+                "custom SU2ComposeBench cases are diagnostic profile cases only unless "
+                "benchmark_mode=fused_stability"
+            )
         specs = case_specs
-        batch, steps, repeats, warmups, samples = specs[0]
-        if min(batch, steps, repeats, samples) <= 0 or warmups != 0:
-            raise IntegrityError("invalid SU2ComposeBench profiler case")
+        for batch, steps, repeats, warmups, samples in specs:
+            if min(batch, steps, repeats, samples) <= 0:
+                raise IntegrityError("invalid SU2ComposeBench custom case")
+            if stage == "profile" and warmups != 0:
+                raise IntegrityError("SU2ComposeBench profiler cases cannot include warmups")
+        if stage in {"pilot", "performance"}:
+            if [(b, k) for b, k, *_ in specs] != list(PERFORMANCE_CASES):
+                raise IntegrityError("fused stability cases must retain the exact eight-case order")
+            if any(warmups != 5 or samples != 10 for _, _, _, warmups, samples in specs):
+                raise IntegrityError("fused stability requires five warmups and ten samples per case")
     candidate_hash = command_sha256(command, Path.cwd())
     if expected_candidate_sha256 is not None and candidate_hash != expected_candidate_sha256:
         raise IntegrityError("SU2ComposeBench candidate SHA-256 differs from frozen identity")
@@ -130,18 +167,23 @@ def run_su2_compose(
             rotor_hash = _sha256(workdir / rotor_name)
             phase_hash = _sha256(workdir / phase_name)
             case_id = f"su2-f32-seed-{seed}-b-{batch}-k-{steps}-{rotor_hash[:12]}-{phase_hash[:12]}"
-            outputs = {
+            outputs: dict[str, str] = {
                 "fused_rotors": f"fused_rotors_b{batch}_k{steps}.bin",
                 "fused_phases": f"fused_phases_b{batch}_k{steps}.bin",
-                "unfused_rotors": f"unfused_rotors_b{batch}_k{steps}.bin",
-                "unfused_phases": f"unfused_phases_b{batch}_k{steps}.bin",
             }
+            if benchmark_mode != FUSED_STABILITY:
+                outputs.update(
+                    {
+                        "unfused_rotors": f"unfused_rotors_b{batch}_k{steps}.bin",
+                        "unfused_phases": f"unfused_phases_b{batch}_k{steps}.bin",
+                    }
+                )
             case = {
                 "case_id": case_id,
                 "B": batch,
                 "K": steps,
                 "repeat_count": repeats,
-                "warmup_pairs": warmups,
+                "warmup_count": warmups,
                 "samples": samples,
                 "inputs": {
                     "rotors": rotor_name,
@@ -160,6 +202,7 @@ def run_su2_compose(
             "dtype": "float32",
             "device_id": 0,
             "seed": seed,
+            "benchmark_mode": benchmark_mode,
             "cases": cases,
             "outputs": {"metrics": "metrics.json"},
         }
@@ -174,13 +217,14 @@ def run_su2_compose(
             source_commit,
             process_capture=process_capture,
             candidate_environment=candidate_environment,
+            cpu_affinity=cpu_affinity,
         )
         host_s = time.perf_counter() - host_start
         metrics = json.loads((workdir / "metrics.json").read_text())
         normalized = validate_su2_metrics(metrics, manifest, candidate_hash, host_s)
         if normalized["provenance"]["repository_commit"] != source_commit:
             raise IntegrityError("SU2ComposeBench execution-source commit mismatch")
-        if stage in {"performance", "profile"} and not normalized["performance_eligible"]:
+        if stage in {"performance", "pilot", "profile"} and not normalized["performance_eligible"]:
             raise IntegrityError("performance collection requires performance_eligible=true")
 
         results: list[dict[str, object]] = []
@@ -192,14 +236,9 @@ def run_su2_compose(
             assert isinstance(output, dict)
             fused_rotor = _read_float32(workdir / str(output["fused_rotors"]), (batch, 4))
             fused_phase = _read_float32(workdir / str(output["fused_phases"]), (batch, 2))
-            unfused_rotor = _read_float32(workdir / str(output["unfused_rotors"]), (batch, 4))
-            unfused_phase = _read_float32(workdir / str(output["unfused_phases"]), (batch, 2))
             reference_rotor, reference_phase = su2_compose_chain(rotors.double(), phases.double())
             fused_correctness = _correctness(
                 fused_rotor, fused_phase, reference_rotor, reference_phase
-            )
-            unfused_correctness = _correctness(
-                unfused_rotor, unfused_phase, reference_rotor, reference_phase
             )
             oracle_error, end_to_end_error = _oracle_errors(coefficients, fused_rotor, fused_phase)
             if oracle_error > 1e-11:
@@ -209,11 +248,8 @@ def run_su2_compose(
             timing = candidate_case["timings_s"]
             repeats = int(case["repeat_count"])
             fused_samples = [float(value) / repeats for value in timing["fused_samples"]]
-            unfused_samples = [float(value) / repeats for value in timing["unfused_samples"]]
             fused_summary = timing_summary(fused_samples)
-            unfused_summary = timing_summary(unfused_samples)
-            results.append(
-                {
+            result: dict[str, object] = {
                     "case_id": case["case_id"],
                     "B": batch,
                     "K": steps,
@@ -222,27 +258,47 @@ def run_su2_compose(
                         "phases_sha256": case["inputs"]["phases_sha256"],
                     },
                     "repeat_count": repeats,
-                    "warmup_pairs": case["warmup_pairs"],
+                    "warmup_count": case["warmup_count"],
                     "samples": case["samples"],
                     "stable_benchmark": False,
                     "performance_eligible": normalized["performance_eligible"],
                     "fused": {"timing_s": fused_summary, "correctness": fused_correctness},
-                    "unfused": {"timing_s": unfused_summary, "correctness": unfused_correctness},
-                    "comparison": {
-                        "fused_over_unfused_median": float(fused_summary["median"])
-                        / float(unfused_summary["median"]),
+                    "derived": {
                         "steps_per_s_fused": batch * steps / float(fused_summary["median"]),
                         "trajectories_per_s_fused": batch / float(fused_summary["median"]),
                         "qmul_per_s_fused": batch * (steps - 1) / float(fused_summary["median"]),
                         "fused_logical_bytes": 24 * batch * steps + 24 * batch,
-                        "unfused_logical_bytes": 72 * batch * (steps - 1),
                     },
                     "cpu_oracle_max_abs_error": oracle_error,
                     "end_to_end_matrix_max_abs_error": end_to_end_error,
                     "candidate_metadata": candidate_case["work"],
                     "raw_candidate_timings_s": timing,
                 }
-            )
+            if benchmark_mode != FUSED_STABILITY:
+                unfused_rotor = _read_float32(
+                    workdir / str(output["unfused_rotors"]), (batch, 4)
+                )
+                unfused_phase = _read_float32(
+                    workdir / str(output["unfused_phases"]), (batch, 2)
+                )
+                unfused_correctness = _correctness(
+                    unfused_rotor, unfused_phase, reference_rotor, reference_phase
+                )
+                unfused_samples = [float(value) / repeats for value in timing["unfused_samples"]]
+                unfused_summary = timing_summary(unfused_samples)
+                result["unfused"] = {
+                    "timing_s": unfused_summary,
+                    "correctness": unfused_correctness,
+                }
+                result["comparison"] = {
+                    "fused_over_unfused_median": float(fused_summary["median"])
+                    / float(unfused_summary["median"]),
+                    "unfused_logical_bytes": 72 * batch * (steps - 1),
+                }
+                cast_derived = result["derived"]
+                assert isinstance(cast_derived, dict)
+                cast_derived["unfused_logical_bytes"] = 72 * batch * (steps - 1)
+            results.append(result)
 
     report: dict[str, object] = {
         "schema": REPORT_SCHEMA,
@@ -250,6 +306,7 @@ def run_su2_compose(
         "benchmark": "SU2ComposeBench",
         "family": "SU2HamiltonianBench",
         "benchmark_stage": stage,
+        "benchmark_mode": benchmark_mode,
         "protocol": PROTOCOL,
         "device": DEVICE,
         "dtype": "float32",
@@ -271,9 +328,12 @@ def run_su2_compose(
         "nonclaims": [
             "no_stability_claim",
             "no_acceleration_claim",
+            "no_stable_fused_unfused_comparison_claim",
             "no_cpu_comparison",
             "no_measured_bandwidth_claim",
             "no_full_device_side_hamiltonian_lowering_claim",
+            "no_energy_claim",
+            "no_tenstorrent_endorsement",
         ],
     }
     return report
@@ -373,6 +433,9 @@ def validate_su2_metrics(
     for key, value in expected.items():
         if metrics.get(key) != value:
             raise IntegrityError(f"SU2ComposeBench metrics {key} mismatch")
+    benchmark_mode = manifest.get("benchmark_mode", PAIRED_COMPARISON)
+    if metrics.get("benchmark_mode", PAIRED_COMPARISON) != benchmark_mode:
+        raise IntegrityError("SU2ComposeBench metrics benchmark_mode mismatch")
     if not isinstance(metrics.get("performance_eligible"), bool):
         raise IntegrityError("performance_eligible must be boolean")
     if metrics.get("lifecycle") != {
@@ -415,13 +478,22 @@ def validate_su2_metrics(
     for expected_case, actual in zip(expected_cases, actual_cases, strict=True):
         if not isinstance(expected_case, dict) or not isinstance(actual, dict):
             raise IntegrityError("case must be an object")
-        for key in ("case_id", "B", "K", "repeat_count", "warmup_pairs", "samples"):
+        for key in ("case_id", "B", "K", "repeat_count", "samples"):
             if actual.get(key) != expected_case.get(key):
                 raise IntegrityError(f"case {key} mismatch")
+        expected_warmups = expected_case.get("warmup_count", expected_case.get("warmup_pairs"))
+        actual_warmups = actual.get("warmup_count", actual.get("warmup_pairs"))
+        if actual_warmups != expected_warmups:
+            raise IntegrityError("case warmup count mismatch")
         timings = actual.get("timings_s")
         if not isinstance(timings, dict):
             raise IntegrityError("case timings missing")
-        for key in ("fused_samples", "unfused_samples", "paired_order"):
+        timing_keys = ("fused_samples",)
+        if benchmark_mode != FUSED_STABILITY:
+            timing_keys += ("unfused_samples", "paired_order")
+        elif "unfused_samples" in timings or "paired_order" in timings:
+            raise IntegrityError("fused stability metrics must not contain paired timing data")
+        for key in timing_keys:
             if not isinstance(timings.get(key), list) or len(timings[key]) != int(
                 expected_case["samples"]
             ):
@@ -437,10 +509,12 @@ def validate_su2_metrics(
             or work.get("device_id") != 0
         ):
             raise IntegrityError("case core/device metadata mismatch")
-        if (
-            work.get("fused_dispatches_per_chain") != 1
-            or work.get("unfused_dispatches_per_chain") != int(expected_case["K"]) - 1
-        ):
+        if work.get("fused_dispatches_per_chain") != 1:
+            raise IntegrityError("case dispatch metadata mismatch")
+        if benchmark_mode == FUSED_STABILITY:
+            if "unfused_dispatches_per_chain" in work:
+                raise IntegrityError("fused stability must not report unfused dispatch metadata")
+        elif work.get("unfused_dispatches_per_chain") != int(expected_case["K"]) - 1:
             raise IntegrityError("case dispatch metadata mismatch")
     return metrics
 
@@ -461,14 +535,14 @@ def render_su2_markdown(report: Mapping[str, object]) -> str:
         "",
         "## Results",
         "",
-        "| B | K | values/path | fused median s | unfused median s | ratio | fused max error |",
-        "|---:|---:|---:|---:|---:|---:|---:|",
+        "| B | K | values/path | fused median s | fused max error |",
+        "|---:|---:|---:|---:|---:|",
     ]
     for result in report["results"]:  # type: ignore[union-attr]
         lines.append(
             f"| {result['B']} | {result['K']} | {result['fused']['correctness']['validated_values']} | "
-            f"{result['fused']['timing_s']['median']:.9f} | {result['unfused']['timing_s']['median']:.9f} | "
-            f"{result['comparison']['fused_over_unfused_median']:.6f} | {result['fused']['correctness']['max_abs_error']:.3e} |"
+            f"{result['fused']['timing_s']['median']:.9f} | "
+            f"{result['fused']['correctness']['max_abs_error']:.3e} |"
         )
     lines.extend(
         [
@@ -489,6 +563,7 @@ def _run_candidate(
     *,
     process_capture: MutableMapping[str, str] | None = None,
     candidate_environment: Mapping[str, str] | None = None,
+    cpu_affinity: frozenset[int] | None = None,
 ) -> None:
     tokens = shlex.split(command)
     if not tokens or any(word in command.lower() for word in ("emule", "docker", "reference")):
@@ -504,11 +579,21 @@ def _run_candidate(
     )
     if candidate_environment:
         env.update(candidate_environment)
+    preexec_fn = None
+    if cpu_affinity is not None:
+        if not hasattr(os, "sched_setaffinity"):
+            raise IntegrityError("fixed CPU affinity is unavailable on this host")
+
+        def set_affinity() -> None:
+            os.sched_setaffinity(0, cpu_affinity)
+
+        preexec_fn = set_affinity
     completed = subprocess.run(
         [*tokens, "--workdir", str(workdir), "--manifest", str(manifest), "--device", "0"],
         capture_output=True,
         text=True,
         env=env,
+        preexec_fn=preexec_fn,
     )
     if process_capture is not None:
         process_capture["stdout"] = completed.stdout

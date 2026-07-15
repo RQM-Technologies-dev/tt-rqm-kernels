@@ -16,6 +16,8 @@ import torch
 
 from tt_rqm_kernels.benchmark_integrity import IntegrityError
 from tt_rqm_kernels.backends.tenstorrent.su2_compose_persistent import (
+    FUSED_STABILITY,
+    PAIRED_COMPARISON,
     render_su2_markdown,
     run_su2_compose,
 )
@@ -27,6 +29,23 @@ from tt_rqm_kernels.hardware_session import (
 
 
 SESSION_SCHEMA = "tt-rqm-su2-compose-session.v2"
+SESSION_SCHEMA_V3 = "tt-rqm-su2-compose-session.v3"
+DISALLOWED_TIMING_ENV = {
+    "TT_METAL_DEVICE_PROFILER",
+    "TT_METAL_DEVICE_PROFILER_DISPATCH",
+    "TT_METAL_DEVICE_PROFILER_NOC_EVENTS",
+    "TT_METAL_MEM_PROFILER",
+    "TT_METAL_NOC_DEBUG_DUMP",
+    "TT_METAL_PROFILE_PERF_COUNTERS",
+    "TT_METAL_PROFILER_CPP_POST_PROCESS",
+    "TT_METAL_PROFILER_MID_RUN_DUMP",
+    "TT_METAL_PROFILER_SUM",
+    "TT_METAL_PROFILER_SYNC",
+    "TT_METAL_PROFILER_TRACE_TRACKING",
+    "TT_METAL_RISCV_DEBUG_INFO",
+    "TT_METAL_TRACE_PROFILER",
+    "TT_METAL_WATCHER",
+}
 
 
 def collect_su2_session(
@@ -48,6 +67,12 @@ def collect_su2_session(
     invocation: str | None = None,
     tt_smi_command: str = "tt-smi -s",
     seed: int = 0,
+    benchmark_mode: str = PAIRED_COMPARISON,
+    benchmark_stage: str = "performance",
+    case_specs: tuple[tuple[int, int, int, int, int], ...] | None = None,
+    designated_stability_session: bool = True,
+    isolate_runtime_cache: bool = False,
+    cpu_affinity: frozenset[int] | None = None,
 ) -> Path:
     """Collect one designated process and retain complete pass or failure evidence."""
 
@@ -58,6 +83,12 @@ def collect_su2_session(
     metal_snapshot = _git_snapshot(tt_metal_root)
     session_dir.mkdir(parents=True, exist_ok=False)
     _write(session_dir / "command.txt", (invocation or command) + "\n")
+    cache_dir: Path | None = None
+    if isolate_runtime_cache:
+        cache_dir = session_dir / "tt-metal-cache"
+        cache_dir.mkdir()
+    host_state_pre = capture_host_state(cpu_affinity=cpu_affinity)
+    _write_json(session_dir / "host-state-pre.json", host_state_pre)
 
     process_capture: dict[str, str] = {}
     report: dict[str, Any] | None = None
@@ -83,7 +114,7 @@ def collect_su2_session(
         )
         if candidate_hash != expected_candidate_sha256:
             raise IntegrityError("candidate SHA-256 differs from frozen identity")
-        if not source_trees_clean:
+        if designated_stability_session and not source_trees_clean:
             raise IntegrityError("repository or TT-Metal source tree is dirty")
         if metal_snapshot["head"] != expected_tt_metal_commit:
             raise IntegrityError("TT-Metal commit differs from frozen identity")
@@ -105,8 +136,21 @@ def collect_su2_session(
         if expected_compiler_version is not None and compiler_version != expected_compiler_version:
             raise IntegrityError("compiler version differs from frozen identity")
         runtime_version = expected_runtime_version or f"tt-metal-{expected_tt_metal_commit[:8]}"
+        timing_environment = {
+            key: value
+            for key, value in sorted(os.environ.items())
+            if key.startswith("TT_METAL_") or key.startswith("TT_RQM_")
+        }
+        enabled_debug = {
+            key: value
+            for key, value in timing_environment.items()
+            if key in DISALLOWED_TIMING_ENV
+            and value.strip().lower() not in {"", "0", "false", "off", "no"}
+        }
+        if benchmark_mode == FUSED_STABILITY and enabled_debug:
+            raise IntegrityError(f"profiler, watcher, or debug environment is enabled: {enabled_debug}")
         environment = {
-            "schema": "tt-rqm-su2-compose-environment.v1",
+            "schema": "tt-rqm-su2-compose-environment.v2",
             "captured_at_utc": datetime.now(timezone.utc).isoformat(),
             "host": platform.node(),
             "platform": platform.platform(),
@@ -129,12 +173,16 @@ def collect_su2_session(
             "device_count": 1,
             "device_id": 0,
             "pre_health": pre_health,
+            "host_state": host_state_pre,
+            "timing_environment": timing_environment,
+            "profiler_watcher_debug_disabled": not enabled_debug,
+            "tt_metal_cache": None if cache_dir is None else str(cache_dir.resolve()),
         }
         _write_json(session_dir / "environment.json", environment)
 
         report = run_su2_compose(
             command=str(candidate_path),
-            stage="performance",
+            stage=benchmark_stage,
             methodology_note=methodology_note,
             seed=seed,
             expected_candidate_sha256=expected_candidate_sha256,
@@ -147,7 +195,11 @@ def collect_su2_session(
                 "TT_RQM_TT_METAL_COMMIT": expected_tt_metal_commit,
                 "TT_RQM_COMPILER_VERSION": compiler_version,
                 "TT_RQM_RUNTIME_VERSION": runtime_version,
+                **({"TT_METAL_CACHE": str(cache_dir.resolve())} if cache_dir else {}),
             },
+            benchmark_mode=benchmark_mode,
+            case_specs=case_specs,
+            cpu_affinity=cpu_affinity,
         )
         _write_json(session_dir / "report.json", report)
         _write(session_dir / "report.md", render_su2_markdown(report))
@@ -180,6 +232,13 @@ def collect_su2_session(
             post_health = {"validation_error": f"{type(exc).__name__}: {exc}"}
             failure = failure or str(post_health["validation_error"])
 
+        try:
+            _write_json(session_dir / "host-state-post.json", capture_host_state(cpu_affinity=cpu_affinity))
+        except Exception as exc:
+            failure = failure or f"host-state capture failed: {exc}"
+        if cache_dir is not None:
+            _write_json(session_dir / "cache-inventory.json", cache_inventory(cache_dir))
+
         artifacts = []
         for path in sorted(session_dir.iterdir()):
             if path.is_file() and path.name != "session-manifest.json":
@@ -196,21 +255,22 @@ def collect_su2_session(
             if report is None
             else all(
                 len(result["fused"]["timing_s"]["samples"])
-                == len(result["unfused"]["timing_s"]["samples"])
+                == (len(result["unfused"]["timing_s"]["samples"]) if "unfused" in result else 10)
                 == 10
                 for result in report["results"]
             )
         )
         manifest = {
-            "schema": SESSION_SCHEMA,
+            "schema": SESSION_SCHEMA_V3 if benchmark_mode == FUSED_STABILITY else SESSION_SCHEMA,
             "session_id": session_id,
             "collection_status": "passed" if failure is None and report is not None else "failed",
             "failure": failure,
-            "designated_stability_session": True,
+            "designated_stability_session": designated_stability_session,
             "cold_start_host_session": True,
             "no_discarded_performance_runs": True,
             "stable_benchmark": False,
-            "benchmark_stage": "performance",
+            "benchmark_stage": benchmark_stage,
+            "benchmark_mode": benchmark_mode,
             "device_count": 1,
             "device_id": 0,
             "candidate_sha256": expected_candidate_sha256,
@@ -223,6 +283,10 @@ def collect_su2_session(
             "seed": seed,
             "case_order": case_order,
             "all_expected_paired_samples_retained": retained_pairs,
+            "all_expected_fused_samples_retained": retained_pairs,
+            "isolated_runtime_cache": cache_dir is not None,
+            "runtime_cache_path": None if cache_dir is None else str(cache_dir.resolve()),
+            "cpu_affinity": sorted(cpu_affinity) if cpu_affinity is not None else None,
             "lifecycle": None if report is None else report["lifecycle"],
             "post_health": post_health,
             "artifacts": artifacts,
@@ -273,9 +337,12 @@ def _write_json(path: Path, value: Mapping[str, Any]) -> None:
 def _artifact_role(name: str) -> str:
     return {
         "candidate.sha256": "candidate-identity",
+        "cache-inventory.json": "runtime-cache-inventory",
         "command.txt": "exact-command",
         "environment.json": "environment",
         "input-hashes.json": "input-hashes",
+        "host-state-post.json": "host-state-post",
+        "host-state-pre.json": "host-state-pre",
         "post-device-health.txt": "post-device-health",
         "pre-device-health.txt": "pre-device-health",
         "report.json": "hardware-report",
@@ -283,6 +350,89 @@ def _artifact_role(name: str) -> str:
         "stderr.txt": "candidate-stderr",
         "stdout.txt": "candidate-stdout",
     }.get(name, "session-evidence")
+
+
+def capture_host_state(*, cpu_affinity: frozenset[int] | None = None) -> dict[str, Any]:
+    """Capture timing-relevant Linux host state without mutating the host."""
+
+    inherited = sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else None
+    cpuinfo = _read_optional(Path("/proc/cpuinfo"))
+    model = next(
+        (
+            line.split(":", 1)[1].strip()
+            for line in cpuinfo.splitlines()
+            if line.lower().startswith("model name") and ":" in line
+        ),
+        platform.processor() or "unknown",
+    )
+    governors = sorted(
+        {
+            path.read_text(encoding="utf-8").strip()
+            for path in Path("/sys/devices/system/cpu").glob("cpu[0-9]*/cpufreq/scaling_governor")
+            if path.is_file()
+        }
+    )
+    frequencies = {
+        path.parent.parent.name: path.read_text(encoding="utf-8").strip()
+        for path in Path("/sys/devices/system/cpu").glob("cpu[0-9]*/cpufreq/scaling_cur_freq")
+        if path.is_file()
+    }
+    numa_nodes = sorted(path.name for path in Path("/sys/devices/system/node").glob("node[0-9]*"))
+    return {
+        "schema": "tt-rqm-su2-host-state.v1",
+        "captured_at_utc": datetime.now(timezone.utc).isoformat(),
+        "cpu_model": model,
+        "inherited_cpu_affinity": inherited,
+        "requested_candidate_cpu_affinity": None if cpu_affinity is None else sorted(cpu_affinity),
+        "process_nice": os.nice(0),
+        "loadavg": _read_optional(Path("/proc/loadavg")).strip() or "unavailable",
+        "cpu_governors": governors,
+        "cpu_current_frequency_khz": frequencies,
+        "numa_nodes": numa_nodes,
+    }
+
+
+def cache_inventory(cache_dir: Path) -> dict[str, Any]:
+    files = []
+    for path in sorted(candidate for candidate in cache_dir.rglob("*") if candidate.is_file()):
+        files.append(
+            {
+                "path": str(path.relative_to(cache_dir)),
+                "size_bytes": path.stat().st_size,
+                "sha256": sha256_file(path),
+            }
+        )
+    return {
+        "schema": "tt-rqm-su2-runtime-cache-inventory.v1",
+        "cache_root": str(cache_dir.resolve()),
+        "file_count": len(files),
+        "files": files,
+    }
+
+
+def parse_cpu_affinity(value: str | None) -> frozenset[int] | None:
+    if value is None:
+        return None
+    cpus: set[int] = set()
+    for part in value.split(","):
+        bounds = part.strip().split("-", 1)
+        if not bounds[0].isdigit() or (len(bounds) == 2 and not bounds[1].isdigit()):
+            raise IntegrityError("CPU affinity must use comma-separated CPU numbers or ranges")
+        start = int(bounds[0])
+        stop = int(bounds[-1])
+        if stop < start:
+            raise IntegrityError("CPU affinity range is reversed")
+        cpus.update(range(start, stop + 1))
+    if not cpus:
+        raise IntegrityError("CPU affinity cannot be empty")
+    return frozenset(cpus)
+
+
+def _read_optional(path: Path) -> str:
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError:
+        return ""
 
 
 def _validate_session_id(value: str) -> None:

@@ -1,0 +1,19 @@
+{
+  "benchmark_mode": "fused_stability",
+  "cases": [
+    {"B": 32768, "K": 8, "repeat_count": 267},
+    {"B": 8192, "K": 32, "repeat_count": 90},
+    {"B": 2048, "K": 128, "repeat_count": 24},
+    {"B": 512, "K": 512, "repeat_count": 7},
+    {"B": 1024, "K": 128, "repeat_count": 24},
+    {"B": 4096, "K": 128, "repeat_count": 24},
+    {"B": 16384, "K": 128, "repeat_count": 24},
+    {"B": 65536, "K": 128, "repeat_count": 12}
+  ],
+  "derivation": "ceil(0.0375 seconds / v2 calibration fused median per chain)",
+  "designated_stability_evidence": false,
+  "schema": "tt-rqm-su2-compose-v3-pilot-repeat-counts.v1",
+  "source_report": "benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-experiment-1/performance.json",
+  "source_report_sha256": "650dd40a20d3a1094812fcd5faeec09379df046d8f15e49c050f560652699552",
+  "target_raw_sample_duration_s": 0.0375
+}

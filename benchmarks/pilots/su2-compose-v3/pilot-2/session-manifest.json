@@ -1,0 +1,173 @@
+{
+  "all_expected_fused_samples_retained": true,
+  "all_expected_paired_samples_retained": true,
+  "artifacts": [
+    {
+      "path": "cache-inventory.json",
+      "role": "runtime-cache-inventory",
+      "sha256": "2da57dc462ed3481f4760bb79452f5e3e4945635b91795f92096213edc16637d"
+    },
+    {
+      "path": "candidate.sha256",
+      "role": "candidate-identity",
+      "sha256": "da2cf14d8e122c68a93351990a4258fb1b6a6f369e1f06ab023502ca810841b6"
+    },
+    {
+      "path": "command.txt",
+      "role": "exact-command",
+      "sha256": "8fc93cc269bfedb5bbbc3f30f25e5945629cc02062bdc826d9c2a58c1b18fedb"
+    },
+    {
+      "path": "environment.json",
+      "role": "environment",
+      "sha256": "fc03168fcb25f11a0573c42ca59f85ecb1efc3b02cfb209f421ac46b51adaabb"
+    },
+    {
+      "path": "host-state-post.json",
+      "role": "host-state-post",
+      "sha256": "0feb3b4cbe162f08cc2a70689589d77bf663930b24a36601d2b0c40fcd8e48f8"
+    },
+    {
+      "path": "host-state-pre.json",
+      "role": "host-state-pre",
+      "sha256": "d4df0c7244eee4b19941b51e52ac64ce38845c7e420651659edd9bf5701694b4"
+    },
+    {
+      "path": "input-hashes.json",
+      "role": "input-hashes",
+      "sha256": "29fe568659920a19c05afeec274be65c500f872daa94fac6daea47f74be924b5"
+    },
+    {
+      "path": "post-device-health.txt",
+      "role": "post-device-health",
+      "sha256": "7b1e93afd5ad791818e79957f30c6a66f6da716a2d2422c9f69473cb1598fdb7"
+    },
+    {
+      "path": "pre-device-health.txt",
+      "role": "pre-device-health",
+      "sha256": "20274ab1b6da8b8cdebd0e6b22239962293b54e0d55cef689393c49b15865c00"
+    },
+    {
+      "path": "report.json",
+      "role": "hardware-report",
+      "sha256": "2b19ccb704db52785a8820e91c8d3534f587ece866bc13ba60036d0b925ecc17"
+    },
+    {
+      "path": "report.md",
+      "role": "hardware-report-summary",
+      "sha256": "901035f34c990c24f9cd02626bc902077b63a6518401280cf5d5d2a94b2763a8"
+    },
+    {
+      "path": "stderr.txt",
+      "role": "candidate-stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "stdout.txt",
+      "role": "candidate-stdout",
+      "sha256": "50b99fca8c3abbc06df85b99abafa0704fac2764fadcfde1d6fcbe7056c5e03c"
+    }
+  ],
+  "benchmark_mode": "fused_stability",
+  "benchmark_stage": "performance",
+  "candidate_sha256": "785fa452345ad340413dae4d59bd0bb3ac0c0398aa81e8f98250cf4a0c82c6a0",
+  "case_order": [
+    [
+      32768,
+      8
+    ],
+    [
+      8192,
+      32
+    ],
+    [
+      2048,
+      128
+    ],
+    [
+      512,
+      512
+    ],
+    [
+      1024,
+      128
+    ],
+    [
+      4096,
+      128
+    ],
+    [
+      16384,
+      128
+    ],
+    [
+      65536,
+      128
+    ]
+  ],
+  "cold_start_host_session": true,
+  "collection_status": "passed",
+  "collector_repository_commit": "4c820d74495ae872de089a768d9c463f98117d31",
+  "cpu_affinity": [
+    24,
+    25,
+    26,
+    27
+  ],
+  "designated_stability_session": false,
+  "device_count": 1,
+  "device_id": 0,
+  "execution_source_commit": "4c820d74495ae872de089a768d9c463f98117d31",
+  "failure": null,
+  "isolated_runtime_cache": true,
+  "lifecycle": {
+    "close_count": 1,
+    "create_count": 1,
+    "device_count": 1,
+    "device_id": 0
+  },
+  "no_discarded_performance_runs": true,
+  "post_health": {
+    "devices": [
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 L",
+        "boot_date": "0x670e0237",
+        "bus_id": "0000:e1:00.0",
+        "device_id": 0,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 283316,
+        "runtime_seconds": "0x23232",
+        "temperature_c": 40.0,
+        "throttler": "0x0"
+      },
+      {
+        "aiclk_mhz": 500,
+        "board_id": "010001461192717d",
+        "board_type": "n300 R",
+        "boot_date": "0x670e0237",
+        "bus_id": "N/A",
+        "device_id": 1,
+        "dram_status": true,
+        "faults": "0x0",
+        "heartbeat": 283315,
+        "runtime_seconds": "0x23232",
+        "temperature_c": 34.5,
+        "throttler": "0x0"
+      }
+    ],
+    "selected_device_id": 0,
+    "visible_device_count": 2
+  },
+  "runtime_cache_path": "/home/user/su2-v3-pilots/pilot-2/tt-metal-cache",
+  "schema": "tt-rqm-su2-compose-session.v3",
+  "seed": 0,
+  "session_id": "pilot-2",
+  "source_tree_sha256": null,
+  "source_trees_clean": false,
+  "stability_preregistration": "benchmarks/manifests/su2-compose-stability-preregistration-v3.json",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

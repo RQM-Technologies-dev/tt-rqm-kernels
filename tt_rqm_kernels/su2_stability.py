@@ -17,9 +17,11 @@ from tt_rqm_kernels.hardware_session import compare_device_health, validate_devi
 SCHEMA = "tt-rqm-su2-compose-stability-qualification.v1"
 PREREGISTRATION_SCHEMA = "tt-rqm-su2-compose-stability-preregistration.v1"
 PREREGISTRATION_SCHEMA_V2 = "tt-rqm-su2-compose-stability-preregistration.v2"
+PREREGISTRATION_SCHEMA_V3 = "tt-rqm-su2-compose-stability-preregistration.v3"
 SESSION_SCHEMAS = {
     "tt-rqm-su2-compose-session.v1",
     "tt-rqm-su2-compose-session.v2",
+    "tt-rqm-su2-compose-session.v3",
 }
 DEFAULT_PREREGISTRATION = Path("benchmarks/manifests/su2-compose-stability-preregistration.json")
 CASES = (
@@ -44,10 +46,46 @@ REQUIRED_ROLES = {
     "candidate-stderr",
     "candidate-stdout",
 }
+V3_REQUIRED_ROLES = REQUIRED_ROLES | {
+    "host-state-post",
+    "host-state-pre",
+    "runtime-cache-inventory",
+}
 
 
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load_v3_pilot_repeat_counts(
+    path: Path,
+    *,
+    repo_root: Path | None = None,
+) -> dict[tuple[int, int], int]:
+    root = (repo_root or Path.cwd()).resolve()
+    payload = json.loads(_resolve(root, path).read_text(encoding="utf-8"))
+    _require(
+        payload.get("schema") == "tt-rqm-su2-compose-v3-pilot-repeat-counts.v1",
+        "v3 pilot repeat-count schema mismatch",
+    )
+    _require(payload.get("benchmark_mode") == "fused_stability", "pilot plan must be fused-only")
+    _require(payload.get("designated_stability_evidence") is False, "pilot plan cannot be designated")
+    source = Path(str(payload.get("source_report")))
+    source_path = _resolve(root, source)
+    _require(source_path.is_file(), "pilot repeat-count source report is missing")
+    _require(
+        sha256_file(source_path) == payload.get("source_report_sha256"),
+        "pilot repeat-count source report hash mismatch",
+    )
+    cases = payload.get("cases")
+    _require(isinstance(cases, list), "pilot repeat counts are missing")
+    _require(
+        [(case.get("B"), case.get("K")) for case in cases] == list(CASES),
+        "pilot repeat-count case order changed",
+    )
+    values = {(int(case["B"]), int(case["K"])): int(case["repeat_count"]) for case in cases}
+    _require(all(value > 0 for value in values.values()), "pilot repeat counts must be positive")
+    return values
 
 
 def load_stability_preregistration(
@@ -70,9 +108,11 @@ def validate_stability_preregistration(
     data = payload
     schema = data.get("schema")
     _require(
-        schema in {PREREGISTRATION_SCHEMA, PREREGISTRATION_SCHEMA_V2},
+        schema in {PREREGISTRATION_SCHEMA, PREREGISTRATION_SCHEMA_V2, PREREGISTRATION_SCHEMA_V3},
         "SU2 stability schema mismatch",
     )
+    if schema == PREREGISTRATION_SCHEMA_V3:
+        return _validate_v3_preregistration(data)
     expected_status = (
         "frozen_before_designated_session_2"
         if schema == PREREGISTRATION_SCHEMA
@@ -149,6 +189,73 @@ def validate_stability_preregistration(
     return data
 
 
+def _validate_v3_preregistration(data: dict[str, Any]) -> dict[str, Any]:
+    status = data.get("status")
+    _require(
+        status in {"pilot_foundation_not_frozen", "frozen_before_designated_session_1"},
+        "v3 status must be pilot-only or frozen before designated session 1",
+    )
+    _require(data.get("benchmark_mode") == "fused_stability", "v3 must isolate fused_stability")
+    session = data.get("session_contract")
+    _require(isinstance(session, dict), "v3 session contract is missing")
+    expected_session = {
+        "all_designated_sessions_retained": True,
+        "cold_start_host_process": True,
+        "device_count": 1,
+        "device_id": 0,
+        "isolated_empty_runtime_cache_per_session": True,
+        "measured_samples_per_case": 10,
+        "no_discarded_performance_runs": True,
+        "one_synchronization_boundary_per_sample": True,
+        "required_designated_sessions": 3,
+        "separate_collector_invocations": True,
+        "warmups_per_case": 5,
+    }
+    _require(session == expected_session, "v3 session contract changed")
+    statistic = data.get("statistic")
+    _require(isinstance(statistic, dict), "v3 stability statistic is missing")
+    _require(statistic.get("required_metrics") == ["fused"], "v3 Level 2 requires fused only")
+    _require(
+        statistic.get("diagnostic_metrics") == ["unfused", "ratio"],
+        "v3 diagnostics must name unfused and ratio",
+    )
+    _require(float(statistic.get("absolute_maximum_limit", -1)) == 0.10, "v3 maximum limit must be 10%")
+    duration = data.get("raw_sample_duration_s")
+    _require(
+        duration == {"minimum": 0.025, "maximum": 0.05, "record_before_normalization": True},
+        "v3 raw sample duration contract changed",
+    )
+    cases = data.get("cases")
+    _require(isinstance(cases, list), "v3 cases are missing")
+    _require(
+        [(case.get("B"), case.get("K")) for case in cases] == list(CASES),
+        "v3 case order changed",
+    )
+    for case in cases:
+        limits = case.get("limits")
+        _require(
+            limits == {"fused": {"within_session_dispersion": 0.05, "cross_session_deviation": 0.05}},
+            "v3 fused limits must remain 5%",
+        )
+        repeats = case.get("repeat_count")
+        if status == "pilot_foundation_not_frozen":
+            _require(repeats is None, "pilot-only v3 repeat counts must remain unset")
+        else:
+            _require(isinstance(repeats, int) and repeats > 0, "frozen v3 repeat counts must be positive")
+    candidate = data.get("candidate")
+    pilots = data.get("pilot_sessions")
+    if status == "pilot_foundation_not_frozen":
+        _require(candidate is None and pilots == [], "pilot-only v3 cannot freeze candidate or pilot evidence")
+    else:
+        _require(isinstance(candidate, dict), "frozen v3 candidate identity is missing")
+        for key in ("sha256", "source_commit", "source_tree_sha256", "tt_metal_commit"):
+            _require(isinstance(candidate.get(key), str) and candidate[key], f"frozen v3 candidate {key} is missing")
+        _require(isinstance(pilots, list) and len(pilots) == 3, "frozen v3 requires three pilot sessions")
+    invalid = data.get("invalid_session_rules")
+    _require(isinstance(invalid, list) and len(invalid) == len(set(invalid)) >= 12, "v3 invalid-session rules are incomplete")
+    return data
+
+
 def _validate_v2_identity_and_inputs(data: Mapping[str, Any], report: Mapping[str, Any]) -> None:
     candidate = data.get("candidate")
     _require(isinstance(candidate, dict), "v2 stability candidate identity is missing")
@@ -203,12 +310,17 @@ def qualify_stability(
         str(_resolve(root, path).relative_to(root)) for path in manifest_paths
     ]
     preregistration = load_stability_preregistration(preregistration_path, repo_root=root)
+    if (
+        preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3
+        and preregistration.get("status") != "frozen_before_designated_session_1"
+    ):
+        raise IntegrityError("v3 pilot foundation is not frozen and cannot qualify designated sessions")
     analyses: list[dict[str, Any]] = []
     identities: list[tuple[str, ...] | None] = []
     input_identities: list[tuple[str, ...] | None] = []
     for path in manifest_paths:
         try:
-            analysis, identity, input_identity = _analyze_session(path, root=root)
+            analysis, identity, input_identity = _analyze_session(path, root=root, require_designated=True)
         except Exception as exc:
             analysis = {
                 "manifest": str(path),
@@ -262,14 +374,28 @@ def qualify_stability(
         )
         if not valid_inputs or valid_inputs[0] != expected_inputs:
             rejected.append("designated session inputs differ from v2 preregistration")
+    if preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3:
+        host_identities = [analysis.get("host_identity") for analysis in analyses]
+        if None in host_identities or len(set(tuple(value) for value in host_identities if value)) != 1:
+            rejected.append("frozen host parameters differ between designated sessions")
+        cache_paths = [analysis.get("runtime_cache_path") for analysis in analyses]
+        if None in cache_paths or len(cache_paths) != len(set(cache_paths)):
+            rejected.append("designated sessions did not use distinct runtime cache roots")
 
     qualified_cases: list[dict[str, Any]] = []
+    required_metrics = tuple(preregistration["statistic"]["required_metrics"])
     for threshold in preregistration["cases"]:
         batch, steps = int(threshold["B"]), int(threshold["K"])
         case_rejected: list[str] = []
         metrics: dict[str, Any] = {}
-        for metric in ("fused", "unfused", "ratio"):
-            limit = float(threshold["limits"][metric])
+        for metric in required_metrics:
+            limit_spec = threshold["limits"][metric]
+            within_limit = float(
+                limit_spec["within_session_dispersion"] if isinstance(limit_spec, dict) else limit_spec
+            )
+            cross_limit = float(
+                limit_spec["cross_session_deviation"] if isinstance(limit_spec, dict) else limit_spec
+            )
             session_statistics = []
             for analysis in analyses:
                 case = next(
@@ -292,10 +418,18 @@ def qualify_stability(
                         "within_session_dispersion": value["dispersion"],
                     }
                 )
-                if value["dispersion"] > limit:
+                if value["dispersion"] > within_limit:
                     case_rejected.append(
-                        f"{analysis['session_id']}: {metric} within-session dispersion exceeds {limit:.9f}"
+                        f"{analysis['session_id']}: {metric} within-session dispersion exceeds {within_limit:.9f}"
                     )
+                if preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3:
+                    raw = case.get("raw_fused_samples_s", [])
+                    minimum = float(preregistration["raw_sample_duration_s"]["minimum"])
+                    maximum = float(preregistration["raw_sample_duration_s"]["maximum"])
+                    if len(raw) != 10 or any(value < minimum or value > maximum for value in raw):
+                        case_rejected.append(
+                            f"{analysis['session_id']}: fused raw sample duration is outside {minimum:.3f}-{maximum:.3f}s"
+                        )
             medians = [value["median_s"] for value in session_statistics]
             median_across = statistics.median(medians) if medians else None
             cross = []
@@ -308,12 +442,14 @@ def qualify_stability(
                             "relative_deviation": deviation,
                         }
                     )
-                    if deviation > limit:
+                    if deviation > cross_limit:
                         case_rejected.append(
-                            f"{value['session_id']}: {metric} cross-session deviation exceeds {limit:.9f}"
+                            f"{value['session_id']}: {metric} cross-session deviation exceeds {cross_limit:.9f}"
                         )
             metrics[metric] = {
-                "limit": limit,
+                "within_session_limit": within_limit,
+                "cross_session_limit": cross_limit,
+                **({"limit": within_limit} if within_limit == cross_limit else {}),
                 "session_statistics": session_statistics,
                 "median_across_sessions_s": median_across,
                 "cross_session_deviation": cross,
@@ -359,15 +495,141 @@ def write_qualification(path: Path, payload: Mapping[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def assess_v3_pilots(
+    manifest_paths: Sequence[Path],
+    *,
+    preregistration_path: Path,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Assess three non-designated fused-only pilots without making a stability claim."""
+
+    root = (repo_root or Path.cwd()).resolve()
+    preregistration = load_stability_preregistration(preregistration_path, repo_root=root)
+    _require(
+        preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3,
+        "pilot assessment requires the v3 preregistration",
+    )
+    analyses: list[dict[str, Any]] = []
+    identities: list[tuple[str, ...]] = []
+    input_identities: list[tuple[str, ...]] = []
+    rejected: list[str] = []
+    for path in manifest_paths:
+        try:
+            analysis, identity, input_identity = _analyze_session(
+                path, root=root, require_designated=False
+            )
+        except Exception as exc:
+            rejected.append(f"{path}: {type(exc).__name__}: {exc}")
+            continue
+        analyses.append(analysis)
+        identities.append(identity)
+        input_identities.append(input_identity)
+        rejected.extend(f"{analysis['session_id']}: {reason}" for reason in analysis["rejected_gates"])
+    if len(manifest_paths) != 3 or len(analyses) != 3:
+        rejected.append("exactly three complete non-designated pilot sessions are required")
+    ids = [analysis["session_id"] for analysis in analyses]
+    if len(ids) != len(set(ids)):
+        rejected.append("pilot session IDs are not distinct")
+    if identities and len(set(identities)) != 1:
+        rejected.append("pilot candidate or runtime identity differs")
+    if input_identities and len(set(input_identities)) != 1:
+        rejected.append("pilot deterministic input identity differs")
+    host_identities = [analysis.get("host_identity") for analysis in analyses]
+    if host_identities and (None in host_identities or len(set(host_identities)) != 1):
+        rejected.append("pilot frozen host parameters differ")
+    cache_paths = [analysis.get("runtime_cache_path") for analysis in analyses]
+    if cache_paths and (None in cache_paths or len(cache_paths) != len(set(cache_paths))):
+        rejected.append("pilot runtime cache roots are not distinct")
+
+    minimum = float(preregistration["raw_sample_duration_s"]["minimum"])
+    maximum = float(preregistration["raw_sample_duration_s"]["maximum"])
+    cases: list[dict[str, Any]] = []
+    for batch, steps in CASES:
+        session_statistics = []
+        case_rejected: list[str] = []
+        for analysis in analyses:
+            case = next(
+                (value for value in analysis["cases"] if (value["B"], value["K"]) == (batch, steps)),
+                None,
+            )
+            if case is None:
+                case_rejected.append(f"{analysis['session_id']}: missing case")
+                continue
+            fused = case["fused"]
+            raw = case["raw_fused_samples_s"]
+            duration_ok = len(raw) == 10 and all(minimum <= value <= maximum for value in raw)
+            if not duration_ok:
+                case_rejected.append(
+                    f"{analysis['session_id']}: raw sample duration outside {minimum:.3f}-{maximum:.3f}s"
+                )
+            session_statistics.append(
+                {
+                    "session_id": analysis["session_id"],
+                    "median_s": fused["median_s"],
+                    "p95_s": fused["p95_s"],
+                    "within_session_dispersion": fused["dispersion"],
+                    "raw_sample_duration_min_s": min(raw) if raw else None,
+                    "raw_sample_duration_max_s": max(raw) if raw else None,
+                }
+            )
+        medians = [value["median_s"] for value in session_statistics]
+        across = statistics.median(medians) if medians else None
+        deviations = []
+        if across is not None:
+            deviations = [
+                {
+                    "session_id": value["session_id"],
+                    "relative_deviation": abs(value["median_s"] - across) / across,
+                }
+                for value in session_statistics
+            ]
+        observed = [value["within_session_dispersion"] for value in session_statistics] + [
+            value["relative_deviation"] for value in deviations
+        ]
+        observed_max = max(observed) if observed else math.inf
+        cases.append(
+            {
+                "B": batch,
+                "K": steps,
+                "session_statistics": session_statistics,
+                "median_across_sessions_s": across,
+                "cross_session_deviation": deviations,
+                "observed_maximum": observed_max,
+                "within_absolute_maximum_10_percent": observed_max <= 0.10 and not case_rejected,
+                "within_preferred_5_percent": observed_max <= 0.05 and not case_rejected,
+                "rejected_gates": case_rejected,
+            }
+        )
+    ready = not rejected and all(case["within_absolute_maximum_10_percent"] for case in cases)
+    return {
+        "schema": "tt-rqm-su2-compose-v3-pilot-assessment.v1",
+        "benchmark_id": preregistration["benchmark_id"],
+        "preregistration": str(preregistration_path),
+        "non_designated_pilot_only": True,
+        "stable_benchmark": False,
+        "qualification_passed": False,
+        "session_ids": ids,
+        "sessions": analyses,
+        "cases": cases,
+        "rejected_gates": rejected,
+        "ready_to_freeze_v3": ready,
+        "all_cases_within_preferred_5_percent": ready
+        and all(case["within_preferred_5_percent"] for case in cases),
+    }
+
+
 def _analyze_session(
     manifest_path: Path,
     *,
     root: Path,
+    require_designated: bool,
 ) -> tuple[dict[str, Any], tuple[str, ...], tuple[str, ...]]:
     manifest_path = _resolve(root, manifest_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     _require(manifest.get("schema") in SESSION_SCHEMAS, "unsupported SU2 session schema")
-    modern = manifest.get("schema") == "tt-rqm-su2-compose-session.v2"
+    modern = manifest.get("schema") in {"tt-rqm-su2-compose-session.v2", "tt-rqm-su2-compose-session.v3"}
+    v3 = manifest.get("schema") == "tt-rqm-su2-compose-session.v3"
+    host_identity: tuple[Any, ...] | None = None
     rejected: list[str] = []
     if modern and manifest.get("collection_status") != "passed":
         rejected.append(f"designated collection failed: {manifest.get('failure')}")
@@ -401,8 +663,9 @@ def _analyze_session(
         role_paths[role] = path
         if role in {"hardware-report", "raw-paired-performance-and-correctness"}:
             report_path = path
-    if modern and not REQUIRED_ROLES.issubset(roles):
-        rejected.append(f"session package is missing roles: {sorted(REQUIRED_ROLES - roles)}")
+    required_roles = V3_REQUIRED_ROLES if v3 else REQUIRED_ROLES
+    if modern and not required_roles.issubset(roles):
+        rejected.append(f"session package is missing roles: {sorted(required_roles - roles)}")
     _require(report_path is not None, "SU2 session has no performance report")
     report = json.loads(report_path.read_text(encoding="utf-8"))
     from tt_rqm_kernels.su2_benchmark_release import validate_su2_report
@@ -418,10 +681,22 @@ def _analyze_session(
             rejected.append("session manifest lifecycle differs from report")
         if manifest.get("case_order") != [[b, k] for b, k in CASES]:
             rejected.append("session case order differs from preregistration")
-        if manifest.get("source_trees_clean") is not True:
+        if require_designated and manifest.get("source_trees_clean") is not True:
             rejected.append("source trees were not recorded clean")
         if manifest.get("all_expected_paired_samples_retained") is not True:
             rejected.append("not every paired sample was retained")
+        if v3:
+            if manifest.get("benchmark_mode") != "fused_stability":
+                rejected.append("v3 session did not isolate fused_stability mode")
+            expected_designation = True if require_designated else False
+            if manifest.get("designated_stability_session") is not expected_designation:
+                rejected.append(
+                    "v3 qualification received a non-designated pilot session"
+                    if require_designated
+                    else "v3 pilot assessment received a designated session"
+                )
+            if manifest.get("isolated_runtime_cache") is not True:
+                rejected.append("v3 session did not use an isolated runtime cache")
         try:
             pre = role_paths["pre-device-health"].read_text(encoding="utf-8")
             post = role_paths["post-device-health"].read_text(encoding="utf-8")
@@ -432,12 +707,34 @@ def _analyze_session(
             rejected.append(f"device-health validation failed: {exc}")
         try:
             environment = json.loads(role_paths["environment"].read_text(encoding="utf-8"))
-            if environment.get("repository", {}).get("status"):
+            if require_designated and environment.get("repository", {}).get("status"):
                 rejected.append("collector repository was dirty")
-            if environment.get("tt_metal", {}).get("status"):
+            if require_designated and environment.get("tt_metal", {}).get("status"):
                 rejected.append("TT-Metal source tree was dirty")
+            if v3 and environment.get("profiler_watcher_debug_disabled") is not True:
+                rejected.append("profiler, watcher, or debug mode was not disabled")
         except (KeyError, OSError, json.JSONDecodeError) as exc:
             rejected.append(f"environment validation failed: {exc}")
+        if v3:
+            try:
+                pre_host = json.loads(role_paths["host-state-pre"].read_text(encoding="utf-8"))
+                post_host = json.loads(role_paths["host-state-post"].read_text(encoding="utf-8"))
+                stable_keys = (
+                    "cpu_model",
+                    "inherited_cpu_affinity",
+                    "requested_candidate_cpu_affinity",
+                    "process_nice",
+                    "cpu_governors",
+                    "numa_nodes",
+                )
+                if any(pre_host.get(key) != post_host.get(key) for key in stable_keys):
+                    rejected.append("frozen host state changed during the session")
+                host_identity = tuple(json.dumps(pre_host.get(key), sort_keys=True) for key in stable_keys)
+                cache = json.loads(role_paths["runtime-cache-inventory"].read_text(encoding="utf-8"))
+                if cache.get("file_count", 0) <= 0:
+                    rejected.append("runtime cache inventory is empty after collection")
+            except (KeyError, OSError, json.JSONDecodeError, TypeError) as exc:
+                rejected.append(f"v3 host/cache validation failed: {exc}")
 
     candidate = report["provenance"]["candidate"]
     identity = (
@@ -497,6 +794,9 @@ def _analyze_session(
             if not all(math.isfinite(value) and value > 0 for value in samples):
                 rejected.append(f"{result['B']}x{result['K']} {metric} timing is invalid")
             case[metric] = _summary(samples)
+        case["raw_fused_samples_s"] = [
+            float(value) for value in result["raw_candidate_timings_s"]["fused_samples"]
+        ]
         cases.append(case)
     return (
         {
@@ -512,6 +812,8 @@ def _analyze_session(
             "compiler_version": identity[3],
             "runtime_version": identity[4],
             "input_case_ids": list(input_identity),
+            "host_identity": host_identity,
+            "runtime_cache_path": manifest.get("runtime_cache_path") if v3 else None,
             "cases": cases,
         },
         identity,
@@ -521,6 +823,9 @@ def _analyze_session(
 
 def _metric_samples(result: Mapping[str, Any]) -> dict[str, list[float]]:
     fused = [float(value) for value in result["fused"]["timing_s"]["samples"]]
+    if "unfused" not in result:
+        _require(len(fused) == 10, "SU2 fused stability case must retain ten samples")
+        return {"fused": fused}
     unfused = [float(value) for value in result["unfused"]["timing_s"]["samples"]]
     _require(len(fused) == len(unfused) == 10, "SU2 case must retain ten paired samples")
     return {

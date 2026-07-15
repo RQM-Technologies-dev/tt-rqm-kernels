@@ -1,0 +1,642 @@
+{
+  "cache_root": "/home/user/su2-v3-pilots/pilot-2/tt-metal-cache",
+  "file_count": 127,
+  "files": [
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/.build_state",
+      "sha256": "bbf3466b6e7fd5d664b7db1d0ad3c13f4805c975ce90637cdafa4626e60ad7ba",
+      "size_bytes": 20
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisc.elf",
+      "sha256": "dfb00262a5df1593a2581c4ac744ca2dad4843e454bdb8fff6a1d0dfceba92d7",
+      "size_bytes": 1436584
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisc.elf.dephash",
+      "sha256": "544f1b8b6717ee72100e29bca33978042b9f0a67ecdc8302a39d679b49415619",
+      "size_bytes": 206
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisc.elf.xip.elf",
+      "sha256": "2bb8824e9ffec057b18907db451b6d8c2b1483ffe800b5ed9b4b25c49bcb1270",
+      "size_bytes": 1436584
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisck.o",
+      "sha256": "51e6a321afe77b7b1212a5d046222f31d31810e8fd09a42bb4b2ee150a3f7c08",
+      "size_bytes": 596360
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisck.o.dephash",
+      "sha256": "ada04724513d93c38d848a8a58bfe0d5890368155a99a8c8f156304b436b1438",
+      "size_bytes": 11558
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/brisc/brisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/chlkc_descriptors.h",
+      "sha256": "e8226293f408bb8cda5197a085dad910d50450d2b81734f2c460c17c8cbd4e8a",
+      "size_bytes": 4095
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch/6122670342048954421/kernel_includes.hpp",
+      "sha256": "d68b1f1257cc31872bda3e6f96cf42484bea8b654048ffb822be918b76826fe4",
+      "size_bytes": 82
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/chlkc_descriptors.h",
+      "sha256": "e8226293f408bb8cda5197a085dad910d50450d2b81734f2c460c17c8cbd4e8a",
+      "size_bytes": 4095
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/kernel_includes.hpp",
+      "sha256": "f5208a5a3e9c79fbe8d556d5d2b8ee4ab48a00076936a7f49f036d2961c77b1b",
+      "size_bytes": 94
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/.build_state",
+      "sha256": "7a86085cea023e603d205b9147ed269e0cd38b0bf68101de050477c20871c5d2",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/ncrisc.elf",
+      "sha256": "f248a4161b73d0d2197101c2d91d8a9b27650e4d5a4a3dc0fc8bacc1dea04e76",
+      "size_bytes": 340764
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/ncrisc.elf.dephash",
+      "sha256": "144adc7237a14f1beef03bbcd5ca8376e640b8c0dcf89a0599fed845c11b7f53",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/ncrisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/ncrisck.o",
+      "sha256": "a459a9de0d68cdbfcc21b5efdafc3bb899e0379751a39f1fbbae2d8e8c2d755a",
+      "size_bytes": 190080
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/ncrisck.o.dephash",
+      "sha256": "3c0327d82a982b4af90440d19e1a98e08680eb0a81feedfc36b0fa703bcf2d65",
+      "size_bytes": 8474
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate/7721046501531036586/ncrisc/ncrisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/chlkc_descriptors.h",
+      "sha256": "37920c65382f00e9aaf72b50b0f1c94c251b6a8d5491ddb456f7d997d0e4c151",
+      "size_bytes": 4093
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/chlkc_isolate_sfpu.cpp",
+      "sha256": "af490e239a259cc57a20d67409c84533fd8b08cdc16901d3a2e381bd4371ea5c",
+      "size_bytes": 160
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/chlkc_math.cpp",
+      "sha256": "2768054f5597b47a49771a24ad073383250eb57eeb8e63ac7a46ffb508689b4b",
+      "size_bytes": 152
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/chlkc_pack.cpp",
+      "sha256": "9c4ddb8b769868f19e73b30fbafd0502abf54335d7969ed865e5598345d79fcf",
+      "size_bytes": 152
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/chlkc_unpack.cpp",
+      "sha256": "6ed1b432d299258521fcca209669596726cc07326bfa74646d5dd93e30e328d9",
+      "size_bytes": 154
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/defines_generated.h",
+      "sha256": "9436233669f8e6b6c5acb43e198720f111a43ecabd03e70e2d7d352849a1c5da",
+      "size_bytes": 276
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/.build_state",
+      "sha256": "41b96cbf27ef9df88b8e1325fd3c91374cc8d0ea52190ff0cb69ad48e6bc10a9",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisc0.elf",
+      "sha256": "0b9c172083c028a313f79e6414c7b1ea30e3d16c6da195840d949044cb8763e0",
+      "size_bytes": 164296
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisc0.elf.dephash",
+      "sha256": "2d9129b42f2cff18d48671bfc3a3af2aea35bb91b31e64afd3a140ce1333f947",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisc0.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisc0.elf.xip.elf",
+      "sha256": "a6c31e6727b00f7fc69cb9a8d621787b96a956f94f9ea11503202516d4730db2",
+      "size_bytes": 164296
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisck.o",
+      "sha256": "ba12078d5ab1f7f84b4942f463eb42121d023d3e8af388da6f48e5e0dc59a78c",
+      "size_bytes": 145088
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisck.o.dephash",
+      "sha256": "7f3c97e67faed6bddd7ff2f244db1a26d55e52bcee11d696c65d85ef53845602",
+      "size_bytes": 10351
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc0/trisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/.build_state",
+      "sha256": "30e23902491af3105e6bcb96717f549430bd8f3f78de6ecc5bbbd5903034914e",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisc1.elf",
+      "sha256": "6dab365ff51a71e383598aa3f8d4ceb14a7e84d0f23bf5723c54787d8f66cccf",
+      "size_bytes": 242348
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisc1.elf.dephash",
+      "sha256": "3e5296b072334af72f8996b701951a7a5eb9b1c916038d07e3e54177255458ea",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisc1.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisc1.elf.xip.elf",
+      "sha256": "956b680dc4e414fbbbae0e184eefc19e696f4b7321127c8c780bfae01d8b6fee",
+      "size_bytes": 242348
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisck.o",
+      "sha256": "388e54ddb4d15b7429281416cd0fe94975eec878cec4d8c0a9c9a8c303d1dc1d",
+      "size_bytes": 159876
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisck.o.dephash",
+      "sha256": "ba5d16d19d2beb71083f4aab81b26e012f1a139359fbf89e8a7b5acf8ef2ee7e",
+      "size_bytes": 15033
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc1/trisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/.build_state",
+      "sha256": "e353acd6994e3972de0409966355b2fe81aa64d10f1dd5839a2d4562d7d97196",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisc2.elf",
+      "sha256": "ad112c8caa8aa2d550729bafeec495b01d0b3e43e9a55c4c542625fd50f44932",
+      "size_bytes": 73140
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisc2.elf.dephash",
+      "sha256": "4df4ed6fc0b1ffda9477eb2ff7f8c6207f6b1db4e2e5107092f55e995956b6fa",
+      "size_bytes": 210
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisc2.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisc2.elf.xip.elf",
+      "sha256": "a1f1656217bf35232cb23ce5630636f45acaad297297e64c19d21d8d48d222e0",
+      "size_bytes": 73140
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisck.o",
+      "sha256": "66f7996df31e0912d3b22e842bc9700d9df0a66f33ba3797118a0b8264bb075f",
+      "size_bytes": 80852
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisck.o.dephash",
+      "sha256": "e15c28b3c39d4c1bd736687d699ac875f6c6646dbf4af6f982c40de647fcd3b3",
+      "size_bytes": 6866
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_dispatch_subordinate_compute/3171650006829732184/trisc2/trisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/.build_state",
+      "sha256": "bbf3466b6e7fd5d664b7db1d0ad3c13f4805c975ce90637cdafa4626e60ad7ba",
+      "size_bytes": 20
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisc.elf",
+      "sha256": "acf1aa2a7356d5c1978ce97169a024c866098d5bd376aaf3a5561d62faf65ac3",
+      "size_bytes": 2592620
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisc.elf.dephash",
+      "sha256": "544f1b8b6717ee72100e29bca33978042b9f0a67ecdc8302a39d679b49415619",
+      "size_bytes": 206
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisc.elf.xip.elf",
+      "sha256": "17283f01b0251dc0fbadda3db12da93df55cfa57f0286fb8e1fd3a7abbead413",
+      "size_bytes": 2592620
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisck.o",
+      "sha256": "41047e8fde19c5aa33cd99d566c02104e8926288e5675cda3280cb98af760d28",
+      "size_bytes": 743776
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisck.o.dephash",
+      "sha256": "91e167f0811a2d1107afd3a0865555086da165163c0f60287ab67398d0f225b4",
+      "size_bytes": 11456
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/brisc/brisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/chlkc_descriptors.h",
+      "sha256": "e8226293f408bb8cda5197a085dad910d50450d2b81734f2c460c17c8cbd4e8a",
+      "size_bytes": 4095
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_prefetch/3553671013818515937/kernel_includes.hpp",
+      "sha256": "8366b9f6d225c0190b22c03362d3f2dd17c2c852b549b0ccdbdb6b56b46c0ed4",
+      "size_bytes": 82
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/.build_state",
+      "sha256": "bbf3466b6e7fd5d664b7db1d0ad3c13f4805c975ce90637cdafa4626e60ad7ba",
+      "size_bytes": 20
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisc.elf",
+      "sha256": "30a0391359b81449e058f9c6f3396181cc871f3a71a996f99cd145e3877dff5d",
+      "size_bytes": 123928
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisc.elf.dephash",
+      "sha256": "544f1b8b6717ee72100e29bca33978042b9f0a67ecdc8302a39d679b49415619",
+      "size_bytes": 206
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisc.elf.xip.elf",
+      "sha256": "f64acf1ce40a9d063edae8034eb0c97d58dbd97ee6832b73ee3558e89f48e429",
+      "size_bytes": 123928
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisck.o",
+      "sha256": "fb8ad5b8b951532f0b279588beaef1ca520e4472fb993eb92949cbbb1c9106f6",
+      "size_bytes": 116652
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisck.o.dephash",
+      "sha256": "b1611cdd6796794716bdbb9a90cc7fd89ca3bb2c5e5d9d06a29ddf578b2de4d2",
+      "size_bytes": 7716
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/brisc/brisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/chlkc_descriptors.h",
+      "sha256": "e8226293f408bb8cda5197a085dad910d50450d2b81734f2c460c17c8cbd4e8a",
+      "size_bytes": 4095
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler/475430448150712355/kernel_includes.hpp",
+      "sha256": "b15e809fbba988bbbb0dbbf71608d0a45cf7d63fab1b918ec385e8ccdadea1f8",
+      "size_bytes": 91
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/chlkc_descriptors.h",
+      "sha256": "e8226293f408bb8cda5197a085dad910d50450d2b81734f2c460c17c8cbd4e8a",
+      "size_bytes": 4095
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/kernel_includes.hpp",
+      "sha256": "cce4d6e00e409a7ae1915d37845bf670bd5bb9968beeeaa38a1b8eefb63777f9",
+      "size_bytes": 96
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/.build_state",
+      "sha256": "7a86085cea023e603d205b9147ed269e0cd38b0bf68101de050477c20871c5d2",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/ncrisc.elf",
+      "sha256": "f51fd4eceda2e1eb487c8de5067be367059fb8a22f1c49a3cb3a9d5e9da7eef1",
+      "size_bytes": 276256
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/ncrisc.elf.dephash",
+      "sha256": "144adc7237a14f1beef03bbcd5ca8376e640b8c0dcf89a0599fed845c11b7f53",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/ncrisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/ncrisck.o",
+      "sha256": "082a6fc844ca5ac3634dc242f798fe082d8aa78e5bd978438d65ff9461dd84c8",
+      "size_bytes": 318728
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/ncrisck.o.dephash",
+      "sha256": "2e34f30c75bcb33a1483314e61028e2693b2c0ee4095f79ede670c7234754a2e",
+      "size_bytes": 10202
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/cq_realtime_profiler_push/2238202426921698538/ncrisc/ncrisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/chlkc_descriptors.h",
+      "sha256": "3bea25776c10cbf88babd59436b4259878acbb027d85822be8269efec6af872a",
+      "size_bytes": 3852
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/chlkc_isolate_sfpu.cpp",
+      "sha256": "7ef7a341b102660feda4dbfad9ddc217388ec0315ccc76b67d597ea46d9f992a",
+      "size_bytes": 165
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/chlkc_math.cpp",
+      "sha256": "64fa02a50c9af8fd2e674adad70512f3f619389adab57bb8ebc48d13cddd02e1",
+      "size_bytes": 157
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/chlkc_pack.cpp",
+      "sha256": "792f548e419899d93dc5035b8501c0000eec374e6f8f9cb7376470bbf5f0bf58",
+      "size_bytes": 157
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/chlkc_unpack.cpp",
+      "sha256": "437d1f7199494bc00d4f6c33bdc8bd392dcdeffc362d084deb02b3fdfb8cac3b",
+      "size_bytes": 159
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/defines_generated.h",
+      "sha256": "27cef770447179a12aa47ce44b0063ac809e7130303ab38dd78acf460908ad52",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/.build_state",
+      "sha256": "41b96cbf27ef9df88b8e1325fd3c91374cc8d0ea52190ff0cb69ad48e6bc10a9",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisc0.elf",
+      "sha256": "f5861c41db3c473d3b75df1933ce674630ae080482b831a98d8da172b795df91",
+      "size_bytes": 842728
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisc0.elf.dephash",
+      "sha256": "2d9129b42f2cff18d48671bfc3a3af2aea35bb91b31e64afd3a140ce1333f947",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisc0.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisc0.elf.xip.elf",
+      "sha256": "0faf99c64ececd66bbfc454d1b4912b2877443f7325923535ef87ae915f42766",
+      "size_bytes": 842728
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisck.o",
+      "sha256": "bc40d6a21ea637e327ece4c61af66aa62d659895d322d99e0c28f11a76d34e48",
+      "size_bytes": 264608
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisck.o.dephash",
+      "sha256": "1ad176a0fe906a72906c5986c82c5dff1206c8a15557e1f8ee248777ea8d1d6d",
+      "size_bytes": 12552
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc0/trisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/.build_state",
+      "sha256": "30e23902491af3105e6bcb96717f549430bd8f3f78de6ecc5bbbd5903034914e",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisc1.elf",
+      "sha256": "fe82ea8a27adf251326181b19e6ae326577e789ffc9419313561951bd847bdc3",
+      "size_bytes": 1936604
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisc1.elf.dephash",
+      "sha256": "3e5296b072334af72f8996b701951a7a5eb9b1c916038d07e3e54177255458ea",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisc1.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisc1.elf.xip.elf",
+      "sha256": "452dd136d2a0aca9f91e30d4ec18844f1b863e35aa2e6470e5685fef1419cd9b",
+      "size_bytes": 1936604
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisck.o",
+      "sha256": "77181221ba92a061b7f3268c3e4f21762196db8bb9a856ff69ed7771fa59b786",
+      "size_bytes": 259636
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisck.o.dephash",
+      "sha256": "a763bb091f77db7cea6e56e617e049691ded9e166619415399375ad76066e804",
+      "size_bytes": 17049
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc1/trisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/.build_state",
+      "sha256": "e353acd6994e3972de0409966355b2fe81aa64d10f1dd5839a2d4562d7d97196",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisc2.elf",
+      "sha256": "166fbcd1eb45a8403dac9e0c933f0c07fa75a358b90556a3c2b9821fb9b6a102",
+      "size_bytes": 306764
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisc2.elf.dephash",
+      "sha256": "4df4ed6fc0b1ffda9477eb2ff7f8c6207f6b1db4e2e5107092f55e995956b6fa",
+      "size_bytes": 210
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisc2.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisc2.elf.xip.elf",
+      "sha256": "d88c698c65bf70c8fa2ca714269a65384d1b7f8271751d30278f7ef5ddef9dfd",
+      "size_bytes": 306764
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisck.o",
+      "sha256": "753bdfb553fe997968bbfa6411c5175d4cd3c88a968b012cf3d69e42d112c682",
+      "size_bytes": 263644
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisck.o.dephash",
+      "sha256": "46b5816c2d0653016596cce6942a5386d26811f6b08635a03235c3f33bafc486",
+      "size_bytes": 13176
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_compute/11362460542839042355/trisc2/trisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/.build_state",
+      "sha256": "bbf3466b6e7fd5d664b7db1d0ad3c13f4805c975ce90637cdafa4626e60ad7ba",
+      "size_bytes": 20
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisc.elf",
+      "sha256": "cd9aa99a13f9ed58168e2a2aea945d32b53f652d6e7f28a5594d54fcd6182e47",
+      "size_bytes": 179312
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisc.elf.dephash",
+      "sha256": "544f1b8b6717ee72100e29bca33978042b9f0a67ecdc8302a39d679b49415619",
+      "size_bytes": 206
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisc.elf.xip.elf",
+      "sha256": "01873c70403114057054983e80f84d8d5b99383a200b2e158cf3705a42a6e006",
+      "size_bytes": 179312
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisck.o",
+      "sha256": "0c07cdae52cc428dab71e257353fe561e433cbdae02bd8f22786108ad9e21222",
+      "size_bytes": 159976
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisck.o.dephash",
+      "sha256": "6c8382b1f4c4373173171f13cce2929bc0881ae71fe71e3b953944e6ae540d3d",
+      "size_bytes": 7422
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/brisc/brisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/chlkc_descriptors.h",
+      "sha256": "2348cdca1e7a1f37759b09607144f5864342066de3dbc145c8339738e93be73a",
+      "size_bytes": 3855
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_reader/14540618185334935508/kernel_includes.hpp",
+      "sha256": "e6391378268344a46fac144a97bfa39aee13345b71400163f681c480760926bb",
+      "size_bytes": 106
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/chlkc_descriptors.h",
+      "sha256": "2348cdca1e7a1f37759b09607144f5864342066de3dbc145c8339738e93be73a",
+      "size_bytes": 3855
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/kernel_includes.hpp",
+      "sha256": "cbcd97fe10c487e8326dce8cc94115c07ca5e0108462e14c17af709d721d7952",
+      "size_bytes": 106
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/.build_state",
+      "sha256": "7a86085cea023e603d205b9147ed269e0cd38b0bf68101de050477c20871c5d2",
+      "size_bytes": 19
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/ncrisc.elf",
+      "sha256": "e295d8ef6088e8331a0181a76b4f6dbaaed5f62522cb739f886469e3d8e4e786",
+      "size_bytes": 178204
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/ncrisc.elf.dephash",
+      "sha256": "144adc7237a14f1beef03bbcd5ca8376e640b8c0dcf89a0599fed845c11b7f53",
+      "size_bytes": 208
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/ncrisc.elf.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/ncrisck.o",
+      "sha256": "7da7f486ce994aaa4620138e9676ed9793a064caf3837bcb84b20cb97c633a90",
+      "size_bytes": 157428
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/ncrisck.o.dephash",
+      "sha256": "c7cb56a94d6ee47ea949668bd71715cdee252ecf6e3c25a0e0a8334d081d0035",
+      "size_bytes": 7426
+    },
+    {
+      "path": "tt-metal-cache1173036929715483899/kernels/su2_fused_writer/14373451151291420247/ncrisc/ncrisck.o.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "schema": "tt-rqm-su2-runtime-cache-inventory.v1"
+}

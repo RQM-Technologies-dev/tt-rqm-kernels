@@ -4,10 +4,21 @@ This package contains the separate H1 Wormhole candidate. It consumes
 CPU-lowered Float32 rotor and phase chains; it does not lower Hamiltonian
 coefficients on device.
 
-The binary implements two paths inside one device-0 session:
+The historical comparison mode implements two paths inside one device-0 session:
 
 - unfused `K-1` qmul-plus-phase dispatches with DRAM ping-pong accumulators;
 - one fused reader/compute/writer workload with L1 accumulator ping-pong.
+
+The v3 manifest adds explicit `benchmark_mode` values:
+
+- `conformance` retains fused/unfused correctness coverage;
+- `paired_comparison` retains the Level 1 and future Level 3 surface;
+- `fused_stability` is the Level 2 surface and does not construct or execute
+  the unfused workload.
+
+In `fused_stability`, each raw sample enqueues its fixed repeats nonblocking
+and uses one `Finish` boundary. The host contract supplies five warmups and ten
+raw samples and retains each raw duration before normalization.
 
 All quaternion and complex-phase arithmetic is in the compute/SFPU kernels.
 Data-movement kernels perform only tile DMA and synchronization.

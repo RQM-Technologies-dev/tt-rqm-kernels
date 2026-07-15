@@ -17,6 +17,7 @@
 #include <iomanip>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -302,11 +303,14 @@ void enqueue_unfused_chain(
 json run_case(
     const std::shared_ptr<distributed::MeshDevice>& device,
     const std::filesystem::path& workdir,
-    const json& spec) {
+    const json& spec,
+    bool fused_only) {
     const uint32_t batch = spec.at("B").get<uint32_t>();
     const uint32_t steps = spec.at("K").get<uint32_t>();
     const uint32_t repeats = spec.at("repeat_count").get<uint32_t>();
-    const uint32_t warmups = spec.at("warmup_pairs").get<uint32_t>();
+    const uint32_t warmups = spec.contains("warmup_count")
+        ? spec.at("warmup_count").get<uint32_t>()
+        : spec.at("warmup_pairs").get<uint32_t>();
     const uint32_t samples = spec.at("samples").get<uint32_t>();
     if (batch == 0 || steps < 2 || repeats == 0 || samples == 0) throw std::runtime_error("invalid case dimensions");
     const auto& inputs = spec.at("inputs");
@@ -325,13 +329,18 @@ json run_case(
     distributed::ReplicatedBufferConfig output_config{.size = output_bytes};
     auto input = distributed::MeshBuffer::create(input_config, local, device.get());
     auto fused_output = distributed::MeshBuffer::create(output_config, local, device.get());
-    auto ping_a = distributed::MeshBuffer::create(output_config, local, device.get());
-    auto ping_b = distributed::MeshBuffer::create(output_config, local, device.get());
+    std::shared_ptr<distributed::MeshBuffer> ping_a;
+    std::shared_ptr<distributed::MeshBuffer> ping_b;
+    if (!fused_only) {
+        ping_a = distributed::MeshBuffer::create(output_config, local, device.get());
+        ping_b = distributed::MeshBuffer::create(output_config, local, device.get());
+    }
     const double allocation_s = seconds_since(allocation_start);
 
     const auto build_start = Clock::now();
     auto fused = build_fused(device, input, fused_output, component_tiles, steps);
-    auto unfused = build_unfused(device, input, ping_a, component_tiles);
+    std::optional<UnfusedWorkload> unfused;
+    if (!fused_only) unfused.emplace(build_unfused(device, input, ping_a, component_tiles));
     const double build_s = seconds_since(build_start);
 
     const auto h2d_start = Clock::now();
@@ -341,20 +350,27 @@ json run_case(
 
     const auto run_fused = [&]() {
         const auto start = Clock::now();
-        for (uint32_t repeat = 0; repeat < repeats; ++repeat) distributed::EnqueueMeshWorkload(cq, fused.workload, true);
+        for (uint32_t repeat = 0; repeat < repeats; ++repeat) {
+            distributed::EnqueueMeshWorkload(cq, fused.workload, !fused_only);
+        }
+        // fused_stability has exactly one synchronization boundary per measured sample.
         distributed::Finish(cq);
         return seconds_since(start);
     };
     const auto run_unfused = [&]() {
+        if (!unfused.has_value()) throw std::runtime_error("unfused workload is absent in fused_stability mode");
         const auto start = Clock::now();
-        for (uint32_t repeat = 0; repeat < repeats; ++repeat) enqueue_unfused_chain(cq, unfused, input, ping_a, ping_b, steps);
+        for (uint32_t repeat = 0; repeat < repeats; ++repeat) {
+            enqueue_unfused_chain(cq, *unfused, input, ping_a, ping_b, steps);
+        }
         distributed::Finish(cq);
         return seconds_since(start);
     };
 
     const auto warmup_start = Clock::now();
     for (uint32_t warmup = 0; warmup < warmups; ++warmup) {
-        if (warmup % 2 == 0) { run_fused(); run_unfused(); }
+        if (fused_only) run_fused();
+        else if (warmup % 2 == 0) { run_fused(); run_unfused(); }
         else { run_unfused(); run_fused(); }
     }
     const double warmup_s = seconds_since(warmup_start);
@@ -363,7 +379,9 @@ json run_case(
     std::vector<double> unfused_samples;
     std::vector<std::string> order;
     for (uint32_t sample = 0; sample < samples; ++sample) {
-        if (sample % 2 == 0) {
+        if (fused_only) {
+            fused_samples.push_back(run_fused());
+        } else if (sample % 2 == 0) {
             order.push_back("fused_first");
             fused_samples.push_back(run_fused());
             unfused_samples.push_back(run_unfused());
@@ -378,35 +396,44 @@ json run_case(
     std::vector<uint32_t> fused_packed;
     std::vector<uint32_t> unfused_packed;
     distributed::EnqueueReadMeshBuffer(cq, fused_packed, fused_output, true);
-    auto final_unfused = ((steps - 1) % 2 == 1) ? ping_a : ping_b;
-    distributed::EnqueueReadMeshBuffer(cq, unfused_packed, final_unfused, true);
+    if (!fused_only) {
+        auto final_unfused = ((steps - 1) % 2 == 1) ? ping_a : ping_b;
+        distributed::EnqueueReadMeshBuffer(cq, unfused_packed, final_unfused, true);
+    }
     distributed::Finish(cq);
     const double d2h_s = seconds_since(d2h_start);
     auto [fused_rotors, fused_phases] = unpack_output(fused_packed, batch);
-    auto [unfused_rotors, unfused_phases] = unpack_output(unfused_packed, batch);
     write_words(workdir / outputs.at("fused_rotors").get<std::string>(), fused_rotors);
     write_words(workdir / outputs.at("fused_phases").get<std::string>(), fused_phases);
-    write_words(workdir / outputs.at("unfused_rotors").get<std::string>(), unfused_rotors);
-    write_words(workdir / outputs.at("unfused_phases").get<std::string>(), unfused_phases);
+    json output_identity = {
+        {"fused_rotors_fnv1a64", fnv1a64(fused_rotors)},
+        {"fused_phases_fnv1a64", fnv1a64(fused_phases)},
+        {"value_count_per_path", static_cast<uint64_t>(batch) * kLanes}
+    };
+    json timings = {{"buffer_allocation", allocation_s}, {"program_build", build_s}, {"h2d", h2d_s},
+        {"warmup", warmup_s}, {"fused_samples", fused_samples}, {"d2h", d2h_s}};
+    json work = {{"device_count", 1}, {"device_id", 0}, {"core_count", fused.metadata.cores},
+        {"available_core_count", fused.metadata.grid_x * fused.metadata.grid_y},
+        {"component_tiles", component_tiles}, {"layout", "step_major_planar_float32_tiles_32x32"},
+        {"work_split", "row_major"}, {"fused_dispatches_per_chain", 1},
+        {"arithmetic_path", "tensix_compute_sfpu"}, {"fused_accumulator_storage", "tensix_l1_ping_pong"},
+        {"synchronization_boundaries_per_sample", fused_only ? 1 : repeats + 1}};
+    if (!fused_only) {
+        auto [unfused_rotors, unfused_phases] = unpack_output(unfused_packed, batch);
+        write_words(workdir / outputs.at("unfused_rotors").get<std::string>(), unfused_rotors);
+        write_words(workdir / outputs.at("unfused_phases").get<std::string>(), unfused_phases);
+        output_identity["unfused_rotors_fnv1a64"] = fnv1a64(unfused_rotors);
+        output_identity["unfused_phases_fnv1a64"] = fnv1a64(unfused_phases);
+        timings["unfused_samples"] = unfused_samples;
+        timings["paired_order"] = order;
+        work["unfused_dispatches_per_chain"] = steps - 1;
+    }
 
     return {
         {"case_id", spec.at("case_id")}, {"B", batch}, {"K", steps},
-        {"repeat_count", repeats}, {"warmup_pairs", warmups}, {"samples", samples},
+        {"repeat_count", repeats}, {"warmup_count", warmups}, {"samples", samples},
         {"input_identity", {{"rotors_sha256", inputs.at("rotors_sha256")}, {"phases_sha256", inputs.at("phases_sha256")}}},
-        {"output_identity", {
-            {"fused_rotors_fnv1a64", fnv1a64(fused_rotors)}, {"fused_phases_fnv1a64", fnv1a64(fused_phases)},
-            {"unfused_rotors_fnv1a64", fnv1a64(unfused_rotors)}, {"unfused_phases_fnv1a64", fnv1a64(unfused_phases)},
-            {"value_count_per_path", static_cast<uint64_t>(batch) * kLanes}
-        }},
-        {"timings_s", {{"buffer_allocation", allocation_s}, {"program_build", build_s}, {"h2d", h2d_s},
-            {"warmup", warmup_s}, {"fused_samples", fused_samples}, {"unfused_samples", unfused_samples},
-            {"paired_order", order}, {"d2h", d2h_s}}},
-        {"work", {{"device_count", 1}, {"device_id", 0}, {"core_count", fused.metadata.cores},
-            {"available_core_count", fused.metadata.grid_x * fused.metadata.grid_y},
-            {"component_tiles", component_tiles}, {"layout", "step_major_planar_float32_tiles_32x32"},
-            {"work_split", "row_major"}, {"fused_dispatches_per_chain", 1},
-            {"unfused_dispatches_per_chain", steps - 1}, {"arithmetic_path", "tensix_compute_sfpu"},
-            {"fused_accumulator_storage", "tensix_l1_ping_pong"}}}
+        {"output_identity", output_identity}, {"timings_s", timings}, {"work", work}
     };
 }
 
@@ -434,19 +461,24 @@ int main(int argc, char** argv) {
         const json manifest = json::parse(read_text(manifest_path));
         if (manifest.value("schema", "") != kProtocol || manifest.value("workload", "") != "su2_compose" ||
             manifest.value("dtype", "") != "float32") throw std::runtime_error("unsupported SU2ComposeBench manifest");
+        const std::string benchmark_mode = manifest.value("benchmark_mode", "paired_comparison");
+        if (benchmark_mode != "fused_stability" && benchmark_mode != "paired_comparison" &&
+            benchmark_mode != "conformance") throw std::runtime_error("unsupported benchmark_mode");
+        const bool fused_only = benchmark_mode == "fused_stability";
 
         const auto process_start = Clock::now();
         const auto create_start = Clock::now();
         auto device = distributed::MeshDevice::create_unit_mesh(device_id);
         const double create_s = seconds_since(create_start);
         json cases = json::array();
-        for (const auto& spec : manifest.at("cases")) cases.push_back(run_case(device, workdir, spec));
+        for (const auto& spec : manifest.at("cases")) cases.push_back(run_case(device, workdir, spec, fused_only));
         const auto close_start = Clock::now();
         if (!device->close()) throw std::runtime_error("failed to close MeshDevice");
         const double close_s = seconds_since(close_start);
         const json metrics = {
             {"schema", kMetrics}, {"protocol", kProtocol}, {"backend", "tt-metalium-su2-compose-candidate"},
             {"device", "tenstorrent/wormhole-device-0"}, {"dtype", "float32"}, {"execution_kind", "hardware"},
+            {"benchmark_mode", benchmark_mode},
             {"implementation_class", kImplementation}, {"performance_eligible", kPerformanceEligible},
             {"stable_benchmark", false}, {"lifecycle", {{"device_count", 1}, {"device_id", 0}, {"create_count", 1}, {"close_count", 1}}},
             {"session_timings_s", {{"device_create", create_s}, {"device_close", close_s}, {"candidate_session", seconds_since(process_start)}}},
@@ -455,7 +487,9 @@ int main(int argc, char** argv) {
                 {"compiler_version", env_or_unknown("TT_RQM_COMPILER_VERSION")}, {"runtime_version", env_or_unknown("TT_RQM_RUNTIME_VERSION")},
                 {"build_id", env_or_unknown("TT_RQM_BUILD_ID")}, {"candidate_sha256", env_or_unknown("TT_RQM_CANDIDATE_SHA256")},
                 {"repository_commit", env_or_unknown("TT_RQM_REPOSITORY_COMMIT")},
-                {"timer_scope", "one persistent device session; paired prepared enqueue-through-Finish samples"}
+                {"timer_scope", fused_only
+                    ? "one persistent device session; fused-only prepared enqueue-through-one-Finish samples"
+                    : "one persistent device session; paired prepared enqueue-through-Finish samples"}
             }}
         };
         write_text(workdir / manifest.at("outputs").at("metrics").get<std::string>(), metrics.dump(2) + "\n");
