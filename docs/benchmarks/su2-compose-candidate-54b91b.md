@@ -42,6 +42,7 @@ scaling, or device-side Hamiltonian coefficient lowering.
 
 ## Retained evidence
 
+- [Machine-readable candidate-experiment manifest](../../benchmarks/manifests/su2-compose-candidate-54b91b-experiment.json)
 - [Conformance package](../../benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-conformance-1/)
 - [Conformance report](../../benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-conformance-1/conformance.md)
 - [Performance package](../../benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-experiment-1/)
@@ -51,6 +52,13 @@ Each package retains the candidate binary and SHA-256, source and environment
 provenance, device-health snapshots, raw reports, standard output and error,
 and an `artifacts.sha256` inventory. The conformance package also retains the
 interrupted performance attempt instead of concealing it.
+
+The manifest and `scripts/validate_su2_candidate_experiment.py` verify every
+retained package byte, candidate and source identities, recorded clean-tree and
+device-health evidence, report consistency, and the complete paired timing
+contract. The conformance package did not capture a separate execution-source
+status file; that historical provenance limitation is explicit in the manifest
+and is not reconstructed after the fact.
 
 ## Next gate
 

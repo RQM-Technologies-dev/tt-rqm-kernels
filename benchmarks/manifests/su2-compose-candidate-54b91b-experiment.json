@@ -1,0 +1,99 @@
+{
+  "benchmark_id": "wormhole-su2-compose-fp32",
+  "candidate": {
+    "collector_commit": "d02c37936317e23c6d10385a22648074f56107f7",
+    "compiler_first_line": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "device": "tenstorrent/wormhole-device-0",
+    "python_version": "Python 3.10.12",
+    "runtime_version": "tt-metal-dd2849b5",
+    "sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+    "source_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+    "torch_version": "2.13.0+cu130",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "claim": {
+    "designated_stability_session": false,
+    "performance_eligible": true,
+    "stable_benchmark": false
+  },
+  "classification": "diagnostic_not_release",
+  "experiment_id": "2026-07-15-n300-device0-candidate-54b91b",
+  "packages": [
+    {
+      "candidate_binary": "tt_rqm_metalium_su2_compose_candidate",
+      "canonical_report": "conformance.json",
+      "clean_records": [
+        "collector-repository-status.txt",
+        "tt-metal-status.txt"
+      ],
+      "documented_missing_records": [
+        "execution-source-status.txt"
+      ],
+      "exit_statuses": {
+        "conformance-exit-status.txt": 0,
+        "performance-exit-status.txt": 1
+      },
+      "health_pairs": [
+        {
+          "post": "post-conformance-device-health.txt",
+          "pre": "pre-device-health.txt"
+        },
+        {
+          "post": "post-performance-device-health.txt",
+          "pre": "pre-device-health.txt"
+        }
+      ],
+      "inventory_sha256": "a3bd3fe29745e7e426dfc420d8e07773eb17edbeb53fc2f736a07329bcfc10ff",
+      "path": "benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-conformance-1",
+      "provenance_limitation": "The package did not capture a separate execution-source status file; collector and TT-Metal clean-tree records are retained and the source commit is recorded.",
+      "retained_noncanonical_artifacts": [
+        "performance.json",
+        "performance.md",
+        "performance-run.stdout.txt",
+        "performance-run.stderr.txt",
+        "performance-candidate.stdout.txt",
+        "performance-candidate.stderr.txt"
+      ],
+      "role": "conformance"
+    },
+    {
+      "candidate_binary": "tt_rqm_metalium_su2_compose_candidate",
+      "canonical_report": "performance.json",
+      "clean_records": [
+        "collector-repository-status.txt",
+        "execution-source-status.txt",
+        "tt-metal-status.txt"
+      ],
+      "documented_missing_records": [],
+      "exit_statuses": {
+        "performance-exit-status.txt": 0
+      },
+      "health_pairs": [
+        {
+          "post": "post-performance-device-health.txt",
+          "pre": "pre-device-health.txt"
+        }
+      ],
+      "inventory_sha256": "0cf8cf9e84b01336db7a2cceff2ca568276d80e85f98cb8a1281a14dba437196",
+      "path": "benchmarks/raw/su2-compose/2026-07-15-n300-device0-candidate-54b91b-experiment-1",
+      "role": "performance"
+    }
+  ],
+  "performance_contract": {
+    "cases": [
+      {"B": 32768, "K": 8},
+      {"B": 8192, "K": 32},
+      {"B": 2048, "K": 128},
+      {"B": 512, "K": 512},
+      {"B": 1024, "K": 128},
+      {"B": 4096, "K": 128},
+      {"B": 16384, "K": 128},
+      {"B": 65536, "K": 128}
+    ],
+    "measured_pairs_per_case": 10,
+    "measured_path_observations_per_case": 20,
+    "paired_order": "alternating_fused_first_unfused_first",
+    "warmup_pairs_per_case": 2
+  },
+  "schema": "tt-rqm-su2-compose-candidate-experiment.v1"
+}
