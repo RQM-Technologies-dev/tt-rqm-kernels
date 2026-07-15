@@ -1,0 +1,27 @@
+{
+  "candidate": {
+    "path": "/home/user/su2-compose-build/tt_rqm_metalium_su2_compose_candidate",
+    "sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+    "source_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+    "source_tree_sha256": "6fdb52dec6c2de283bdc7e7a21351903ab3e8bd694f6acf27e161724ee2aeea8"
+  },
+  "captured_at_utc": "2026-07-15T02:28:43.656311+00:00",
+  "collector": {
+    "commit": "1becf1ac334f4894e15d1e310626f40bf4df3549",
+    "path": "/home/user/src/tt-rqm-kernels"
+  },
+  "host": "f05cs07",
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "profiler_environment": {
+    "TRACY_NO_INVARIANT_CHECK": "1",
+    "TT_METAL_DEVICE_PROFILER": "1",
+    "TT_METAL_PROFILER_MID_RUN_DUMP": "1",
+    "TT_METAL_RUNTIME_ROOT": "/home/user/src/tt-metal"
+  },
+  "python_version": "3.10.12",
+  "schema": "tt-rqm-su2-compose-profile-environment.v1",
+  "tt_metal": {
+    "commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+    "path": "/home/user/src/tt-metal"
+  }
+}

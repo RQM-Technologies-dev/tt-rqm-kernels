@@ -1,0 +1,149 @@
+{
+  "benchmark": "SU2ComposeBench",
+  "benchmark_stage": "profile",
+  "device": "tenstorrent/wormhole-device-0",
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "family": "SU2HamiltonianBench",
+  "generated_at_utc": "2026-07-15T02:30:33.752584+00:00",
+  "lifecycle": {
+    "close_count": 1,
+    "create_count": 1,
+    "device_count": 1,
+    "device_id": 0
+  },
+  "methodology_note": "Diagnostic Device Program Profiler and Tracy capture; one fused/unfused pair, no timing warmups, no stability or acceleration claim.",
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_measured_bandwidth_claim",
+    "no_full_device_side_hamiltonian_lowering_claim"
+  ],
+  "performance_eligible": true,
+  "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+  "protocol": "tt-rqm-external-su2-compose-persistent.v1",
+  "provenance": {
+    "candidate": {
+      "build_id": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+      "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+      "chip_type": "wormhole_b0",
+      "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+      "runtime_version": "tt-metal-dd2849b5",
+      "timer_scope": "one persistent device session; paired prepared enqueue-through-Finish samples",
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+    },
+    "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+    "repository_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7"
+  },
+  "python_version": "3.10.12",
+  "results": [
+    {
+      "B": 8192,
+      "K": 32,
+      "candidate_metadata": {
+        "arithmetic_path": "tensix_compute_sfpu",
+        "available_core_count": 56,
+        "component_tiles": 8,
+        "core_count": 8,
+        "device_count": 1,
+        "device_id": 0,
+        "fused_accumulator_storage": "tensix_l1_ping_pong",
+        "fused_dispatches_per_chain": 1,
+        "layout": "step_major_planar_float32_tiles_32x32",
+        "unfused_dispatches_per_chain": 31,
+        "work_split": "row_major"
+      },
+      "case_id": "su2-f32-seed-0-b-8192-k-32-ca915ad4461d-026fee0c3a38",
+      "comparison": {
+        "fused_logical_bytes": 6488064,
+        "fused_over_unfused_median": 1.0073291832864533,
+        "qmul_per_s_fused": 6346799.964661136,
+        "steps_per_s_fused": 6551535.4473921405,
+        "trajectories_per_s_fused": 204735.4827310044,
+        "unfused_logical_bytes": 18284544
+      },
+      "cpu_oracle_max_abs_error": 7.221139395610517e-15,
+      "end_to_end_matrix_max_abs_error": 9.306866930755009e-07,
+      "fused": {
+        "correctness": {
+          "bloch_norm_drift": 1.9001566057275099e-06,
+          "failing_values": 0,
+          "max_abs_error": 7.395548915489769e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 6.782865265009264e-07,
+          "quaternion_norm_drift": 7.840253242186179e-07,
+          "rms_error": 1.0379131294962449e-07,
+          "su2_determinant_error": 1.5680512632787469e-06,
+          "u2_phase_consistency_error": 1.5680510662357454e-06,
+          "unitarity_frobenius_error": 2.6872272426881844e-06,
+          "validated_values": 49152
+        },
+        "timing_s": {
+          "median": 0.040012605,
+          "p95": 0.040012605,
+          "samples": [
+            0.040012605
+          ]
+        }
+      },
+      "input_hashes": {
+        "phases_sha256": "026fee0c3a38a197c1ae35b41f9f08929849c6ad27bc7bb7251a5373fdfe58e2",
+        "rotors_sha256": "ca915ad4461d4dae81239aa1ab1ad1efc49bdf58866795fcdea70a7505ab3998"
+      },
+      "performance_eligible": true,
+      "raw_candidate_timings_s": {
+        "buffer_allocation": 0.000241148,
+        "d2h": 0.001006199,
+        "fused_samples": [
+          0.040012605
+        ],
+        "h2d": 0.010219108,
+        "paired_order": [
+          "fused_first"
+        ],
+        "program_build": 0.001009039,
+        "unfused_samples": [
+          0.039721479
+        ],
+        "warmup": 5e-08
+      },
+      "repeat_count": 1,
+      "samples": 1,
+      "stable_benchmark": false,
+      "unfused": {
+        "correctness": {
+          "bloch_norm_drift": 1.9001566057275099e-06,
+          "failing_values": 0,
+          "max_abs_error": 7.395548915489769e-07,
+          "nonfinite_values": 0,
+          "phase_norm_drift": 6.782865265009264e-07,
+          "quaternion_norm_drift": 7.840253242186179e-07,
+          "rms_error": 1.0379131294962449e-07,
+          "su2_determinant_error": 1.5680512632787469e-06,
+          "u2_phase_consistency_error": 1.5680510662357454e-06,
+          "unitarity_frobenius_error": 2.6872272426881844e-06,
+          "validated_values": 49152
+        },
+        "timing_s": {
+          "median": 0.039721479,
+          "p95": 0.039721479,
+          "samples": [
+            0.039721479
+          ]
+        }
+      },
+      "warmup_pairs": 0
+    }
+  ],
+  "schema": "tt-rqm-su2-compose-report.v1",
+  "seed": 0,
+  "session_timing": {
+    "candidate_session": 2.54266704,
+    "device_close": 0.252011631,
+    "device_create": 2.144921384,
+    "host_process_end_to_end": 3.190290988990455
+  },
+  "stable_benchmark": false
+}

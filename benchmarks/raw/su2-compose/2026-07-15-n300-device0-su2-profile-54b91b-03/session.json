@@ -1,0 +1,54 @@
+{
+  "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+  "cases": [
+    {
+      "B": 32768,
+      "K": 8,
+      "core_count": 32,
+      "id": "b32768-k8-many-trajectories-short-chain",
+      "status": "passed"
+    },
+    {
+      "B": 8192,
+      "K": 32,
+      "core_count": 8,
+      "id": "b8192-k32-balanced",
+      "status": "passed"
+    },
+    {
+      "B": 512,
+      "K": 512,
+      "core_count": 1,
+      "id": "b512-k512-one-core-long-chain",
+      "status": "passed"
+    },
+    {
+      "B": 65536,
+      "K": 128,
+      "core_count": 56,
+      "id": "b65536-k128-large-batch-56-core",
+      "status": "passed"
+    }
+  ],
+  "classification": "diagnostic_not_stability_evidence",
+  "collection_status": "passed",
+  "device_id": 0,
+  "failure": null,
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_speedup_claim",
+    "no_measured_bandwidth_claim",
+    "no_application_claim"
+  ],
+  "not_observable": [
+    "circular-buffer wait counters",
+    "SFPU utilization counters"
+  ],
+  "schema": "tt-rqm-su2-compose-profile-session.v1",
+  "session_id": "2026-07-15-n300-device0-su2-profile-54b91b-03",
+  "source_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+  "source_tree_sha256": "6fdb52dec6c2de283bdc7e7a21351903ab3e8bd694f6acf27e161724ee2aeea8",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

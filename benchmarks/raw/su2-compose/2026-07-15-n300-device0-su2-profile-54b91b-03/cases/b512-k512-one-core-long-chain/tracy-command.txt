@@ -1,0 +1,1 @@
+/home/user/src/tt-metal/build_n300/tools/profiler/bin/tracy-capture -o /home/user/su2-profile-evidence/2026-07-15-n300-device0-su2-profile-54b91b-03/cases/b512-k512-one-core-long-chain/profiler/b512-k512-one-core-long-chain.tracy

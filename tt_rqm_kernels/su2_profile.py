@@ -23,6 +23,8 @@ from tt_rqm_kernels.hardware_session import compare_device_health, validate_devi
 
 COLLECTION_SCHEMA = "tt-rqm-su2-compose-profile-session.v1"
 PROCESSED_SCHEMA = "tt-rqm-su2-compose-profile-attribution.v1"
+EVIDENCE_MANIFEST_SCHEMA = "tt-rqm-su2-compose-profile-evidence.v1"
+DEFAULT_EVIDENCE_MANIFEST = Path("benchmarks/manifests/su2-compose-profile-54b91b.json")
 EXPECTED_CANDIDATE_SHA256 = "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16"
 EXPECTED_SOURCE_COMMIT = "3238299a9eea2a44dccd6826a947cac3266dd2f7"
 EXPECTED_TT_METAL_COMMIT = "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
@@ -44,6 +46,183 @@ ROLE_BY_PROCESSOR = {
 
 class SU2ProfileError(ValueError):
     """Raised when a profiler capture is incomplete or internally inconsistent."""
+
+
+def validate_profile_evidence(
+    manifest_path: Path = DEFAULT_EVIDENCE_MANIFEST, *, repo_root: Path | None = None
+) -> dict[str, Any]:
+    """Validate all retained failed attempts and the complete profiler session."""
+
+    root = (repo_root or Path.cwd()).resolve()
+    path = (
+        manifest_path.resolve() if manifest_path.is_absolute() else (root / manifest_path).resolve()
+    )
+    _require(path.is_relative_to(root) and path.is_file(), "profile evidence manifest is missing")
+    manifest = json.loads(path.read_text())
+    _require(manifest.get("schema") == EVIDENCE_MANIFEST_SCHEMA, "profile evidence schema mismatch")
+    _require(
+        manifest.get("candidate_sha256") == EXPECTED_CANDIDATE_SHA256, "profile candidate mismatch"
+    )
+    _require(manifest.get("stable_benchmark") is False, "profile evidence cannot be stable")
+    attempts = manifest.get("attempts")
+    _require(
+        isinstance(attempts, list) and len(attempts) == 3,
+        "exactly three retained profiler attempts required",
+    )
+    passed = 0
+    for attempt in attempts:
+        _require(isinstance(attempt, dict), "profile attempt must be an object")
+        relative = Path(str(attempt.get("path", "")))
+        _require(
+            not relative.is_absolute() and ".." not in relative.parts, "unsafe profile attempt path"
+        )
+        directory = (root / relative).resolve()
+        _require(
+            directory.is_relative_to(root) and directory.is_dir(),
+            "profile attempt directory missing",
+        )
+        inventory = directory / "artifacts.sha256"
+        _require(inventory.is_file(), "profile attempt inventory missing")
+        _require(
+            sha256_file(inventory) == attempt.get("inventory_sha256"),
+            "profile inventory SHA-256 mismatch",
+        )
+        _validate_artifact_inventory(directory)
+        session = json.loads((directory / "session.json").read_text())
+        expected_status = attempt.get("status")
+        _require(
+            session.get("collection_status") == expected_status, "profile attempt status mismatch"
+        )
+        _require(session.get("stable_benchmark") is False, "profile attempt cannot be stable")
+        _require(
+            session.get("candidate_sha256") == EXPECTED_CANDIDATE_SHA256,
+            "profile session candidate mismatch",
+        )
+        _require(session.get("source_commit") == EXPECTED_SOURCE_COMMIT, "profile source mismatch")
+        _require(
+            session.get("tt_metal_commit") == EXPECTED_TT_METAL_COMMIT, "profile TT-Metal mismatch"
+        )
+        if expected_status == "failed":
+            _require(
+                isinstance(session.get("failure"), str) and session["failure"],
+                "failed attempt lacks failure",
+            )
+            continue
+        _require(expected_status == "passed", "unsupported profile attempt status")
+        passed += 1
+        _validate_passed_profile_session(directory, session)
+    _require(passed == 1, "exactly one complete profiler attempt required")
+    return manifest
+
+
+def _validate_artifact_inventory(directory: Path) -> None:
+    inventory = directory / "artifacts.sha256"
+    entries: dict[str, str] = {}
+    for line in inventory.read_text().splitlines():
+        match = re.fullmatch(r"([0-9a-f]{64})  \./(.+)", line)
+        _require(match is not None, "invalid profile inventory line")
+        expected, relative = match.groups()
+        path = Path(relative)
+        _require(not path.is_absolute() and ".." not in path.parts, "unsafe profile inventory path")
+        _require(relative not in entries, "duplicate profile inventory path")
+        artifact = directory / path
+        _require(
+            artifact.is_file() and not artifact.is_symlink(),
+            f"missing profile artifact: {relative}",
+        )
+        _require(
+            sha256_file(artifact) == expected, f"profile artifact SHA-256 mismatch: {relative}"
+        )
+        entries[relative] = expected
+    observed = {
+        path.relative_to(directory).as_posix()
+        for path in directory.rglob("*")
+        if path.is_file() and path != inventory
+    }
+    _require(set(entries) == observed, "profile inventory coverage mismatch")
+
+
+def _validate_passed_profile_session(directory: Path, session: Mapping[str, Any]) -> None:
+    expected_cases = [
+        {
+            "id": f"b{batch}-k{steps}-{label}",
+            "B": batch,
+            "K": steps,
+            "core_count": cores,
+            "status": "passed",
+        }
+        for label, batch, steps, cores in PROFILE_CASES
+    ]
+    _require(session.get("cases") == expected_cases, "profile case contract mismatch")
+    processed, markdown = process_profile_session(directory)
+    committed = json.loads((directory / "profile-attribution.json").read_text())
+    _require(committed == processed, "profile attribution is not deterministic")
+    _require(
+        (directory / "profile-attribution.md").read_text() == markdown,
+        "profile markdown is not deterministic",
+    )
+    _require(
+        committed.get("architecture_decision") == "retain_exact_candidate",
+        "profile candidate decision mismatch",
+    )
+    for label, batch, steps, cores in PROFILE_CASES:
+        case_id = f"b{batch}-k{steps}-{label}"
+        case_dir = directory / "cases" / case_id
+        pre = (case_dir / "pre-device-health.txt").read_text()
+        post = (case_dir / "post-device-health.txt").read_text()
+        validate_device_health(pre, device_id=0)
+        validate_device_health(post, device_id=0)
+        compare_device_health(pre, post, device_id=0)
+        for status_name in (
+            "runner.exit-status.txt",
+            "profiler/tracy-capture.exit-status.txt",
+            "profiler/tracy-zone-events.csv.exit-status.txt",
+            "profiler/tracy-zone-statistics.csv.exit-status.txt",
+            "profiler/tracy-messages.csv.exit-status.txt",
+        ):
+            _require(
+                (case_dir / status_name).read_text().strip() == "0",
+                f"failed profile command: {status_name}",
+            )
+        report = json.loads((case_dir / "report.json").read_text())
+        _require(report.get("benchmark_stage") == "profile", "profile report stage mismatch")
+        _require(report.get("stable_benchmark") is False, "profile report cannot be stable")
+        _require(report.get("execution_label") == "hardware", "profile report is not hardware")
+        _require(
+            report.get("lifecycle")
+            == {"close_count": 1, "create_count": 1, "device_count": 1, "device_id": 0},
+            "profile lifecycle mismatch",
+        )
+        candidate = report["provenance"]["candidate"]
+        _require(
+            candidate.get("candidate_sha256") == EXPECTED_CANDIDATE_SHA256,
+            "profile report candidate mismatch",
+        )
+        _require(
+            candidate.get("repository_commit") == EXPECTED_SOURCE_COMMIT,
+            "profile report source mismatch",
+        )
+        _require(
+            candidate.get("tt_metal_commit") == EXPECTED_TT_METAL_COMMIT,
+            "profile report TT-Metal mismatch",
+        )
+        result = report["results"][0]
+        _require((result["B"], result["K"]) == (batch, steps), "profile report case mismatch")
+        _require(
+            result["warmup_pairs"] == 0 and result["samples"] == 1,
+            "profile report timing contract mismatch",
+        )
+        _require(
+            result["candidate_metadata"]["core_count"] == cores, "profile report core mismatch"
+        )
+        for path_name in ("fused", "unfused"):
+            correctness = result[path_name]["correctness"]
+            _require(
+                correctness["failing_values"] == correctness["nonfinite_values"] == 0,
+                "profile correctness failure",
+            )
+        trace = case_dir / "profiler" / f"{case_id}.tracy"
+        _require(trace.is_file() and trace.stat().st_size > 0, "profile Tracy trace missing")
 
 
 def sha256_file(path: Path) -> str:
@@ -562,6 +741,17 @@ def process_profile_session(session_dir: Path) -> tuple[dict[str, Any], str]:
         host = parse_tracy_statistics(
             case_dir / "profiler/tracy-zone-statistics.csv", timed_pair_s=timed_pair_s
         )
+        fused_path = device["paths"]["fused"]
+        fused_role_cycles = {
+            "reader": fused_path["roles"]["reader"]["median_of_core_maxima_cycles"],
+            "compute": max(
+                fused_path["roles"][role]["median_of_core_maxima_cycles"]
+                for role in ("compute_unpack", "compute_math", "compute_pack")
+            ),
+            "writer": fused_path["roles"]["writer"]["median_of_core_maxima_cycles"],
+        }
+        ordered_roles = sorted(fused_role_cycles.items(), key=lambda value: value[1], reverse=True)
+        fused_margin = (ordered_roles[0][1] - ordered_roles[1][1]) / ordered_roles[0][1]
         cases.append(
             {
                 "id": case_id,
@@ -572,11 +762,20 @@ def process_profile_session(session_dir: Path) -> tuple[dict[str, Any], str]:
                 "host": host,
                 "fused_s": float(result["fused"]["timing_s"]["median"]),
                 "unfused_s": float(result["unfused"]["timing_s"]["median"]),
+                "fused_critical_role_margin_fraction": fused_margin,
                 "stable_benchmark": False,
             }
         )
     fused_roles = [case["device"]["paths"]["fused"]["critical_device_role"] for case in cases]
     primary = max(set(fused_roles), key=lambda role: (fused_roles.count(role), role))
+    fully_overlapped = all(
+        case["device"]["paths"]["fused"]["all_role_overlap_dispatch_fraction"] == 1.0
+        for case in cases
+    )
+    marginal_role_difference = (
+        max(case["fused_critical_role_margin_fraction"] for case in cases) < 0.05
+    )
+    retain_candidate = fully_overlapped and marginal_role_difference
     payload = {
         "schema": PROCESSED_SCHEMA,
         "classification": "diagnostic_not_stability_evidence",
@@ -587,7 +786,14 @@ def process_profile_session(session_dir: Path) -> tuple[dict[str, Any], str]:
         "cases": cases,
         "fused_primary_device_role": primary,
         "circular_buffer_waits": "not_observable_with_pinned_profiler",
-        "architecture_decision": "pending_review",
+        "architecture_decision": (
+            "retain_exact_candidate" if retain_candidate else "architecture_review_required"
+        ),
+        "architecture_decision_rationale": (
+            "Reader, compute, and writer scopes overlap for every fused dispatch; the longest role is less than five percent beyond the next-longest role in every case, so the profile does not isolate a semantics-preserving architectural correction."
+            if retain_candidate
+            else "The profiler attribution requires a targeted architecture review before candidate freeze."
+        ),
         "nonclaims": [
             "no_stability_claim",
             "no_acceleration_claim",
@@ -616,6 +822,12 @@ def process_profile_session(session_dir: Path) -> tuple[dict[str, Any], str]:
         [
             "",
             f"The most frequent fused critical device role is `{primary}`. Reader, compute, and writer KERNEL scopes are reported separately in the machine-readable artifact.",
+            "",
+            (
+                "Reader, compute, and writer scopes overlap in every fused dispatch, and the marginally longest role is less than five percent beyond the next-longest role in every case. No isolated architectural correction is supported, so the exact `54b91b…` candidate is retained for the new stability contract."
+                if retain_candidate
+                else "The attribution requires an architecture correction before a stability candidate is frozen."
+            ),
             "",
             "The pinned profiler does not expose direct circular-buffer wait or SFPU-utilization counters. Their absence is not interpreted as zero wait or full utilization.",
             "",

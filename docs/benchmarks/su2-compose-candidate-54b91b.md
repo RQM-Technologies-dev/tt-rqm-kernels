@@ -62,7 +62,19 @@ and is not reconstructed after the fact.
 
 ## Next gate
 
-Before a future Level 2 claim, explicitly select one candidate identity and
-freeze a new or recovered preregistration. Then collect three designated,
-independent cold-start sessions under that identical contract and run the
-deterministic qualifier. Individual reports remain `stable_benchmark=false`.
+Device Program Profiler and Tracy evidence now covers four representative
+cases: many trajectories with a short chain, balanced work, a one-core long
+chain, and 56-core large-batch execution. Reader, compute, and writer scopes
+overlap in every fused dispatch. The writer scope is marginally longest, but it
+is less than five percent beyond the next-longest role in every case, so the
+profile does not isolate a semantics-preserving architectural correction.
+Circular-buffer wait and SFPU-utilization counters are not observable in the
+pinned profiler.
+
+The exact `54b91b…` candidate is therefore retained. See the
+[profiler evidence manifest](../../benchmarks/manifests/su2-compose-profile-54b91b.json)
+and [processed attribution](../../benchmarks/raw/su2-compose/2026-07-15-n300-device0-su2-profile-54b91b-03/profile-attribution.md).
+The next gate is to freeze a new hash-bound stability preregistration before
+collecting three fresh designated cold-start sessions. The retained experiment
+and profiler captures are not designated sessions, and every individual report
+remains `stable_benchmark=false`.

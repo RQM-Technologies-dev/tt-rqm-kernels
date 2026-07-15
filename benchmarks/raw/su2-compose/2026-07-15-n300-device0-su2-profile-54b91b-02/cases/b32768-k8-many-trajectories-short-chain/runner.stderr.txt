@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/user/src/tt-rqm-kernels/scripts/run_su2_compose_profile_case.py", line 56, in <module>
+    raise SystemExit(main())
+  File "/home/user/src/tt-rqm-kernels/scripts/run_su2_compose_profile_case.py", line 35, in main
+    report = run_su2_compose(
+  File "/home/user/src/tt-rqm-kernels/tt_rqm_kernels/backends/tenstorrent/su2_compose_persistent.py", line 178, in run_su2_compose
+    normalized = validate_su2_metrics(metrics, manifest, candidate_hash, host_s)
+  File "/home/user/src/tt-rqm-kernels/tt_rqm_kernels/backends/tenstorrent/su2_compose_persistent.py", line 396, in validate_su2_metrics
+    raise IntegrityError(f"missing provenance.{key}")
+tt_rqm_kernels.benchmark_integrity.IntegrityError: missing provenance.chip_type

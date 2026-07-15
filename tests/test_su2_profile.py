@@ -6,7 +6,16 @@ import pytest
 
 from tt_rqm_kernels.backends.tenstorrent.su2_compose_persistent import run_su2_compose
 from tt_rqm_kernels.benchmark_integrity import IntegrityError
-from tt_rqm_kernels.su2_profile import SU2ProfileError, parse_device_profile, parse_tracy_statistics
+from tt_rqm_kernels.su2_profile import (
+    DEFAULT_EVIDENCE_MANIFEST,
+    SU2ProfileError,
+    parse_device_profile,
+    parse_tracy_statistics,
+    validate_profile_evidence,
+)
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 PROCESSORS = ("BRISC", "TRISC_0", "TRISC_1", "TRISC_2", "NCRISC")
@@ -71,3 +80,12 @@ def test_custom_su2_cases_are_profile_only() -> None:
             methodology_note="test",
             case_specs=((32, 8, 1, 0, 1),),
         )
+
+
+def test_retained_su2_profile_evidence_validates() -> None:
+    manifest = validate_profile_evidence(ROOT / DEFAULT_EVIDENCE_MANIFEST, repo_root=ROOT)
+    assert [attempt["status"] for attempt in manifest["attempts"]] == [
+        "failed",
+        "failed",
+        "passed",
+    ]

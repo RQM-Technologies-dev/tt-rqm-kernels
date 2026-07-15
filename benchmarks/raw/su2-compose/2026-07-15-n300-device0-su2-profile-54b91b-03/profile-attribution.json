@@ -1,0 +1,425 @@
+{
+  "architecture_decision": "retain_exact_candidate",
+  "architecture_decision_rationale": "Reader, compute, and writer scopes overlap for every fused dispatch; the longest role is less than five percent beyond the next-longest role in every case, so the profile does not isolate a semantics-preserving architectural correction.",
+  "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+  "cases": [
+    {
+      "B": 32768,
+      "K": 8,
+      "core_count": 32,
+      "device": {
+        "circular_buffer_waits": "not_observable",
+        "dispatch_count": 8,
+        "expected_dispatch_count": 8,
+        "fused_dispatch_count": 1,
+        "paths": {
+          "fused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 1,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 94557.0,
+                "median_of_core_maxima_cycles": 94557.0,
+                "median_of_core_medians_cycles": 91150.5
+              },
+              "compute_pack": {
+                "maximum_cycles": 93843.0,
+                "median_of_core_maxima_cycles": 93843.0,
+                "median_of_core_medians_cycles": 90428.5
+              },
+              "compute_unpack": {
+                "maximum_cycles": 94088.0,
+                "median_of_core_maxima_cycles": 94088.0,
+                "median_of_core_medians_cycles": 90669.5
+              },
+              "reader": {
+                "maximum_cycles": 70719.0,
+                "median_of_core_maxima_cycles": 70719.0,
+                "median_of_core_medians_cycles": 66976.5
+              },
+              "writer": {
+                "maximum_cycles": 95798.0,
+                "median_of_core_maxima_cycles": 95798.0,
+                "median_of_core_medians_cycles": 92591.5
+              }
+            }
+          },
+          "unfused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 7,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 21590.0,
+                "median_of_core_maxima_cycles": 20897.0,
+                "median_of_core_medians_cycles": 19608.5
+              },
+              "compute_pack": {
+                "maximum_cycles": 19939.0,
+                "median_of_core_maxima_cycles": 19259.0,
+                "median_of_core_medians_cycles": 17964.5
+              },
+              "compute_unpack": {
+                "maximum_cycles": 21101.0,
+                "median_of_core_maxima_cycles": 20380.0,
+                "median_of_core_medians_cycles": 19102.0
+              },
+              "reader": {
+                "maximum_cycles": 9507.0,
+                "median_of_core_maxima_cycles": 8817.0,
+                "median_of_core_medians_cycles": 7558.5
+              },
+              "writer": {
+                "maximum_cycles": 21855.0,
+                "median_of_core_maxima_cycles": 21186.0,
+                "median_of_core_medians_cycles": 20046.0
+              }
+            }
+          }
+        },
+        "unfused_dispatch_count": 7
+      },
+      "fused_critical_role_margin_fraction": 0.012954341426752124,
+      "fused_s": 0.032613195,
+      "host": {
+        "direct_dispatch_and_finish_fraction_of_timed_pair": 0.1680334636543594,
+        "timed_pair_s": 0.066898133,
+        "zones": {
+          "EnqueueProgram": {
+            "count": 8,
+            "total_ns": 1002649
+          },
+          "FDMeshCommandQueue::finish": {
+            "count": 5,
+            "total_ns": 10238476
+          },
+          "FDMeshCommandQueue::finish_nolock": {
+            "count": 145,
+            "total_ns": 8131567
+          }
+        }
+      },
+      "id": "b32768-k8-many-trajectories-short-chain",
+      "stable_benchmark": false,
+      "unfused_s": 0.034284938
+    },
+    {
+      "B": 8192,
+      "K": 32,
+      "core_count": 8,
+      "device": {
+        "circular_buffer_waits": "not_observable",
+        "dispatch_count": 32,
+        "expected_dispatch_count": 32,
+        "fused_dispatch_count": 1,
+        "paths": {
+          "fused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 1,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 370564.0,
+                "median_of_core_maxima_cycles": 370564.0,
+                "median_of_core_medians_cycles": 370252.0
+              },
+              "compute_pack": {
+                "maximum_cycles": 369841.0,
+                "median_of_core_maxima_cycles": 369841.0,
+                "median_of_core_medians_cycles": 369541.5
+              },
+              "compute_unpack": {
+                "maximum_cycles": 370097.0,
+                "median_of_core_maxima_cycles": 370097.0,
+                "median_of_core_medians_cycles": 369799.5
+              },
+              "reader": {
+                "maximum_cycles": 346228.0,
+                "median_of_core_maxima_cycles": 346228.0,
+                "median_of_core_medians_cycles": 345856.0
+              },
+              "writer": {
+                "maximum_cycles": 371012.0,
+                "median_of_core_maxima_cycles": 371012.0,
+                "median_of_core_medians_cycles": 370723.5
+              }
+            }
+          },
+          "unfused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 31,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 15081.0,
+                "median_of_core_maxima_cycles": 14855.0,
+                "median_of_core_medians_cycles": 14715.5
+              },
+              "compute_pack": {
+                "maximum_cycles": 13431.0,
+                "median_of_core_maxima_cycles": 13200.0,
+                "median_of_core_medians_cycles": 13069.0
+              },
+              "compute_unpack": {
+                "maximum_cycles": 14578.0,
+                "median_of_core_maxima_cycles": 14369.0,
+                "median_of_core_medians_cycles": 14209.5
+              },
+              "reader": {
+                "maximum_cycles": 3024.0,
+                "median_of_core_maxima_cycles": 2786.0,
+                "median_of_core_medians_cycles": 2639.5
+              },
+              "writer": {
+                "maximum_cycles": 15373.0,
+                "median_of_core_maxima_cycles": 15174.0,
+                "median_of_core_medians_cycles": 14992.5
+              }
+            }
+          }
+        },
+        "unfused_dispatch_count": 31
+      },
+      "fused_critical_role_margin_fraction": 0.0012075081129451339,
+      "fused_s": 0.040012605,
+      "host": {
+        "direct_dispatch_and_finish_fraction_of_timed_pair": 0.15223385522306873,
+        "timed_pair_s": 0.079734084,
+        "zones": {
+          "EnqueueProgram": {
+            "count": 32,
+            "total_ns": 2198348
+          },
+          "FDMeshCommandQueue::finish": {
+            "count": 5,
+            "total_ns": 9939879
+          },
+          "FDMeshCommandQueue::finish_nolock": {
+            "count": 169,
+            "total_ns": 8966254
+          }
+        }
+      },
+      "id": "b8192-k32-balanced",
+      "stable_benchmark": false,
+      "unfused_s": 0.039721479
+    },
+    {
+      "B": 512,
+      "K": 512,
+      "core_count": 1,
+      "device": {
+        "circular_buffer_waits": "not_observable",
+        "dispatch_count": 512,
+        "expected_dispatch_count": 512,
+        "fused_dispatch_count": 1,
+        "paths": {
+          "fused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 1,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 6023068.0,
+                "median_of_core_maxima_cycles": 6023068.0,
+                "median_of_core_medians_cycles": 6023068.0
+              },
+              "compute_pack": {
+                "maximum_cycles": 6022345.0,
+                "median_of_core_maxima_cycles": 6022345.0,
+                "median_of_core_medians_cycles": 6022345.0
+              },
+              "compute_unpack": {
+                "maximum_cycles": 6022591.0,
+                "median_of_core_maxima_cycles": 6022591.0,
+                "median_of_core_medians_cycles": 6022591.0
+              },
+              "reader": {
+                "maximum_cycles": 5998564.0,
+                "median_of_core_maxima_cycles": 5998564.0,
+                "median_of_core_medians_cycles": 5998564.0
+              },
+              "writer": {
+                "maximum_cycles": 6023379.0,
+                "median_of_core_maxima_cycles": 6023379.0,
+                "median_of_core_medians_cycles": 6023379.0
+              }
+            }
+          },
+          "unfused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 511,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 14510.0,
+                "median_of_core_maxima_cycles": 14393.0,
+                "median_of_core_medians_cycles": 14393.0
+              },
+              "compute_pack": {
+                "maximum_cycles": 12843.0,
+                "median_of_core_maxima_cycles": 12741.0,
+                "median_of_core_medians_cycles": 12741.0
+              },
+              "compute_unpack": {
+                "maximum_cycles": 13992.0,
+                "median_of_core_maxima_cycles": 13882.0,
+                "median_of_core_medians_cycles": 13882.0
+              },
+              "reader": {
+                "maximum_cycles": 2411.0,
+                "median_of_core_maxima_cycles": 2309.0,
+                "median_of_core_medians_cycles": 2309.0
+              },
+              "writer": {
+                "maximum_cycles": 14869.0,
+                "median_of_core_maxima_cycles": 14669.0,
+                "median_of_core_medians_cycles": 14669.0
+              }
+            }
+          }
+        },
+        "unfused_dispatch_count": 511
+      },
+      "fused_critical_role_margin_fraction": 5.1632148666056045e-05,
+      "fused_s": 0.043441938,
+      "host": {
+        "direct_dispatch_and_finish_fraction_of_timed_pair": 0.36918200681064184,
+        "timed_pair_s": 0.106441363,
+        "zones": {
+          "EnqueueProgram": {
+            "count": 512,
+            "total_ns": 31406123
+          },
+          "FDMeshCommandQueue::finish": {
+            "count": 5,
+            "total_ns": 7890113
+          },
+          "FDMeshCommandQueue::finish_nolock": {
+            "count": 649,
+            "total_ns": 30086222
+          }
+        }
+      },
+      "id": "b512-k512-one-core-long-chain",
+      "stable_benchmark": false,
+      "unfused_s": 0.062999425
+    },
+    {
+      "B": 65536,
+      "K": 128,
+      "core_count": 56,
+      "device": {
+        "circular_buffer_waits": "not_observable",
+        "dispatch_count": 128,
+        "expected_dispatch_count": 128,
+        "fused_dispatch_count": 1,
+        "paths": {
+          "fused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 1,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 3016067.0,
+                "median_of_core_maxima_cycles": 3016067.0,
+                "median_of_core_medians_cycles": 1510800.5
+              },
+              "compute_pack": {
+                "maximum_cycles": 3015360.0,
+                "median_of_core_maxima_cycles": 3015360.0,
+                "median_of_core_medians_cycles": 1510086.0
+              },
+              "compute_unpack": {
+                "maximum_cycles": 3015586.0,
+                "median_of_core_maxima_cycles": 3015586.0,
+                "median_of_core_medians_cycles": 1510343.5
+              },
+              "reader": {
+                "maximum_cycles": 2991508.0,
+                "median_of_core_maxima_cycles": 2991508.0,
+                "median_of_core_medians_cycles": 1486459.0
+              },
+              "writer": {
+                "maximum_cycles": 3016293.0,
+                "median_of_core_maxima_cycles": 3016293.0,
+                "median_of_core_medians_cycles": 1511624.0
+              }
+            }
+          },
+          "unfused": {
+            "all_role_overlap_dispatch_fraction": 1.0,
+            "critical_device_role": "writer",
+            "dispatch_count": 127,
+            "roles": {
+              "compute_math": {
+                "maximum_cycles": 41317.0,
+                "median_of_core_maxima_cycles": 40098.0,
+                "median_of_core_medians_cycles": 24547.0
+              },
+              "compute_pack": {
+                "maximum_cycles": 39788.0,
+                "median_of_core_maxima_cycles": 38472.0,
+                "median_of_core_medians_cycles": 22906.0
+              },
+              "compute_unpack": {
+                "maximum_cycles": 40914.0,
+                "median_of_core_maxima_cycles": 39581.0,
+                "median_of_core_medians_cycles": 24046.5
+              },
+              "reader": {
+                "maximum_cycles": 24861.0,
+                "median_of_core_maxima_cycles": 22123.0,
+                "median_of_core_medians_cycles": 12486.0
+              },
+              "writer": {
+                "maximum_cycles": 41633.0,
+                "median_of_core_maxima_cycles": 40423.0,
+                "median_of_core_medians_cycles": 24917.5
+              }
+            }
+          }
+        },
+        "unfused_dispatch_count": 127
+      },
+      "fused_critical_role_margin_fraction": 7.492640801142329e-05,
+      "fused_s": 0.04138749,
+      "host": {
+        "direct_dispatch_and_finish_fraction_of_timed_pair": 0.2387283625083252,
+        "timed_pair_s": 0.096470921,
+        "zones": {
+          "EnqueueProgram": {
+            "count": 128,
+            "total_ns": 13502419
+          },
+          "FDMeshCommandQueue::finish": {
+            "count": 5,
+            "total_ns": 9527926
+          },
+          "FDMeshCommandQueue::finish_nolock": {
+            "count": 265,
+            "total_ns": 18311748
+          }
+        }
+      },
+      "id": "b65536-k128-large-batch-56-core",
+      "stable_benchmark": false,
+      "unfused_s": 0.055083431
+    }
+  ],
+  "circular_buffer_waits": "not_observable_with_pinned_profiler",
+  "classification": "diagnostic_not_stability_evidence",
+  "fused_primary_device_role": "writer",
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_speedup_claim",
+    "no_measured_bandwidth_claim",
+    "no_application_claim"
+  ],
+  "schema": "tt-rqm-su2-compose-profile-attribution.v1",
+  "source_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

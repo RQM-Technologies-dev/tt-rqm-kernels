@@ -62,6 +62,7 @@ jobs:
         run: |
           python scripts/validate_su2_compose_preregistration.py
           python scripts/validate_su2_candidate_experiment.py
+          python scripts/validate_su2_compose_profile.py
           python scripts/validate_su2_compose_stability_preregistration.py
           python scripts/validate_su2_compose_release.py
           python scripts/reproduce_wormhole_su2_compose.py --check

@@ -1,0 +1,20 @@
+MessageName,total_ns
+perf_event_paranoid: 4,217686489
+tracefs path: /sys/kernel/tracing,217836927
+sched_switch id: -1,217853117
+sched_waking id: -1,217853287
+drm_vblank_event id: -1,217853467
+Setup software sampling,217878707
+  Probed precise_ip: 0,217881757
+  Probed precise_ip: 0,217883167
+  Failed to setup!,217884827
+Setup sampling cycles + retirement,217885087
+  Probed precise_ip: 0,217886227
+Setup sampling CPU cache references + misses,217942506
+  Probed precise_ip: 0,217943526
+Setup sampling CPU branch retirements + misses,217999935
+  Probed precise_ip: 0,218000955
+Ringbuffers in use: 0,218057515
+Failed to increase SysTraceWorker thread priority!,218422001
+SYNC_CHECK,2366442664
+FINISH_SYNC,2422725418

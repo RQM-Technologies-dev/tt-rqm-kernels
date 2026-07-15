@@ -1,0 +1,25 @@
+{
+  "candidate_sha256": "54b91bd921a67bcbda0faaafc2019bbfb931a7f1ef5cef26913d252d0f01da16",
+  "cases": [],
+  "classification": "diagnostic_not_stability_evidence",
+  "collection_status": "failed",
+  "device_id": 0,
+  "failure": "SU2ProfileError: missing device profiler artifact: profile_log_device.csv",
+  "nonclaims": [
+    "no_stability_claim",
+    "no_acceleration_claim",
+    "no_cpu_speedup_claim",
+    "no_measured_bandwidth_claim",
+    "no_application_claim"
+  ],
+  "not_observable": [
+    "circular-buffer wait counters",
+    "SFPU utilization counters"
+  ],
+  "schema": "tt-rqm-su2-compose-profile-session.v1",
+  "session_id": "2026-07-15-n300-device0-su2-profile-54b91b-01",
+  "source_commit": "3238299a9eea2a44dccd6826a947cac3266dd2f7",
+  "source_tree_sha256": "6fdb52dec6c2de283bdc7e7a21351903ab3e8bd694f6acf27e161724ee2aeea8",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}
