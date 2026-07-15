@@ -71,13 +71,16 @@ The published SU2 evidence remains **Claim Level 1** with
 three independent cold-start sessions must use the same candidate and
 environment, retain every designated run, pass whole-output correctness, and
 satisfy preregistered per-path and fused/unfused comparison-variability gates
-across all eight benchmark cases. Sessions 2 and 3 have not been collected, so
-the repository makes no stable SU2 performance claim.
+across all eight benchmark cases. No fresh v2 designated session has been
+collected yet, so the repository makes no stable SU2 performance claim.
 
-The [stability methodology](docs/su2-stability-methodology.md) and
-[machine-readable preregistration](benchmarks/manifests/su2-compose-stability-preregistration.json)
-define the gates. The collector and deterministic qualifier fail closed on
-candidate, environment, session, correctness, or timing inconsistencies.
+The original [stability preregistration](benchmarks/manifests/su2-compose-stability-preregistration.json)
+remains historical. After profiler review retained candidate `54b91b…`, the
+[new v2 preregistration](benchmarks/manifests/su2-compose-stability-preregistration-v2.json)
+froze its exact candidate, source, runtime, input hashes, case order, and gates
+before designated session 1. The collector and deterministic qualifier fail
+closed on candidate, environment, session, correctness, or timing
+inconsistencies.
 
 ### Separate candidate experiment
 
@@ -88,8 +91,9 @@ case, passed the recorded correctness checks, and remains
 `stable_benchmark=false`. It is **not** session 2 of the frozen Level 2
 campaign: that campaign is bound to a different candidate identity. See the
 [candidate experiment record](docs/benchmarks/su2-compose-candidate-54b91b.md)
-and its retained raw evidence. A new stability campaign requires a new frozen
-candidate contract and three designated cold-start sessions.
+and its retained raw evidence. The new candidate contract is now frozen, but
+the retained experiment is not designated session 1; three fresh cold-start
+sessions are still required.
 
 The sibling `TwoQubitHamiltonianBench` now has a CPU-only
 [EntanglementDynamicsBench reference foundation](docs/benchmarks/entanglement-dynamics-bench.md).

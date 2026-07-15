@@ -21,7 +21,7 @@ Independent SU2 multi-session stability: pending
 EntanglementDynamicsBench CPU reference foundation: complete
 EntanglementDynamicsBench hardware implementation: not started
 qmul profiler and ceiling diagnostics: present
-SU2 profiler attribution: pending
+SU2 profiler attribution: complete for retained 54b91b candidate
 CPU timing-scope-compatible comparison: pending
 Energy measurement: pending
 H2 device-side coefficient lowering: pending
@@ -70,19 +70,20 @@ eight-case paired performance run, but it is not a designated session in the
 existing hash-bound campaign. Its packages are now protected by a dedicated
 fail-closed candidate-experiment manifest and validator. Profiler attribution
 in [issue #27](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/27)
-must finish before candidate selection. Only then may the new three-session
-campaign in [issue #28](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/28)
-be frozen. Do not combine campaigns or promote either one-session result to
-Level 2.
+retained the exact candidate because reader, compute, and writer scopes overlap
+and no isolated architectural correction was supported. The new v2 stability
+contract is frozen before designated session 1; collection is tracked in
+[issue #28](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/28).
+Do not combine campaigns or promote either one-session result to Level 2.
 
 ### Profiler attribution
 
-Capture Device Program Profiler and Tracy evidence for the fused and unfused
-paths. Attribute dispatch, compute, data movement, and synchronization costs
-before selecting additional optimizations or freezing a stability candidate.
-Logical-byte formulas must remain distinct from measured hardware bandwidth.
-This work is tracked in
-[issue #27](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/issues/27).
+Device Program Profiler and Tracy evidence covers four representative fused and
+unfused cases. Reader, compute, and writer scopes overlap in every fused
+dispatch; writer is marginally longest but less than five percent beyond the
+next-longest role. Circular-buffer wait and SFPU-utilization counters remain
+unobservable in the pinned tools. The exact `54b91b…` candidate is retained;
+logical-byte formulas remain distinct from measured hardware bandwidth.
 
 ### Matched comparisons and energy
 

@@ -87,6 +87,7 @@ def run_su2_compose(
     expected_repository_commit: str | None = None,
     process_capture: MutableMapping[str, str] | None = None,
     case_specs: tuple[tuple[int, int, int, int, int], ...] | None = None,
+    candidate_environment: Mapping[str, str] | None = None,
 ) -> dict[str, object]:
     """Run both hardware paths and validate every returned value."""
 
@@ -172,6 +173,7 @@ def run_su2_compose(
             candidate_hash,
             source_commit,
             process_capture=process_capture,
+            candidate_environment=candidate_environment,
         )
         host_s = time.perf_counter() - host_start
         metrics = json.loads((workdir / "metrics.json").read_text())
@@ -486,6 +488,7 @@ def _run_candidate(
     source_commit: str,
     *,
     process_capture: MutableMapping[str, str] | None = None,
+    candidate_environment: Mapping[str, str] | None = None,
 ) -> None:
     tokens = shlex.split(command)
     if not tokens or any(word in command.lower() for word in ("emule", "docker", "reference")):
@@ -499,6 +502,8 @@ def _run_candidate(
             "TT_RQM_REPOSITORY_COMMIT": source_commit,
         }
     )
+    if candidate_environment:
+        env.update(candidate_environment)
     completed = subprocess.run(
         [*tokens, "--workdir", str(workdir), "--manifest", str(manifest), "--device", "0"],
         capture_output=True,

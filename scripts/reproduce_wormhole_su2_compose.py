@@ -27,11 +27,14 @@ from tt_rqm_kernels.su2_stability import load_stability_preregistration
 FROZEN_CANDIDATE_SHA256 = "d8237f2e5b05885167085d87a0400daf8b5feb0318d906285a1d263035294441"
 FROZEN_EXECUTION_SOURCE = "3238299a9eea2a44dccd6826a947cac3266dd2f7"
 FROZEN_TT_METAL = "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+V2_PREREGISTRATION = Path("benchmarks/manifests/su2-compose-stability-preregistration-v2.json")
 
 
 def _check() -> None:
     load_su2_preregistration(REPO_ROOT / "benchmarks/manifests/su2-compose-preregistration.json")
     load_stability_preregistration(repo_root=REPO_ROOT)
+    if (REPO_ROOT / V2_PREREGISTRATION).is_file():
+        load_stability_preregistration(V2_PREREGISTRATION, repo_root=REPO_ROOT)
     release_path = REPO_ROOT / "benchmarks/manifests/su2-compose-conformance.json"
     release = json.loads(release_path.read_text())
     if release.get("schema") != "tt-rqm-su2-compose-conformance-release.v1":
@@ -90,6 +93,13 @@ def main() -> int:
     parser.add_argument("--repository-root", type=Path, default=REPO_ROOT)
     parser.add_argument("--tt-metal-root", type=Path, default=REPO_ROOT.parent / "tt-metal")
     parser.add_argument("--tt-smi-command", default="tt-smi -s")
+    parser.add_argument("--output-root", type=Path)
+    parser.add_argument("--execution-source-root", type=Path)
+    parser.add_argument(
+        "--stability-preregistration",
+        type=Path,
+        default=Path("benchmarks/manifests/su2-compose-stability-preregistration.json"),
+    )
     parser.add_argument(
         "--methodology-note",
         default=(
@@ -103,8 +113,16 @@ def main() -> int:
     else:
         if not args.command:
             parser.error("--collect requires --command")
+        preregistration = load_stability_preregistration(
+            args.stability_preregistration, repo_root=args.repository_root
+        )
+        candidate = preregistration.get("candidate", {})
+        candidate_sha256 = candidate.get("sha256", FROZEN_CANDIDATE_SHA256)
+        source_commit = candidate.get("source_commit", FROZEN_EXECUTION_SOURCE)
+        tt_metal_commit = candidate.get("tt_metal_commit", FROZEN_TT_METAL)
+        output_root = args.output_root or (REPO_ROOT / "benchmarks/raw/su2-compose")
         session_id = args.session_id or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
-        directory = REPO_ROOT / "benchmarks/raw/su2-compose" / session_id
+        directory = output_root / session_id
         print(
             collect_su2_session(
                 session_dir=directory,
@@ -113,9 +131,14 @@ def main() -> int:
                 methodology_note=args.methodology_note,
                 repository_root=args.repository_root,
                 tt_metal_root=args.tt_metal_root,
-                expected_candidate_sha256=FROZEN_CANDIDATE_SHA256,
-                expected_execution_source_commit=FROZEN_EXECUTION_SOURCE,
-                expected_tt_metal_commit=FROZEN_TT_METAL,
+                expected_candidate_sha256=str(candidate_sha256),
+                expected_execution_source_commit=str(source_commit),
+                expected_tt_metal_commit=str(tt_metal_commit),
+                expected_compiler_version=candidate.get("compiler_version"),
+                expected_runtime_version=candidate.get("runtime_version"),
+                execution_source_root=args.execution_source_root,
+                expected_source_tree_sha256=candidate.get("source_tree_sha256"),
+                stability_preregistration=str(args.stability_preregistration),
                 invocation=shlex.join(sys.argv),
                 tt_smi_command=args.tt_smi_command,
             )

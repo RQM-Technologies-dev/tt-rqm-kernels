@@ -9,6 +9,7 @@ import pytest
 
 from tt_rqm_kernels.benchmark_integrity import IntegrityError
 from tt_rqm_kernels.su2_stability import (
+    load_stability_preregistration,
     qualify_stability,
     sha256_file,
     validate_stability_preregistration,
@@ -23,6 +24,17 @@ from tt_rqm_kernels.su2_benchmark_release import (
 
 ROOT = Path(__file__).resolve().parents[1]
 ReportMutation = Callable[[dict[str, object]], None]
+
+
+def test_v2_stability_preregistration_is_frozen_before_session_one() -> None:
+    preregistration = load_stability_preregistration(
+        Path("benchmarks/manifests/su2-compose-stability-preregistration-v2.json"),
+        repo_root=ROOT,
+    )
+    assert preregistration["status"] == "frozen_before_designated_session_1"
+    assert preregistration["calibration_experiment"]["designated_stability_session"] is False
+    assert preregistration["candidate"]["sha256"].startswith("54b91b")
+    assert len(preregistration["inputs"]) == 8
 
 
 def _health() -> str:

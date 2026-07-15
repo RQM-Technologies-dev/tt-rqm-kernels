@@ -16,6 +16,7 @@ from tt_rqm_kernels.hardware_session import compare_device_health, validate_devi
 
 SCHEMA = "tt-rqm-su2-compose-stability-qualification.v1"
 PREREGISTRATION_SCHEMA = "tt-rqm-su2-compose-stability-preregistration.v1"
+PREREGISTRATION_SCHEMA_V2 = "tt-rqm-su2-compose-stability-preregistration.v2"
 SESSION_SCHEMAS = {
     "tt-rqm-su2-compose-session.v1",
     "tt-rqm-su2-compose-session.v2",
@@ -67,11 +68,17 @@ def validate_stability_preregistration(
     root = (repo_root or Path.cwd()).resolve()
     _require(isinstance(payload, dict), "SU2 stability preregistration must be an object")
     data = payload
-    _require(data.get("schema") == PREREGISTRATION_SCHEMA, "SU2 stability schema mismatch")
+    schema = data.get("schema")
     _require(
-        data.get("status") == "frozen_before_designated_session_2",
-        "SU2 stability methodology is not frozen",
+        schema in {PREREGISTRATION_SCHEMA, PREREGISTRATION_SCHEMA_V2},
+        "SU2 stability schema mismatch",
     )
+    expected_status = (
+        "frozen_before_designated_session_2"
+        if schema == PREREGISTRATION_SCHEMA
+        else "frozen_before_designated_session_1"
+    )
+    _require(data.get("status") == expected_status, "SU2 stability methodology is not frozen")
     session = data.get("session_contract")
     _require(
         session
@@ -94,15 +101,30 @@ def validate_stability_preregistration(
         statistic.get("required_metrics") == ["fused", "unfused", "ratio"],
         "both paths and paired ratio must qualify",
     )
-    first = data.get("first_session")
-    _require(isinstance(first, dict), "first-session anchor is missing")
+    anchor_key = "first_session" if schema == PREREGISTRATION_SCHEMA else "calibration_experiment"
+    first = data.get(anchor_key)
+    _require(isinstance(first, dict), f"{anchor_key.replace('_', '-')} anchor is missing")
     first_path = _resolve(root, Path(str(first.get("report"))))
-    _require(first_path.is_file(), "first-session report is missing")
+    _require(first_path.is_file(), "stability calibration report is missing")
     _require(
         sha256_file(first_path) == first.get("report_sha256"),
-        "first-session report hash mismatch",
+        "stability calibration report hash mismatch",
     )
     report = json.loads(first_path.read_text(encoding="utf-8"))
+    if schema == PREREGISTRATION_SCHEMA_V2:
+        _validate_v2_identity_and_inputs(data, report)
+        profiler = data.get("profiler_decision")
+        _require(isinstance(profiler, dict), "v2 profiler decision is missing")
+        profiler_path = _resolve(root, Path(str(profiler.get("manifest"))))
+        _require(profiler_path.is_file(), "v2 profiler evidence manifest is missing")
+        _require(
+            sha256_file(profiler_path) == profiler.get("manifest_sha256"),
+            "v2 profiler evidence hash mismatch",
+        )
+        _require(
+            profiler.get("architecture_decision") == "retain_exact_candidate",
+            "v2 candidate was not retained by profiler decision",
+        )
     cases = data.get("cases")
     _require(isinstance(cases, list), "SU2 stability case thresholds are missing")
     _require(
@@ -117,7 +139,7 @@ def validate_stability_preregistration(
             expected = max(0.05, 2.0 * _dispersion(samples[metric]))
             _require(
                 math.isclose(float(limits.get(metric, -1)), expected, rel_tol=0.0, abs_tol=1e-15),
-                f"SU2 {case['B']}x{case['K']} {metric} limit is not derived from session 1",
+                f"SU2 {case['B']}x{case['K']} {metric} limit is not derived from the calibration report",
             )
     invalid = data.get("invalid_session_rules")
     _require(
@@ -125,6 +147,47 @@ def validate_stability_preregistration(
         "invalid-session rules are incomplete",
     )
     return data
+
+
+def _validate_v2_identity_and_inputs(data: Mapping[str, Any], report: Mapping[str, Any]) -> None:
+    candidate = data.get("candidate")
+    _require(isinstance(candidate, dict), "v2 stability candidate identity is missing")
+    report_candidate = report.get("provenance", {}).get("candidate", {})
+    expected_identity = {
+        "sha256": report_candidate.get("candidate_sha256"),
+        "source_commit": report_candidate.get("repository_commit"),
+        "tt_metal_commit": report_candidate.get("tt_metal_commit"),
+        "compiler_version": report_candidate.get("compiler_version"),
+        "runtime_version": report_candidate.get("runtime_version"),
+        "device": "tenstorrent/wormhole-device-0",
+        "source_tree_sha256": "6fdb52dec6c2de283bdc7e7a21351903ab3e8bd694f6acf27e161724ee2aeea8",
+    }
+    _require(candidate == expected_identity, "v2 stability candidate identity mismatch")
+    calibration = data.get("calibration_experiment")
+    _require(
+        isinstance(calibration, dict) and calibration.get("designated_stability_session") is False,
+        "calibration experiment cannot be designated session 1",
+    )
+    expected_inputs = data.get("inputs")
+    _require(isinstance(expected_inputs, list), "v2 deterministic input hashes are missing")
+    _require(
+        [(value.get("B"), value.get("K")) for value in expected_inputs] == list(CASES),
+        "v2 deterministic input order mismatch",
+    )
+    _require(
+        [value.get("case_id") for value in expected_inputs]
+        == [result.get("case_id") for result in report.get("results", [])],
+        "v2 calibration input identity mismatch",
+    )
+    for value in expected_inputs:
+        for key in ("rotors_sha256", "phases_sha256"):
+            observed = value.get(key)
+            _require(
+                isinstance(observed, str)
+                and len(observed) == 64
+                and all(character in "0123456789abcdef" for character in observed),
+                f"invalid v2 input hash: {key}",
+            )
 
 
 def qualify_stability(
@@ -175,8 +238,30 @@ def qualify_stability(
     if len(valid_identities) != len(analyses) or len(set(valid_identities)) != 1:
         rejected.append("candidate, source, TT-Metal, compiler, or runtime identity differs")
     valid_inputs = [value for value in input_identities if value is not None]
-    if len(valid_inputs) != len(analyses) or len(set(valid_inputs)) != 1:
+    comparable_inputs = (
+        [tuple(item.split(":", 1)[0] for item in value) for value in valid_inputs]
+        if preregistration.get("schema") == PREREGISTRATION_SCHEMA
+        else valid_inputs
+    )
+    if len(comparable_inputs) != len(analyses) or len(set(comparable_inputs)) != 1:
         rejected.append("deterministic input identity differs")
+    if preregistration.get("schema") == PREREGISTRATION_SCHEMA_V2:
+        expected_identity = preregistration["candidate"]
+        frozen_identity = (
+            expected_identity["sha256"],
+            expected_identity["source_commit"],
+            expected_identity["tt_metal_commit"],
+            expected_identity["compiler_version"],
+            expected_identity["runtime_version"],
+        )
+        if not valid_identities or valid_identities[0] != frozen_identity:
+            rejected.append("designated session identity differs from v2 preregistration")
+        expected_inputs = tuple(
+            f"{value['case_id']}:{value['rotors_sha256']}:{value['phases_sha256']}"
+            for value in preregistration["inputs"]
+        )
+        if not valid_inputs or valid_inputs[0] != expected_inputs:
+            rejected.append("designated session inputs differ from v2 preregistration")
 
     qualified_cases: list[dict[str, Any]] = []
     for threshold in preregistration["cases"]:
@@ -380,7 +465,15 @@ def _analyze_session(
             rejected.append("legacy session provenance differs from report")
 
     cases = []
-    input_identity = tuple(str(result["case_id"]) for result in report["results"])
+    input_identity = tuple(
+        (
+            f"{result['case_id']}:{result['input_hashes']['rotors_sha256']}:"
+            f"{result['input_hashes']['phases_sha256']}"
+            if "input_hashes" in result
+            else str(result["case_id"])
+        )
+        for result in report["results"]
+    )
     if modern:
         try:
             recorded_inputs = json.loads(role_paths["input-hashes"].read_text(encoding="utf-8"))

@@ -40,6 +40,11 @@ def collect_su2_session(
     expected_candidate_sha256: str,
     expected_execution_source_commit: str,
     expected_tt_metal_commit: str,
+    expected_compiler_version: str | None = None,
+    expected_runtime_version: str | None = None,
+    execution_source_root: Path | None = None,
+    expected_source_tree_sha256: str | None = None,
+    stability_preregistration: str | None = None,
     invocation: str | None = None,
     tt_smi_command: str = "tt-smi -s",
     seed: int = 0,
@@ -62,6 +67,7 @@ def collect_su2_session(
     candidate_path: Path | None = None
     candidate_hash: str | None = None
     source_trees_clean = not repo_snapshot["status"] and not metal_snapshot["status"]
+    source_tree_sha256: str | None = None
 
     try:
         tokens = shlex.split(command)
@@ -81,10 +87,24 @@ def collect_su2_session(
             raise IntegrityError("repository or TT-Metal source tree is dirty")
         if metal_snapshot["head"] != expected_tt_metal_commit:
             raise IntegrityError("TT-Metal commit differs from frozen identity")
+        if execution_source_root is not None:
+            from tt_rqm_kernels.su2_profile import validate_source_tree
+
+            source_tree_sha256 = validate_source_tree(
+                collector_root=repository_root,
+                source_root=execution_source_root.resolve(),
+                source_commit=expected_execution_source_commit,
+            )
+            if source_tree_sha256 != expected_source_tree_sha256:
+                raise IntegrityError("execution source tree differs from frozen identity")
 
         pre_raw = _run_text(shlex.split(tt_smi_command))
         pre_health = validate_device_health(pre_raw, device_id=0)
         _write(session_dir / "pre-device-health.txt", pre_raw)
+        compiler_version = _version_line(["c++", "--version"])
+        if expected_compiler_version is not None and compiler_version != expected_compiler_version:
+            raise IntegrityError("compiler version differs from frozen identity")
+        runtime_version = expected_runtime_version or f"tt-metal-{expected_tt_metal_commit[:8]}"
         environment = {
             "schema": "tt-rqm-su2-compose-environment.v1",
             "captured_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -92,7 +112,7 @@ def collect_su2_session(
             "platform": platform.platform(),
             "python_version": sys.version.split()[0],
             "torch_version": torch.__version__,
-            "compiler_version": _version_line(["c++", "--version"]),
+            "compiler_version": compiler_version,
             "cmake_version": _version_line(["cmake", "--version"]),
             "tt_smi_version": _version_line(["tt-smi", "--version"], allow_failure=True),
             "repository": repo_snapshot,
@@ -101,6 +121,10 @@ def collect_su2_session(
                 "path": str(candidate_path),
                 "sha256": candidate_hash,
                 "execution_source_commit": expected_execution_source_commit,
+                "execution_source_root": None
+                if execution_source_root is None
+                else str(execution_source_root.resolve()),
+                "source_tree_sha256": source_tree_sha256,
             },
             "device_count": 1,
             "device_id": 0,
@@ -116,6 +140,12 @@ def collect_su2_session(
             expected_candidate_sha256=expected_candidate_sha256,
             expected_repository_commit=expected_execution_source_commit,
             process_capture=process_capture,
+            candidate_environment={
+                "TT_RQM_CHIP_TYPE": "wormhole_b0",
+                "TT_RQM_TT_METAL_COMMIT": expected_tt_metal_commit,
+                "TT_RQM_COMPILER_VERSION": compiler_version,
+                "TT_RQM_RUNTIME_VERSION": runtime_version,
+            },
         )
         _write_json(session_dir / "report.json", report)
         _write(session_dir / "report.md", render_su2_markdown(report))
@@ -186,6 +216,8 @@ def collect_su2_session(
             "tt_metal_commit": expected_tt_metal_commit,
             "collector_repository_commit": repo_snapshot["head"],
             "source_trees_clean": source_trees_clean,
+            "source_tree_sha256": source_tree_sha256,
+            "stability_preregistration": stability_preregistration,
             "seed": seed,
             "case_order": case_order,
             "all_expected_paired_samples_retained": retained_pairs,
