@@ -43,10 +43,26 @@ future work, but it is not a performance or stability result.
 
 ## What it can be used for
 
-### Two-level Hamiltonian simulation
+The same structured FP32 foundation supports two equally important workload
+families: wave/signal/sensing transformations and time-ordered SU(2)
+Hamiltonian evolution.
 
-The strongest current application path is a reproducible two-level evolution
-pipeline:
+### Wave, signal, and sensing workloads
+
+The existing phase pairs, ordered phase/rotation composition, ordinary FP32
+tensors, `qmul`, and whole-output validation form a practical foundation for
+coherent signal processing, polarization-aware processing, phased sensing,
+telecom and RF signal transformations, orientation-aware communications, wave-state
+tracking, and phase-preserving sensor fusion.
+
+These are enabled workload directions for future application studies. The
+repository does not yet demonstrate end-to-end telecom, RF, communications,
+sensing, or sensor-fusion acceleration.
+
+### Two-level Hamiltonian and SU(2) workloads
+
+The corresponding quantum-simulation path is a reproducible two-level
+evolution pipeline:
 
 ```text
 Hamiltonian coefficients
@@ -69,9 +85,8 @@ simulation or quantum-hardware execution.
 
 `qmul` is also a reusable contract for ordered 3D rotation pipelines such as
 robot or drone orientation, inertial-navigation updates, camera or vehicle
-pose, satellite attitude, and quaternion-based sensor fusion. These are
-enabled workload directions, not demonstrated end-to-end application
-acceleration results.
+pose, and satellite attitude. These are enabled workload directions, not
+demonstrated end-to-end application acceleration results.
 
 ### Structured-kernel research on Tenstorrent
 

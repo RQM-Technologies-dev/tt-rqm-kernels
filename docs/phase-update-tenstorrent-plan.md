@@ -55,7 +55,7 @@ above scalar math. It is useful because it combines:
 - `[N] -> [N, 2]` structured output expansion
 
 This pattern appears in engineering workloads such as wireless phase tracking,
-radar/sonar-like signal processing, imaging, optical phase, audio, wave
+telecom and RF signal processing, imaging, optical phase, audio, wave
 simulation, sensing, scientific computing, and physical-AI state streams.
 
 The claim is about benchmark structure and validation, not about a special

@@ -56,7 +56,7 @@ features, supervise an existing estimator, and report state-integrity results.
 It is not proposed as a new navigation filter in this repository.
 
 Potential inputs include IMU, magnetometer, GNSS, optical flow, odometry,
-radar, lidar, cameras, RF, or other time-aligned observation streams where
+telecom sensing, lidar, cameras, RF, or other time-aligned observation streams where
 available. Its first role would be to observe an estimator's predicted state,
 measurements, residuals, and status—not to take over safety-critical control.
 
@@ -120,7 +120,7 @@ residual classification, multiple simultaneous hypotheses, fused
 perception/state estimation, and fleet-scale analysis.
 
 A small conventional EKF on one vehicle may not justify an AI accelerator by
-itself. The accelerator-shaped opportunity becomes stronger when radar, lidar,
+itself. The accelerator-shaped opportunity becomes stronger when telecom, lidar,
 camera, RF, optical, and inertial streams are processed alongside integrity
 features and learned perception. This frames the opportunity as accelerating a
 spatial-intelligence and integrity pipeline around physical-AI inference—not
@@ -132,7 +132,7 @@ that this project is connected to or endorsed by their vendors. NVIDIA's
 [physical-AI ecosystem update](https://nvidianews.nvidia.com/news/nvidia-and-global-robotics-leaders-take-physical-ai-to-the-real-world)
 describes an expanding robotics deployment ecosystem; its [IGX Thor overview](https://developer.nvidia.com/blog/nvidia-igx-thor-powers-industrial-medical-and-robotics-edge-ai-applications/)
 discusses real-time, sensor-intensive edge workloads and high-bandwidth
-camera, lidar, and radar ingestion.
+camera, lidar, and telecom/RF ingestion.
 
 No native quaternion hardware, new silicon feature, or hardware change is
 required for this direction. Values can remain ordinary floating-point tensors;
