@@ -1,0 +1,23 @@
+{
+  "B": 3,
+  "K": 32,
+  "angle_extrema": {
+    "max_phase_angle": 0.039199836570028124,
+    "max_rotor_angle": 0.059145739796297586
+  },
+  "case_id": "random_finite",
+  "dt_path": "random_finite/dt.bin",
+  "dt_sha256": "76903412dbab61e030a55200654b29f0510c64fbf7b03e053e769743768c2bc2",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    3,
+    32,
+    4
+  ],
+  "hamiltonians_path": "random_finite/hamiltonians.bin",
+  "hamiltonians_sha256": "4a532ebf7df31f74f639edcc27a9798fc21204d45178e96f8166f5a99aba56f6",
+  "hbar": 1.0,
+  "role": "conformance",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+}

@@ -29,11 +29,12 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         "performance_eligible": False,
     }
     assert result["h2b"] == {
-        "status": "source_foundation",
+        "status": "non_designated_pilot_failed_environment",
         "stable_benchmark": False,
         "performance_eligible": False,
         "claim_level": None,
-        "hardware_run": False,
+        "hardware_run": True,
+        "pilot_passed": False,
     }
 
 
@@ -66,7 +67,7 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         ),
         (
             "plan.md",
-            "H2B integration foundation: CPU/reference API and fail-closed protocol are\n  implemented; a two-program TT-Metal candidate feeds protected fused H1 from\n  a device-DRAM intermediate. Hardware has not yet been run;\n  `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
+            "H2B first non-designated N300 pilot: retained and did not pass; the failure\n  is classified as environment. All 20 frozen cases were attempted once\n  without retry or replacement. No H2B hardware claim exists;\n  `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
             "H2B claim level 0 established.",
             "plan status marker missing",
         ),

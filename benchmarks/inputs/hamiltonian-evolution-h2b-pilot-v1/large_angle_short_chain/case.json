@@ -1,0 +1,23 @@
+{
+  "B": 1,
+  "K": 2,
+  "angle_extrema": {
+    "max_phase_angle": 8975.979089736938,
+    "max_rotor_angle": 24168.56335181328
+  },
+  "case_id": "large_angle_short_chain",
+  "dt_path": "large_angle_short_chain/dt.bin",
+  "dt_sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    2,
+    4
+  ],
+  "hamiltonians_path": "large_angle_short_chain/hamiltonians.bin",
+  "hamiltonians_sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+  "hbar": 1.0,
+  "role": "stress_diagnostic",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+}

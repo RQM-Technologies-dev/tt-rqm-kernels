@@ -66,16 +66,18 @@ retry or replacement. This establishes silicon conformance only. It makes no
 performance, stability, full-H2, speedup, bandwidth, energy, dual-device, or
 inherited-H1 claim.
 
-## H2B device-resident evolution foundation
+## H2B device-resident evolution pilot
 
 - Family: `HamiltonianEvolutionBench`; stage: H2B complete two-level evolution
-- Status: CPU/reference foundation implemented; TT-Metal candidate source
-  present; hardware not yet run
+- Status: first non-designated N300 pilot retained; did not pass
+  (`environment`); no H2B hardware claim exists
 - Architecture: two programs, one device session, device-DRAM intermediate,
   zero intermediate host round trips
 - Stability and performance eligibility: `stable_benchmark=false`,
   `performance_eligible=false`, `claim_level=null`
 - [H2B foundation report](hamiltonian-evolution-h2b.md)
+- [Processed pilot qualification](../../benchmarks/processed/hamiltonian-evolution-h2b-pilot-qualification.json)
+- [Pilot blocker](../../reports/h2b_n300_pilot_blocker.md)
 
 H2B does not inherit the H1 Level 2 or H2A Level 0 results. It is not a
 single fused kernel or an acceleration result.

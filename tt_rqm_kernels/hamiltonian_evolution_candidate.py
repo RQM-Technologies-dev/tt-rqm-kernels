@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from array import array
+from contextlib import nullcontext
 from dataclasses import dataclass
 import hashlib
 import json
@@ -24,6 +25,7 @@ from tt_rqm_kernels.hamiltonian.su2_reference import (
     u2_matrix_from_rotor_phase,
 )
 from tt_rqm_kernels.hamiltonian_evolution_benchmark import ATOL, RTOL
+from tt_rqm_kernels.hamiltonian_evolution_domain import validate_pilot_domain
 
 PROTOCOL = "tt-rqm-external-hamiltonian-evolution.v1"
 METRICS_SCHEMA = "tt-rqm-external-hamiltonian-evolution-metrics.v1"
@@ -56,6 +58,8 @@ def run_external_candidate(
     stage: Stage = "conformance",
     execution_label: ExecutionLabel = "cpu_reference",
     hbar: float = 1.0,
+    enforce_pilot_domain: bool = False,
+    retained_work_dir: Path | None = None,
 ) -> CandidateRun:
     """Execute and validate one serialized H2B candidate invocation."""
 
@@ -71,14 +75,30 @@ def run_external_candidate(
         raise HamiltonianEvolutionCandidateError(str(exc)) from exc
     if hamiltonians.dtype != torch.float32:
         raise HamiltonianEvolutionCandidateError("H2B external inputs must use float32")
+    if enforce_pilot_domain:
+        try:
+            validate_pilot_domain(hamiltonians, dt, hbar=hbar)
+        except ValueError as exc:
+            raise HamiltonianEvolutionCandidateError(str(exc)) from exc
     coefficients = hamiltonians.detach().cpu().contiguous()
     dt_value = torch.as_tensor(dt, dtype=torch.float32).detach().cpu().contiguous()
     shape = tuple(int(value) for value in coefficients.shape)
     if tuple(dt_value.shape) not in {(), shape[:2]}:
         raise HamiltonianEvolutionCandidateError("H2B external dt must be scalar or exactly [B, K]")
 
-    with tempfile.TemporaryDirectory(prefix="tt-rqm-h2b-") as temporary:
+    context = (
+        tempfile.TemporaryDirectory(prefix="tt-rqm-h2b-")
+        if retained_work_dir is None
+        else nullcontext(str(retained_work_dir.resolve()))
+    )
+    with context as temporary:
         work_dir = Path(temporary)
+        if retained_work_dir is not None:
+            if work_dir.exists() and any(work_dir.iterdir()):
+                raise HamiltonianEvolutionCandidateError(
+                    "retained candidate work directory must be new or empty"
+                )
+            work_dir.mkdir(parents=True, exist_ok=True)
         coefficients_path = work_dir / "hamiltonians.bin"
         dt_path = work_dir / "dt.bin"
         _write_float32(coefficients_path, coefficients)
@@ -138,6 +158,10 @@ def run_external_candidate(
         "dtype": "float32",
         "B": shape[0],
         "K": shape[1],
+        "input_hashes": {
+            "hamiltonians_sha256": hashlib.sha256(coefficients.numpy().tobytes()).hexdigest(),
+            "dt_sha256": hashlib.sha256(dt_value.numpy().tobytes()).hexdigest(),
+        },
         "correctness": correctness,
         "candidate_metrics": metrics,
         "host_end_to_end_s": host_elapsed,

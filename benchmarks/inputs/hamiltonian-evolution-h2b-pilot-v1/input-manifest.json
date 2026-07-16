@@ -1,0 +1,492 @@
+{
+  "case_order": [
+    "identity_k1",
+    "zero_vector_phase_chain",
+    "axis_x",
+    "axis_y",
+    "axis_z",
+    "noncommuting_xy",
+    "noncommuting_yx",
+    "mixed_zero_nonzero",
+    "tiny_norms",
+    "varying_dt",
+    "random_finite",
+    "long_chain",
+    "boundary_rotor_positive",
+    "boundary_rotor_negative",
+    "boundary_phase_positive",
+    "boundary_phase_negative",
+    "boundary_combined",
+    "boundary_noncommuting_xy",
+    "boundary_noncommuting_yx",
+    "large_angle_short_chain"
+  ],
+  "cases": [
+    {
+      "B": 2,
+      "K": 1,
+      "angle_extrema": {
+        "max_phase_angle": 0.0,
+        "max_rotor_angle": 0.0
+      },
+      "case_id": "identity_k1",
+      "dt_path": "identity_k1/dt.bin",
+      "dt_sha256": "75e253f50979177eba47b2d0805ad36038789108924514d2a761a70de057d16f",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        2,
+        1,
+        4
+      ],
+      "hamiltonians_path": "identity_k1/hamiltonians.bin",
+      "hamiltonians_sha256": "66687aadf862bd776c8fc18b8e9f8e20089714856ee233b3902a591d0d5f2925",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 8,
+      "angle_extrema": {
+        "max_phase_angle": 0.03750000149011612,
+        "max_rotor_angle": 0.0
+      },
+      "case_id": "zero_vector_phase_chain",
+      "dt_path": "zero_vector_phase_chain/dt.bin",
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        8,
+        4
+      ],
+      "hamiltonians_path": "zero_vector_phase_chain/hamiltonians.bin",
+      "hamiltonians_sha256": "df5e9edf6e37ec751fd0f44c4b1dfc2e609222bb304d1700067113527010bd04",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "angle_extrema": {
+        "max_phase_angle": 0.0600000032782555,
+        "max_rotor_angle": 0.20000000298023224
+      },
+      "case_id": "axis_x",
+      "dt_path": "axis_x/dt.bin",
+      "dt_sha256": "5d96a77c55b4ac1eea2d77815396c4349292b85e3b07beaca6aff933e7ef8752",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "axis_x/hamiltonians.bin",
+      "hamiltonians_sha256": "b73d5c5290bbb48518d1a9fca01dbd15e7d266dd4cc493308dcd3b6e1e1e2b5a",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 8,
+      "angle_extrema": {
+        "max_phase_angle": 0.03000000163912775,
+        "max_rotor_angle": 0.10000000149011612
+      },
+      "case_id": "axis_y",
+      "dt_path": "axis_y/dt.bin",
+      "dt_sha256": "fb360f7241a770dc32cade9a1d1273c92b13bd4959b1c130931312b7fe95e63f",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        8,
+        4
+      ],
+      "hamiltonians_path": "axis_y/hamiltonians.bin",
+      "hamiltonians_sha256": "c9af43f7ce910fdd78441bdf52f2b28053bc4f9b8b08be6f9cd89faa6df5c62f",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 32,
+      "angle_extrema": {
+        "max_phase_angle": 0.007500000409781937,
+        "max_rotor_angle": 0.02500000037252903
+      },
+      "case_id": "axis_z",
+      "dt_path": "axis_z/dt.bin",
+      "dt_sha256": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        32,
+        4
+      ],
+      "hamiltonians_path": "axis_z/hamiltonians.bin",
+      "hamiltonians_sha256": "d0cf474a6061ade3add732f2eba415e175f43b2a5a9bab6cff828ece2b6d8833",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "angle_extrema": {
+        "max_phase_angle": 0.13999999970197674,
+        "max_rotor_angle": 0.7700000035762784
+      },
+      "case_id": "noncommuting_xy",
+      "dt_path": "noncommuting_xy/dt.bin",
+      "dt_sha256": "2f0d6f3d65a7e28c4223e4389106e46f1e9010a2bd724d35f9794cb8a86d7c68",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "noncommuting_xy/hamiltonians.bin",
+      "hamiltonians_sha256": "b5be4097167e66c18e71a9e9deb99d7178151f65f55f63edbb6aa4cb65c4a69b",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "angle_extrema": {
+        "max_phase_angle": 0.13999999970197674,
+        "max_rotor_angle": 0.7700000035762784
+      },
+      "case_id": "noncommuting_yx",
+      "dt_path": "noncommuting_yx/dt.bin",
+      "dt_sha256": "2f0d6f3d65a7e28c4223e4389106e46f1e9010a2bd724d35f9794cb8a86d7c68",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "noncommuting_yx/hamiltonians.bin",
+      "hamiltonians_sha256": "57d6f4f0c6c88f5c7d13af22d7689eb4878993ffc1bf6f1f1a4d6cf7c17ede44",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 2,
+      "K": 32,
+      "angle_extrema": {
+        "max_phase_angle": 0.010000000298023226,
+        "max_rotor_angle": 0.046770718031612264
+      },
+      "case_id": "mixed_zero_nonzero",
+      "dt_path": "mixed_zero_nonzero/dt.bin",
+      "dt_sha256": "0b9d79ff0fc4d0a77ef398763bbe45c445501e826219f2b6a1aa709411ab631d",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        2,
+        32,
+        4
+      ],
+      "hamiltonians_path": "mixed_zero_nonzero/hamiltonians.bin",
+      "hamiltonians_sha256": "142a9a5e3058d80a81d885eb5800e7fe6bebb2c2bac79126b09936c5701d9747",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 128,
+      "angle_extrema": {
+        "max_phase_angle": 0.007499999832361937,
+        "max_rotor_angle": 1.06066016533369e-08
+      },
+      "case_id": "tiny_norms",
+      "dt_path": "tiny_norms/dt.bin",
+      "dt_sha256": "9a8208635e00348ab64aac2b759e76391fd47089e9a749bbcec770d9eb5c6421",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        128,
+        4
+      ],
+      "hamiltonians_path": "tiny_norms/hamiltonians.bin",
+      "hamiltonians_sha256": "9ce71f60ec355e55695c01fd95a5148b100e7351ab6d4d3f3021cb5b549c0ac7",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 2,
+      "K": 8,
+      "angle_extrema": {
+        "max_phase_angle": 0.09000000715255752,
+        "max_rotor_angle": 0.45000001788139343
+      },
+      "case_id": "varying_dt",
+      "dt_path": "varying_dt/dt.bin",
+      "dt_sha256": "abc7ecf3bb3671fd50c11ed3de6e9953c095979be05827a5eda0d537c6e9faa5",
+      "dt_shape": [
+        2,
+        8
+      ],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        2,
+        8,
+        4
+      ],
+      "hamiltonians_path": "varying_dt/hamiltonians.bin",
+      "hamiltonians_sha256": "75c0d6652484b6f2734a3056e8589526e369874fe62101aa80b369b8d66e6599",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 3,
+      "K": 32,
+      "angle_extrema": {
+        "max_phase_angle": 0.039199836570028124,
+        "max_rotor_angle": 0.059145739796297586
+      },
+      "case_id": "random_finite",
+      "dt_path": "random_finite/dt.bin",
+      "dt_sha256": "76903412dbab61e030a55200654b29f0510c64fbf7b03e053e769743768c2bc2",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        3,
+        32,
+        4
+      ],
+      "hamiltonians_path": "random_finite/hamiltonians.bin",
+      "hamiltonians_sha256": "4a532ebf7df31f74f639edcc27a9798fc21204d45178e96f8166f5a99aba56f6",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 512,
+      "angle_extrema": {
+        "max_phase_angle": 0.00298008018031537,
+        "max_rotor_angle": 0.0036245990483941832
+      },
+      "case_id": "long_chain",
+      "dt_path": "long_chain/dt.bin",
+      "dt_sha256": "8b35fe1a9b331dc0217e0419be35288af59676e9c57022a334110ab0e4799df4",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        512,
+        4
+      ],
+      "hamiltonians_path": "long_chain/hamiltonians.bin",
+      "hamiltonians_sha256": "c05f6ab721d7b05220af1936d1b0dda21242b718186bd9f478d0ecdccafb861b",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 1,
+      "angle_extrema": {
+        "max_phase_angle": 0.0,
+        "max_rotor_angle": 1024.0
+      },
+      "case_id": "boundary_rotor_positive",
+      "dt_path": "boundary_rotor_positive/dt.bin",
+      "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        1,
+        4
+      ],
+      "hamiltonians_path": "boundary_rotor_positive/hamiltonians.bin",
+      "hamiltonians_sha256": "658d09dc9a2f83a9bed79961613acd0550dff9b0a71fb7f758b516b2f95b65ce",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 1,
+      "angle_extrema": {
+        "max_phase_angle": 0.0,
+        "max_rotor_angle": 1024.0
+      },
+      "case_id": "boundary_rotor_negative",
+      "dt_path": "boundary_rotor_negative/dt.bin",
+      "dt_sha256": "c68830a25204a09f8e77aada6bc5807f607cccaaa0ebb2a7122d317584478a8b",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        1,
+        4
+      ],
+      "hamiltonians_path": "boundary_rotor_negative/hamiltonians.bin",
+      "hamiltonians_sha256": "658d09dc9a2f83a9bed79961613acd0550dff9b0a71fb7f758b516b2f95b65ce",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 1,
+      "angle_extrema": {
+        "max_phase_angle": 8192.0,
+        "max_rotor_angle": 0.0
+      },
+      "case_id": "boundary_phase_positive",
+      "dt_path": "boundary_phase_positive/dt.bin",
+      "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        1,
+        4
+      ],
+      "hamiltonians_path": "boundary_phase_positive/hamiltonians.bin",
+      "hamiltonians_sha256": "ac1cf2d2809e588a68ae77e7e5d6fb0feeec83bbbe6e90b15622da636a01e89a",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 1,
+      "angle_extrema": {
+        "max_phase_angle": 8192.0,
+        "max_rotor_angle": 0.0
+      },
+      "case_id": "boundary_phase_negative",
+      "dt_path": "boundary_phase_negative/dt.bin",
+      "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        1,
+        4
+      ],
+      "hamiltonians_path": "boundary_phase_negative/hamiltonians.bin",
+      "hamiltonians_sha256": "9edb5ec6fa3f926423e1be20217a9ed19115cb14377a719bb309f1389b9190eb",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 1,
+      "angle_extrema": {
+        "max_phase_angle": 8000.0,
+        "max_rotor_angle": 999.9999863982298
+      },
+      "case_id": "boundary_combined",
+      "dt_path": "boundary_combined/dt.bin",
+      "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        1,
+        4
+      ],
+      "hamiltonians_path": "boundary_combined/hamiltonians.bin",
+      "hamiltonians_sha256": "97c8194acb5e969953b9c6ae5c55b7e6b01531581846368b8a7fa46a07174125",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "angle_extrema": {
+        "max_phase_angle": 8000.0,
+        "max_rotor_angle": 1000.0
+      },
+      "case_id": "boundary_noncommuting_xy",
+      "dt_path": "boundary_noncommuting_xy/dt.bin",
+      "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "boundary_noncommuting_xy/hamiltonians.bin",
+      "hamiltonians_sha256": "3d9103e3f113dbd7c0aaf3734ded90dc53e5370da40dc66421027b411f750f6c",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "angle_extrema": {
+        "max_phase_angle": 8000.0,
+        "max_rotor_angle": 1000.0
+      },
+      "case_id": "boundary_noncommuting_yx",
+      "dt_path": "boundary_noncommuting_yx/dt.bin",
+      "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "boundary_noncommuting_yx/hamiltonians.bin",
+      "hamiltonians_sha256": "d35ddd6594026b9960e071cc7397bd0ded440812b0ab677cf3e7de6deb9cd708",
+      "hbar": 1.0,
+      "role": "conformance",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "angle_extrema": {
+        "max_phase_angle": 8975.979089736938,
+        "max_rotor_angle": 24168.56335181328
+      },
+      "case_id": "large_angle_short_chain",
+      "dt_path": "large_angle_short_chain/dt.bin",
+      "dt_sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "large_angle_short_chain/hamiltonians.bin",
+      "hamiltonians_sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+      "hbar": 1.0,
+      "role": "stress_diagnostic",
+      "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+    }
+  ],
+  "generator": "hamiltonian_evolution_pilot_contract.pilot_cases.v1",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-inputs.v1",
+  "seed": 0
+}

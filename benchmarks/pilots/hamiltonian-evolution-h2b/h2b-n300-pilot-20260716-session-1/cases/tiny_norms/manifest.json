@@ -1,0 +1,26 @@
+{
+  "B": 1,
+  "K": 128,
+  "angle_extrema": {
+    "max_phase_angle": 0.007499999832361937,
+    "max_rotor_angle": 1.06066016533369e-08
+  },
+  "attempt": 1,
+  "case_id": "tiny_norms",
+  "dt_path": "tiny_norms/dt.bin",
+  "dt_sha256": "9a8208635e00348ab64aac2b759e76391fd47089e9a749bbcec770d9eb5c6421",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    128,
+    4
+  ],
+  "hamiltonians_path": "tiny_norms/hamiltonians.bin",
+  "hamiltonians_sha256": "9ce71f60ec355e55695c01fd95a5148b100e7351ab6d4d3f3021cb5b549c0ac7",
+  "hbar": 1.0,
+  "replacement": false,
+  "retry_count": 0,
+  "role": "conformance",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+}

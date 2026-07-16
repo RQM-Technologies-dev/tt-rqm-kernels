@@ -19,9 +19,9 @@ validators remain the source of truth.
 - H2A device-side coefficient lowering: Claim Level 0 silicon conformance from
   one designated N300 device-0 session; `stable_benchmark=false` and
   `performance_eligible=false`.
-- H2B integration foundation: CPU/reference API and fail-closed protocol are
-  implemented; a two-program TT-Metal candidate feeds protected fused H1 from
-  a device-DRAM intermediate. Hardware has not yet been run;
+- H2B first non-designated N300 pilot: retained and did not pass; the failure
+  is classified as environment. All 20 frozen cases were attempted once
+  without retry or replacement. No H2B hardware claim exists;
   `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.
 <!-- repository-claims:end -->
 
@@ -83,7 +83,7 @@ nonfinite values, one attempt per case, and no retries or replacements. The
 separate public Level 0 release remains `stable_benchmark=false` and
 performance-ineligible; it does not confer H2B evidence or inherit H1 claims.
 
-## Active integration: H2B foundation
+## Active integration: H2B failed non-designated pilot
 
 H2B is device-resident H2A lowering directly feeding fused H1 ordered
 composition without a host round-trip for intermediate rotors or phases. Its
@@ -94,9 +94,12 @@ The reference API, exact-order tests, complex128 whole-output oracle,
 deterministic benchmark family, external protocol, and two-program candidate
 source now exist. The candidate creates device 0 once, runs compensated H2A
 and protected fused H1 against one device-DRAM intermediate, reads only final
-rotor/phase output, and closes once. Hardware has not yet been run. H2B
-requires separate retained evidence and cannot reuse historical H1 or H2A
-status.
+rotor/phase output, and closes once. The first frozen 20-case N300 pilot is
+retained, but every invocation stopped before device execution because the
+launcher omitted the separately required TT-Metal runtime-root variable. The
+failure is classified as `environment`; no retry or replacement occurred.
+H2B requires a newly versioned non-designated contract before any future run
+and cannot reuse historical H1 or H2A status.
 
 ## Deferred work
 

@@ -1,0 +1,1829 @@
+{
+  "case_id": "large_angle_short_chain",
+  "claim_level": null,
+  "compensated_arithmetic_trace": [
+    {
+      "alpha_exact_quotient": 714.0,
+      "alpha_hi": 4487.98974609375,
+      "alpha_lo": -0.00020122528076171875,
+      "alpha_product_error": 0.0,
+      "alpha_quotient": 714.0,
+      "alpha_reduced": 1.795235514640808,
+      "alpha_reduction_error": -2.7604073693510145e-08,
+      "cos_alpha": -0.22255964577198029,
+      "cos_alpha_error": 3.1832560393185716e-08,
+      "cos_theta": -0.9578908681869507,
+      "cos_theta_error": 4.713651303100974e-05,
+      "dt_over_hbar_hi": 0.4487989544868469,
+      "dt_over_hbar_lo": 0.0,
+      "index": 0,
+      "r": 53851.6484375,
+      "r2": 2900000000.0,
+      "r2_error": 0.0,
+      "r_error": 0.00036615495628211647,
+      "sin_alpha": 0.9749190807342529,
+      "sin_alpha_error": 1.2347259659151177e-08,
+      "sin_theta": -0.28713259100914,
+      "sin_theta_error": -0.00015736707610114475,
+      "theta_exact_quotient": 3847.0,
+      "theta_hi": 24168.564453125,
+      "theta_lo": -0.0009369817562401295,
+      "theta_product_error": 0.00016432996199000627,
+      "theta_quotient": 3847.0,
+      "theta_reduced": -2.850360631942749,
+      "theta_reduction_error": 0.00016427464288426563
+    },
+    {
+      "alpha_exact_quotient": -1429.0,
+      "alpha_hi": -8975.9794921875,
+      "alpha_lo": 0.0004024505615234375,
+      "alpha_product_error": 0.0,
+      "alpha_quotient": -1429.0,
+      "alpha_reduced": 2.692714214324951,
+      "alpha_reduction_error": -8.365532266907394e-09,
+      "cos_alpha": -0.9009343385696411,
+      "cos_alpha_error": 4.1239771375600753e-08,
+      "cos_theta": 0.5524826049804688,
+      "cos_theta_error": -6.60459971526528e-05,
+      "dt_over_hbar_hi": 0.4487989544868469,
+      "dt_over_hbar_lo": 0.0,
+      "index": 1,
+      "r": 50990.1953125,
+      "r2": 2600000000.0,
+      "r2_error": 0.0,
+      "r_error": 0.00017657215357758105,
+      "sin_alpha": 0.4339553713798523,
+      "sin_alpha_error": 2.4278990651271926e-08,
+      "sin_theta": 0.8335244059562683,
+      "sin_theta_error": 4.375932863920351e-05,
+      "theta_exact_quotient": 3642.0,
+      "theta_hi": 22884.345703125,
+      "theta_lo": 0.0006422051228582859,
+      "theta_product_error": 7.924539750092663e-05,
+      "theta_quotient": 3642.0,
+      "theta_reduced": 0.9854565858840942,
+      "theta_reduction_error": 7.924921010271646e-05
+    }
+  ],
+  "development_report": true,
+  "diagnosis": {
+    "acceptance_path": "B_formally_bounded_operating_domain",
+    "bounded_domain_required": true,
+    "not_primary": [
+      "H1 composition",
+      "operation order",
+      "layout",
+      "synchronization",
+      "nonfinite arithmetic"
+    ],
+    "operating_domain": {
+      "large_angle_short_chain_role": "out_of_domain_stress_diagnostic",
+      "phase_angle_limit": 8192.0,
+      "phase_first_observed_failure_angle": 15707963.267948966,
+      "phase_last_observed_pass_angle": 13176794.633322284,
+      "rotor_angle_limit": 1024.0,
+      "rotor_first_observed_failure_angle": 1539.3794236964986,
+      "rotor_last_observed_all_pass_angle": 1536.238807605409
+    },
+    "primary_origin": "uncompensated Float32 angle-product formation",
+    "resolution": "The H2B TT-Metal candidate already uses the protected compensated H2A TwoProduct and split-2pi path. Retained compensated H2A hardware steps composed in H1 order have zero combined-tolerance value failures."
+  },
+  "performance_eligible": false,
+  "release_evidence": false,
+  "retained_h2a_hardware_source": {
+    "candidate_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+    "report_path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-clean-reproduction-20260716/probes/clean-large_angles/development-report.json",
+    "report_sha256": "cdddbda61c3ca0a94568cfcf9c1b81349af442c7494c4e256a37404c1a5c9f4c"
+  },
+  "schema": "tt-rqm-h2b-large-angle-diagnostic.v1",
+  "stable_benchmark": false,
+  "stages": {
+    "A_float64_analytical_lowering": {
+      "failing_value_count": 0,
+      "max_phase_absolute_error": 0.0,
+      "max_rotor_absolute_error": 0.0,
+      "nonfinite_value_count": 0
+    },
+    "B_float32_cpu_lowering": {
+      "failing_value_count": 9,
+      "max_phase_absolute_error": 0.00036253972861866046,
+      "max_rotor_absolute_error": 0.0007835023094003579,
+      "nonfinite_value_count": 0
+    },
+    "C_compensated_h2a_equivalent_cpu": {
+      "failing_value_count": 0,
+      "max_phase_absolute_error": 4.1239821446659164e-08,
+      "max_rotor_absolute_error": 0.00011688396223238917,
+      "nonfinite_value_count": 0
+    },
+    "D_per_step_matrix_reconstruction": {
+      "compensated_cpu_error": 0.0001260625101728396,
+      "float32_cpu_error": 0.0010403359259813238,
+      "retained_compensated_h2a_hardware_error": 0.00012605900036450937
+    },
+    "E_float32_h1_composition_of_exact_steps": {
+      "complex128_final_matrix_error": 1.2066718670071115e-07,
+      "failing_value_count": 0,
+      "max_phase_absolute_error": 7.195181817021279e-08,
+      "max_rotor_absolute_error": 5.4749585309821214e-08,
+      "nonfinite_value_count": 0
+    },
+    "F_float32_h1_composition_of_compensated_steps": {
+      "cpu_equivalent": {
+        "complex128_final_matrix_error": 0.0001409444062726083,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 7.247594624448794e-08,
+        "max_rotor_absolute_error": 0.00010445417187543438,
+        "nonfinite_value_count": 0
+      },
+      "retained_h2a_hardware_steps": {
+        "complex128_final_matrix_error": 0.00014089839848403432,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.0686211615595909e-07,
+        "max_rotor_absolute_error": 0.00010445417187543438,
+        "nonfinite_value_count": 0
+      }
+    },
+    "G_final_u2_matrix": {
+      "compensated_cpu_error": 0.0001409444062726083,
+      "retained_h2a_hardware_steps_error": 0.00014089839848403432,
+      "uncompensated_float32_error": 0.0011534561023507253
+    }
+  },
+  "sweep": {
+    "case_count": 166,
+    "case_order": [
+      "turn_1_minus_neg_x",
+      "turn_1_minus_neg_y",
+      "turn_1_minus_neg_z",
+      "turn_1_minus_neg_mixed",
+      "turn_1_exact_neg_x",
+      "turn_1_exact_neg_y",
+      "turn_1_exact_neg_z",
+      "turn_1_exact_neg_mixed",
+      "turn_1_plus_neg_x",
+      "turn_1_plus_neg_y",
+      "turn_1_plus_neg_z",
+      "turn_1_plus_neg_mixed",
+      "half_1_minus_neg_x",
+      "half_1_minus_neg_y",
+      "half_1_minus_neg_z",
+      "half_1_minus_neg_mixed",
+      "half_1_plus_neg_x",
+      "half_1_plus_neg_y",
+      "half_1_plus_neg_z",
+      "half_1_plus_neg_mixed",
+      "turn_31_minus_neg_x",
+      "turn_31_minus_neg_y",
+      "turn_31_minus_neg_z",
+      "turn_31_minus_neg_mixed",
+      "turn_31_exact_neg_x",
+      "turn_31_exact_neg_y",
+      "turn_31_exact_neg_z",
+      "turn_31_exact_neg_mixed",
+      "turn_31_plus_neg_x",
+      "turn_31_plus_neg_y",
+      "turn_31_plus_neg_z",
+      "turn_31_plus_neg_mixed",
+      "half_31_minus_neg_x",
+      "half_31_minus_neg_y",
+      "half_31_minus_neg_z",
+      "half_31_minus_neg_mixed",
+      "half_31_plus_neg_x",
+      "half_31_plus_neg_y",
+      "half_31_plus_neg_z",
+      "half_31_plus_neg_mixed",
+      "turn_1024_minus_neg_x",
+      "turn_1024_minus_neg_y",
+      "turn_1024_minus_neg_z",
+      "turn_1024_minus_neg_mixed",
+      "turn_1024_exact_neg_x",
+      "turn_1024_exact_neg_y",
+      "turn_1024_exact_neg_z",
+      "turn_1024_exact_neg_mixed",
+      "turn_1024_plus_neg_x",
+      "turn_1024_plus_neg_y",
+      "turn_1024_plus_neg_z",
+      "turn_1024_plus_neg_mixed",
+      "half_1024_minus_neg_x",
+      "half_1024_minus_neg_y",
+      "half_1024_minus_neg_z",
+      "half_1024_minus_neg_mixed",
+      "half_1024_plus_neg_x",
+      "half_1024_plus_neg_y",
+      "half_1024_plus_neg_z",
+      "half_1024_plus_neg_mixed",
+      "turn_4096_minus_neg_x",
+      "turn_4096_minus_neg_y",
+      "turn_4096_minus_neg_z",
+      "turn_4096_minus_neg_mixed",
+      "turn_4096_exact_neg_x",
+      "turn_4096_exact_neg_y",
+      "turn_4096_exact_neg_z",
+      "turn_4096_exact_neg_mixed",
+      "turn_4096_plus_neg_x",
+      "turn_4096_plus_neg_y",
+      "turn_4096_plus_neg_z",
+      "turn_4096_plus_neg_mixed",
+      "half_4096_minus_neg_x",
+      "half_4096_minus_neg_y",
+      "half_4096_minus_neg_z",
+      "half_4096_minus_neg_mixed",
+      "half_4096_plus_neg_x",
+      "half_4096_plus_neg_y",
+      "half_4096_plus_neg_z",
+      "half_4096_plus_neg_mixed",
+      "turn_1_minus_pos_x",
+      "turn_1_minus_pos_y",
+      "turn_1_minus_pos_z",
+      "turn_1_minus_pos_mixed",
+      "turn_1_exact_pos_x",
+      "turn_1_exact_pos_y",
+      "turn_1_exact_pos_z",
+      "turn_1_exact_pos_mixed",
+      "turn_1_plus_pos_x",
+      "turn_1_plus_pos_y",
+      "turn_1_plus_pos_z",
+      "turn_1_plus_pos_mixed",
+      "half_1_minus_pos_x",
+      "half_1_minus_pos_y",
+      "half_1_minus_pos_z",
+      "half_1_minus_pos_mixed",
+      "half_1_plus_pos_x",
+      "half_1_plus_pos_y",
+      "half_1_plus_pos_z",
+      "half_1_plus_pos_mixed",
+      "turn_31_minus_pos_x",
+      "turn_31_minus_pos_y",
+      "turn_31_minus_pos_z",
+      "turn_31_minus_pos_mixed",
+      "turn_31_exact_pos_x",
+      "turn_31_exact_pos_y",
+      "turn_31_exact_pos_z",
+      "turn_31_exact_pos_mixed",
+      "turn_31_plus_pos_x",
+      "turn_31_plus_pos_y",
+      "turn_31_plus_pos_z",
+      "turn_31_plus_pos_mixed",
+      "half_31_minus_pos_x",
+      "half_31_minus_pos_y",
+      "half_31_minus_pos_z",
+      "half_31_minus_pos_mixed",
+      "half_31_plus_pos_x",
+      "half_31_plus_pos_y",
+      "half_31_plus_pos_z",
+      "half_31_plus_pos_mixed",
+      "turn_1024_minus_pos_x",
+      "turn_1024_minus_pos_y",
+      "turn_1024_minus_pos_z",
+      "turn_1024_minus_pos_mixed",
+      "turn_1024_exact_pos_x",
+      "turn_1024_exact_pos_y",
+      "turn_1024_exact_pos_z",
+      "turn_1024_exact_pos_mixed",
+      "turn_1024_plus_pos_x",
+      "turn_1024_plus_pos_y",
+      "turn_1024_plus_pos_z",
+      "turn_1024_plus_pos_mixed",
+      "half_1024_minus_pos_x",
+      "half_1024_minus_pos_y",
+      "half_1024_minus_pos_z",
+      "half_1024_minus_pos_mixed",
+      "half_1024_plus_pos_x",
+      "half_1024_plus_pos_y",
+      "half_1024_plus_pos_z",
+      "half_1024_plus_pos_mixed",
+      "turn_4096_minus_pos_x",
+      "turn_4096_minus_pos_y",
+      "turn_4096_minus_pos_z",
+      "turn_4096_minus_pos_mixed",
+      "turn_4096_exact_pos_x",
+      "turn_4096_exact_pos_y",
+      "turn_4096_exact_pos_z",
+      "turn_4096_exact_pos_mixed",
+      "turn_4096_plus_pos_x",
+      "turn_4096_plus_pos_y",
+      "turn_4096_plus_pos_z",
+      "turn_4096_plus_pos_mixed",
+      "half_4096_minus_pos_x",
+      "half_4096_minus_pos_y",
+      "half_4096_minus_pos_z",
+      "half_4096_minus_pos_mixed",
+      "half_4096_plus_pos_x",
+      "half_4096_plus_pos_y",
+      "half_4096_plus_pos_z",
+      "half_4096_plus_pos_mixed",
+      "phase_only_neg",
+      "rotor_only_neg",
+      "phase_only_pos",
+      "rotor_only_pos",
+      "noncommuting_xy_edge",
+      "noncommuting_yx_edge"
+    ],
+    "max_compensated_matrix_error": 0.0006869618837268497,
+    "max_compensated_phase_error": 7.00246775009461e-08,
+    "max_compensated_rotor_error": 0.0006869479438799571,
+    "noncommuting_reversal_matrix_difference": 1.999999891990451,
+    "results": [
+      {
+        "case_id": "turn_1_minus_neg_x",
+        "complex128_final_matrix_error": 8.161453816527753e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.573078619685451e-08,
+        "max_rotor_absolute_error": 5.943387459961258e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_neg_y",
+        "complex128_final_matrix_error": 8.161453816527753e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.573078619685451e-08,
+        "max_rotor_absolute_error": 5.943387459961258e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_neg_z",
+        "complex128_final_matrix_error": 5.5643307523056264e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5614257183636204e-08,
+        "max_rotor_absolute_error": 2.949213095959635e-10,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_neg_mixed",
+        "complex128_final_matrix_error": 2.65047820088743e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5614257183636204e-08,
+        "max_rotor_absolute_error": 2.026122395604093e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_neg_x",
+        "complex128_final_matrix_error": 8.153591122915483e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.532107773982716e-14,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_neg_y",
+        "complex128_final_matrix_error": 8.153591122915483e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.532107773982716e-14,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_neg_z",
+        "complex128_final_matrix_error": 8.153591633022758e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.532107773982716e-14,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_neg_mixed",
+        "complex128_final_matrix_error": 1.936097031028169e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.2857015244181155e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_neg_x",
+        "complex128_final_matrix_error": 1.3156724813513204e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.946880510254715e-08,
+        "max_rotor_absolute_error": 5.977536976509157e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_neg_y",
+        "complex128_final_matrix_error": 1.3156724813513204e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.946880510254715e-08,
+        "max_rotor_absolute_error": 5.977536976509157e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_neg_z",
+        "complex128_final_matrix_error": 8.170983401907319e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5652948558393076e-08,
+        "max_rotor_absolute_error": 5.9542525909783706e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_neg_mixed",
+        "complex128_final_matrix_error": 1.6061141039363753e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5652948558393076e-08,
+        "max_rotor_absolute_error": 9.333785111443563e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_neg_x",
+        "complex128_final_matrix_error": 6.359729208874978e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.953449498608253e-09,
+        "max_rotor_absolute_error": 6.359755971559276e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_neg_y",
+        "complex128_final_matrix_error": 6.359729208874978e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.953449498608253e-09,
+        "max_rotor_absolute_error": 6.359755971559276e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_neg_z",
+        "complex128_final_matrix_error": 9.31871205142268e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.942223135768643e-08,
+        "max_rotor_absolute_error": 6.365565366744236e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_neg_mixed",
+        "complex128_final_matrix_error": 7.94268015582279e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.942223135768643e-08,
+        "max_rotor_absolute_error": 4.45633735689753e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_neg_x",
+        "complex128_final_matrix_error": 1.1123911992163101e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 1.1123885112910084e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_neg_y",
+        "complex128_final_matrix_error": 1.1123911992163101e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 1.1123885112910084e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_neg_z",
+        "complex128_final_matrix_error": 1.1921249237939668e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 1.1129705879001431e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_neg_mixed",
+        "complex128_final_matrix_error": 3.3029126129688187e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 3.223755477072725e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_neg_x",
+        "complex128_final_matrix_error": 7.45146757865619e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 5.664434632457471e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_neg_y",
+        "complex128_final_matrix_error": 7.45146757865619e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 5.664434632457471e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_neg_z",
+        "complex128_final_matrix_error": 6.990761601377338e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 4.924603380640491e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_neg_mixed",
+        "complex128_final_matrix_error": 7.440021371925494e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 7.38406066328834e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_neg_x",
+        "complex128_final_matrix_error": 8.162045437393106e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.579449551569356e-08,
+        "max_rotor_absolute_error": 5.96000360175708e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_neg_y",
+        "complex128_final_matrix_error": 8.162045437393106e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.579449551569356e-08,
+        "max_rotor_absolute_error": 5.96000360175708e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_neg_z",
+        "complex128_final_matrix_error": 5.579456415923737e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5794495663870965e-08,
+        "max_rotor_absolute_error": 1.0549561224593162e-11,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_neg_mixed",
+        "complex128_final_matrix_error": 3.1627247403855497e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5794495663870965e-08,
+        "max_rotor_absolute_error": 3.10693021575914e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_neg_x",
+        "complex128_final_matrix_error": 5.67493493873618e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.580757045679438e-08,
+        "max_rotor_absolute_error": 2.969440027200676e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_neg_y",
+        "complex128_final_matrix_error": 5.67493493873618e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.580757045679438e-08,
+        "max_rotor_absolute_error": 2.969440027200676e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_neg_z",
+        "complex128_final_matrix_error": 8.374833119057696e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.9468959423547574e-08,
+        "max_rotor_absolute_error": 2.969440027200676e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_neg_mixed",
+        "complex128_final_matrix_error": 3.0829491557436177e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.9468959423547574e-08,
+        "max_rotor_absolute_error": 2.460799757146061e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_neg_x",
+        "complex128_final_matrix_error": 6.338081959609841e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 6.33796951574929e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_neg_y",
+        "complex128_final_matrix_error": 6.338081959609841e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 6.33796951574929e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_neg_z",
+        "complex128_final_matrix_error": 8.95645543088742e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 6.34415370847968e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_neg_mixed",
+        "complex128_final_matrix_error": 2.5496838681514684e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 2.5412384019137717e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_neg_x",
+        "complex128_final_matrix_error": 1.1139757640421173e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 6.071912717064976e-08,
+        "max_rotor_absolute_error": 1.1145670496346544e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_neg_y",
+        "complex128_final_matrix_error": 1.1139757640421173e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 6.071912717064976e-08,
+        "max_rotor_absolute_error": 1.1145670496346544e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_neg_z",
+        "complex128_final_matrix_error": 1.1954498351272029e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.753649159682706e-09,
+        "max_rotor_absolute_error": 1.1139849730266039e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_neg_mixed",
+        "complex128_final_matrix_error": 1.57732074676757e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.753649159682706e-09,
+        "max_rotor_absolute_error": 1.5695381725880754e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_neg_x",
+        "complex128_final_matrix_error": 8.342501949275686e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.315089308093434e-08,
+        "max_rotor_absolute_error": 3.96082946441112e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_neg_y",
+        "complex128_final_matrix_error": 8.342501949275686e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.315089308093434e-08,
+        "max_rotor_absolute_error": 3.96082946441112e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_neg_z",
+        "complex128_final_matrix_error": 5.427095333819742e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.0490673148753904e-08,
+        "max_rotor_absolute_error": 5.178276263340109e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_neg_mixed",
+        "complex128_final_matrix_error": 0.000244291159690072,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.0490673148753904e-08,
+        "max_rotor_absolute_error": 0.00024428057436991994,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_neg_x",
+        "complex128_final_matrix_error": 2.873529759362059e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.276919718382288e-08,
+        "max_rotor_absolute_error": 1.6027992599809693e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_neg_y",
+        "complex128_final_matrix_error": 2.873529759362059e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.276919718382288e-08,
+        "max_rotor_absolute_error": 1.6027992599809693e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_neg_z",
+        "complex128_final_matrix_error": 1.0885176604592918e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.3157714806588672e-08,
+        "max_rotor_absolute_error": 1.6027992599809693e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_neg_mixed",
+        "complex128_final_matrix_error": 0.00013166633203654077,
+        "failing_value_count": 1,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.3157714806588672e-08,
+        "max_rotor_absolute_error": 0.00013165583610041576,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_neg_x",
+        "complex128_final_matrix_error": 8.950314111306348e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 7.166418880544256e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_neg_y",
+        "complex128_final_matrix_error": 8.950314111306348e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 7.166418880544256e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_neg_z",
+        "complex128_final_matrix_error": 1.861492434788364e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 1.8494780151812051e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_neg_mixed",
+        "complex128_final_matrix_error": 0.00013251499412130502,
+        "failing_value_count": 1,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 0.00013250441260908923,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_neg_x",
+        "complex128_final_matrix_error": 5.040241195201928e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.516153188981013e-08,
+        "max_rotor_absolute_error": 1.2930995385573851e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_neg_y",
+        "complex128_final_matrix_error": 5.040241195201928e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.516153188981013e-08,
+        "max_rotor_absolute_error": 1.2930995385573851e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_neg_z",
+        "complex128_final_matrix_error": 7.318005852411411e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.507529000031228e-08,
+        "max_rotor_absolute_error": 1.2930995385573851e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_neg_mixed",
+        "complex128_final_matrix_error": 8.995492481405251e-05,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.507529000031228e-08,
+        "max_rotor_absolute_error": 8.99097885123896e-05,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_neg_x",
+        "complex128_final_matrix_error": 7.413060028836695e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.5047769578606886e-08,
+        "max_rotor_absolute_error": 7.409771707604824e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_neg_y",
+        "complex128_final_matrix_error": 7.413060028836695e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.5047769578606886e-08,
+        "max_rotor_absolute_error": 7.409771707604824e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_neg_z",
+        "complex128_final_matrix_error": 1.3361592180837302e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.00246775009461e-08,
+        "max_rotor_absolute_error": 7.406068138187533e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_neg_mixed",
+        "complex128_final_matrix_error": 0.00025724648383288856,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.00246775009461e-08,
+        "max_rotor_absolute_error": 0.00025720094307875925,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_neg_x",
+        "complex128_final_matrix_error": 4.619828006483317e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.1907858189119476e-08,
+        "max_rotor_absolute_error": 9.82844461372423e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_neg_y",
+        "complex128_final_matrix_error": 4.619828006483317e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.1907858189119476e-08,
+        "max_rotor_absolute_error": 9.82844461372423e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_neg_z",
+        "complex128_final_matrix_error": 5.3562455828988164e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 6.044149958306377e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_neg_mixed",
+        "complex128_final_matrix_error": 0.0006392996287929219,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 0.000639255824881967,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_neg_x",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_neg_y",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_neg_z",
+        "complex128_final_matrix_error": 6.159709282135551e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_neg_mixed",
+        "complex128_final_matrix_error": 0.0005266653536775582,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 0.0005266232861940451,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_neg_x",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_neg_y",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_neg_z",
+        "complex128_final_matrix_error": 6.159709282135551e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_neg_mixed",
+        "complex128_final_matrix_error": 7.95609603583088e-05,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 7.951887225264456e-05,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_neg_x",
+        "complex128_final_matrix_error": 5.730935365764474e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_neg_y",
+        "complex128_final_matrix_error": 5.730935365764474e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_neg_z",
+        "complex128_final_matrix_error": 7.871898563334794e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_neg_mixed",
+        "complex128_final_matrix_error": 0.0006869618837268497,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 0.0006869479438799571,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_neg_x",
+        "complex128_final_matrix_error": 4.564640729581701e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.6277240161576287e-08,
+        "max_rotor_absolute_error": 4.1892838291901144e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_neg_y",
+        "complex128_final_matrix_error": 4.564640729581701e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.6277240161576287e-08,
+        "max_rotor_absolute_error": 4.1892838291901144e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_neg_z",
+        "complex128_final_matrix_error": 5.60314938896534e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.345302985151676e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_neg_mixed",
+        "complex128_final_matrix_error": 0.00032330279104004903,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.345302985151676e-08,
+        "max_rotor_absolute_error": 0.0003232889196058888,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_pos_x",
+        "complex128_final_matrix_error": 8.161453816527753e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.573078619685451e-08,
+        "max_rotor_absolute_error": 5.943387459961258e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_pos_y",
+        "complex128_final_matrix_error": 8.161453816527753e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.573078619685451e-08,
+        "max_rotor_absolute_error": 5.943387459961258e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_pos_z",
+        "complex128_final_matrix_error": 5.5643307523056264e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5614257183636204e-08,
+        "max_rotor_absolute_error": 2.949213095959635e-10,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_minus_pos_mixed",
+        "complex128_final_matrix_error": 2.6504781976432133e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5614257183636204e-08,
+        "max_rotor_absolute_error": 2.026122395604093e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_pos_x",
+        "complex128_final_matrix_error": 8.153591122915483e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.532107773982716e-14,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_pos_y",
+        "complex128_final_matrix_error": 8.153591122915483e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.532107773982716e-14,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_pos_z",
+        "complex128_final_matrix_error": 8.153591633022758e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.532107773982716e-14,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_exact_pos_mixed",
+        "complex128_final_matrix_error": 1.9360970342597425e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.960463511645031e-08,
+        "max_rotor_absolute_error": 1.2857015244181155e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_pos_x",
+        "complex128_final_matrix_error": 1.3156724813513204e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.946880510254715e-08,
+        "max_rotor_absolute_error": 5.977536976509157e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_pos_y",
+        "complex128_final_matrix_error": 1.3156724813513204e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.946880510254715e-08,
+        "max_rotor_absolute_error": 5.977536976509157e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_pos_z",
+        "complex128_final_matrix_error": 8.170983401907319e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5652948558393076e-08,
+        "max_rotor_absolute_error": 5.9542525909783706e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1_plus_pos_mixed",
+        "complex128_final_matrix_error": 1.6061141057779734e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5652948558393076e-08,
+        "max_rotor_absolute_error": 9.333785111443563e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_pos_x",
+        "complex128_final_matrix_error": 6.359729208874978e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.953449498608253e-09,
+        "max_rotor_absolute_error": 6.359755971559276e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_pos_y",
+        "complex128_final_matrix_error": 6.359729208874978e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.953449498608253e-09,
+        "max_rotor_absolute_error": 6.359755971559276e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_pos_z",
+        "complex128_final_matrix_error": 9.31871205142268e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.942223135768643e-08,
+        "max_rotor_absolute_error": 6.365565366744236e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_minus_pos_mixed",
+        "complex128_final_matrix_error": 7.942680177746165e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.942223135768643e-08,
+        "max_rotor_absolute_error": 4.45633735689753e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_pos_x",
+        "complex128_final_matrix_error": 1.1123911992163101e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 1.1123885112910084e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_pos_y",
+        "complex128_final_matrix_error": 1.1123911992163101e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 1.1123885112910084e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_pos_z",
+        "complex128_final_matrix_error": 1.1921249237939668e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 1.1129705879001431e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1_plus_pos_mixed",
+        "complex128_final_matrix_error": 3.302912618623481e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.914644458806123e-09,
+        "max_rotor_absolute_error": 3.223755477072725e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_pos_x",
+        "complex128_final_matrix_error": 7.45146757865619e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 5.664434632457471e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_pos_y",
+        "complex128_final_matrix_error": 7.45146757865619e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 5.664434632457471e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_pos_z",
+        "complex128_final_matrix_error": 6.990761601377338e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 4.924603380640491e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_minus_pos_mixed",
+        "complex128_final_matrix_error": 7.44002136928161e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.57688201270265e-08,
+        "max_rotor_absolute_error": 7.38406066328834e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_pos_x",
+        "complex128_final_matrix_error": 8.162045437393106e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.579449551569356e-08,
+        "max_rotor_absolute_error": 5.96000360175708e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_pos_y",
+        "complex128_final_matrix_error": 8.162045437393106e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.579449551569356e-08,
+        "max_rotor_absolute_error": 5.96000360175708e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_pos_z",
+        "complex128_final_matrix_error": 5.579456415923737e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5794495663870965e-08,
+        "max_rotor_absolute_error": 1.0549561224593162e-11,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_exact_pos_mixed",
+        "complex128_final_matrix_error": 3.1627247373879475e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.5794495663870965e-08,
+        "max_rotor_absolute_error": 3.10693021575914e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_pos_x",
+        "complex128_final_matrix_error": 5.67493493873618e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.580757045679438e-08,
+        "max_rotor_absolute_error": 2.969440027200676e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_pos_y",
+        "complex128_final_matrix_error": 5.67493493873618e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.580757045679438e-08,
+        "max_rotor_absolute_error": 2.969440027200676e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_pos_z",
+        "complex128_final_matrix_error": 8.374833119057696e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.9468959423547574e-08,
+        "max_rotor_absolute_error": 2.969440027200676e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_31_plus_pos_mixed",
+        "complex128_final_matrix_error": 3.0829490165093916e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 5.9468959423547574e-08,
+        "max_rotor_absolute_error": 2.460799757146061e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_pos_x",
+        "complex128_final_matrix_error": 6.338081959609841e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 6.33796951574929e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_pos_y",
+        "complex128_final_matrix_error": 6.338081959609841e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 6.33796951574929e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_pos_z",
+        "complex128_final_matrix_error": 8.95645543088742e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 6.34415370847968e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_minus_pos_mixed",
+        "complex128_final_matrix_error": 2.5496838503825446e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.796071112026876e-09,
+        "max_rotor_absolute_error": 2.5412384019137717e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_pos_x",
+        "complex128_final_matrix_error": 1.1139757640421173e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 6.071912717064976e-08,
+        "max_rotor_absolute_error": 1.1145670496346544e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_pos_y",
+        "complex128_final_matrix_error": 1.1139757640421173e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 6.071912717064976e-08,
+        "max_rotor_absolute_error": 1.1145670496346544e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_pos_z",
+        "complex128_final_matrix_error": 1.1954498351272029e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.753649159682706e-09,
+        "max_rotor_absolute_error": 1.1139849730266039e-07,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_31_plus_pos_mixed",
+        "complex128_final_matrix_error": 1.5773207470502529e-06,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.753649159682706e-09,
+        "max_rotor_absolute_error": 1.5695381725880754e-06,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_pos_x",
+        "complex128_final_matrix_error": 8.342501949275686e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.315089308093434e-08,
+        "max_rotor_absolute_error": 3.96082946441112e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_pos_y",
+        "complex128_final_matrix_error": 8.342501949275686e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.315089308093434e-08,
+        "max_rotor_absolute_error": 3.96082946441112e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_pos_z",
+        "complex128_final_matrix_error": 5.427095333819742e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.0490673148753904e-08,
+        "max_rotor_absolute_error": 5.178276263340109e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_minus_pos_mixed",
+        "complex128_final_matrix_error": 0.0002442911597760142,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.0490673148753904e-08,
+        "max_rotor_absolute_error": 0.00024428057436991994,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_pos_x",
+        "complex128_final_matrix_error": 2.873529759362059e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.276919718382288e-08,
+        "max_rotor_absolute_error": 1.6027992599809693e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_pos_y",
+        "complex128_final_matrix_error": 2.873529759362059e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.276919718382288e-08,
+        "max_rotor_absolute_error": 1.6027992599809693e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_pos_z",
+        "complex128_final_matrix_error": 1.0885176604592918e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.3157714806588672e-08,
+        "max_rotor_absolute_error": 1.6027992599809693e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_exact_pos_mixed",
+        "complex128_final_matrix_error": 0.00013166633191930068,
+        "failing_value_count": 1,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.3157714806588672e-08,
+        "max_rotor_absolute_error": 0.00013165583610041576,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_pos_x",
+        "complex128_final_matrix_error": 8.950314111306348e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 7.166418880544256e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_pos_y",
+        "complex128_final_matrix_error": 8.950314111306348e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 7.166418880544256e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_pos_z",
+        "complex128_final_matrix_error": 1.861492434788364e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 1.8494780151812051e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_1024_plus_pos_mixed",
+        "complex128_final_matrix_error": 0.00013251499412130502,
+        "failing_value_count": 1,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 1.7217051673235062e-08,
+        "max_rotor_absolute_error": 0.00013250441260908923,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_pos_x",
+        "complex128_final_matrix_error": 5.040241195201928e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.516153188981013e-08,
+        "max_rotor_absolute_error": 1.2930995385573851e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_pos_y",
+        "complex128_final_matrix_error": 5.040241195201928e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.516153188981013e-08,
+        "max_rotor_absolute_error": 1.2930995385573851e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_pos_z",
+        "complex128_final_matrix_error": 7.318005852411411e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.507529000031228e-08,
+        "max_rotor_absolute_error": 1.2930995385573851e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_minus_pos_mixed",
+        "complex128_final_matrix_error": 8.995492512409406e-05,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.507529000031228e-08,
+        "max_rotor_absolute_error": 8.99097885123896e-05,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_pos_x",
+        "complex128_final_matrix_error": 7.413060028836695e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.5047769578606886e-08,
+        "max_rotor_absolute_error": 7.409771707604824e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_pos_y",
+        "complex128_final_matrix_error": 7.413060028836695e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.5047769578606886e-08,
+        "max_rotor_absolute_error": 7.409771707604824e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_pos_z",
+        "complex128_final_matrix_error": 1.3361592180837302e-07,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.00246775009461e-08,
+        "max_rotor_absolute_error": 7.406068138187533e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_1024_plus_pos_mixed",
+        "complex128_final_matrix_error": 0.00025724648393085235,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 7.00246775009461e-08,
+        "max_rotor_absolute_error": 0.00025720094307875925,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_pos_x",
+        "complex128_final_matrix_error": 4.619828006483317e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.1907858189119476e-08,
+        "max_rotor_absolute_error": 9.82844461372423e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_pos_y",
+        "complex128_final_matrix_error": 4.619828006483317e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.1907858189119476e-08,
+        "max_rotor_absolute_error": 9.82844461372423e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_pos_z",
+        "complex128_final_matrix_error": 5.3562455828988164e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 6.044149958306377e-09,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_minus_pos_mixed",
+        "complex128_final_matrix_error": 0.000639299630150701,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 0.000639255824881967,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_pos_x",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_pos_y",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_pos_z",
+        "complex128_final_matrix_error": 6.159709282135551e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_exact_pos_mixed",
+        "complex128_final_matrix_error": 0.0005266653526572604,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 0.0005266232861940451,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_pos_x",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_pos_y",
+        "complex128_final_matrix_error": 6.157398612594522e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_pos_z",
+        "complex128_final_matrix_error": 6.159709282135551e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 1.802929228134076e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "turn_4096_plus_pos_mixed",
+        "complex128_final_matrix_error": 7.956096104058846e-05,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 7.951887225264456e-05,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_pos_x",
+        "complex128_final_matrix_error": 5.730935365764474e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_pos_y",
+        "complex128_final_matrix_error": 5.730935365764474e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_pos_z",
+        "complex128_final_matrix_error": 7.871898563334794e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_minus_pos_mixed",
+        "complex128_final_matrix_error": 0.0006869618828309746,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.7680653436057412e-08,
+        "max_rotor_absolute_error": 0.0006869479438799571,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_pos_x",
+        "complex128_final_matrix_error": 4.564640729581701e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.6277240161576287e-08,
+        "max_rotor_absolute_error": 4.1892838291901144e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_pos_y",
+        "complex128_final_matrix_error": 4.564640729581701e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.6277240161576287e-08,
+        "max_rotor_absolute_error": 4.1892838291901144e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_pos_z",
+        "complex128_final_matrix_error": 5.60314938896534e-08,
+        "failing_value_count": 0,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.345302985151676e-08,
+        "max_rotor_absolute_error": 4.2000306381721145e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "half_4096_plus_pos_mixed",
+        "complex128_final_matrix_error": 0.00032330279110709674,
+        "failing_value_count": 3,
+        "kind": "single_step_combined",
+        "max_phase_absolute_error": 2.345302985151676e-08,
+        "max_rotor_absolute_error": 0.0003232889196058888,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "phase_only_neg",
+        "complex128_final_matrix_error": 4.992664305663247e-08,
+        "failing_value_count": 0,
+        "kind": "phase_only",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 0.0,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "rotor_only_neg",
+        "complex128_final_matrix_error": 4.20041702531293e-08,
+        "failing_value_count": 0,
+        "kind": "rotor_only",
+        "max_phase_absolute_error": 0.0,
+        "max_rotor_absolute_error": 4.200248429874756e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "phase_only_pos",
+        "complex128_final_matrix_error": 4.992664305663247e-08,
+        "failing_value_count": 0,
+        "kind": "phase_only",
+        "max_phase_absolute_error": 4.200248429874756e-08,
+        "max_rotor_absolute_error": 0.0,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "rotor_only_pos",
+        "complex128_final_matrix_error": 4.20041702531293e-08,
+        "failing_value_count": 0,
+        "kind": "rotor_only",
+        "max_phase_absolute_error": 0.0,
+        "max_rotor_absolute_error": 4.200248429874756e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "noncommuting_xy_edge",
+        "complex128_final_matrix_error": 6.520451793096477e-08,
+        "failing_value_count": 0,
+        "kind": "noncommuting",
+        "max_phase_absolute_error": 0.0,
+        "max_rotor_absolute_error": 6.522712736600766e-08,
+        "nonfinite_value_count": 0
+      },
+      {
+        "case_id": "noncommuting_yx_edge",
+        "complex128_final_matrix_error": 6.520451793096477e-08,
+        "failing_value_count": 0,
+        "kind": "noncommuting_reversed",
+        "max_phase_absolute_error": 0.0,
+        "max_rotor_absolute_error": 6.522712736600766e-08,
+        "nonfinite_value_count": 0
+      }
+    ]
+  },
+  "tolerances": {
+    "atol": 0.0001,
+    "pilot_final_matrix_threshold": 0.0002,
+    "rtol": 0.0001
+  }
+}

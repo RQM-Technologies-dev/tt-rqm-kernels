@@ -102,8 +102,8 @@ def validate_repository_claims(
     )
     _require(
         _h2b_foundation_status(repo_root)[0]
-        == "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
-        "repo_status.py does not report the H2B source foundation",
+        == "first non-designated N300 pilot retained; did not pass (environment)",
+        "repo_status.py does not report the retained failed H2B pilot",
     )
     documents = _load_status_documents(repo_root)
     _validate_status_surfaces(documents)
@@ -113,11 +113,12 @@ def validate_repository_claims(
         "su2": {**expected_claim, "scope": "fused_only"},
         "h2a": {"status": "claim_level_0", **expected_h2a_claim},
         "h2b": {
-            "status": "source_foundation",
+            "status": "non_designated_pilot_failed_environment",
             "stable_benchmark": False,
             "performance_eligible": False,
             "claim_level": None,
-            "hardware_run": False,
+            "hardware_run": True,
+            "pilot_passed": False,
         },
         "status_files": list(STATUS_FILES),
     }
@@ -140,7 +141,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "Every individual qmul and H1 source-session report remains `stable_benchmark=false`",
         "historical H1 v2 fused/unfused campaign is retained and non-qualifying",
         "H2A device-side coefficient lowering: Claim Level 0 silicon conformance from one designated N300 device-0 session; `stable_benchmark=false` and `performance_eligible=false`.",
-        "H2B integration foundation: CPU/reference API and fail-closed protocol are implemented; a two-program TT-Metal candidate feeds protected fused H1 from a device-DRAM intermediate. Hardware has not yet been run; `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
+        "H2B first non-designated N300 pilot: retained and did not pass; the failure is classified as environment. All 20 frozen cases were attempted once without retry or replacement. No H2B hardware claim exists; `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
     )
     for marker in required_plan:
         _require(marker in " ".join(plan.split()), f"plan status marker missing: {marker}")
@@ -165,7 +166,8 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "Retries or replacements | 0",
         ),
         "docs/benchmarks/hamiltonian-evolution-h2b.md": (
-            "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
+            "The first non-designated H2B N300 pilot is retained and did not pass",
+            "failure is classified as `environment`",
             "program_count=2",
             "host_round_trip_count=0",
             "claim_level=null",
@@ -183,12 +185,12 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "H1: completed fused-composition baseline",
             "H2A: device-side coefficient lowering",
             "H2A Claim Level 0 silicon conformance is established",
-            "H2B: resident lowering plus H1 composition foundation implemented",
+            "H2B: resident lowering plus H1 composition; first pilot failed",
         ),
         "docs/tenstorrent-landing.md": (
             "SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release",
             "HamiltonianLoweringBench H2A: Claim Level 0 silicon conformance",
-            "HamiltonianEvolutionBench H2B: CPU/reference foundation and TT-Metal candidate source; hardware not yet run; no claim level",
+            "HamiltonianEvolutionBench H2B: first non-designated N300 pilot retained; did not pass (environment); no claim level",
         ),
         "docs/collaboration-map.md": (
             "SU2ComposeBench` has a fused-only Claim Level 2 release",

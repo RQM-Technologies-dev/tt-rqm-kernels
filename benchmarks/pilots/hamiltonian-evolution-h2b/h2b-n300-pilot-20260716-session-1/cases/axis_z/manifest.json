@@ -1,0 +1,26 @@
+{
+  "B": 1,
+  "K": 32,
+  "angle_extrema": {
+    "max_phase_angle": 0.007500000409781937,
+    "max_rotor_angle": 0.02500000037252903
+  },
+  "attempt": 1,
+  "case_id": "axis_z",
+  "dt_path": "axis_z/dt.bin",
+  "dt_sha256": "2bf14e785577603fda60476e5e5cfd313b95b39166647c4fa6b0b00fcd6d46b3",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    32,
+    4
+  ],
+  "hamiltonians_path": "axis_z/hamiltonians.bin",
+  "hamiltonians_sha256": "d0cf474a6061ade3add732f2eba415e175f43b2a5a9bab6cff828ece2b6d8833",
+  "hbar": 1.0,
+  "replacement": false,
+  "retry_count": 0,
+  "role": "conformance",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+}

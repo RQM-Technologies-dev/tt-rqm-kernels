@@ -130,6 +130,10 @@ jobs:
         run: |
           python scripts/validate_hamiltonian_evolution_candidate.py \
             --command "python scripts/hamiltonian_evolution_external_reference.py"
+          python scripts/generate_h2b_large_angle_diagnostic.py --check
+          python scripts/generate_hamiltonian_evolution_source_manifest.py --check
+          python scripts/validate_hamiltonian_evolution_pilot_contract.py
+          python scripts/qualify_hamiltonian_evolution_h2b_pilot.py --check || test $? -eq 1
 
       - name: Validate repository status
         run: |

@@ -340,6 +340,21 @@ def _h2b_foundation_status(repo_root: Path) -> tuple[str, str]:
     )
     if not all(invariants):
         return "invalid candidate architecture", "The H2B device-resident source audit failed."
+    qualification_path = (
+        repo_root / "benchmarks/processed/hamiltonian-evolution-h2b-pilot-qualification.json"
+    )
+    if qualification_path.is_file():
+        try:
+            qualification = json.loads(qualification_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return "invalid pilot qualification", "The H2B processed pilot result is malformed."
+        if qualification.get("package_valid") is not True:
+            return "invalid pilot qualification", "The retained H2B pilot package is invalid."
+        if qualification.get("pilot_passed") is False:
+            return (
+                "first non-designated N300 pilot retained; did not pass (environment)",
+                "All 20 frozen cases were attempted once without retry or replacement and stopped at TT-Metal runtime-root initialization before device execution. No H2B hardware claim exists.",
+            )
     return (
         "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
         "Two programs share one Wormhole device session and a device-DRAM intermediate; stable_benchmark=false, performance_eligible=false, and claim_level=null.",

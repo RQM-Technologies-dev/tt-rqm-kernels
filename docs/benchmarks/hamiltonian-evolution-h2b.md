@@ -1,9 +1,11 @@
-# H2B Device-Resident Hamiltonian Evolution Foundation
+# H2B Device-Resident Hamiltonian Evolution Pilot
 
-HamiltonianEvolutionBench H2B now has a CPU/reference foundation, a fail-closed
-external protocol, and a TT-Metal candidate source. Hardware has not yet been
-run. H2B has no claim level and remains `stable_benchmark=false` and
-`performance_eligible=false`; `claim_level=null`.
+HamiltonianEvolutionBench H2B has a CPU/reference foundation, fail-closed
+external protocol, TT-Metal candidate source, and retained first
+non-designated N300 pilot. The first non-designated H2B N300 pilot is retained
+and did not pass; the failure is classified as `environment`. H2B has no claim
+level and remains `stable_benchmark=false`, `performance_eligible=false`, and
+`claim_level=null`.
 
 ## Contract
 
@@ -25,6 +27,40 @@ norms, varying `dt`, random inputs, K=512 drift, and large angles. The family
 includes K=1, 2, 8, 32, 128, and 512 and reports final rotor/phase absolute and
 relative errors, failing and nonfinite counts, norm drift, direct and
 global-phase-aware complex128 matrix errors, and an output checksum.
+
+## Large-angle diagnosis and bounded domain
+
+The retained large-angle error originates primarily in uncompensated FP32
+angle-product formation, not H1 composition. In the deterministic stage
+diagnostic, uncompensated lowering reached `7.835e-4` rotor error and
+`1.040e-3` per-step matrix error. Protected compensated-H2A-equivalent
+lowering reduced those to `1.169e-4` and `1.261e-4`, while Float32 H1
+composition of exact steps contributed only `1.207e-7` final matrix error.
+
+The wider mixed-direction sweep first failed at rotor angle
+`1539.3794236964986` after passing through `1536.238807605409`. The frozen
+conformance contract therefore uses the conservative physical API bounds
+`abs(theta) <= 1024` and `abs(alpha) <= 8192` radians per logical step, for
+both signs. Inputs outside this implementation domain remain mathematically
+valid but are unsupported by the H2B conformance contract and fail closed.
+`large_angle_short_chain` remains retained as an out-of-domain stress
+diagnostic rather than a conformance gate.
+
+## Frozen pilot contract
+
+The preregistration was frozen before candidate execution with 20 cases in
+this exact order: `identity_k1`, `zero_vector_phase_chain`, `axis_x`, `axis_y`,
+`axis_z`, `noncommuting_xy`, `noncommuting_yx`, `mixed_zero_nonzero`,
+`tiny_norms`, `varying_dt`, `random_finite`, `long_chain`,
+`boundary_rotor_positive`, `boundary_rotor_negative`,
+`boundary_phase_positive`, `boundary_phase_negative`, `boundary_combined`,
+`boundary_noncommuting_xy`, `boundary_noncommuting_yx`, and
+`large_angle_short_chain`.
+
+The contract binds one attempt, zero retries or replacements, `atol=rtol=1e-4`,
+zero failing and nonfinite values, final matrix maximum absolute error
+`2e-4`, exact inputs, source and binary identities, TT-Metal commit, device 0,
+two programs, and the no-intermediate-transfer lifecycle.
 
 ## External protocol
 
@@ -63,10 +99,23 @@ and `host_round_trip_count=0`.
 
 ## Current status and nonclaims
 
-Current status: **CPU/reference foundation implemented; TT-Metal candidate
-source present; hardware not yet run**.
+Current status: **The first non-designated H2B N300 pilot is retained and did
+not pass. The failure is classified as `environment`. No H2B hardware claim
+exists.**
+
+All 20 frozen cases were invoked once in order without retry or replacement.
+Every invocation stopped during TT-Metal runtime initialization before device
+execution because the frozen launcher supplied `TT_METAL_HOME` but omitted the
+separately required `TT_METAL_RUNTIME_ROOT`. No numerical output was produced.
+Both N300 device entries remained visible before and after collection. The
+offline package qualifier reports `package_valid=true` and
+`pilot_passed=false`.
 
 This foundation is not stable, performance-eligible, accelerated, or Claim
 Level 0 or higher. It does not inherit H1 stability or H2A conformance. It does
 not claim a single fused kernel, avoidance of device DRAM, or Tenstorrent
 endorsement.
+
+No designated Claim Level 0 contract was prepared because the non-designated
+pilot did not pass. Any future pilot requires a separately versioned frozen
+contract; retained session 1 is immutable.

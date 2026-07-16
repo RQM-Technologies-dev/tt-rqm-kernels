@@ -1,0 +1,30 @@
+{
+  "schema": "tt-rqm-hamiltonian-evolution-clean-build-reproduction.v1",
+  "captured_date": "2026-07-16",
+  "source_commit": "796e7459c61a81196da1cafd51eb78af6bc9fc27",
+  "source_bundle_sha256": "57a6f741dae34d4d029cbd4274fd59cb5e4e2d34a2617e841d4bbb95d4486d01",
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+  "compiler": "GNU C++ 11.4.0 via Open MPI 5.0.7 ULFM wrapper",
+  "builds": [
+    {
+      "build_id": "isolated-clean-build-a",
+      "candidate_binary_sha256": "3f7069bd1376a4081600a77c23ac8bb0a5b4273167d98ba20117581b9def7913",
+      "source_tree_clean": true
+    },
+    {
+      "build_id": "isolated-clean-build-b",
+      "candidate_binary_sha256": "3f7069bd1376a4081600a77c23ac8bb0a5b4273167d98ba20117581b9def7913",
+      "source_tree_clean": true
+    }
+  ],
+  "byte_identical": true,
+  "candidate_binary_sha256": "3f7069bd1376a4081600a77c23ac8bb0a5b4273167d98ba20117581b9def7913",
+  "preflight_history": {
+    "initial_default_mpi_link_failed": true,
+    "classification": "build_environment",
+    "cause": "default MPI library lacked required ULFM symbols",
+    "candidate_binary_produced": false,
+    "candidate_executed": false,
+    "pilot_attempt_consumed": false
+  }
+}
