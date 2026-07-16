@@ -48,14 +48,14 @@ records the current fused-only Level 2 composition evidence.
 
 ## Current proven result
 
-The repository has two public N300 device-0 benchmark releases. qmul has a
-three-session stable one-device release; `SU2ComposeBench` has one qualified
-fused/unfused comparison session. Neither result is an acceleration claim.
+The repository has two public N300 device-0 benchmark releases: qmul and
+`SU2ComposeBench` each have a three-session stable one-device release.
+`SU2ComposeBench` is fused-only; neither result is an acceleration claim.
 
 | Evidence | Implementation | Claim | Stable benchmark |
 |---|---|---|---|
 | qmul | multicore Tensix compute/SFPU on one Wormhole device; Stage A baseline retained | Level 2 | `true` |
-| SU2ComposeBench H1 | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |
+| SU2ComposeBench | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |
 
 The individual qmul and SU2 source-session reports remain
 `stable_benchmark=false`; each aggregate release is `true` only because three
