@@ -8,7 +8,10 @@ The common quaternion convention is:
 [..., 4] = [real, i, j, k]
 ```
 
-All current implementations are CPU/PyTorch reference kernels. Future TT-Metalium, TT-NN, or TT-MLIR paths should match these contracts before adding backend-specific optimizations.
+Every public operator has a CPU/PyTorch reference. qmul and H1 also have
+protected TT-Metalium releases; H2A is currently reference and protocol only.
+Any future TT-Metalium, TT-NN, or TT-MLIR path must match these contracts before
+adding backend-specific optimizations and cannot inherit an older stable label.
 
 ## Common Expectations
 
@@ -18,6 +21,38 @@ All current implementations are CPU/PyTorch reference kernels. Future TT-Metaliu
 - Leading dimensions follow normal PyTorch broadcasting rules unless otherwise stated.
 - Current benchmark tolerances are engineering tolerances for float32 and float64 comparison, not formal numerical-analysis guarantees.
 - The scalar reference backend provides small independent spot checks for selected operators.
+
+## H2A Hamiltonian coefficient lowering
+
+H2A lowers piecewise-constant two-level Hamiltonian coefficients without
+composing the resulting chain:
+
+```text
+hamiltonians: [B,K,4] Float32, [h0,hx,hy,hz]
+dt:           scalar Float32 or broadcastable [B,K] Float32
+rotors:       [B,K,4] Float32, [w,x,y,z]
+phases:       [B,K,2] Float32, [real,imag]
+```
+
+For `H = h0 I + hx sigma_x + hy sigma_y + hz sigma_z`, define
+`r = sqrt(hx^2+hy^2+hz^2)`, `theta=r*dt/hbar`, and
+`alpha=h0*dt/hbar`. The rotor is
+`[cos(theta), sin(theta)hx/r, sin(theta)hy/r, sin(theta)hz/r]`; the phase is
+`[cos(alpha),-sin(alpha)]`. Exactly zero `r` produces `[1,0,0,0]` while
+retaining the scalar phase.
+
+The implementation rejects nonfinite coefficients or `dt`, non-floating
+coefficients, incompatible shapes, and nonpositive or nonfinite `hbar`. Tiny
+nonzero norms are not folded into the zero branch, large finite angles are not
+clamped, and outputs are not normalized. The independent conformance oracle is
+Float64 analytical lowering plus complex128 reconstruction of
+`exp(-i H dt/hbar)`.
+
+The logical contract does not prescribe a native quaternion datatype or device
+layout. The planned Wormhole boundary packs the six input/output component
+planes into padded FP32 tiles and restores row-major `[B,K,*]` ordering before
+validation. See the [H2A roadmap](hamiltonian-evolution-roadmap.md#h2a-device-side-coefficient-lowering)
+and [design scaffold](../experimental/tt_metalium_hamiltonian_lowering/README.md).
 
 ## `qmul`
 

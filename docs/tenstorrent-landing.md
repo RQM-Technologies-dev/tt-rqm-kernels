@@ -7,9 +7,10 @@ Discussions, or a maintainer handoff.
 
 H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
 rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
-H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
-stage of a Hamiltonian-simulation pipeline, not the complete device-side
-pipeline. The exact boundary is documented in
+H2A device-side Hamiltonian coefficient lowering is the active technical
+milestone. Its reference and external-candidate foundation is pre-hardware;
+there is no H2 hardware result. H1 is a real stage of a
+Hamiltonian-simulation pipeline, not the complete device-side pipeline. The exact boundary is documented in
 [SU2ComposeBench](benchmarks/su2-compose-bench.md).
 
 ## What This Is
@@ -45,6 +46,7 @@ multicore/SFPU candidate: Stage B conformance and first official sweep present
 persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sessions
 SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release plus retained historical v2 campaign
 EntanglementDynamicsBench: CPU reference foundation only; no hardware claim or claim level
+HamiltonianLoweringBench H2A: CPU reference and pre-hardware candidate foundation only
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.

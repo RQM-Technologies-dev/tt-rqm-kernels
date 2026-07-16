@@ -45,6 +45,17 @@ def test_su2_level_two_release_is_the_published_fused_only_claim() -> None:
     assert release["stability_qualification"].endswith("v3-stability-qualification.json")
 
 
+def test_su2_release_validator_cli_defaults_to_published_level_two() -> None:
+    completed = subprocess.run(
+        [sys.executable, "scripts/validate_su2_compose_release.py"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert "Claim Level 2" in completed.stdout
+
+
 def test_su2_artifact_tampering_is_rejected() -> None:
     release = copy.deepcopy(load_manifest(ROOT / DEFAULT_MANIFEST))
     release["artifacts"][0]["sha256"] = "0" * 64

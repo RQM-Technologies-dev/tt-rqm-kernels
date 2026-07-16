@@ -10,6 +10,7 @@ import sys
 from scripts.repo_status import (
     _entanglement_foundation_status,
     _entanglement_hardware_status,
+    _h2a_foundation_status,
     _su2_comparison_status,
     _su2_conformance_status,
     _su2_foundation_status,
@@ -41,8 +42,11 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["Persistent Stage B hardware report"] == "stable one-device performance present"
     assert statuses["SU2ComposeBench reference foundation"] == "implemented reference"
     assert statuses["SU2ComposeBench N300 conformance"] == "hardware conformance present"
-    assert statuses["SU2ComposeBench first comparison"] == "stable one-device fused performance present"
+    assert (
+        statuses["SU2ComposeBench current release"] == "stable one-device fused performance present"
+    )
     assert statuses["SU2ComposeBench stability"] == "established"
+    assert statuses["HamiltonianLoweringBench H2A"] == "implementation-ready reference foundation"
     assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
     assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
 
@@ -67,9 +71,15 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
     assert "SU2ComposeBench reference foundation: implemented reference" in completed.stdout
     assert "SU2ComposeBench N300 conformance: hardware conformance present" in completed.stdout
     assert (
-        "SU2ComposeBench first comparison: stable one-device fused performance present" in completed.stdout
+        "SU2ComposeBench current release: stable one-device fused performance present"
+        in completed.stdout
     )
     assert "SU2ComposeBench stability: established" in completed.stdout
+    assert (
+        "HamiltonianLoweringBench H2A: implementation-ready reference foundation"
+        in completed.stdout
+    )
+    assert "hardware execution is not implemented" in completed.stdout
     assert (
         "EntanglementDynamicsBench reference foundation: implemented reference" in completed.stdout
     )
@@ -88,6 +98,10 @@ def test_su2_status_fails_clearly_when_evidence_is_absent(tmp_path: Path) -> Non
 def test_entanglement_status_fails_clearly_when_foundation_is_absent(tmp_path: Path) -> None:
     assert _entanglement_foundation_status(tmp_path)[0] == "not implemented"
     assert _entanglement_hardware_status(tmp_path)[0] == "not implemented"
+
+
+def test_h2a_status_fails_clearly_when_foundation_is_absent(tmp_path: Path) -> None:
+    assert _h2a_foundation_status(tmp_path)[0] == "not implemented"
 
 
 def test_entanglement_status_rejects_preregistration_claim_escalation(

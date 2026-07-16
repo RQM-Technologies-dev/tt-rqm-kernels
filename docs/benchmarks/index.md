@@ -42,6 +42,18 @@ and three-session stability. It is not a CPU comparison, acceleration claim,
 hardware-bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
+## H2A reference foundation
+
+- Family: `HamiltonianLoweringBench`; stage: H2A coefficient lowering
+- Status: deterministic CPU reference benchmark, independent Float64 and
+  complex128 oracles, and external candidate protocol implemented
+- [Pre-hardware Claim Level 0 preregistration](../../benchmarks/manifests/hamiltonian-lowering-h2a-preregistration.json)
+- Hardware execution, performance eligibility, and stability: absent
+
+H2A is the active technical milestone. It produces per-step rotors and phases
+for the protected H1 boundary, but currently makes no hardware, full-H2,
+speedup, bandwidth, energy, dual-device, or inherited-stability claim.
+
 ## Two-qubit reference foundation
 
 - [EntanglementDynamicsBench reference foundation](entanglement-dynamics-bench.md)
@@ -70,4 +82,6 @@ Validate the complete published release without hardware access:
 python scripts/reproduce_wormhole_qmul.py --check
 python scripts/reproduce_wormhole_su2_compose.py --check
 python scripts/validate_entanglement_dynamics_preregistration.py
+python scripts/validate_hamiltonian_lowering_preregistration.py
+python scripts/validate_repository_claims.py
 ```

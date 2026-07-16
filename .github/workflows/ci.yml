@@ -34,13 +34,22 @@ jobs:
         run: >-
           python -m ruff format --check
           scripts/repo_status.py
+          scripts/validate_repository_claims.py
           tt_rqm_kernels/entanglement_benchmark.py
+          tt_rqm_kernels/hamiltonian_lowering_benchmark.py
+          tt_rqm_kernels/hamiltonian_lowering_candidate.py
+          tt_rqm_kernels/hamiltonian_lowering_preregistration.py
+          tt_rqm_kernels/repository_claims.py
           tt_rqm_kernels/su2_benchmark.py
           tt_rqm_kernels/su2_candidate_experiment.py
           tt_rqm_kernels/su2_hardware_session.py
           tt_rqm_kernels/su2_profile.py
           tt_rqm_kernels/su2_stability.py
           tests/test_entanglement_benchmark.py
+          tests/test_hamiltonian_lowering_benchmark.py
+          tests/test_hamiltonian_lowering_candidate.py
+          tests/test_repository_claims.py
+          tests/test_tt_metalium_h2a_scaffold.py
           tests/test_repo_status.py
           tests/test_su2_candidate_experiment.py
           tests/test_su2_hardware_session.py
@@ -79,8 +88,16 @@ jobs:
       - name: Validate EntanglementDynamicsBench foundation
         run: python scripts/validate_entanglement_dynamics_preregistration.py
 
+      - name: Validate H2A foundation
+        run: |
+          python scripts/validate_hamiltonian_lowering_preregistration.py
+          python scripts/validate_hamiltonian_lowering_candidate.py \
+            --command "python scripts/hamiltonian_lowering_external_reference.py"
+
       - name: Validate repository status
-        run: python scripts/repo_status.py
+        run: |
+          python scripts/validate_repository_claims.py
+          python scripts/repo_status.py
 
       - name: Verify deterministic generated outputs
         run: |

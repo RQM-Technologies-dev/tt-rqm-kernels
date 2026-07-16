@@ -14,9 +14,11 @@ official Tenstorrent repository or a statement of Tenstorrent endorsement.
 
 H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
 rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
-H2 will address device-side Hamiltonian coefficient lowering. H1 is a real
-stage of a Hamiltonian-simulation pipeline, not the complete device-side
-pipeline.
+H2A device-side Hamiltonian coefficient lowering is now the active technical
+milestone. Its CPU reference, independent oracle, candidate protocol, and
+pre-hardware conformance contract are implemented; no H2 hardware execution is
+claimed. H1 is a real stage of the simulation pipeline, not the complete
+device-side pipeline.
 
 ## For Tenstorrent engineers
 
@@ -27,9 +29,9 @@ example rather than a request for a new datatype or hardware feature.
   noncommutative ordering, explicit data movement, multicore Tensix
   compute/SFPU arithmetic, and concrete opportunities for register/L1 reuse
   and fusion.
-- **What is proven:** the one-device `qmul` release passed three independent
-  qualified N300 sessions; fused and unfused `SU2ComposeBench` paths passed
-  whole-output conformance and one paired N300 comparison session.
+- **What is proven:** the one-device `qmul` release and fused-only
+  `SU2ComposeBench` release each passed three qualified N300 sessions. The
+  historical SU2 fused/unfused campaign remains non-qualifying.
 - **The current engineering decisions:** the SU2 profiler did not isolate a
   semantics-preserving fusion/layout correction, while the separate qmul
   placement question remains a design discussion rather than an
@@ -112,10 +114,10 @@ large matrix multiplication:
 - the same representation supports disciplined scientific-computing and
   physical-AI experiments without introducing a native quaternion datatype.
 
-These results do not establish CPU acceleration, stable SU2 performance,
-measured hardware bandwidth, energy efficiency, application speedup, full
-device-side Hamiltonian lowering, dual-device scaling, or Tenstorrent
-endorsement.
+These results do not establish CPU acceleration, stable fused/unfused SU2
+comparison, measured hardware bandwidth, energy efficiency, application
+speedup, full device-side Hamiltonian lowering, dual-device scaling, or
+Tenstorrent endorsement.
 
 ## What you can use `qmul` for
 
@@ -173,6 +175,8 @@ python scripts/validate_su2_compose_stability_preregistration.py
 python scripts/validate_su2_compose_release.py
 python scripts/reproduce_wormhole_su2_compose.py --check
 python scripts/validate_entanglement_dynamics_preregistration.py
+python scripts/validate_hamiltonian_lowering_preregistration.py
+python scripts/validate_repository_claims.py
 ```
 
 ## Documentation paths

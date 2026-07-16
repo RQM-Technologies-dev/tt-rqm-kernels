@@ -1,0 +1,70 @@
+{
+  "benchmark_id": "hamiltonian-lowering-h2a-first-conformance",
+  "cases": [
+    {"id": "zero_vector", "input_identity": "deterministic_sha256"},
+    {"id": "axis_x", "input_identity": "deterministic_sha256"},
+    {"id": "axis_y", "input_identity": "deterministic_sha256"},
+    {"id": "axis_z", "input_identity": "deterministic_sha256"},
+    {"id": "tiny_norms", "input_identity": "deterministic_sha256"},
+    {"id": "random_finite", "input_identity": "deterministic_sha256"},
+    {"id": "varying_dt", "input_identity": "deterministic_sha256"},
+    {"id": "large_angles", "input_identity": "deterministic_sha256"},
+    {"id": "mixed_zero_nonzero", "input_identity": "deterministic_sha256"}
+  ],
+  "claims": {
+    "current_level": null,
+    "performance_eligible": false,
+    "stable_benchmark": false
+  },
+  "gates": [
+    "one_wormhole_device",
+    "device_identity_recorded",
+    "tt_metal_commit_pinned",
+    "candidate_binary_sha256_recorded",
+    "source_commit_recorded",
+    "compiler_runtime_provenance_recorded",
+    "deterministic_input_sha256_recorded",
+    "whole_output_validated",
+    "zero_failing_values",
+    "zero_nonfinite_values",
+    "no_discarded_or_replaced_designated_result"
+  ],
+  "nonclaims": [
+    "no_hardware_execution_yet",
+    "no_performance_claim",
+    "no_stability_claim",
+    "no_speedup_claim",
+    "no_full_h2_end_to_end_claim",
+    "no_h1_status_inheritance",
+    "no_measured_bandwidth_claim",
+    "no_energy_claim",
+    "no_dual_device_claim",
+    "no_tenstorrent_endorsement"
+  ],
+  "operation": {
+    "dt": "float32 scalar or broadcastable [B,K]",
+    "dtype": "float32",
+    "family": "HamiltonianLoweringBench",
+    "input_lane_order": ["h0", "hx", "hy", "hz"],
+    "input_shape": "[B, K, 4]",
+    "normalization": "none",
+    "phase_lane_order": ["real", "imag"],
+    "phase_shape": "[B, K, 2]",
+    "rotor_lane_order": ["w", "x", "y", "z"],
+    "rotor_shape": "[B, K, 4]",
+    "stage": "H2A"
+  },
+  "pinned_tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+  "schema": "tt-rqm-hamiltonian-lowering-preregistration.v1",
+  "status": "pre_hardware",
+  "target_claim_level": 0,
+  "tolerances": {
+    "failing_values": 0,
+    "nonfinite_values": 0,
+    "phase_atol": 0.0001,
+    "phase_rtol": 0.0001,
+    "rotor_atol": 0.0001,
+    "rotor_rtol": 0.0001
+  },
+  "title": "H2A Device-Side Hamiltonian Coefficient Lowering First Conformance"
+}

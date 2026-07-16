@@ -6,9 +6,9 @@ The current public description is:
 
 It must be followed in the same introductory block by the H1 boundary: the CPU
 lowers piecewise-constant two-level Hamiltonian coefficients into FP32 rotors
-and phase pairs; Wormhole composes them in time order; H2 will address
-device-side coefficient lowering. H1 is a real pipeline stage, not the complete
-device-side pipeline.
+and phase pairs; Wormhole composes them in time order; H2A is the active
+device-side coefficient-lowering milestone. H1 is a real pipeline stage, not
+the complete device-side pipeline.
 
 The shared repository claim ladder applies:
 
@@ -38,9 +38,10 @@ acceleration claim.
 
 The historical v1 methodology and retained-candidate v2 methodology are
 permanently retained campaigns. V2 retained all three designated sessions but
-did not pass its frozen variability gates, so it cannot promote the public
-Claim Level 1 release. It must not be rerun, repaired, threshold-expanded, or
-partially qualified after inspection.
+did not pass its frozen variability gates, so it could not promote its
+historical Claim Level 1 release. It must not be rerun, repaired,
+threshold-expanded, or partially qualified after inspection. The separate v3
+fused-only campaign is the current Claim Level 2 release.
 
 See the [historical stability methodology](../su2-stability-methodology.md) and
 the [v3 methodology](../su2-stability-methodology-v3.md).

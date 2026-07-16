@@ -17,10 +17,12 @@ statement of Tenstorrent endorsement.
 - Device Program Profiler and Tracy evidence attribute the current reader,
   compute, and writer execution. The evidence is diagnostic and is not a
   measured-bandwidth or acceleration claim.
-- `SU2ComposeBench` has correct fused and unfused Wormhole implementations and
-  one qualified Claim Level 1 comparison. A later three-session v2 campaign
-  was retained but failed frozen variability gates, so it remains
-  `stable_benchmark=false` and is not part of the first upstream request.
+- `SU2ComposeBench` has a fused-only Claim Level 2 release from three qualified
+  v3 N300 device-0 sessions. The aggregate is `stable_benchmark=true`; every
+  source session remains `false`.
+- The earlier three-session v2 fused/unfused campaign is retained but failed
+  its frozen variability gates. It is historical, non-qualifying evidence and
+  does not establish stable fused/unfused comparison performance.
 
 The [qmul release report](benchmarks/wormhole-qmul.md),
 [hardware evidence](benchmarks/wormhole-qmul-hardware-evidence.md), and
@@ -105,12 +107,15 @@ golden tests, validate representative Wormhole shapes, and capture one
 diagnostic profiler report for the upstream-shaped implementation. A new port
 does not inherit the existing release's stability label.
 
-Inside this repository, the retained SU2 profiler work and non-qualifying v2
-stability campaign are complete evidence records, not a Level 2 release. H2,
-two-qubit hardware execution, and broader benchmark families remain deferred.
+Inside this repository, qmul Level 2 and fused-only H1 Level 2 are protected
+baselines. H2A coefficient lowering is now the active implementation
+foundation, with CPU reference and pre-hardware conformance machinery only.
+H2B fusion, two-qubit hardware execution, and broader benchmark families remain
+future work.
 
 ## Nonclaims
 
 This collaboration path does not claim CPU acceleration, measured hardware
-bandwidth, application speedup, energy efficiency, dual-device scaling,
-stable SU2 performance, or Tenstorrent endorsement.
+bandwidth, application speedup, energy efficiency, dual-device scaling, stable
+fused/unfused SU2 comparison, H2 hardware execution, or Tenstorrent
+endorsement.

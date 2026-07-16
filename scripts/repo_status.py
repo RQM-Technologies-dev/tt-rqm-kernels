@@ -17,6 +17,9 @@ if str(REPO_ROOT) not in sys.path:
 
 from tt_rqm_kernels.benchmark_release import validate_release as validate_qmul_release
 from tt_rqm_kernels.entanglement_benchmark import validate_entanglement_preregistration
+from tt_rqm_kernels.hamiltonian_lowering_preregistration import (
+    load_preregistration as load_h2a_preregistration,
+)
 from tt_rqm_kernels.su2_benchmark import validate_su2_preregistration
 from tt_rqm_kernels.su2_benchmark_release import (
     published_manifest_path,
@@ -50,6 +53,7 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     su2_conformance_status, su2_conformance_detail = _su2_conformance_status(repo_root)
     su2_comparison_status, su2_comparison_detail = _su2_comparison_status(repo_root)
     su2_stability_status, su2_stability_detail = _su2_stability_status(repo_root)
+    h2a_status, h2a_detail = _h2a_foundation_status(repo_root)
     entanglement_foundation_status, entanglement_foundation_detail = (
         _entanglement_foundation_status(repo_root)
     )
@@ -131,7 +135,7 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
                 su2_conformance_detail,
             ),
             _item(
-                "SU2ComposeBench first comparison",
+                "SU2ComposeBench current release",
                 su2_comparison_status,
                 su2_comparison_detail,
             ),
@@ -139,6 +143,11 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
                 "SU2ComposeBench stability",
                 su2_stability_status,
                 su2_stability_detail,
+            ),
+            _item(
+                "HamiltonianLoweringBench H2A",
+                h2a_status,
+                h2a_detail,
             ),
             _item(
                 "EntanglementDynamicsBench reference foundation",
@@ -181,6 +190,42 @@ def _item(name: str, status: str, detail: str) -> dict[str, str]:
         "status": status,
         "detail": detail,
     }
+
+
+def _h2a_foundation_status(repo_root: Path) -> tuple[str, str]:
+    required = (
+        repo_root / "tt_rqm_kernels" / "hamiltonian_lowering_benchmark.py",
+        repo_root / "tt_rqm_kernels" / "hamiltonian_lowering_candidate.py",
+        repo_root / "scripts" / "hamiltonian_lowering_external_reference.py",
+        repo_root / "scripts" / "validate_hamiltonian_lowering_candidate.py",
+        repo_root
+        / "experimental"
+        / "tt_metalium_hamiltonian_lowering"
+        / "audit_pinned_tt_metal.py",
+    )
+    if not all(path.is_file() for path in required):
+        return "not implemented", "The H2A reference/candidate foundation is incomplete."
+    unexpected = (
+        repo_root / "reports" / "tt_hardware_hamiltonian_lowering.json",
+        repo_root / "benchmarks" / "manifests" / "wormhole-hamiltonian-lowering.json",
+    )
+    if any(path.exists() for path in unexpected):
+        return (
+            "unexpected hardware evidence present",
+            "H2A is preregistered for Claim Level 0 but no hardware result is authorized yet.",
+        )
+    try:
+        manifest = load_h2a_preregistration(
+            repo_root / "benchmarks" / "manifests" / "hamiltonian-lowering-h2a-preregistration.json"
+        )
+    except (OSError, ValueError, TypeError, json.JSONDecodeError):
+        return "invalid reference foundation", "The H2A preregistration failed validation."
+    if manifest.get("status") != "pre_hardware":
+        return "invalid reference foundation", "H2A must remain explicitly pre-hardware."
+    return (
+        "implementation-ready reference foundation",
+        "CPU reference, independent oracles, external candidate protocol, pinned-API design audit, and Claim Level 0 preregistration are present; hardware execution is not implemented.",
+    )
 
 
 def _hardware_report_status() -> tuple[str, str]:
@@ -469,7 +514,7 @@ def _su2_conformance_status(root: Path) -> tuple[str, str]:
 def _su2_comparison_status(root: Path) -> tuple[str, str]:
     manifest_path = root / published_manifest_path(root)
     if not manifest_path.is_file():
-        return "not implemented", "The SU2ComposeBench Claim Level 1 release is absent."
+        return "not implemented", "The published SU2ComposeBench release is absent."
     try:
         release = validate_su2_release(manifest_path, repo_root=root, verify_generated=False)
         claim = release.get("claim")
@@ -498,7 +543,10 @@ def _su2_comparison_status(root: Path) -> tuple[str, str]:
         ):
             raise ValueError("comparison result validation failed")
     except (KeyError, OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
-        return "invalid comparison evidence", f"SU2 Claim Level 1 validation failed: {exc}"
+        return (
+            "invalid comparison evidence",
+            f"Published SU2 release validation failed: {exc}",
+        )
     if claim["level"] == 2:
         return (
             "stable one-device fused performance present",
