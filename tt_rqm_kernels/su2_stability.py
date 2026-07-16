@@ -511,10 +511,8 @@ def qualify_stability(
         str(_resolve(root, path).relative_to(root)) for path in manifest_paths
     ]
     preregistration = load_stability_preregistration(preregistration_path, repo_root=root)
-    if (
-        preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3
-        and preregistration.get("status") != "frozen_before_designated_session_1"
-    ):
+    is_v3 = preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3
+    if is_v3 and preregistration.get("status") != "frozen_before_designated_session_1":
         raise IntegrityError(
             "v3 pilot foundation is not frozen and cannot qualify designated sessions"
         )
@@ -579,7 +577,7 @@ def qualify_stability(
         )
         if not valid_inputs or valid_inputs[0] != expected_inputs:
             rejected.append("designated session inputs differ from v2 preregistration")
-    if preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3:
+    if is_v3:
         expected_candidate = preregistration["candidate"]
         expected_identity = (
             expected_candidate["sha256"],
@@ -666,7 +664,7 @@ def qualify_stability(
                     case_rejected.append(
                         f"{analysis['session_id']}: {metric} within-session dispersion exceeds {within_limit:.9f}"
                     )
-                if preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3:
+                if is_v3:
                     raw = case.get("raw_fused_samples_s", [])
                     minimum = float(preregistration["raw_sample_duration_s"]["minimum"])
                     maximum = float(preregistration["raw_sample_duration_s"]["maximum"])
@@ -690,14 +688,22 @@ def qualify_stability(
                         case_rejected.append(
                             f"{value['session_id']}: {metric} cross-session deviation exceeds {cross_limit:.9f}"
                         )
-            metrics[metric] = {
-                "within_session_limit": within_limit,
-                "cross_session_limit": cross_limit,
-                **({"limit": within_limit} if within_limit == cross_limit else {}),
-                "session_statistics": session_statistics,
-                "median_across_sessions_s": median_across,
-                "cross_session_deviation": cross,
-            }
+            if is_v3:
+                metrics[metric] = {
+                    "within_session_limit": within_limit,
+                    "cross_session_limit": cross_limit,
+                    **({"limit": within_limit} if within_limit == cross_limit else {}),
+                    "session_statistics": session_statistics,
+                    "median_across_sessions_s": median_across,
+                    "cross_session_deviation": cross,
+                }
+            else:
+                metrics[metric] = {
+                    "limit": within_limit,
+                    "session_statistics": session_statistics,
+                    "median_across_sessions_s": median_across,
+                    "cross_session_deviation": cross,
+                }
         qualified_cases.append(
             {
                 "B": batch,
@@ -726,22 +732,37 @@ def qualify_stability(
         "session_ids": ids,
         "session_manifests": normalized_manifest_paths,
         "identity": None if not valid_identities else list(valid_identities[0]),
-        "sessions": [
-            {
-                **analysis,
-                "host_identity": (
-                    None
-                    if analysis.get("host_identity") is None
-                    else list(analysis["host_identity"])
-                ),
-            }
-            for analysis in analyses
-        ],
+        "sessions": [_qualification_session(analysis, is_v3=is_v3) for analysis in analyses],
         "cases": qualified_cases,
         "rejected_gates": rejected,
         "qualification_passed": passed,
         "stable_benchmark": passed,
     }
+
+
+def _qualification_session(analysis: Mapping[str, Any], *, is_v3: bool) -> dict[str, Any]:
+    """Preserve the historical v2 artifact while exposing v3 host evidence."""
+
+    if is_v3:
+        return {
+            **analysis,
+            "host_identity": (
+                None if analysis.get("host_identity") is None else list(analysis["host_identity"])
+            ),
+        }
+    omitted = {
+        "host_identity",
+        "source_tree_sha256",
+        "timing_environment",
+        "profiler_watcher_debug_disabled",
+        "runtime_cache_path",
+    }
+    session = {key: value for key, value in analysis.items() if key not in omitted}
+    session["cases"] = [
+        {key: value for key, value in case.items() if key != "raw_fused_samples_s"}
+        for case in analysis["cases"]
+    ]
+    return session
 
 
 def write_qualification(path: Path, payload: Mapping[str, Any]) -> None:

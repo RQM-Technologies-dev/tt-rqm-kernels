@@ -39,6 +39,28 @@ def test_v2_stability_preregistration_is_frozen_before_session_one() -> None:
     assert len(preregistration["inputs"]) == 8
 
 
+def test_v2_qualification_regenerates_the_retained_historical_artifact() -> None:
+    manifests = [
+        Path(
+            f"benchmarks/raw/su2-compose/2026-07-15-n300-device0-su2-v2-session-{index}/session-manifest.json"
+        )
+        for index in range(1, 4)
+    ]
+    qualification = qualify_stability(
+        manifests,
+        preregistration_path=Path(
+            "benchmarks/manifests/su2-compose-stability-preregistration-v2.json"
+        ),
+        repo_root=ROOT,
+    )
+    expected = json.loads(
+        (
+            ROOT / "benchmarks/processed/wormhole-su2-compose-stability-qualification.json"
+        ).read_text()
+    )
+    assert qualification == expected
+
+
 def test_v3_foundation_is_fused_only_and_frozen_before_collection() -> None:
     path = Path("benchmarks/manifests/su2-compose-stability-preregistration-v3.json")
     preregistration = load_stability_preregistration(path, repo_root=ROOT)
