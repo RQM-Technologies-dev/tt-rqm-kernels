@@ -1,0 +1,104 @@
+{
+  "candidate_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+  "case_id": "axis_x",
+  "claim_level": null,
+  "correctness": {
+    "complex_matrix_reconstruction_error": 7.978017057466398e-08,
+    "failing_value_count": 0,
+    "max_phase_absolute_error": 1.99509934128983e-08,
+    "max_phase_relative_error": 2.7821784854802317e-08,
+    "max_rotor_absolute_error": 6.055101298141352e-08,
+    "max_rotor_relative_error": 6.249379368520102e-08,
+    "nonfinite_value_count": 0,
+    "passed": true,
+    "phase_norm_drift": 1.9832648412432263e-08,
+    "rotor_norm_drift": 5.99417120383805e-08
+  },
+  "designated": false,
+  "frozen_tolerances": {
+    "phase_atol": 0.0001,
+    "phase_rtol": 0.0001,
+    "rotor_atol": 0.0001,
+    "rotor_rtol": 0.0001
+  },
+  "performance_eligible": false,
+  "phases": [
+    [
+      [
+        1.0,
+        -0.0
+      ],
+      [
+        0.9995117783546448,
+        -0.03124491311609745
+      ],
+      [
+        0.9980475306510925,
+        0.0624593161046505
+      ]
+    ]
+  ],
+  "qualification_eligible": false,
+  "reference_phases": [
+    [
+      [
+        1.0,
+        -0.0
+      ],
+      [
+        0.9995117584851364,
+        -0.03124491398532608
+      ],
+      [
+        0.9980475107000991,
+        0.0624593178423802
+      ]
+    ]
+  ],
+  "reference_rotors": [
+    [
+      [
+        0.992197667229329,
+        0.12467473338522769,
+        0.0,
+        0.0
+      ],
+      [
+        0.9689124217106447,
+        -0.24740395925452294,
+        0.0,
+        0.0
+      ],
+      [
+        0.9305076219123143,
+        0.36627252908604757,
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "rotors": [
+    [
+      [
+        0.9921976923942566,
+        0.1246747300028801,
+        0.0,
+        0.0
+      ],
+      [
+        0.9689124822616577,
+        -0.24740396440029144,
+        0.0,
+        0.0
+      ],
+      [
+        0.9305076599121094,
+        0.36627253890037537,
+        0.0,
+        0.0
+      ]
+    ]
+  ],
+  "schema": "tt-rqm-h2a-development-probe.v1",
+  "stable_benchmark": false
+}

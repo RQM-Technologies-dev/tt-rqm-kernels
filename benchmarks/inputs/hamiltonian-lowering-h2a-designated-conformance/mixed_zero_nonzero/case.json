@@ -1,0 +1,27 @@
+{
+  "B": 1,
+  "K": 4,
+  "case_id": "mixed_zero_nonzero",
+  "dt_path": "mixed_zero_nonzero/dt.bin",
+  "dt_sha256": "5d96a77c55b4ac1eea2d77815396c4349292b85e3b07beaca6aff933e7ef8752",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    4,
+    4
+  ],
+  "hamiltonians_path": "mixed_zero_nonzero/hamiltonians.bin",
+  "hamiltonians_sha256": "5da14bc286d4879622c9b3ae437617e3504c15a73f7ad8f8fb9473c4bb6ea744",
+  "phase_shape": [
+    1,
+    4,
+    2
+  ],
+  "rotor_shape": [
+    1,
+    4,
+    4
+  ],
+  "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+}

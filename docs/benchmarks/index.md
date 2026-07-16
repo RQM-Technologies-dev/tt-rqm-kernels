@@ -51,11 +51,15 @@ result, or Tenstorrent endorsement.
 - [Retained N300 development blocker](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/README.md)
 - [Compensated development comparison](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/README.md)
 - [Passing non-designated nine-case pilot](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/suite-report.md)
+- [Clean-build and clean-tree reproduction](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-clean-reproduction-20260716/README.md)
+- [Frozen designated Claim Level 0 contract](../../benchmarks/manifests/hamiltonian-lowering-h2a-designated-conformance.json)
 - Claim Level 0 release, performance eligibility, and stability: absent
 
 H2A is the active technical milestone. The original large-angle blocker is
 preserved; a distinct compensated candidate later passed all nine frozen cases
-and one qualification-ineligible pilot. It makes no designated
+and one qualification-ineligible pilot. Its clean committed identity is
+reproducibly built, revalidated, and frozen for later designated Claim Level 0
+collection. Collection has not started. It makes no designated
 hardware-conformance, full-H2, speedup, bandwidth, energy, dual-device, or
 inherited-stability claim.
 

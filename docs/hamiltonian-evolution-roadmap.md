@@ -3,8 +3,9 @@
 **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian
 simulation on Tenstorrent Wormhole.** H1 uses CPU-lowered FP32 rotors and phase
 pairs. Its protected v3 aggregate is Claim Level 2 for stable fused-only
-one-device performance. H2 is the next technical phase; a compensated H2A
-candidate and one passing non-designated pilot exist, but no designated
+one-device performance. H2 is the next technical phase; the clean committed
+H2A candidate is frozen for later designated collection after reproducible
+builds and passing non-designated N300 revalidation, but no designated
 conformance release exists.
 
 ## Protected baselines
@@ -137,6 +138,12 @@ non-designated pilot; the large case had zero failing values, `1.17e-04`
 maximum rotor error, and `4.73e-08` maximum phase error. This is still not
 Claim Level 0 evidence.
 
+The candidate is now bound to implementation commit `225cb213…` and source
+bundle `519b2b9f…`. Two isolated clean builds produced byte-identical binary
+`b12063fd…`; the clean primitive, axis, mixed, large-angle, and nine-case runs
+passed, and every nine-case output checksum matched the retained dirty-tree
+pilot. These are explicitly non-designated development reproductions.
+
 ### First hardware claim gate
 
 The committed preregistration targets Claim Level 0 conformance only. It
@@ -144,6 +151,12 @@ requires one Wormhole device, device identity, pinned TT-Metal and source
 commits, candidate binary hash, compiler/runtime provenance, deterministic
 serialized input hashes, whole-output validation, and zero failing or
 nonfinite values. No designated result may be discarded or replaced.
+
+The [frozen designated manifest](../benchmarks/manifests/hamiltonian-lowering-h2a-designated-conformance.json),
+[serialized inputs](../benchmarks/inputs/hamiltonian-lowering-h2a-designated-conformance),
+collector, qualifier, and [runbook](hamiltonian-lowering-h2a-designated-runbook.md)
+are ready. Their status is `frozen_not_collected`: no session identity has
+been opened and no result is implied.
 
 Until a later designated execution satisfies that contract, H2A remains pre-Claim-Level-0 with
 `stable_benchmark=false` and `performance_eligible=false`. It inherits no H1

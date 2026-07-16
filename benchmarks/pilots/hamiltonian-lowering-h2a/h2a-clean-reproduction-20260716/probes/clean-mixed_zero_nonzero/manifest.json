@@ -1,0 +1,51 @@
+{
+  "benchmark": "HamiltonianLoweringBench",
+  "dt_shape": [],
+  "dtype": "float32",
+  "format": "raw little-endian float32 row-major",
+  "hamiltonian_lane_order": [
+    "h0",
+    "hx",
+    "hy",
+    "hz"
+  ],
+  "hamiltonian_shape": [
+    1,
+    4,
+    4
+  ],
+  "hbar": 1.0,
+  "inputs": {
+    "dt": "dt.bin",
+    "dt_sha256": "5d96a77c55b4ac1eea2d77815396c4349292b85e3b07beaca6aff933e7ef8752",
+    "hamiltonians": "hamiltonians.bin",
+    "hamiltonians_sha256": "5da14bc286d4879622c9b3ae437617e3504c15a73f7ad8f8fb9473c4bb6ea744"
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "phases": "phases.bin",
+    "rotors": "rotors.bin"
+  },
+  "phase_lane_order": [
+    "real",
+    "imag"
+  ],
+  "phase_shape": [
+    1,
+    4,
+    2
+  ],
+  "rotor_lane_order": [
+    "w",
+    "x",
+    "y",
+    "z"
+  ],
+  "rotor_shape": [
+    1,
+    4,
+    4
+  ],
+  "schema": "tt-rqm-external-hamiltonian-lowering.v1",
+  "stage": "conformance"
+}

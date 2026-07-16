@@ -24,6 +24,15 @@ from tt_rqm_kernels.hamiltonian_lowering_pilot import (
     HamiltonianLoweringPilotError,
     validate_pilot_package as validate_h2a_pilot,
 )
+from tt_rqm_kernels.hamiltonian_lowering_designated import (
+    HamiltonianLoweringDesignatedError,
+    MANIFEST_PATH as H2A_DESIGNATED_MANIFEST,
+    validate_designated_manifest,
+)
+from tt_rqm_kernels.hamiltonian_lowering_evidence import (
+    HamiltonianLoweringEvidenceError,
+    validate_clean_reproduction,
+)
 from tt_rqm_kernels.su2_benchmark import validate_su2_preregistration
 from tt_rqm_kernels.su2_benchmark_release import (
     published_manifest_path,
@@ -238,6 +247,20 @@ def _h2a_foundation_status(repo_root: Path) -> tuple[str, str]:
             if result["pilot_passed"]
             else "non-designated hardware pilot failed"
         )
+        frozen = repo_root / H2A_DESIGNATED_MANIFEST
+        if result["pilot_passed"] and frozen.is_file():
+            try:
+                validate_designated_manifest(frozen, repo_root)
+                validate_clean_reproduction(repo_root)
+            except (HamiltonianLoweringDesignatedError, HamiltonianLoweringEvidenceError):
+                return (
+                    "invalid frozen designated contract",
+                    "The clean reproduction evidence or frozen H2A contract failed validation.",
+                )
+            return (
+                "candidate frozen for designated collection",
+                "The clean committed candidate was reproducibly rebuilt and revalidated; the Claim Level 0 contract is frozen, but designated collection has not started and claim_level remains null.",
+            )
         return (
             status,
             "The retained pilot is non-designated and qualification-ineligible; official H2A silicon conformance remains pending.",

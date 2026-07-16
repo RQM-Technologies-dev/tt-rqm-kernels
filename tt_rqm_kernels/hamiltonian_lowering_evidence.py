@@ -15,6 +15,8 @@ BLOCKER = EVIDENCE_ROOT / "h2a-n300-development-blocker-20260716"
 COMPARISON = EVIDENCE_ROOT / "h2a-compensated-development-20260716"
 PILOT = EVIDENCE_ROOT / "h2a-compensated-n300-pilot-20260716"
 INDEX = EVIDENCE_ROOT / "retained-evidence-index.json"
+CLEAN_REPRODUCTION = EVIDENCE_ROOT / "h2a-clean-reproduction-20260716"
+CLEAN_REPRODUCTION_INDEX = CLEAN_REPRODUCTION / "artifact-index.json"
 
 
 class HamiltonianLoweringEvidenceError(ValueError):
@@ -96,6 +98,71 @@ def validate_retained_evidence(repo_root: Path) -> dict[str, Any]:
         "package_count": len(index["packages"]),
         "file_count": sum(len(package["files"]) for package in index["packages"]),
         "pilot_passed": pilot["pilot_passed"],
+    }
+
+
+def build_clean_reproduction_index(repo_root: Path) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    root = repo_root / CLEAN_REPRODUCTION
+    if not root.is_dir():
+        raise HamiltonianLoweringEvidenceError("missing clean reproduction package")
+    files = [
+        {
+            "path": path.relative_to(repo_root).as_posix(),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "size_bytes": path.stat().st_size,
+        }
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and path != repo_root / CLEAN_REPRODUCTION_INDEX
+    ]
+    return {"schema": "tt-rqm-h2a-clean-reproduction-index.v1", "files": files}
+
+
+def validate_clean_reproduction(repo_root: Path) -> dict[str, Any]:
+    repo_root = repo_root.resolve()
+    index = _load_object(repo_root / CLEAN_REPRODUCTION_INDEX)
+    if index != build_clean_reproduction_index(repo_root):
+        raise HamiltonianLoweringEvidenceError("clean reproduction file hash or inventory changed")
+    summary = _load_object(repo_root / CLEAN_REPRODUCTION / "reproducibility.json")
+    expected = {
+        "repository_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+        "source_tree_clean": True,
+        "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+        "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+        "tt_metal_tree_clean": True,
+        "binary_byte_identical": True,
+        "nine_case_suite_passed": True,
+        "all_output_checksums_match_retained_dirty_tree_pilot": True,
+        "designated": False,
+        "qualification_eligible": False,
+        "claim_level": None,
+        "stable_benchmark": False,
+        "performance_eligible": False,
+    }
+    for key, value in expected.items():
+        if summary.get(key) != value:
+            raise HamiltonianLoweringEvidenceError(f"clean reproduction {key} mismatch")
+    builds = summary.get("builds", ())
+    if len(builds) != 2 or any(
+        build.get("candidate_binary_sha256")
+        != "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979"
+        for build in builds
+    ):
+        raise HamiltonianLoweringEvidenceError("clean build identities mismatch")
+    clean_pilot = repo_root / CLEAN_REPRODUCTION / "nine-case-pilot"
+    clean_result = validate_pilot_package(clean_pilot)
+    retained = _load_object(repo_root / PILOT / "suite-report.json")
+    reproduced = _load_object(clean_pilot / "suite-report.json")
+    old_checksums = [item.get("output_checksum") for item in retained["results"]]
+    new_checksums = [item.get("output_checksum") for item in reproduced["results"]]
+    if old_checksums != new_checksums:
+        raise HamiltonianLoweringEvidenceError("clean output checksums differ from retained pilot")
+    return {
+        "clean_reproduction_valid": True,
+        "file_count": len(index["files"]),
+        "build_count": 2,
+        "case_count": clean_result["case_count"],
+        "outputs_byte_identical": True,
     }
 
 

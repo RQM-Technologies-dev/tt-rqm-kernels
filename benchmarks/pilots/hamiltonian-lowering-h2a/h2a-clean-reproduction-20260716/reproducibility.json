@@ -1,0 +1,53 @@
+{
+  "schema": "tt-rqm-h2a-clean-reproducibility.v1",
+  "repository_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+  "source_tree_clean": true,
+  "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+  "source_manifest_sha256": "fa465856fcdf9632af7f2e26585973b0a7b6e52427c98590afe424ee0e08a3e0",
+  "source_file_count": 26,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+  "tt_metal_tree_clean": true,
+  "compiler_identity": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+  "cmake_identity": "cmake version 4.0.2",
+  "ninja_identity": "1.10.1",
+  "runtime_identity": "tt-metal-dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+  "cmake_generator": "Ninja",
+  "cmake_build_type": "",
+  "cmake_cxx_flags": "",
+  "build_command": "python experimental/tt_metalium_hamiltonian_lowering_compensated/build_candidate.py --tt-metal-root {pinned_tt_metal} --cmake-prefix-path {pinned_tt_metal_build} --build-dir {isolated_build_dir}",
+  "build_environment_identity": {
+    "os": "Ubuntu 22.04",
+    "host_class": "N300 Wormhole development instance",
+    "tt_metal_runtime_root": "pinned TT-Metal source checkout",
+    "tt_metal_package": "pinned build_n300 package"
+  },
+  "builds": [
+    {
+      "id": "clean-build-a",
+      "isolated_build_directory": true,
+      "candidate_binary_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+      "elf_build_id": "d8796ba0ce5037f05f10d2ae31a63f082837d8ac"
+    },
+    {
+      "id": "clean-build-b",
+      "isolated_build_directory": true,
+      "candidate_binary_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+      "elf_build_id": "d8796ba0ce5037f05f10d2ae31a63f082837d8ac"
+    }
+  ],
+  "binary_byte_identical": true,
+  "binary_nondeterminism": null,
+  "primitive_probe_passed": true,
+  "smoke_passed": true,
+  "mixed_zero_nonzero_passed": true,
+  "large_angles_passed": true,
+  "nine_case_suite_passed": true,
+  "all_output_checksums_match_retained_dirty_tree_pilot": true,
+  "development_probe": true,
+  "designated": false,
+  "qualification_eligible": false,
+  "claim_level": null,
+  "stable_benchmark": false,
+  "performance_eligible": false,
+  "infrastructure_note": "An initial non-designated primitive launch lacking TT_METAL_RUNTIME_ROOT failed before device execution; it was retained remotely and the corrected, distinctly named run passed. No designated session was opened."
+}

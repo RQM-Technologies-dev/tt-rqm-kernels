@@ -38,6 +38,7 @@ jobs:
           tt_rqm_kernels/entanglement_benchmark.py
           tt_rqm_kernels/hamiltonian_lowering_benchmark.py
           tt_rqm_kernels/hamiltonian_lowering_candidate.py
+          tt_rqm_kernels/hamiltonian_lowering_designated.py
           tt_rqm_kernels/hamiltonian_lowering_evidence.py
           tt_rqm_kernels/hamiltonian_lowering_pilot.py
           tt_rqm_kernels/hamiltonian_lowering_preregistration.py
@@ -51,6 +52,7 @@ jobs:
           tests/test_entanglement_benchmark.py
           tests/test_hamiltonian_lowering_benchmark.py
           tests/test_hamiltonian_lowering_candidate.py
+          tests/test_hamiltonian_lowering_designated.py
           tests/test_hamiltonian_lowering_evidence.py
           tests/test_hamiltonian_lowering_pilot.py
           tests/test_hamiltonian_lowering_source_identity.py
@@ -98,6 +100,9 @@ jobs:
         run: |
           python scripts/validate_hamiltonian_lowering_preregistration.py
           python scripts/validate_hamiltonian_lowering_evidence.py
+          python scripts/validate_hamiltonian_lowering_clean_reproduction.py
+          python scripts/validate_hamiltonian_lowering_designated_contract.py
+          python scripts/qualify_hamiltonian_lowering_h2a_designated.py --contract-only
           python scripts/validate_hamiltonian_lowering_candidate.py \
             --command "python scripts/hamiltonian_lowering_external_reference.py"
           for manifest in benchmarks/pilots/hamiltonian-lowering-h2a/*/pilot-manifest.json; do

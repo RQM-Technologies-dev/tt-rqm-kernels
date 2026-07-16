@@ -22,11 +22,19 @@ ordinary FP32 `r²` accumulation and `sqrt_tile<false>` remain unchanged because
 Candidate B already meets the frozen contract. Exact-zero selection still
 prevents reciprocal-at-zero and returns `[1,0,0,0]` exactly.
 
-On N300 device 0 the final binary SHA-256 is
+The retained dirty-tree development binary SHA-256 was
 `433e74b827d2cf9a7a790a6c9d7bb3917fc1fed3915ec384de0486cdc014d306` and
-the final source-bundle SHA-256 is
+its development source-bundle SHA-256 was
 `7fb65217e05139bf035952ebeb34602d49e5f1772b8dec4c336b7a296e1fba2f`.
-All nine development cases and the one non-designated pilot passed. This is a
-software arrangement of FP32 operations, not increased hardware precision,
-and it makes no stability, performance, acceleration, bandwidth, energy,
-dual-device, H2B, or Tenstorrent-endorsement claim.
+Those identities remain historical and are not reused.
+
+The clean implementation identity is commit
+`225cb213ae79df7acd43d6056841c3eae7b5fc40` with source bundle
+`519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5`.
+Two isolated N300 builds were byte-identical at binary SHA-256
+`b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979`.
+The clean nine-case outputs exactly matched the retained pilot. The future
+designated contract is frozen but uncollected. This is a software arrangement
+of FP32 operations, not increased hardware precision, and it makes no
+stability, performance, acceleration, bandwidth, energy, dual-device, H2B, or
+Tenstorrent-endorsement claim.

@@ -1,0 +1,281 @@
+{
+  "case_order": [
+    "zero_vector",
+    "axis_x",
+    "axis_y",
+    "axis_z",
+    "tiny_norms",
+    "random_finite",
+    "varying_dt",
+    "large_angles",
+    "mixed_zero_nonzero"
+  ],
+  "cases": [
+    {
+      "B": 1,
+      "K": 2,
+      "case_id": "zero_vector",
+      "dt_path": "zero_vector/dt.bin",
+      "dt_sha256": "75e253f50979177eba47b2d0805ad36038789108924514d2a761a70de057d16f",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "zero_vector/hamiltonians.bin",
+      "hamiltonians_sha256": "142b11e703ce9543190323ce7749d4b3a7795a664b157818923f79675369fc9b",
+      "phase_shape": [
+        1,
+        2,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        2,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 3,
+      "case_id": "axis_x",
+      "dt_path": "axis_x/dt.bin",
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        3,
+        4
+      ],
+      "hamiltonians_path": "axis_x/hamiltonians.bin",
+      "hamiltonians_sha256": "cc2ad620fd03b331864ddc0904cad2d3c3de8c6ac9dd033f401e4daaf85e94ef",
+      "phase_shape": [
+        1,
+        3,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        3,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 3,
+      "case_id": "axis_y",
+      "dt_path": "axis_y/dt.bin",
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        3,
+        4
+      ],
+      "hamiltonians_path": "axis_y/hamiltonians.bin",
+      "hamiltonians_sha256": "5407e8586c848508229629685d9df0051747097d8dcc18c1ebf1a48e0a9c7d92",
+      "phase_shape": [
+        1,
+        3,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        3,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 3,
+      "case_id": "axis_z",
+      "dt_path": "axis_z/dt.bin",
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        3,
+        4
+      ],
+      "hamiltonians_path": "axis_z/hamiltonians.bin",
+      "hamiltonians_sha256": "51c646b2af21997ed37db2b89f8456c0c4516a087356c52fd81658b7fd795b15",
+      "phase_shape": [
+        1,
+        3,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        3,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "case_id": "tiny_norms",
+      "dt_path": "tiny_norms/dt.bin",
+      "dt_sha256": "9a8208635e00348ab64aac2b759e76391fd47089e9a749bbcec770d9eb5c6421",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "tiny_norms/hamiltonians.bin",
+      "hamiltonians_sha256": "78f6b3ff0b8f8824f86df36bff8ec4bd295f60eb8b960f312dd1a266b1056de1",
+      "phase_shape": [
+        1,
+        2,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        2,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 4,
+      "K": 7,
+      "case_id": "random_finite",
+      "dt_path": "random_finite/dt.bin",
+      "dt_sha256": "0b9d79ff0fc4d0a77ef398763bbe45c445501e826219f2b6a1aa709411ab631d",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        4,
+        7,
+        4
+      ],
+      "hamiltonians_path": "random_finite/hamiltonians.bin",
+      "hamiltonians_sha256": "9731a8782d4f98b3152fcdde76cfd4cffc0ce066717d914920c0d5d669871284",
+      "phase_shape": [
+        4,
+        7,
+        2
+      ],
+      "rotor_shape": [
+        4,
+        7,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 2,
+      "K": 4,
+      "case_id": "varying_dt",
+      "dt_path": "varying_dt/dt.bin",
+      "dt_sha256": "9206a4761ef440addd7e5b52a6774e08cfc2d3d95430559144f44e5850d04329",
+      "dt_shape": [
+        2,
+        4
+      ],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        2,
+        4,
+        4
+      ],
+      "hamiltonians_path": "varying_dt/hamiltonians.bin",
+      "hamiltonians_sha256": "d244666f09741266e2082999aa6012de8c0db7136cd46f2c2d4a6eb14be42713",
+      "phase_shape": [
+        2,
+        4,
+        2
+      ],
+      "rotor_shape": [
+        2,
+        4,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "case_id": "large_angles",
+      "dt_path": "large_angles/dt.bin",
+      "dt_sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        2,
+        4
+      ],
+      "hamiltonians_path": "large_angles/hamiltonians.bin",
+      "hamiltonians_sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+      "phase_shape": [
+        1,
+        2,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        2,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    },
+    {
+      "B": 1,
+      "K": 4,
+      "case_id": "mixed_zero_nonzero",
+      "dt_path": "mixed_zero_nonzero/dt.bin",
+      "dt_sha256": "5d96a77c55b4ac1eea2d77815396c4349292b85e3b07beaca6aff933e7ef8752",
+      "dt_shape": [],
+      "dtype": "float32",
+      "hamiltonian_shape": [
+        1,
+        4,
+        4
+      ],
+      "hamiltonians_path": "mixed_zero_nonzero/hamiltonians.bin",
+      "hamiltonians_sha256": "5da14bc286d4879622c9b3ae437617e3504c15a73f7ad8f8fb9473c4bb6ea744",
+      "phase_shape": [
+        1,
+        4,
+        2
+      ],
+      "rotor_shape": [
+        1,
+        4,
+        4
+      ],
+      "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+    }
+  ],
+  "generator_seed": 0,
+  "hbar": 1.0,
+  "input_lane_order": [
+    "h0",
+    "hx",
+    "hy",
+    "hz"
+  ],
+  "phase_lane_order": [
+    "real",
+    "imag"
+  ],
+  "rotor_lane_order": [
+    "w",
+    "x",
+    "y",
+    "z"
+  ],
+  "schema": "tt-rqm-hamiltonian-lowering-frozen-inputs.v1",
+  "serialization": "raw little-endian float32 row-major"
+}

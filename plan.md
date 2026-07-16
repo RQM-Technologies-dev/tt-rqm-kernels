@@ -17,9 +17,10 @@ validators remain the source of truth.
 - The historical H1 v2 fused/unfused campaign is retained and non-qualifying;
   it is not the current release.
 - Active implementation milestone: H2A device-side two-level Hamiltonian
-  coefficient lowering. A compensated single-core candidate passes all nine
-  frozen N300 cases and one non-designated pilot; designated conformance is
-  absent.
+  coefficient lowering. The clean committed compensated candidate is
+  reproducibly built, revalidated on N300, and frozen for later designated
+  Claim Level 0 collection; collection has not started and `claim_level`
+  remains null.
 - Future integration: H2B device-resident H2A lowering directly feeding the
   protected fused H1 composition path.
 <!-- repository-claims:end -->
@@ -69,13 +70,16 @@ failed because one-value FP32 angle formation discarded product residuals
 before trigonometric reduction. A distinct Candidate B uses split TwoProduct
 and split-`2π` device reduction; all nine frozen cases and its one retained
 non-designated pilot pass. Neither the original blocker nor the pilot is a
-claim level, performance result, or release.
+claim level, performance result, or release. The clean implementation commit is
+`225cb213…`; its 26-file source bundle is `519b2b9f…`, and two isolated builds
+produced the same `b12063fd…` binary. Clean-tree N300 output checksums matched
+the retained pilot exactly.
 
-The next hardware milestone remains designated conformance only: one Wormhole
-device, pinned
-candidate/source/runtime provenance, deterministic serialized input hashes,
-whole-output validation, zero failing and nonfinite values, and
-`stable_benchmark=false`.
+The designated Claim Level 0 contract, exact serialized inputs, fail-closed
+collector, and offline qualifier are now frozen. The next hardware milestone
+remains execution of that one session: one Wormhole device, pinned
+candidate/source/runtime provenance, whole-output validation, zero failing and
+nonfinite values, and `stable_benchmark=false`.
 
 ## Future integration: H2B
 

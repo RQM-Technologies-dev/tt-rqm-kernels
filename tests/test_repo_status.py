@@ -46,7 +46,7 @@ def test_repo_status_json_reports_current_gaps() -> None:
         statuses["SU2ComposeBench current release"] == "stable one-device fused performance present"
     )
     assert statuses["SU2ComposeBench stability"] == "established"
-    assert statuses["HamiltonianLoweringBench H2A"] == "non-designated hardware pilot passed"
+    assert statuses["HamiltonianLoweringBench H2A"] == "candidate frozen for designated collection"
     assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
     assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
 
@@ -75,8 +75,9 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
         in completed.stdout
     )
     assert "SU2ComposeBench stability: established" in completed.stdout
-    assert "HamiltonianLoweringBench H2A: non-designated hardware pilot passed" in completed.stdout
-    assert "qualification-ineligible" in completed.stdout
+    assert "HamiltonianLoweringBench H2A: candidate frozen for designated collection" in completed.stdout
+    assert "designated collection has not started" in completed.stdout
+    assert "claim_level remains null" in completed.stdout
     assert (
         "EntanglementDynamicsBench reference foundation: implemented reference" in completed.stdout
     )

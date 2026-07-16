@@ -1,0 +1,162 @@
+{
+  "definition": {
+    "absolute_paths_included": false,
+    "additional_files": [
+      "tt_rqm_kernels/hamiltonian_lowering_benchmark.py",
+      "tt_rqm_kernels/hamiltonian_lowering_candidate.py",
+      "tt_rqm_kernels/hamiltonian_lowering_source_identity.py"
+    ],
+    "excluded_path_parts": [
+      "__pycache__",
+      "build"
+    ],
+    "hash_encoding": "uint64_le(name_length) || name || uint64_le(payload_length) || payload",
+    "included_suffixes": [
+      ".cpp",
+      ".h",
+      ".py",
+      ".txt"
+    ],
+    "roots": [
+      "experimental/tt_metalium_hamiltonian_lowering",
+      "experimental/tt_metalium_hamiltonian_lowering_compensated"
+    ],
+    "timestamps_included": false
+  },
+  "files": [
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/CMakeLists.txt",
+      "sha256": "ae74030e8bb5e0a3a52e45ee929a9321af397a20faa30fdea7e50dbe41c25565",
+      "size_bytes": 1488
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/audit_pinned_tt_metal.py",
+      "sha256": "824283d7a6b2ad59c9e25f612d2c536cd7d9e063278631f0847d6f8e28e169e6",
+      "size_bytes": 4549
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/build_candidate.py",
+      "sha256": "d95e4d8055deb9f02ae03b7efef8769ca12b13ab5f114ce9ffd5a5222b64deb5",
+      "size_bytes": 2676
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/check_environment.py",
+      "sha256": "36e85299b5236ef73b4937bd8ef22cf5ac81bf9a07471421a26af9c41fcf8e9c",
+      "size_bytes": 1462
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/run_candidate.py",
+      "sha256": "62fb8a39075aa794085d9138109ca47a3ed1380c6556ffc6d5de8774d876cf6f",
+      "size_bytes": 4567
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/src/hamiltonian_lowering_candidate.cpp",
+      "sha256": "8b11224a2f1fc1bd4a9f79688142b0d5471514a045b68af444abf3b2874ed8e9",
+      "size_bytes": 13145
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/src/kernels/compute_hamiltonian_lowering.cpp",
+      "sha256": "593dcd1ffbfb17c48c606a9c07dea10223fd29bdc43393799da3c5deaf9bee6c",
+      "size_bytes": 5795
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/src/kernels/h2a_sfpu.h",
+      "sha256": "e7b1f400ce4a3596e65047c0182e7a4ee76d3ed805b80f7be2e29f247aecf6fd",
+      "size_bytes": 3308
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/src/kernels/primitive_probe_hamiltonian_lowering.cpp",
+      "sha256": "370c82c5f600318a6bc7b45cac88522791356a947e2f429a16a8d5b33fa47312",
+      "size_bytes": 1747
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/src/kernels/reader_hamiltonian_lowering.cpp",
+      "sha256": "4684fcf83e5ec297f157493d98bff6803a5a0fdb9edcd9818a334bfd29c407c9",
+      "size_bytes": 846
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering/src/kernels/writer_hamiltonian_lowering.cpp",
+      "sha256": "33f3f5ed4ae6962e4efd595b906e939f3d815d7de9aad792dfe54cd6ea8be719",
+      "size_bytes": 894
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/CMakeLists.txt",
+      "sha256": "79992bbeaff0c4d9bb1c574d404e5a86dc7f6a1ebdda26824971d014027caf01",
+      "size_bytes": 2096
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/build_candidate.py",
+      "sha256": "1af1b4655269ae689eab5b2b821c114d7ebdc15cf7f7450e522567e52e227ce1",
+      "size_bytes": 3010
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/development_probe.py",
+      "sha256": "b21125ca80afaf2d21e4a944920004ef951669e964747d4c8950aa51f3b8ae5c",
+      "size_bytes": 6742
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_compensated.cpp",
+      "sha256": "c9b45e774924a8d67079bd330d39238ad3d73f8f163830274c579dbd756f1592",
+      "size_bytes": 6747
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_original_trig_diagnostic.cpp",
+      "sha256": "c62ded8324ead3121a7a5f1f4b493cca5220eed7e2d730bcaf8401c8d643c8ae",
+      "size_bytes": 177
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_product_diagnostic.cpp",
+      "sha256": "89b4b415d6b09d0acc3d3cd2598852543f920987f2cd0d7384786754ed07ba5a",
+      "size_bytes": 3913
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_trig_diagnostic.cpp",
+      "sha256": "75fbef4168681f8b3e9b462824c3c1bb1682c7a647e609b60cc3fecddfd5968f",
+      "size_bytes": 168
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_value_diagnostic.cpp",
+      "sha256": "c66f6615928fd5db1166ac08f9c1ab559b6c51b1d34bfe21c636de5ff0b0830b",
+      "size_bytes": 169
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/h2a_compensated_diagnostic_kernel.h",
+      "sha256": "a0fadbd2fc7bb82667fa0f730507193b26c832ce254e1037331a8a7d6af4ca0d",
+      "size_bytes": 6282
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/h2a_compensated_sfpu.h",
+      "sha256": "01476a689ff6dd84ce4e96ff7e8f0307522d595a4fad4bd1eb215277ac1b9330",
+      "size_bytes": 8637
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/primitive_probe_hamiltonian_lowering_compensated.cpp",
+      "sha256": "1879dce6d5f597fd16c6b70f9fcf993109c37fe6ba3a5395f9f4924c964c2217",
+      "size_bytes": 149
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/run_candidate.py",
+      "sha256": "8d24a03ac1c7d89a39076b5526271b66b0f2e20584bdbda5a4d3043b4922c234",
+      "size_bytes": 1911
+    },
+    {
+      "path": "tt_rqm_kernels/hamiltonian_lowering_benchmark.py",
+      "sha256": "51f2819e8f75f6c8e9c4a8b2d9c47293b1db0e418d93dd7e6914eb0a2ccb7d73",
+      "size_bytes": 8965
+    },
+    {
+      "path": "tt_rqm_kernels/hamiltonian_lowering_candidate.py",
+      "sha256": "6c185d98852b953c170315c6d3f4e12329c4585412d1b22e6ebb42ae9f8c4bf8",
+      "size_bytes": 15714
+    },
+    {
+      "path": "tt_rqm_kernels/hamiltonian_lowering_source_identity.py",
+      "sha256": "96755325c80f1ab90c45a5805b8e97197a013c27908b15ad095f78b058f24e41",
+      "size_bytes": 5935
+    }
+  ],
+  "repository_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+  "schema": "tt-rqm-h2a-source-manifest.v1",
+  "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+  "source_tree_clean": true
+}

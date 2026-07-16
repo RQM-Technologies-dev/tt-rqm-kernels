@@ -1,0 +1,27 @@
+{
+  "B": 1,
+  "K": 2,
+  "case_id": "tiny_norms",
+  "dt_path": "tiny_norms/dt.bin",
+  "dt_sha256": "9a8208635e00348ab64aac2b759e76391fd47089e9a749bbcec770d9eb5c6421",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    2,
+    4
+  ],
+  "hamiltonians_path": "tiny_norms/hamiltonians.bin",
+  "hamiltonians_sha256": "78f6b3ff0b8f8824f86df36bff8ec4bd295f60eb8b960f312dd1a266b1056de1",
+  "phase_shape": [
+    1,
+    2,
+    2
+  ],
+  "rotor_shape": [
+    1,
+    2,
+    4
+  ],
+  "schema": "tt-rqm-hamiltonian-lowering-frozen-case.v1"
+}

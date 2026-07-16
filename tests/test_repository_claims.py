@@ -46,7 +46,7 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         ),
         (
             "plan.md",
-            "one non-designated pilot; designated conformance is\n  absent.",
+            "frozen for later designated\n  Claim Level 0 collection; collection has not started and `claim_level`\n  remains null.",
             "H2A hardware implementation: complete.",
             "plan status marker missing",
         ),
