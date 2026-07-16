@@ -2,56 +2,123 @@
 
 [![CI](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml/badge.svg)](https://github.com/RQM-Technologies-dev/tt-rqm-kernels/actions/workflows/ci.yml)
 
-`tt-rqm-kernels` is a hardware-validated TT-Metalium kernel path for structured
-FP32 tensor math on Tenstorrent hardware. Quaternions, rotors, complex phase
-pairs, and SU(2) state remain ordinary tensors; the structure comes from their
-lane conventions and the operators applied to them.
+`tt-rqm-kernels` is RQM Technologies LLC's hardware-validated laboratory for
+running quaternionic rotation, phase, and Hamiltonian-evolution mathematics as
+structured FP32 tensor workloads on Tenstorrent accelerators. Quaternions,
+rotors, complex phase pairs, and SU(2) state are represented as ordinary
+floating-point tensors; no native quaternion datatype is required.
 
 This is an independent open-source RQM Technologies LLC project. It is not an
 official Tenstorrent repository or a statement of Tenstorrent endorsement.
 
 > **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian simulation on Tenstorrent Wormhole.**
 
-H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
-rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
-H2A device-side Hamiltonian coefficient lowering is the current hardware
-evidence milestone. The compensated single-core candidate is bound to clean commit
-`225cb213…`, rebuilt byte-identically in two isolated directories, and
-revalidated across the frozen nine-case N300 contract. One later designated
-device-0 session passed that exact contract and now supports a separate public
-Claim Level 0 silicon-conformance release. It remains
-`stable_benchmark=false` and `performance_eligible=false`. H1 is a real stage
-of the simulation pipeline, not the complete device-side pipeline.
+H1 consumes rotor and phase steps pre-lowered on the CPU; Wormhole composes
+them in exact time order.
 
-## For Tenstorrent engineers
+## What this repository is
 
-This repository is designed to be a compact, reproducible structured-kernel
-example rather than a request for a new datatype or hardware feature.
+The repository turns RQM mathematical operations into reproducible CPU
+references, TT-Metalium kernels, tests, benchmark contracts, and real
+Wormhole hardware evidence. It demonstrates a useful workload class between
+independent scalar or elementwise operations and large matrix multiplication.
 
-- **Why it maps:** `qmul` has fixed four-lane cross-dependencies,
-  noncommutative ordering, explicit data movement, multicore Tensix
-  compute/SFPU arithmetic, and concrete opportunities for register/L1 reuse
-  and fusion.
-- **What is proven:** the one-device `qmul` release and fused-only
-  `SU2ComposeBench` release each passed three qualified N300 sessions. The
-  historical SU2 fused/unfused campaign remains non-qualifying.
-- **The current engineering decisions:** the SU2 profiler did not isolate a
-  semantics-preserving fusion/layout correction, while the separate qmul
-  placement question remains a design discussion rather than an
-  implementation request.
+These are small, structured tensor programs: values have fixed cross-lane
+dependencies, operation order is noncommutative, and rotations and phases must
+be composed in the right sequence. That makes register and L1 reuse, fused
+chains, and reduced intermediate memory movement visible engineering choices
+instead of abstract optimizations.
 
-That placement decision is now tracked in
-[tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
-No upstream implementation PR will be opened until maintainers indicate whether
-the minimal `qmul` path belongs as a TT-Metalium programming example or an
-experimental TT-NN `ProgramDescriptor` operation.
+## What is already here
 
-The evidence is intentionally separated from broader application claims. The
-[Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) records the qualified
-one-device result; [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
-records the current fused-only Level 2 composition evidence.
-The [H2A report](docs/benchmarks/hamiltonian-lowering-h2a.md) records the
-separate Level 0 device-side coefficient-lowering conformance evidence.
+| Component | What runs on Wormhole | Current protected result |
+|---|---|---|
+| Quaternion multiplication — `qmul` | Batched Hamilton products over ordinary FP32 `[N,4]` tensors in `[real, i, j, k]` order, for structured rotations and transformations where order matters | Claim Level 2 stable one-device performance from three qualified N300 sessions |
+| Fused time-ordered SU(2) composition — H1 / `SU2ComposeBench` | Exact-time-order composition of pre-lowered rotor and phase steps; a real stage of two-level Hamiltonian simulation | Claim Level 2 fused-only stable one-device performance from three qualified v3 sessions |
+| Device-side Hamiltonian coefficient lowering — H2A | Converts two-level Hamiltonian coefficients and `dt` into the rotor and phase steps consumed by H1 | Claim Level 0 silicon conformance from one designated N300 session; `stable_benchmark=false`, `performance_eligible=false` |
+
+The H1 result does not establish a stable fused/unfused comparison or an
+acceleration claim. H2A is a completed hardware-conformance milestone, not
+future work, but it is not a performance or stability result.
+
+## What it can be used for
+
+### Two-level Hamiltonian simulation
+
+The strongest current application path is a reproducible two-level evolution
+pipeline:
+
+```text
+Hamiltonian coefficients
+        ↓
+H2A device-side lowering
+        ↓
+rotors and phase pairs
+        ↓
+H1 time-ordered composition
+        ↓
+final U(2) evolution operator
+```
+
+This supports development and study of qubit and spin-½ evolution, driven
+two-level systems, quantum-control and pulse-sequence simulation, and
+time-dependent SU(2) dynamics. It does not claim arbitrary quantum-circuit
+simulation or quantum-hardware execution.
+
+### Rotation, pose, and physical-state workloads
+
+`qmul` is also a reusable contract for ordered 3D rotation pipelines such as
+robot or drone orientation, inertial-navigation updates, camera or vehicle
+pose, satellite attitude, and quaternion-based sensor fusion. These are
+enabled workload directions, not demonstrated end-to-end application
+acceleration results.
+
+### Structured-kernel research on Tenstorrent
+
+The repository gives Tenstorrent developers a compact, reproducible workload
+for cross-lane tensor arithmetic, component-planar layouts, multicore Tensix
+work distribution, compute/SFPU placement, register and L1 reuse, kernel
+fusion, intermediate DRAM avoidance, and whole-output numerical validation.
+
+## What this is building toward
+
+H2B has not begun. It would make the first device-resident two-level
+Hamiltonian-evolution pipeline in this project by feeding H2A directly into
+fused H1 composition, without a host round trip for intermediate rotor and
+phase tensors:
+
+```text
+Hamiltonian coefficients + dt
+        ↓
+device-resident H2A lowering
+        ↓
+directly into fused H1 composition
+        ↓
+final rotor and phase
+```
+
+H2B must earn separate evidence and cannot inherit H1 or H2A claim status. The
+broader purpose is to move RQM mathematics from theory and Python references
+into inspectable, reproducible, hardware-backed Tenstorrent workloads that
+outside engineers can evaluate and potentially integrate.
+
+## Why Tenstorrent
+
+The workload maps naturally to ordinary FP32 tensors, fixed structured
+arithmetic, visible noncommutative order, explicit data movement, and
+multicore Tensix compute/SFPU implementation. It offers practical fusion and
+local-memory reuse opportunities without asking for a new datatype or hardware
+feature.
+
+The open placement question is tracked in
+[tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887):
+whether the minimal `qmul` path belongs as a TT-Metalium programming example or
+an experimental TT-NN `ProgramDescriptor` operation. Tenstorrent has not
+accepted either placement.
+
+For detailed evidence, see the [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md),
+[SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md), and
+[H2A report](docs/benchmarks/hamiltonian-lowering-h2a.md).
 
 ## Current proven result
 
@@ -111,51 +178,19 @@ It adds joint-state evolution and entanglement diagnostics, but has no
 Tenstorrent implementation, hardware evidence, performance claim, or claim
 level.
 
-## Why it matters
+## Evidence boundaries
 
-Structured kernels occupy useful territory between scalar elementwise code and
-large matrix multiplication:
+The present releases prove the `qmul` kernel contract, fused H1 composition,
+and H2A silicon conformance within their separate contracts. They do not prove
+end-to-end speedup for rotation, scientific-simulation, or physical-AI
+applications. They also do not establish CPU acceleration, a stable
+fused/unfused SU2 comparison, measured hardware bandwidth, energy efficiency,
+dual-device scaling, a complete H2B pipeline, or Tenstorrent endorsement.
 
-- fixed cross-lane dependencies test more than independent elementwise math;
-- noncommutative ordered composition makes execution order observable;
-- register and L1 reuse create concrete fusion opportunities;
-- fused chains can avoid intermediate DRAM movement;
-- the same representation supports disciplined scientific-computing and
-  physical-AI experiments without introducing a native quaternion datatype.
-
-These results do not establish CPU acceleration, stable fused/unfused SU2
-comparison, measured hardware bandwidth, energy efficiency, application
-speedup, a complete device-resident H2 pipeline, dual-device scaling, or
-Tenstorrent endorsement.
-
-## What you can use `qmul` for
-
-`qmul(a, b)` is the batched Hamilton product of ordinary floating-point
-quaternion tensors with final lane layout `[real, i, j, k]`. It is useful when
-each four-lane value represents a structured transformation and the order of
-composition matters:
-
-- **Rotation and pose pipelines:** compose unit quaternions that encode 3D
-  orientations, then fuse normalization, conjugation, or vector rotation into
-  a larger tensor program.
-- **Two-level Hamiltonian simulation:** compose the unit-quaternion rotors and
-  phase pairs produced by CPU lowering of piecewise-constant Hamiltonian
-  coefficients. This is the H1 stage implemented by `SU2ComposeBench`.
-- **Structured-kernel development:** use the compact `[N, 4]` contract as a
-  reproducible target for testing cross-lane arithmetic, noncommutative order,
-  layout choices, and fusion on a Tenstorrent backend.
-
-The reference operator supports normal PyTorch broadcasting over leading
-dimensions, so it can serve as a building block inside batched simulations and
-tensor pipelines rather than only as a standalone benchmark. See the
-[operator contract](docs/operator-contracts.md#qmul) for its exact equation,
-shapes, and SU(2) matrix convention.
-
-The present device result proves the `qmul` kernel contract and its
-one-device benchmark stability; it does not yet prove end-to-end speedup for a
-rotation, scientific-simulation, or physical-AI application. Device-side
-Hamiltonian coefficient lowering, broader physical-AI benchmarks, and
-two-qubit execution remain future work.
+H2B integration, broader physical-AI application benchmarks, and two-qubit
+hardware execution remain future work. See the
+[operator contract](docs/operator-contracts.md#qmul) for exact tensor shapes,
+equations, and SU(2) conventions.
 
 ## Five-minute local quickstart
 
