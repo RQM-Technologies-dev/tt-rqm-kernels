@@ -77,7 +77,9 @@ def load_v3_pilot_repeat_counts(
         "v3 pilot repeat-count schema mismatch",
     )
     _require(payload.get("benchmark_mode") == "fused_stability", "pilot plan must be fused-only")
-    _require(payload.get("designated_stability_evidence") is False, "pilot plan cannot be designated")
+    _require(
+        payload.get("designated_stability_evidence") is False, "pilot plan cannot be designated"
+    )
     source = Path(str(payload.get("source_report")))
     source_path = _resolve(root, source)
     _require(source_path.is_file(), "pilot repeat-count source report is missing")
@@ -227,7 +229,9 @@ def _validate_v3_preregistration(data: dict[str, Any], *, root: Path) -> dict[st
         statistic.get("diagnostic_metrics") == ["unfused", "ratio"],
         "v3 diagnostics must name unfused and ratio",
     )
-    _require(float(statistic.get("absolute_maximum_limit", -1)) == 0.10, "v3 maximum limit must be 10%")
+    _require(
+        float(statistic.get("absolute_maximum_limit", -1)) == 0.10, "v3 maximum limit must be 10%"
+    )
     duration = data.get("raw_sample_duration_s")
     _require(
         duration == {"minimum": 0.025, "maximum": 0.05, "record_before_normalization": True},
@@ -242,18 +246,24 @@ def _validate_v3_preregistration(data: dict[str, Any], *, root: Path) -> dict[st
     for case in cases:
         limits = case.get("limits")
         _require(
-            limits == {"fused": {"within_session_dispersion": 0.05, "cross_session_deviation": 0.05}},
+            limits
+            == {"fused": {"within_session_dispersion": 0.05, "cross_session_deviation": 0.05}},
             "v3 fused limits must remain 5%",
         )
         repeats = case.get("repeat_count")
         if status == "pilot_foundation_not_frozen":
             _require(repeats is None, "pilot-only v3 repeat counts must remain unset")
         else:
-            _require(isinstance(repeats, int) and repeats > 0, "frozen v3 repeat counts must be positive")
+            _require(
+                isinstance(repeats, int) and repeats > 0, "frozen v3 repeat counts must be positive"
+            )
     candidate = data.get("candidate")
     pilots = data.get("pilot_sessions")
     if status == "pilot_foundation_not_frozen":
-        _require(candidate is None and pilots == [], "pilot-only v3 cannot freeze candidate or pilot evidence")
+        _require(
+            candidate is None and pilots == [],
+            "pilot-only v3 cannot freeze candidate or pilot evidence",
+        )
     else:
         _require(isinstance(candidate, dict), "frozen v3 candidate identity is missing")
         for key in (
@@ -266,7 +276,10 @@ def _validate_v3_preregistration(data: dict[str, Any], *, root: Path) -> dict[st
             "device",
             "pilot_collection_base_commit",
         ):
-            _require(isinstance(candidate.get(key), str) and candidate[key], f"frozen v3 candidate {key} is missing")
+            _require(
+                isinstance(candidate.get(key), str) and candidate[key],
+                f"frozen v3 candidate {key} is missing",
+            )
         _require(
             pilots == ["pilot-1", "pilot-2", "pilot-3"],
             "frozen v3 requires the three retained pilot sessions",
@@ -276,7 +289,9 @@ def _validate_v3_preregistration(data: dict[str, Any], *, root: Path) -> dict[st
             isinstance(frozen_at, str) and frozen_at.endswith("+00:00"),
             "frozen v3 timestamp is missing or not UTC",
         )
-        repeat_plan = load_v3_pilot_repeat_counts(Path(str(data.get("pilot_repeat_plan"))), repo_root=root)
+        repeat_plan = load_v3_pilot_repeat_counts(
+            Path(str(data.get("pilot_repeat_plan"))), repo_root=root
+        )
         _require(
             [case["repeat_count"] for case in cases]
             == [repeat_plan[(batch, steps)] for batch, steps in CASES],
@@ -285,7 +300,10 @@ def _validate_v3_preregistration(data: dict[str, Any], *, root: Path) -> dict[st
         _validate_v3_host_contract(data)
         _validate_v3_pilot_evidence(data, root=root)
     invalid = data.get("invalid_session_rules")
-    _require(isinstance(invalid, list) and len(invalid) == len(set(invalid)) >= 12, "v3 invalid-session rules are incomplete")
+    _require(
+        isinstance(invalid, list) and len(invalid) == len(set(invalid)) >= 12,
+        "v3 invalid-session rules are incomplete",
+    )
     return data
 
 
@@ -303,7 +321,9 @@ def _validate_v3_host_contract(data: Mapping[str, Any]) -> None:
         "timing_environment",
     }
     _require(set(host) == required, "frozen v3 host contract changed")
-    _require(host["requested_candidate_cpu_affinity"] == [24, 25, 26, 27], "v3 CPU affinity changed")
+    _require(
+        host["requested_candidate_cpu_affinity"] == [24, 25, 26, 27], "v3 CPU affinity changed"
+    )
     _require(host["process_nice"] == 0, "v3 process nice changed")
     _require(host["profiler_watcher_debug_disabled"] is True, "v3 debug contract changed")
     _require(host["timing_environment"] == {}, "v3 timing environment changed")
@@ -338,7 +358,9 @@ def _validate_v3_pilot_evidence(data: Mapping[str, Any], *, root: Path) -> None:
         "pilot assessment did not pass the frozen readiness gate",
     )
     pilots = evidence.get("sessions")
-    _require(isinstance(pilots, list) and len(pilots) == 3, "frozen v3 pilot evidence is incomplete")
+    _require(
+        isinstance(pilots, list) and len(pilots) == 3, "frozen v3 pilot evidence is incomplete"
+    )
     ids = [str(pilot.get("id")) for pilot in pilots if isinstance(pilot, dict)]
     _require(ids == ["pilot-1", "pilot-2", "pilot-3"], "frozen v3 pilot IDs changed")
     _require(assessment.get("session_ids") == ids, "pilot assessment session IDs changed")
@@ -358,13 +380,17 @@ def _validate_v3_pilot_evidence(data: Mapping[str, Any], *, root: Path) -> None:
             and manifest.get("benchmark_mode") == "fused_stability",
             "pilot manifest contract mismatch",
         )
-        _require(manifest.get("candidate_sha256") == candidate.get("sha256"), "pilot candidate hash mismatch")
+        _require(
+            manifest.get("candidate_sha256") == candidate.get("sha256"),
+            "pilot candidate hash mismatch",
+        )
         _require(
             manifest.get("tt_metal_commit") == candidate.get("tt_metal_commit"),
             "pilot TT-Metal commit mismatch",
         )
         _require(
-            manifest.get("execution_source_commit") == candidate.get("pilot_collection_base_commit"),
+            manifest.get("execution_source_commit")
+            == candidate.get("pilot_collection_base_commit"),
             "pilot collection base commit mismatch",
         )
         _validate_imported_cache_inventory(manifest_path.parent)
@@ -383,7 +409,10 @@ def _validate_v3_pilot_evidence(data: Mapping[str, Any], *, root: Path) -> None:
         and manifest.get("benchmark_mode") == "fused_stability",
         "fused conformance manifest contract mismatch",
     )
-    _require(manifest.get("candidate_sha256") == candidate.get("sha256"), "conformance candidate hash mismatch")
+    _require(
+        manifest.get("candidate_sha256") == candidate.get("sha256"),
+        "conformance candidate hash mismatch",
+    )
     report = json.loads((manifest_path.parent / "report.json").read_text(encoding="utf-8"))
     _require(
         report.get("benchmark_stage") == "conformance"
@@ -404,10 +433,16 @@ def _validate_v3_pilot_evidence(data: Mapping[str, Any], *, root: Path) -> None:
 def _validate_imported_cache_inventory(session_dir: Path) -> None:
     cache_root = session_dir / "tt-metal-cache"
     inventory_path = session_dir / "cache-inventory.json"
-    _require(cache_root.is_dir() and inventory_path.is_file(), "imported runtime cache evidence is missing")
+    _require(
+        cache_root.is_dir() and inventory_path.is_file(),
+        "imported runtime cache evidence is missing",
+    )
     inventory = json.loads(inventory_path.read_text(encoding="utf-8"))
     files = inventory.get("files")
-    _require(isinstance(files, list) and len(files) == inventory.get("file_count"), "runtime cache inventory is malformed")
+    _require(
+        isinstance(files, list) and len(files) == inventory.get("file_count"),
+        "runtime cache inventory is malformed",
+    )
     for entry in files:
         _require(isinstance(entry, dict), "runtime cache inventory entry is malformed")
         path = (cache_root / str(entry.get("path"))).resolve()
@@ -416,7 +451,9 @@ def _validate_imported_cache_inventory(session_dir: Path) -> None:
         except ValueError as exc:
             raise IntegrityError("runtime cache inventory path escapes session") from exc
         _require(path.is_file(), "imported runtime cache file is missing")
-        _require(path.stat().st_size == entry.get("size_bytes"), "imported runtime cache size mismatch")
+        _require(
+            path.stat().st_size == entry.get("size_bytes"), "imported runtime cache size mismatch"
+        )
         _require(sha256_file(path) == entry.get("sha256"), "imported runtime cache hash mismatch")
 
 
@@ -478,13 +515,17 @@ def qualify_stability(
         preregistration.get("schema") == PREREGISTRATION_SCHEMA_V3
         and preregistration.get("status") != "frozen_before_designated_session_1"
     ):
-        raise IntegrityError("v3 pilot foundation is not frozen and cannot qualify designated sessions")
+        raise IntegrityError(
+            "v3 pilot foundation is not frozen and cannot qualify designated sessions"
+        )
     analyses: list[dict[str, Any]] = []
     identities: list[tuple[str, ...] | None] = []
     input_identities: list[tuple[str, ...] | None] = []
     for path in manifest_paths:
         try:
-            analysis, identity, input_identity = _analyze_session(path, root=root, require_designated=True)
+            analysis, identity, input_identity = _analyze_session(
+                path, root=root, require_designated=True
+            )
         except Exception as exc:
             analysis = {
                 "manifest": str(path),
@@ -557,18 +598,25 @@ def qualify_stability(
         ):
             rejected.append("designated source tree differs from frozen v3 candidate")
         host_identities = [analysis.get("host_identity") for analysis in analyses]
-        if None in host_identities or len(set(tuple(value) for value in host_identities if value)) != 1:
+        if (
+            None in host_identities
+            or len(set(tuple(value) for value in host_identities if value)) != 1
+        ):
             rejected.append("frozen host parameters differ between designated sessions")
         host_contract = preregistration["host_contract"]
         expected_host_identity = tuple(
-            json.dumps(host_contract[key], sort_keys=True)
-            for key in V3_HOST_IDENTITY_KEYS
+            json.dumps(host_contract[key], sort_keys=True) for key in V3_HOST_IDENTITY_KEYS
         )
         if not host_identities or host_identities[0] != expected_host_identity:
             rejected.append("designated sessions differ from the frozen host contract")
-        if any(analysis.get("timing_environment") != host_contract["timing_environment"] for analysis in analyses):
+        if any(
+            analysis.get("timing_environment") != host_contract["timing_environment"]
+            for analysis in analyses
+        ):
             rejected.append("designated timing environment differs from frozen host contract")
-        if any(analysis.get("profiler_watcher_debug_disabled") is not True for analysis in analyses):
+        if any(
+            analysis.get("profiler_watcher_debug_disabled") is not True for analysis in analyses
+        ):
             rejected.append("designated profiler, watcher, or debug contract changed")
         cache_paths = [analysis.get("runtime_cache_path") for analysis in analyses]
         if None in cache_paths or len(cache_paths) != len(set(cache_paths)):
@@ -583,10 +631,14 @@ def qualify_stability(
         for metric in required_metrics:
             limit_spec = threshold["limits"][metric]
             within_limit = float(
-                limit_spec["within_session_dispersion"] if isinstance(limit_spec, dict) else limit_spec
+                limit_spec["within_session_dispersion"]
+                if isinstance(limit_spec, dict)
+                else limit_spec
             )
             cross_limit = float(
-                limit_spec["cross_session_deviation"] if isinstance(limit_spec, dict) else limit_spec
+                limit_spec["cross_session_deviation"]
+                if isinstance(limit_spec, dict)
+                else limit_spec
             )
             session_statistics = []
             for analysis in analyses:
@@ -726,7 +778,9 @@ def assess_v3_pilots(
         analyses.append(analysis)
         identities.append(identity)
         input_identities.append(input_identity)
-        rejected.extend(f"{analysis['session_id']}: {reason}" for reason in analysis["rejected_gates"])
+        rejected.extend(
+            f"{analysis['session_id']}: {reason}" for reason in analysis["rejected_gates"]
+        )
     if len(manifest_paths) != 3 or len(analyses) != 3:
         rejected.append("exactly three complete non-designated pilot sessions are required")
     ids = [analysis["session_id"] for analysis in analyses]
@@ -751,7 +805,11 @@ def assess_v3_pilots(
         case_rejected: list[str] = []
         for analysis in analyses:
             case = next(
-                (value for value in analysis["cases"] if (value["B"], value["K"]) == (batch, steps)),
+                (
+                    value
+                    for value in analysis["cases"]
+                    if (value["B"], value["K"]) == (batch, steps)
+                ),
                 None,
             )
             if case is None:
@@ -829,7 +887,10 @@ def _analyze_session(
     manifest_path = _resolve(root, manifest_path)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     _require(manifest.get("schema") in SESSION_SCHEMAS, "unsupported SU2 session schema")
-    modern = manifest.get("schema") in {"tt-rqm-su2-compose-session.v2", "tt-rqm-su2-compose-session.v3"}
+    modern = manifest.get("schema") in {
+        "tt-rqm-su2-compose-session.v2",
+        "tt-rqm-su2-compose-session.v3",
+    }
     v3 = manifest.get("schema") == "tt-rqm-su2-compose-session.v3"
     host_identity: tuple[Any, ...] | None = None
     source_tree_sha256: str | None = None
@@ -937,8 +998,12 @@ def _analyze_session(
                 )
                 if any(pre_host.get(key) != post_host.get(key) for key in stable_keys):
                     rejected.append("frozen host state changed during the session")
-                host_identity = tuple(json.dumps(pre_host.get(key), sort_keys=True) for key in stable_keys)
-                cache = json.loads(role_paths["runtime-cache-inventory"].read_text(encoding="utf-8"))
+                host_identity = tuple(
+                    json.dumps(pre_host.get(key), sort_keys=True) for key in stable_keys
+                )
+                cache = json.loads(
+                    role_paths["runtime-cache-inventory"].read_text(encoding="utf-8")
+                )
                 if cache.get("file_count", 0) <= 0:
                     rejected.append("runtime cache inventory is empty after collection")
                 _validate_imported_cache_inventory(manifest_path.parent)

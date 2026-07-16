@@ -148,7 +148,9 @@ def collect_su2_session(
             and value.strip().lower() not in {"", "0", "false", "off", "no"}
         }
         if benchmark_mode == FUSED_STABILITY and enabled_debug:
-            raise IntegrityError(f"profiler, watcher, or debug environment is enabled: {enabled_debug}")
+            raise IntegrityError(
+                f"profiler, watcher, or debug environment is enabled: {enabled_debug}"
+            )
         environment = {
             "schema": "tt-rqm-su2-compose-environment.v2",
             "captured_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -233,7 +235,9 @@ def collect_su2_session(
             failure = failure or str(post_health["validation_error"])
 
         try:
-            _write_json(session_dir / "host-state-post.json", capture_host_state(cpu_affinity=cpu_affinity))
+            _write_json(
+                session_dir / "host-state-post.json", capture_host_state(cpu_affinity=cpu_affinity)
+            )
         except Exception as exc:
             failure = failure or f"host-state capture failed: {exc}"
         if cache_dir is not None:

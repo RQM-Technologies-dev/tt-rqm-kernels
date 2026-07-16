@@ -48,7 +48,9 @@ def validate_retained_evidence(repo_root: Path) -> dict[str, Any]:
     try:
         index = json.loads((repo_root / INDEX).read_text(encoding="utf-8"))
     except (FileNotFoundError, json.JSONDecodeError) as exc:
-        raise HamiltonianLoweringEvidenceError("invalid or missing retained evidence index") from exc
+        raise HamiltonianLoweringEvidenceError(
+            "invalid or missing retained evidence index"
+        ) from exc
     if index != build_evidence_index(repo_root):
         raise HamiltonianLoweringEvidenceError("retained evidence file hash or inventory changed")
 

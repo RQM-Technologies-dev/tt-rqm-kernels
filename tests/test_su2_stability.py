@@ -46,12 +46,25 @@ def test_v3_foundation_is_fused_only_and_frozen_before_collection() -> None:
     assert preregistration["status"] == "frozen_before_designated_session_1"
     assert preregistration["statistic"]["required_metrics"] == ["fused"]
     assert preregistration["statistic"]["diagnostic_metrics"] == ["unfused", "ratio"]
-    assert [case["repeat_count"] for case in preregistration["cases"]] == [267, 90, 24, 7, 24, 24, 24, 12]
-    assert preregistration["candidate"]["source_commit"] == "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6"
+    assert [case["repeat_count"] for case in preregistration["cases"]] == [
+        267,
+        90,
+        24,
+        7,
+        24,
+        24,
+        24,
+        12,
+    ]
+    assert (
+        preregistration["candidate"]["source_commit"] == "cd9118ccc342e7ba7143e34c0a2b570e82c1f4a6"
+    )
     assert preregistration["pilot_sessions"] == ["pilot-1", "pilot-2", "pilot-3"]
     qualification = qualify_stability([], preregistration_path=path, repo_root=ROOT)
     assert qualification["qualification_passed"] is False
-    assert "exactly 3 designated cold-start sessions are required" in qualification["rejected_gates"]
+    assert (
+        "exactly 3 designated cold-start sessions are required" in qualification["rejected_gates"]
+    )
 
 
 def test_v3_frozen_evidence_hash_is_tamper_evident() -> None:
@@ -96,7 +109,9 @@ def test_v3_qualification_requires_frozen_candidate_source_and_host(
             {
                 "B": batch,
                 "K": steps,
-                "limits": {"fused": {"within_session_dispersion": 0.05, "cross_session_deviation": 0.05}},
+                "limits": {
+                    "fused": {"within_session_dispersion": 0.05, "cross_session_deviation": 0.05}
+                },
             }
             for batch, steps in su2_stability.CASES
         ],
@@ -140,7 +155,9 @@ def test_v3_qualification_requires_frozen_candidate_source_and_host(
     assert passed["stable_benchmark"] is True
 
     def wrong_source(path: Path, *, root: Path, require_designated: bool):
-        analysis, observed_identity, inputs = fake_analyze(path, root=root, require_designated=require_designated)
+        analysis, observed_identity, inputs = fake_analyze(
+            path, root=root, require_designated=require_designated
+        )
         if path.name == "session-2":
             analysis["source_tree_sha256"] = "wrong"
         return analysis, observed_identity, inputs

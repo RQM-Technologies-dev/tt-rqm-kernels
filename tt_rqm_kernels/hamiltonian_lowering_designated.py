@@ -115,7 +115,9 @@ def validate_frozen_inputs(input_root: Path, *, compare_generator: bool = True) 
     _require(manifest.get("case_order") == list(CASE_IDS), "frozen case order mismatch")
     records = manifest.get("cases")
     _require(isinstance(records, list), "frozen cases must be a list")
-    _require([record.get("case_id") for record in records] == list(CASE_IDS), "case records reordered")
+    _require(
+        [record.get("case_id") for record in records] == list(CASE_IDS), "case records reordered"
+    )
     generated = {case["id"]: case for case in reference_cases(seed=0)}
     for record in records:
         case_id = record["case_id"]
@@ -123,13 +125,22 @@ def validate_frozen_inputs(input_root: Path, *, compare_generator: bool = True) 
         _require(case_record == record, f"{case_id} case manifest mismatch")
         h_path = input_root / record["hamiltonians_path"]
         dt_path = input_root / record["dt_path"]
-        _require(sha256_file(h_path) == record["hamiltonians_sha256"], f"{case_id} Hamiltonian hash mismatch")
+        _require(
+            sha256_file(h_path) == record["hamiltonians_sha256"],
+            f"{case_id} Hamiltonian hash mismatch",
+        )
         _require(sha256_file(dt_path) == record["dt_sha256"], f"{case_id} dt hash mismatch")
         if compare_generator:
             case = generated[case_id]
-            expected_h = case["hamiltonians"].detach().cpu().to(torch.float32).contiguous().numpy().tobytes()
-            expected_dt = torch.as_tensor(case["dt"], dtype=torch.float32).contiguous().numpy().tobytes()
-            _require(h_path.read_bytes() == expected_h, f"{case_id} Hamiltonians differ from generator")
+            expected_h = (
+                case["hamiltonians"].detach().cpu().to(torch.float32).contiguous().numpy().tobytes()
+            )
+            expected_dt = (
+                torch.as_tensor(case["dt"], dtype=torch.float32).contiguous().numpy().tobytes()
+            )
+            _require(
+                h_path.read_bytes() == expected_h, f"{case_id} Hamiltonians differ from generator"
+            )
             _require(dt_path.read_bytes() == expected_dt, f"{case_id} dt differs from generator")
     return {
         "frozen_inputs_valid": True,
@@ -165,23 +176,46 @@ def validate_designated_manifest(manifest_path: Path, repo_root: Path) -> dict[s
     }
     for key, value in expected.items():
         _require(manifest.get(key) == value, f"designated manifest {key} mismatch")
-    _require(not DEVELOPMENT_IDENTITIES.intersection(_manifest_identity_values(manifest)), "development identity reused")
+    _require(
+        not DEVELOPMENT_IDENTITIES.intersection(_manifest_identity_values(manifest)),
+        "development identity reused",
+    )
     _require(manifest.get("completed_session_id") is None, "completed session must be absent")
     _require(manifest.get("collection_started") is False, "collection must not be started")
     required_nonclaims = {
-        "no_collection_yet", "no_claim_level_yet", "no_performance_claim",
-        "no_stability_claim", "no_acceleration_claim", "no_bandwidth_claim",
-        "no_energy_claim", "no_dual_device_claim", "no_H2B_claim",
-        "no_Tenstorrent_endorsement", "no_inheritance_from_H1",
+        "no_collection_yet",
+        "no_claim_level_yet",
+        "no_performance_claim",
+        "no_stability_claim",
+        "no_acceleration_claim",
+        "no_bandwidth_claim",
+        "no_energy_claim",
+        "no_dual_device_claim",
+        "no_H2B_claim",
+        "no_Tenstorrent_endorsement",
+        "no_inheritance_from_H1",
     }
-    _require(set(manifest.get("nonclaims", ())) == required_nonclaims, "designated nonclaims mismatch")
+    _require(
+        set(manifest.get("nonclaims", ())) == required_nonclaims, "designated nonclaims mismatch"
+    )
     source_manifest = repo_root / manifest["source_manifest"]
-    source_result = validate_source_manifest(source_manifest, repo_root, expected_commit=IMPLEMENTATION_COMMIT)
-    _require(sha256_file(source_manifest) == manifest["source_manifest_sha256"], "source manifest hash mismatch")
+    source_result = validate_source_manifest(
+        source_manifest, repo_root, expected_commit=IMPLEMENTATION_COMMIT
+    )
+    _require(
+        sha256_file(source_manifest) == manifest["source_manifest_sha256"],
+        "source manifest hash mismatch",
+    )
     input_root = repo_root / manifest["frozen_input_root"]
     input_result = validate_frozen_inputs(input_root)
-    _require(input_result["input_manifest_sha256"] == manifest["input_manifest_sha256"], "input manifest hash mismatch")
-    _require(manifest.get("cases") == _load_json(input_root / "input-manifest.json")["cases"], "case contract mismatch")
+    _require(
+        input_result["input_manifest_sha256"] == manifest["input_manifest_sha256"],
+        "input manifest hash mismatch",
+    )
+    _require(
+        manifest.get("cases") == _load_json(input_root / "input-manifest.json")["cases"],
+        "case contract mismatch",
+    )
     return {"designated_manifest_valid": True, **source_result, **input_result}
 
 
@@ -225,8 +259,10 @@ def build_designated_manifest(repo_root: Path) -> dict[str, Any]:
         "compensated_product_strategy": "device-side Dekker split TwoProduct with FP32 splitter 4097",
         "period_reduction_strategy": "device-side nearest-multiple split-2pi reduction",
         "tolerances": {
-            "rotor_atol": 0.0001, "rotor_rtol": 0.0001,
-            "phase_atol": 0.0001, "phase_rtol": 0.0001,
+            "rotor_atol": 0.0001,
+            "rotor_rtol": 0.0001,
+            "phase_atol": 0.0001,
+            "phase_rtol": 0.0001,
         },
         "validation": {
             "zero_failing_values_required": True,
@@ -242,30 +278,59 @@ def build_designated_manifest(repo_root: Path) -> dict[str, Any]:
         "performance_eligible": False,
         "stable_benchmark": False,
         "nonclaims": [
-            "no_collection_yet", "no_claim_level_yet", "no_performance_claim",
-            "no_stability_claim", "no_acceleration_claim", "no_bandwidth_claim",
-            "no_energy_claim", "no_dual_device_claim", "no_H2B_claim",
-            "no_Tenstorrent_endorsement", "no_inheritance_from_H1",
+            "no_collection_yet",
+            "no_claim_level_yet",
+            "no_performance_claim",
+            "no_stability_claim",
+            "no_acceleration_claim",
+            "no_bandwidth_claim",
+            "no_energy_claim",
+            "no_dual_device_claim",
+            "no_H2B_claim",
+            "no_Tenstorrent_endorsement",
+            "no_inheritance_from_H1",
         ],
     }
 
 
 def dry_run_preflight(
-    *, manifest_path: Path, governance_root: Path, source_repo: Path,
-    tt_metal_root: Path, candidate_binary: Path, compiler: str = "c++",
+    *,
+    manifest_path: Path,
+    governance_root: Path,
+    source_repo: Path,
+    tt_metal_root: Path,
+    candidate_binary: Path,
+    compiler: str = "c++",
     tt_smi: str = "tt-smi",
 ) -> dict[str, Any]:
     """Validate all frozen identities without device execution or session creation."""
 
     manifest_result = validate_designated_manifest(manifest_path, governance_root)
     manifest = _load_json(manifest_path)
-    _require(_git(source_repo, "rev-parse", "HEAD") == IMPLEMENTATION_COMMIT, "source checkout commit mismatch")
-    _require(not _git(source_repo, "status", "--porcelain", "--untracked-files=all"), "source checkout is dirty")
-    validate_source_manifest(governance_root / manifest["source_manifest"], source_repo, expected_commit=IMPLEMENTATION_COMMIT)
-    _require(_git(tt_metal_root, "rev-parse", "HEAD") == TT_METAL_COMMIT, "TT-Metal commit mismatch")
-    _require(not _git(tt_metal_root, "status", "--porcelain", "--untracked-files=all"), "TT-Metal tree is dirty")
+    _require(
+        _git(source_repo, "rev-parse", "HEAD") == IMPLEMENTATION_COMMIT,
+        "source checkout commit mismatch",
+    )
+    _require(
+        not _git(source_repo, "status", "--porcelain", "--untracked-files=all"),
+        "source checkout is dirty",
+    )
+    validate_source_manifest(
+        governance_root / manifest["source_manifest"],
+        source_repo,
+        expected_commit=IMPLEMENTATION_COMMIT,
+    )
+    _require(
+        _git(tt_metal_root, "rev-parse", "HEAD") == TT_METAL_COMMIT, "TT-Metal commit mismatch"
+    )
+    _require(
+        not _git(tt_metal_root, "status", "--porcelain", "--untracked-files=all"),
+        "TT-Metal tree is dirty",
+    )
     _require(sha256_file(candidate_binary) == CANDIDATE_SHA256, "candidate binary hash mismatch")
-    compiler_line = subprocess.run([compiler, "--version"], check=True, capture_output=True, text=True).stdout.splitlines()[0]
+    compiler_line = subprocess.run(
+        [compiler, "--version"], check=True, capture_output=True, text=True
+    ).stdout.splitlines()[0]
     _require(compiler_line == COMPILER_IDENTITY, "compiler identity mismatch")
     device_health = query_device_health(tt_smi)
     return {
@@ -285,9 +350,7 @@ def dry_run_preflight(
 def query_device_health(tt_smi: str = "tt-smi") -> dict[str, Any]:
     """Read non-executing device telemetry and require healthy N300 device 0."""
 
-    completed = subprocess.run(
-        [tt_smi, "-s"], check=True, capture_output=True, text=True
-    )
+    completed = subprocess.run([tt_smi, "-s"], check=True, capture_output=True, text=True)
     try:
         payload = json.loads(completed.stdout)
     except json.JSONDecodeError as exc:
@@ -318,17 +381,26 @@ def validate_device_health(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def collect_designated_session(
-    *, manifest_path: Path, governance_root: Path, source_repo: Path,
-    tt_metal_root: Path, candidate_binary: Path, output_root: Path,
-    session_id: str, runner: Callable[..., CandidateRun] = run_external_candidate,
+    *,
+    manifest_path: Path,
+    governance_root: Path,
+    source_repo: Path,
+    tt_metal_root: Path,
+    candidate_binary: Path,
+    output_root: Path,
+    session_id: str,
+    runner: Callable[..., CandidateRun] = run_external_candidate,
     tt_smi: str = "tt-smi",
 ) -> dict[str, Any]:
     """Open exactly one session and retain one attempt for every frozen case."""
 
     dry_run_preflight(
-        manifest_path=manifest_path, governance_root=governance_root,
-        source_repo=source_repo, tt_metal_root=tt_metal_root,
-        candidate_binary=candidate_binary, tt_smi=tt_smi,
+        manifest_path=manifest_path,
+        governance_root=governance_root,
+        source_repo=source_repo,
+        tt_metal_root=tt_metal_root,
+        candidate_binary=candidate_binary,
+        tt_smi=tt_smi,
     )
     _require(session_id.strip() == session_id and bool(session_id), "session id is invalid")
     _require(not output_root.exists(), "designated session output already exists")
@@ -337,14 +409,28 @@ def collect_designated_session(
     cases_root.mkdir()
     manifest = _load_json(manifest_path)
     session = {
-        "schema": SESSION_SCHEMA, "session_id": session_id, "designated": True,
-        "target_claim_level": 0, "claim_level": None, "collection_started": True,
-        "collection_completed": False, "manifest_sha256": sha256_file(manifest_path),
-        "candidate_binary_sha256": CANDIDATE_SHA256, "repository_commit": IMPLEMENTATION_COMMIT,
-        "source_bundle_sha256": SOURCE_BUNDLE_SHA256, "tt_metal_commit": TT_METAL_COMMIT,
-        "device_id": 0, "device_count": 1, "core_count": 1, "case_order": list(CASE_IDS),
-        "attempts_per_case": 1, "retries": 0, "replacement_results": 0,
-        "stable_benchmark": False, "performance_eligible": False, "results": [],
+        "schema": SESSION_SCHEMA,
+        "session_id": session_id,
+        "designated": True,
+        "target_claim_level": 0,
+        "claim_level": None,
+        "collection_started": True,
+        "collection_completed": False,
+        "manifest_sha256": sha256_file(manifest_path),
+        "candidate_binary_sha256": CANDIDATE_SHA256,
+        "repository_commit": IMPLEMENTATION_COMMIT,
+        "source_bundle_sha256": SOURCE_BUNDLE_SHA256,
+        "tt_metal_commit": TT_METAL_COMMIT,
+        "device_id": 0,
+        "device_count": 1,
+        "core_count": 1,
+        "case_order": list(CASE_IDS),
+        "attempts_per_case": 1,
+        "retries": 0,
+        "replacement_results": 0,
+        "stable_benchmark": False,
+        "performance_eligible": False,
+        "results": [],
     }
     _write_json(output_root / "session-manifest.json", session)
     runner_path = (
@@ -362,18 +448,32 @@ def collect_designated_session(
             str(runner_path),
         )
     )
-    input_manifest = _load_json(governance_root / manifest["frozen_input_root"] / "input-manifest.json")
+    input_manifest = _load_json(
+        governance_root / manifest["frozen_input_root"] / "input-manifest.json"
+    )
     for record in input_manifest["cases"]:
         case_id = record["case_id"]
         case_root = cases_root / case_id
         case_root.mkdir()
         result = {"case_id": case_id, "attempt": 1, "passed": False}
         try:
-            hamiltonians, dt = load_frozen_case(governance_root / manifest["frozen_input_root"], record)
+            hamiltonians, dt = load_frozen_case(
+                governance_root / manifest["frozen_input_root"], record
+            )
             run = runner(hamiltonians, dt, command=command, execution_label="hardware")
             _retain_run(case_root, run)
-            result.update({"passed": True, "report": f"cases/{case_id}/report.json", "checksum": run.report["correctness"]["checksum"]})
-        except (HamiltonianLoweringCandidateError, HamiltonianLoweringDesignatedError, OSError) as exc:
+            result.update(
+                {
+                    "passed": True,
+                    "report": f"cases/{case_id}/report.json",
+                    "checksum": run.report["correctness"]["checksum"],
+                }
+            )
+        except (
+            HamiltonianLoweringCandidateError,
+            HamiltonianLoweringDesignatedError,
+            OSError,
+        ) as exc:
             (case_root / "error.txt").write_text(str(exc) + "\n", encoding="utf-8")
             result["error"] = str(exc)
         session["results"].append(result)
@@ -392,57 +492,107 @@ def qualify_session(session_root: Path, manifest_path: Path, repo_root: Path) ->
     session = _load_json(session_root / "session-manifest.json")
     _require(session.get("schema") == SESSION_SCHEMA, "session schema mismatch")
     expected = {
-        "designated": True, "target_claim_level": 0, "claim_level": None,
-        "collection_started": True, "collection_completed": True,
-        "manifest_sha256": sha256_file(manifest_path), "candidate_binary_sha256": CANDIDATE_SHA256,
-        "repository_commit": IMPLEMENTATION_COMMIT, "source_bundle_sha256": SOURCE_BUNDLE_SHA256,
-        "tt_metal_commit": TT_METAL_COMMIT, "device_id": 0, "device_count": 1,
-        "core_count": 1, "case_order": list(CASE_IDS), "attempts_per_case": 1,
-        "retries": 0, "replacement_results": 0, "stable_benchmark": False,
+        "designated": True,
+        "target_claim_level": 0,
+        "claim_level": None,
+        "collection_started": True,
+        "collection_completed": True,
+        "manifest_sha256": sha256_file(manifest_path),
+        "candidate_binary_sha256": CANDIDATE_SHA256,
+        "repository_commit": IMPLEMENTATION_COMMIT,
+        "source_bundle_sha256": SOURCE_BUNDLE_SHA256,
+        "tt_metal_commit": TT_METAL_COMMIT,
+        "device_id": 0,
+        "device_count": 1,
+        "core_count": 1,
+        "case_order": list(CASE_IDS),
+        "attempts_per_case": 1,
+        "retries": 0,
+        "replacement_results": 0,
+        "stable_benchmark": False,
         "performance_eligible": False,
     }
     for key, value in expected.items():
         _require(session.get(key) == value, f"session {key} mismatch")
     results = session.get("results")
-    _require(isinstance(results, list) and [item.get("case_id") for item in results] == list(CASE_IDS), "session results reordered")
+    _require(
+        isinstance(results, list) and [item.get("case_id") for item in results] == list(CASE_IDS),
+        "session results reordered",
+    )
     input_records = {item["case_id"]: item for item in frozen["cases"]}
     for item in results:
-        _require(item.get("attempt") == 1 and item.get("passed") is True, f"case {item.get('case_id')} failed")
+        _require(
+            item.get("attempt") == 1 and item.get("passed") is True,
+            f"case {item.get('case_id')} failed",
+        )
         report = _load_json(session_root / item["report"])
         case_id = item["case_id"]
         record = input_records[case_id]
         _require(report.get("execution_label") == "hardware", f"{case_id} is not hardware")
-        _require(report.get("input_hashes") == {"hamiltonians_sha256": record["hamiltonians_sha256"], "dt_sha256": record["dt_sha256"]}, f"{case_id} inputs mismatch")
+        _require(
+            report.get("input_hashes")
+            == {
+                "hamiltonians_sha256": record["hamiltonians_sha256"],
+                "dt_sha256": record["dt_sha256"],
+            },
+            f"{case_id} inputs mismatch",
+        )
         correctness = report.get("correctness", {})
         _require(correctness.get("passed") is True, f"{case_id} correctness failed")
-        _require(correctness.get("failing_value_count") == 0 and correctness.get("nonfinite_value_count") == 0, f"{case_id} output gate failed")
+        _require(
+            correctness.get("failing_value_count") == 0
+            and correctness.get("nonfinite_value_count") == 0,
+            f"{case_id} output gate failed",
+        )
         metadata = report.get("candidate_metrics", {}).get("candidate_metadata", {})
         for key, value in {
-            "candidate_sha256": CANDIDATE_SHA256, "source_commit": IMPLEMENTATION_COMMIT,
-            "source_tree_clean": True, "source_bundle_sha256": SOURCE_BUNDLE_SHA256,
-            "tt_metal_commit": TT_METAL_COMMIT, "compiler_version": COMPILER_IDENTITY,
-            "runtime_version": RUNTIME_IDENTITY, "device_id": 0, "device_count": 1,
+            "candidate_sha256": CANDIDATE_SHA256,
+            "source_commit": IMPLEMENTATION_COMMIT,
+            "source_tree_clean": True,
+            "source_bundle_sha256": SOURCE_BUNDLE_SHA256,
+            "tt_metal_commit": TT_METAL_COMMIT,
+            "compiler_version": COMPILER_IDENTITY,
+            "runtime_version": RUNTIME_IDENTITY,
+            "device_id": 0,
+            "device_count": 1,
             "core_count": 1,
         }.items():
             _require(metadata.get(key) == value, f"{case_id} metadata {key} mismatch")
-        payload = (session_root / "cases" / case_id / "rotors.bin").read_bytes() + (session_root / "cases" / case_id / "phases.bin").read_bytes()
-        _require(hashlib.sha256(payload).hexdigest() == item["checksum"] == correctness["checksum"], f"{case_id} checksum mismatch")
+        payload = (session_root / "cases" / case_id / "rotors.bin").read_bytes() + (
+            session_root / "cases" / case_id / "phases.bin"
+        ).read_bytes()
+        _require(
+            hashlib.sha256(payload).hexdigest() == item["checksum"] == correctness["checksum"],
+            f"{case_id} checksum mismatch",
+        )
     return {
-        "schema": QUALIFICATION_SCHEMA, "qualification_passed": True,
-        "target_claim_level": 0, "claim_level": None, "stable_benchmark": False,
-        "performance_eligible": False, "release_created": False,
+        "schema": QUALIFICATION_SCHEMA,
+        "qualification_passed": True,
+        "target_claim_level": 0,
+        "claim_level": None,
+        "stable_benchmark": False,
+        "performance_eligible": False,
+        "release_created": False,
     }
 
 
 def load_frozen_case(input_root: Path, record: dict[str, Any]) -> tuple[torch.Tensor, torch.Tensor]:
-    hamiltonians = _read_float32(input_root / record["hamiltonians_path"], tuple(record["hamiltonian_shape"]))
+    hamiltonians = _read_float32(
+        input_root / record["hamiltonians_path"], tuple(record["hamiltonian_shape"])
+    )
     dt = _read_float32(input_root / record["dt_path"], tuple(record["dt_shape"]))
     return hamiltonians, dt
 
 
 def contract_readiness(manifest_path: Path, repo_root: Path) -> dict[str, Any]:
     result = validate_designated_manifest(manifest_path, repo_root)
-    return {**result, "qualifier_ready": True, "designated_session_present": False, "qualification_passed": None, "claim_level": None}
+    return {
+        **result,
+        "qualifier_ready": True,
+        "designated_session_present": False,
+        "qualification_passed": None,
+        "claim_level": None,
+    }
 
 
 def _retain_run(case_root: Path, run: CandidateRun) -> None:
@@ -454,13 +604,18 @@ def _retain_run(case_root: Path, run: CandidateRun) -> None:
 
 
 def _manifest_identity_values(manifest: dict[str, Any]) -> set[str]:
-    values = {str(manifest.get(key, "")) for key in ("repository_commit", "source_bundle_sha256", "candidate_binary_sha256")}
+    values = {
+        str(manifest.get(key, ""))
+        for key in ("repository_commit", "source_bundle_sha256", "candidate_binary_sha256")
+    }
     values.update(str(value) for value in manifest.get("raw_binary_sha256", ()))
     return values
 
 
 def _git(root: Path, *args: str) -> str:
-    return subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True, text=True).stdout.strip()
+    return subprocess.run(
+        ["git", "-C", str(root), *args], check=True, capture_output=True, text=True
+    ).stdout.strip()
 
 
 def _require(condition: bool, message: str) -> None:
