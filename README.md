@@ -14,14 +14,14 @@ official Tenstorrent repository or a statement of Tenstorrent endorsement.
 
 H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
 rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
-H2A device-side Hamiltonian coefficient lowering is now the active technical
-milestone. The compensated single-core candidate is bound to clean commit
+H2A device-side Hamiltonian coefficient lowering is the current hardware
+evidence milestone. The compensated single-core candidate is bound to clean commit
 `225cb213…`, rebuilt byte-identically in two isolated directories, and
-revalidated across the frozen nine-case N300 contract. The future designated
-Claim Level 0 manifest and serialized inputs are frozen, but designated
-collection has not started, and no H2A claim level or hardware conformance
-release exists. H1 is a real stage of the simulation pipeline, not the
-complete device-side pipeline.
+revalidated across the frozen nine-case N300 contract. One later designated
+device-0 session passed that exact contract and now supports a separate public
+Claim Level 0 silicon-conformance release. It remains
+`stable_benchmark=false` and `performance_eligible=false`. H1 is a real stage
+of the simulation pipeline, not the complete device-side pipeline.
 
 ## For Tenstorrent engineers
 
@@ -50,23 +50,29 @@ The evidence is intentionally separated from broader application claims. The
 [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md) records the qualified
 one-device result; [SU2ComposeBench](docs/benchmarks/su2-compose-bench.md)
 records the current fused-only Level 2 composition evidence.
+The [H2A report](docs/benchmarks/hamiltonian-lowering-h2a.md) records the
+separate Level 0 device-side coefficient-lowering conformance evidence.
 
 ## Current proven result
 
-The repository has two public N300 device-0 benchmark releases: qmul and
-`SU2ComposeBench` each have a three-session stable one-device release.
-`SU2ComposeBench` is fused-only; neither result is an acceleration claim.
+The repository has three public N300 device-0 benchmark releases. qmul and
+`SU2ComposeBench` each have a three-session stable one-device release;
+HamiltonianLoweringBench H2A has a separate one-session Claim Level 0
+silicon-conformance release. `SU2ComposeBench` is fused-only; none is an
+acceleration claim.
 
 | Evidence | Implementation | Claim | Stable benchmark |
 |---|---|---|---|
 | qmul | multicore Tensix compute/SFPU on one Wormhole device; Stage A baseline retained | Level 2 | `true` |
 | SU2ComposeBench | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |
+| HamiltonianLoweringBench H2A | device-side Hamiltonian coefficient lowering on one Wormhole device | Level 0 | `false` |
 
 The individual qmul and SU2 source-session reports remain
 `stable_benchmark=false`; each aggregate release is `true` only because three
 qualified designated sessions passed. See the [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md)
 and [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md) for the
-exact contracts, results, and limitations.
+exact contracts, results, and limitations. The H2A source session and every
+case report also remain `stable_benchmark=false` and performance-ineligible.
 
 ### SU2 stability status
 
@@ -119,7 +125,7 @@ large matrix multiplication:
 
 These results do not establish CPU acceleration, stable fused/unfused SU2
 comparison, measured hardware bandwidth, energy efficiency, application
-speedup, full device-side Hamiltonian lowering, dual-device scaling, or
+speedup, a complete device-resident H2 pipeline, dual-device scaling, or
 Tenstorrent endorsement.
 
 ## What you can use `qmul` for
@@ -179,6 +185,8 @@ python scripts/validate_su2_compose_release.py
 python scripts/reproduce_wormhole_su2_compose.py --check
 python scripts/validate_entanglement_dynamics_preregistration.py
 python scripts/validate_hamiltonian_lowering_preregistration.py
+python scripts/validate_hamiltonian_lowering_release.py
+python scripts/reproduce_wormhole_hamiltonian_lowering.py --check
 python scripts/validate_repository_claims.py
 ```
 

@@ -1,0 +1,26 @@
+{
+  "candidate_binary_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+  "case_count": 9,
+  "designated_manifest_valid": true,
+  "device_health": {
+    "board_type": "n300 L",
+    "device_id": 0,
+    "dram_status": true,
+    "faults": "0x0",
+    "pcie_width": "16",
+    "throttler": "0x0"
+  },
+  "device_health_checked": true,
+  "device_scope_validated": true,
+  "dry_run_passed": true,
+  "file_count": 26,
+  "frozen_inputs_valid": true,
+  "hardware_executed": false,
+  "input_manifest_sha256": "b79413f05f7b5f00b0cbe54bed3dae2b995b5338e1632a99a8ecd74bc19b1188",
+  "repository_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+  "session_opened": false,
+  "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+  "source_manifest_valid": true,
+  "source_tree_clean": true,
+  "tt_metal_tree_clean": true
+}

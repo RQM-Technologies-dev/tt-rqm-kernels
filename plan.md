@@ -16,18 +16,16 @@ validators remain the source of truth.
   `stable_benchmark=false`.
 - The historical H1 v2 fused/unfused campaign is retained and non-qualifying;
   it is not the current release.
-- Active implementation milestone: H2A device-side two-level Hamiltonian
-  coefficient lowering. The clean committed compensated candidate is
-  reproducibly built, revalidated on N300, and frozen for later designated
-  Claim Level 0 collection; collection has not started and `claim_level`
-  remains null.
+- H2A device-side coefficient lowering: Claim Level 0 silicon conformance from
+  one designated N300 device-0 session; `stable_benchmark=false` and
+  `performance_eligible=false`.
 - Future integration: H2B device-resident H2A lowering directly feeding the
   protected fused H1 composition path.
 <!-- repository-claims:end -->
 
 Neither Level 2 release is a CPU or application acceleration claim. The
 repository has no stable fused/unfused comparison, measured-bandwidth, energy,
-dual-device, full device-side coefficient-lowering, or Tenstorrent-endorsement
+dual-device, complete device-resident H2 pipeline, or Tenstorrent-endorsement
 claim.
 
 ## Protected completed baselines
@@ -56,7 +54,7 @@ sessions were retained, but the frozen fused, unfused, and paired-ratio gates
 did not qualify. The later v3 campaign used a separately frozen fused-only
 contract and passed with three designated sessions.
 
-## Active implementation milestone: H2A
+## Protected H2A conformance milestone
 
 H2A accepts FP32 Hamiltonian coefficients `[B,K,4]` in `[h0,hx,hy,hz]`
 order and scalar or broadcastable `[B,K]` FP32 `dt`. It produces FP32 rotors
@@ -76,10 +74,12 @@ produced the same `b12063fd…` binary. Clean-tree N300 output checksums matched
 the retained pilot exactly.
 
 The designated Claim Level 0 contract, exact serialized inputs, fail-closed
-collector, and offline qualifier are now frozen. The next hardware milestone
-remains execution of that one session: one Wormhole device, pinned
+collector, and offline qualifier were frozen before collection. One designated
+N300 device-0 session then passed all nine cases with pinned
 candidate/source/runtime provenance, whole-output validation, zero failing and
-nonfinite values, and `stable_benchmark=false`.
+nonfinite values, one attempt per case, and no retries or replacements. The
+separate public Level 0 release remains `stable_benchmark=false` and
+performance-ineligible; it does not authorize H2B work or inherit H1 claims.
 
 ## Future integration: H2B
 
@@ -109,6 +109,7 @@ It will receive new claim language and cannot reuse historical H1 status.
 - [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md)
 - [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md)
 - [H2A/H2B roadmap and contract](docs/hamiltonian-evolution-roadmap.md)
+- [H2A Claim Level 0 report](docs/benchmarks/hamiltonian-lowering-h2a.md)
 - [Operator contracts](docs/operator-contracts.md)
 - [Benchmark claim policy](docs/benchmarks/claim-policy.md)
 - [Documentation index](docs/index.md)

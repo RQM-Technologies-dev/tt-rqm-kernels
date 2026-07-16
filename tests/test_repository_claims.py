@@ -20,7 +20,14 @@ def test_repository_claims_agree_with_protected_releases() -> None:
     result = validate_repository_claims(ROOT)
     assert result["qmul"]["stable_benchmark"] is True
     assert result["su2"]["scope"] == "fused_only"
-    assert result["h2a"] == {"status": "pre_hardware", "target_claim_level": 0}
+    assert result["h2a"] == {
+        "status": "claim_level_0",
+        "level": 0,
+        "name": "silicon_conformance",
+        "public_session_count": 1,
+        "stable_benchmark": False,
+        "performance_eligible": False,
+    }
 
 
 @pytest.mark.parametrize(
@@ -46,7 +53,7 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         ),
         (
             "plan.md",
-            "frozen for later designated\n  Claim Level 0 collection; collection has not started and `claim_level`\n  remains null.",
+            "H2A device-side coefficient lowering: Claim Level 0 silicon conformance from\n  one designated N300 device-0 session; `stable_benchmark=false` and\n  `performance_eligible=false`.",
             "H2A hardware implementation: complete.",
             "plan status marker missing",
         ),

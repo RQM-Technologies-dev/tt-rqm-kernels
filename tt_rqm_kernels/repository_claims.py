@@ -7,17 +7,19 @@ from pathlib import Path
 from typing import Any
 
 from tt_rqm_kernels.benchmark_release import validate_release as validate_qmul_release
-from tt_rqm_kernels.hamiltonian_lowering_preregistration import load_preregistration
+from tt_rqm_kernels.hamiltonian_lowering_release import validate_release as validate_h2a_release
 from tt_rqm_kernels.su2_benchmark_release import validate_release as validate_su2_release
 
 QMUL_RELEASE = Path("benchmarks/manifests/wormhole-qmul-level2.json")
 SU2_RELEASE = Path("benchmarks/manifests/wormhole-su2-compose-level2.json")
 V3_QUALIFICATION = Path("benchmarks/processed/wormhole-su2-compose-v3-stability-qualification.json")
+H2A_RELEASE = Path("benchmarks/manifests/wormhole-hamiltonian-lowering.json")
 STATUS_FILES = (
     "README.md",
     "plan.md",
     "docs/index.md",
     "docs/benchmarks/index.md",
+    "docs/benchmarks/hamiltonian-lowering-h2a.md",
     "docs/benchmarks/su2-compose-bench.md",
     "docs/benchmarks/su2-compose-claim-policy.md",
     "docs/hamiltonian-evolution-roadmap.md",
@@ -47,9 +49,7 @@ def validate_repository_claims(
     qmul = validate_qmul_release(evidence_root / QMUL_RELEASE, repo_root=evidence_root)
     su2 = validate_su2_release(evidence_root / SU2_RELEASE, repo_root=evidence_root)
     qualification = json.loads((evidence_root / V3_QUALIFICATION).read_text(encoding="utf-8"))
-    h2a = load_preregistration(
-        evidence_root / "benchmarks" / "manifests" / "hamiltonian-lowering-h2a-preregistration.json"
-    )
+    h2a = validate_h2a_release(evidence_root / H2A_RELEASE, repo_root=evidence_root)
     expected_claim = {
         "level": 2,
         "name": "stable_one_device_performance",
@@ -76,7 +76,14 @@ def validate_repository_claims(
             report.get("stable_benchmark") is False,
             f"individual source session was promoted: {session['id']}",
         )
-    _require(h2a["status"] == "pre_hardware", "H2A status must remain pre_hardware")
+    expected_h2a_claim = {
+        "level": 0,
+        "name": "silicon_conformance",
+        "public_session_count": 1,
+        "stable_benchmark": False,
+        "performance_eligible": False,
+    }
+    _require(h2a.get("claim") == expected_h2a_claim, "H2A release is not Claim Level 0")
 
     from scripts.repo_status import _h2a_foundation_status, _su2_stability_status
 
@@ -85,8 +92,8 @@ def validate_repository_claims(
         "repo_status.py does not report SU2 stability as established",
     )
     _require(
-        _h2a_foundation_status(evidence_root)[0] == "candidate frozen for designated collection",
-        "repo_status.py does not distinguish the frozen H2A candidate from a claim",
+        _h2a_foundation_status(evidence_root)[0] == "Claim Level 0 silicon conformance present",
+        "repo_status.py does not report the validated H2A Claim Level 0 release",
     )
     documents = _load_status_documents(repo_root)
     _validate_status_surfaces(documents)
@@ -94,7 +101,7 @@ def validate_repository_claims(
         "schema": "tt-rqm-repository-claims-validation.v1",
         "qmul": expected_claim,
         "su2": {**expected_claim, "scope": "fused_only"},
-        "h2a": {"status": "pre_hardware", "target_claim_level": 0},
+        "h2a": {"status": "claim_level_0", **expected_h2a_claim},
         "status_files": list(STATUS_FILES),
     }
 
@@ -115,7 +122,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "SU2ComposeBench H1: Claim Level 2 stable one-device **fused-only** performance",
         "Every individual qmul and H1 source-session report remains `stable_benchmark=false`",
         "historical H1 v2 fused/unfused campaign is retained and non-qualifying",
-        "Active implementation milestone: H2A device-side two-level Hamiltonian coefficient lowering. The clean committed compensated candidate is reproducibly built, revalidated on N300, and frozen for later designated Claim Level 0 collection; collection has not started and `claim_level` remains null.",
+        "H2A device-side coefficient lowering: Claim Level 0 silicon conformance from one designated N300 device-0 session; `stable_benchmark=false` and `performance_eligible=false`.",
         "Future integration: H2B device-resident H2A lowering directly feeding the protected fused H1 composition path.",
     )
     for marker in required_plan:
@@ -125,13 +132,20 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "README.md": (
             "SU2ComposeBench` is fused-only",
             "| SU2ComposeBench | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |",
-            "designated collection has not started, and no H2A claim level or hardware conformance release exists",
+            "| HamiltonianLoweringBench H2A | device-side Hamiltonian coefficient lowering on one Wormhole device | Level 0 | `false` |",
         ),
         "docs/index.md": ("fused-only v3 campaign established the public Claim Level 2 release",),
         "docs/benchmarks/index.md": (
             "Claim Level 2 — stable one-device fused performance",
-            "H2A is the active technical milestone",
-            "frozen for later designated Claim Level 0 collection",
+            "Claim Level 0 — silicon conformance",
+            "one designated N300 device-0 session",
+        ),
+        "docs/benchmarks/hamiltonian-lowering-h2a.md": (
+            "Claim Level 0 — silicon conformance",
+            "`stable_benchmark` | `false`",
+            "`performance_eligible` | `false`",
+            "Attempts per case | 1",
+            "Retries or replacements | 0",
         ),
         "docs/benchmarks/su2-compose-bench.md": (
             "Level 2: stable one-device fused performance",
@@ -145,16 +159,16 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "docs/hamiltonian-evolution-roadmap.md": (
             "H1: completed fused-composition baseline",
             "H2A: device-side coefficient lowering",
-            "the clean committed H2A candidate is frozen for later designated collection",
+            "H2A Claim Level 0 silicon conformance is established",
             "H2B: future resident lowering plus H1 composition",
         ),
         "docs/tenstorrent-landing.md": (
             "SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release",
-            "there is no designated H2A conformance release",
+            "HamiltonianLoweringBench H2A: Claim Level 0 silicon conformance",
         ),
         "docs/collaboration-map.md": (
             "SU2ComposeBench` has a fused-only Claim Level 2 release",
-            "H2A coefficient lowering is now the active implementation milestone",
+            "H2A coefficient lowering has a separate Claim Level 0 silicon-conformance release",
         ),
     }
     for relative, markers in required_markers.items():
@@ -171,7 +185,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "stable fused/unfused comparison: established",
         "v3 fused/unfused stable release",
         "h2a hardware implementation: complete",
-        "h2a hardware execution is established",
+        "h2a stable benchmark: established",
         "cpu acceleration: established",
         "application acceleration: established",
     )

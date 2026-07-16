@@ -1,0 +1,99 @@
+{
+  "all_cases_passed": true,
+  "attempts_per_case": 1,
+  "candidate_binary_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+  "case_order": [
+    "zero_vector",
+    "axis_x",
+    "axis_y",
+    "axis_z",
+    "tiny_norms",
+    "random_finite",
+    "varying_dt",
+    "large_angles",
+    "mixed_zero_nonzero"
+  ],
+  "claim_level": null,
+  "collection_completed": true,
+  "collection_started": true,
+  "core_count": 1,
+  "designated": true,
+  "device_count": 1,
+  "device_id": 0,
+  "manifest_sha256": "976d6e2211cb13e9582950a4898b9831fabad8698f25958f45d8acc28c162d70",
+  "performance_eligible": false,
+  "replacement_results": 0,
+  "repository_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+  "results": [
+    {
+      "attempt": 1,
+      "case_id": "zero_vector",
+      "checksum": "7aa7f13db2b4c8b47ae57546007c5202795bb2ba16ae3aa65c8c84322cdf6eaf",
+      "passed": true,
+      "report": "cases/zero_vector/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "axis_x",
+      "checksum": "2666fc2128aa54b6426091c6a52159860fa7de7796bc60f316f12f82faf3ed06",
+      "passed": true,
+      "report": "cases/axis_x/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "axis_y",
+      "checksum": "010b28eb01394d14973f5de72e0a312bdd96946e5679f3d1ab608f94df5aa28b",
+      "passed": true,
+      "report": "cases/axis_y/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "axis_z",
+      "checksum": "183b555c07de592649c3dea963af9470c2272719303b087c7ec83a11712f9877",
+      "passed": true,
+      "report": "cases/axis_z/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "tiny_norms",
+      "checksum": "d9457bcc16e9fd6630b34dc15b0ac78c5025b2507ddf2e0b7098902851c2b8d1",
+      "passed": true,
+      "report": "cases/tiny_norms/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "random_finite",
+      "checksum": "22e31272a3a2d763d67ae5b3d10cebccd6959b7609976293f8c18a0dd9bf78fe",
+      "passed": true,
+      "report": "cases/random_finite/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "varying_dt",
+      "checksum": "a525937f0748b2794a8026aecfac576e19c36e7c1d6002830c404adeac04b0b2",
+      "passed": true,
+      "report": "cases/varying_dt/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "large_angles",
+      "checksum": "22b6abd94525599fb8d38c5fe3b16efbd0daef84af593e84475979d72b1341c4",
+      "passed": true,
+      "report": "cases/large_angles/report.json"
+    },
+    {
+      "attempt": 1,
+      "case_id": "mixed_zero_nonzero",
+      "checksum": "c4d8a0c210ccbe3d9301dd3494973531b60506b77a5694b854db7d5475c9467a",
+      "passed": true,
+      "report": "cases/mixed_zero_nonzero/report.json"
+    }
+  ],
+  "retries": 0,
+  "schema": "tt-rqm-hamiltonian-lowering-designated-session.v1",
+  "session_id": "h2a-designated-conformance-n300-20260716-session-1",
+  "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+  "stable_benchmark": false,
+  "target_claim_level": 0,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

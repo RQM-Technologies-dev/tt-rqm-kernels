@@ -1,0 +1,148 @@
+{
+  "artifacts": [
+    {
+      "path": "benchmarks/manifests/hamiltonian-lowering-h2a-preregistration.json",
+      "role": "preregistration",
+      "sha256": "f0b5706c700f72edc9fda61e4c4714a9e171580ee8064e1c91db1d12fcfe8008"
+    },
+    {
+      "path": "benchmarks/manifests/hamiltonian-lowering-h2a-designated-conformance.json",
+      "role": "frozen-designated-contract",
+      "sha256": "976d6e2211cb13e9582950a4898b9831fabad8698f25958f45d8acc28c162d70"
+    },
+    {
+      "path": "benchmarks/manifests/hamiltonian-lowering-h2a-source-manifest.json",
+      "role": "candidate-source-manifest",
+      "sha256": "fa465856fcdf9632af7f2e26585973b0a7b6e52427c98590afe424ee0e08a3e0"
+    },
+    {
+      "path": "benchmarks/inputs/hamiltonian-lowering-h2a-designated-conformance/input-manifest.json",
+      "role": "frozen-input-manifest",
+      "sha256": "b79413f05f7b5f00b0cbe54bed3dae2b995b5338e1632a99a8ecd74bc19b1188"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1/session-manifest.json",
+      "role": "designated-session-manifest",
+      "sha256": "81219ee037f57494da89bcb268ebada7e6056e3020952efa4b211096093047cc"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/session-file-inventory.sha256",
+      "role": "complete-session-file-inventory",
+      "sha256": "7e06260f1eb289e6fb672d81b06aa1a5e39af3ea8e49031b4817fbcafd67e09d"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/preflight.json",
+      "role": "preflight-and-device-health",
+      "sha256": "dba7dd9cba807417e310ac4116376d87d72170ee96e468d3a4dd1a20ca4e234f"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/cpu-reference-validation.txt",
+      "role": "cpu-reference-validation",
+      "sha256": "c4c959db4e5d6ccb8afcac941d52ff64351f94d0bc2d5edd0c85ee31c446e3bf"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/collection-invoked-at.txt",
+      "role": "collection-start",
+      "sha256": "ee7f3e931c53741487d2f3816c106e50e36d805c21a9bfb4709646a7d6b8ca63"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/collection-returned-at.txt",
+      "role": "collection-end",
+      "sha256": "4e7d76263a18e2fe9ca548b9cf59b5a7a1d496bd514f57df8136505f8bad7d62"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/collector.exit-code.txt",
+      "role": "collector-exit-code",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/collector.stdout.txt",
+      "role": "collector-stdout",
+      "sha256": "81219ee037f57494da89bcb268ebada7e6056e3020952efa4b211096093047cc"
+    },
+    {
+      "path": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/collector.stderr.txt",
+      "role": "collector-stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "benchmarks/processed/wormhole-hamiltonian-lowering-h2a-qualification.json",
+      "role": "offline-qualification",
+      "sha256": "2926804f8a789c40916f778d5c805e6f45d6c65cf18b0913da0a4381449babcb"
+    }
+  ],
+  "benchmark_id": "wormhole-hamiltonian-lowering-h2a-fp32",
+  "claim": {
+    "level": 0,
+    "name": "silicon_conformance",
+    "performance_eligible": false,
+    "public_session_count": 1,
+    "stable_benchmark": false
+  },
+  "nonclaims": [
+    "no_H2B_claim",
+    "no_Tenstorrent_endorsement",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_dual_device_claim",
+    "no_energy_claim",
+    "no_inheritance_from_H1",
+    "no_measured_bandwidth_claim",
+    "no_performance_claim",
+    "no_stability_claim"
+  ],
+  "origin_package": {
+    "file_count": 46,
+    "tar_sha256": "c68151223dbf3d789635338d641a4211334719b4a8b17c7ca7701d6b319fe746",
+    "transferred_inventory_byte_identical": true
+  },
+  "primary_report": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1/session-manifest.json",
+  "processed_output": "benchmarks/processed/wormhole-hamiltonian-lowering-h2a-summary.json",
+  "provenance": {
+    "candidate_binary_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+    "candidate_source_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+    "compiler_identity": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "governance_commit": "a8ee3dfa02eea3e924f625bc7e7df18cb94ce5e4",
+    "runtime_identity": "tt-metal-dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+    "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "qualification_gates": {
+    "core_count": 1,
+    "device_id": 0,
+    "frozen_case_order": [
+      "zero_vector",
+      "axis_x",
+      "axis_y",
+      "axis_z",
+      "tiny_norms",
+      "random_finite",
+      "varying_dt",
+      "large_angles",
+      "mixed_zero_nonzero"
+    ],
+    "no_retry_or_replacement": true,
+    "one_attempt_per_case": true,
+    "one_wormhole_device": true,
+    "whole_output_atol": 0.0001,
+    "whole_output_rtol": 0.0001,
+    "zero_failing_values": true,
+    "zero_nonfinite_values": true
+  },
+  "schema": "tt-rqm-hamiltonian-lowering-release.v1",
+  "sessions": [
+    {
+      "artifact_inventory": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1-governance/session-file-inventory.sha256",
+      "attempts_per_case": 1,
+      "hardware_execution": true,
+      "id": "h2a-designated-conformance-n300-20260716-session-1",
+      "qualification": "benchmarks/processed/wormhole-hamiltonian-lowering-h2a-qualification.json",
+      "qualification_passed": true,
+      "replacement_results": 0,
+      "retries": 0,
+      "session_manifest": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1/session-manifest.json",
+      "session_root": "benchmarks/raw/hamiltonian-lowering-h2a/h2a-designated-conformance-n300-20260716-session-1"
+    }
+  ],
+  "title": "H2A Device-Side Hamiltonian Coefficient Lowering on Tenstorrent Wormhole"
+}

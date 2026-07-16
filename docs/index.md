@@ -28,6 +28,7 @@ without making it part of the primary introduction.
 - [H2A retained N300 development blocker](../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/README.md)
 - [H2A compensated development comparison](../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/README.md)
 - [H2A non-designated pilot](../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/suite-report.md)
+- [H2A Claim Level 0 silicon-conformance report](benchmarks/hamiltonian-lowering-h2a.md)
 - [Stage B stability methodology](stage-b-stability-methodology.md)
 - [Tenstorrent execution runbook](tenstorrent-execution-runbook.md)
 - [Functional quickstart](tenstorrent-functional-quickstart.md)

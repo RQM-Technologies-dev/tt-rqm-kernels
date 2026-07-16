@@ -42,26 +42,29 @@ and three-session stability. It is not a CPU comparison, acceleration claim,
 hardware-bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
-## H2A candidate and reference foundation
+## H2A Claim Level 0 silicon conformance
 
 - Family: `HamiltonianLoweringBench`; stage: H2A coefficient lowering
-- Status: deterministic CPU reference, independent Float64/complex128 oracles,
-  external protocol, and real single-core TT-Metalium candidate implemented
+- Qualification: **Claim Level 0 — silicon conformance**
+- Stability and performance eligibility: `stable_benchmark=false`,
+  `performance_eligible=false`
+- Public designated sessions: **1** on N300 device 0
+- [Public H2A conformance report](hamiltonian-lowering-h2a.md)
 - [Pre-hardware Claim Level 0 preregistration](../../benchmarks/manifests/hamiltonian-lowering-h2a-preregistration.json)
 - [Retained N300 development blocker](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/README.md)
 - [Compensated development comparison](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/README.md)
 - [Passing non-designated nine-case pilot](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/suite-report.md)
 - [Clean-build and clean-tree reproduction](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-clean-reproduction-20260716/README.md)
 - [Frozen designated Claim Level 0 contract](../../benchmarks/manifests/hamiltonian-lowering-h2a-designated-conformance.json)
-- Claim Level 0 release, performance eligibility, and stability: absent
+- [Claim Level 0 release manifest](../../benchmarks/manifests/wormhole-hamiltonian-lowering.json)
+- [Deterministic qualification](../../benchmarks/processed/wormhole-hamiltonian-lowering-h2a-qualification.json)
 
-H2A is the active technical milestone. The original large-angle blocker is
-preserved; a distinct compensated candidate later passed all nine frozen cases
-and one qualification-ineligible pilot. Its clean committed identity is
-reproducibly built, revalidated, and frozen for later designated Claim Level 0
-collection. Collection has not started. It makes no designated
-hardware-conformance, full-H2, speedup, bandwidth, energy, dual-device, or
-inherited-stability claim.
+The original large-angle blocker and the later non-designated pilot remain
+preserved development evidence. After the contract was frozen, one designated
+N300 device-0 session passed all nine cases with one attempt per case and no
+retry or replacement. This establishes silicon conformance only. It makes no
+performance, stability, full-H2, speedup, bandwidth, energy, dual-device, or
+inherited-H1 claim.
 
 ## Two-qubit reference foundation
 

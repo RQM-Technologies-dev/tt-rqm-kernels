@@ -20,6 +20,10 @@ from tt_rqm_kernels.entanglement_benchmark import validate_entanglement_preregis
 from tt_rqm_kernels.hamiltonian_lowering_preregistration import (
     load_preregistration as load_h2a_preregistration,
 )
+from tt_rqm_kernels.hamiltonian_lowering_release import (
+    HamiltonianLoweringReleaseError,
+    validate_release as validate_h2a_release,
+)
 from tt_rqm_kernels.hamiltonian_lowering_pilot import (
     HamiltonianLoweringPilotError,
     validate_pilot_package as validate_h2a_pilot,
@@ -220,9 +224,19 @@ def _h2a_foundation_status(repo_root: Path) -> tuple[str, str]:
         return "not implemented", "The H2A reference/candidate foundation is incomplete."
     designated = repo_root / "benchmarks" / "manifests" / "wormhole-hamiltonian-lowering.json"
     if designated.exists():
+        try:
+            release = validate_h2a_release(designated, repo_root=repo_root)
+        except (HamiltonianLoweringReleaseError, OSError, ValueError, TypeError):
+            return (
+                "invalid Claim Level 0 release",
+                "The public H2A release failed its hash, provenance, qualification, or generated-output gate.",
+            )
+        claim = release["claim"]
         return (
-            "designated conformance present",
-            "An H2A designated release manifest is present; validate it separately before making a claim.",
+            "Claim Level 0 silicon conformance present",
+            f"One designated N300 device-0 session passed all nine frozen H2A cases. "
+            f"stable_benchmark={str(claim['stable_benchmark']).lower()} and "
+            f"performance_eligible={str(claim['performance_eligible']).lower()}; this is not a performance claim.",
         )
     try:
         manifest = load_h2a_preregistration(

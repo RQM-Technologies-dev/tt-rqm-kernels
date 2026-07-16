@@ -1,0 +1,56 @@
+{
+  "B": 4,
+  "K": 8,
+  "benchmark_family": "HamiltonianLoweringBench",
+  "candidate_metrics": {
+    "benchmark": "HamiltonianLoweringBench",
+    "candidate_metadata": {
+      "device": "cpu/pytorch-reference",
+      "implementation_class": "cpu_reference"
+    },
+    "dt_shape": [
+      4,
+      8
+    ],
+    "dtype": "float32",
+    "execution_label": "cpu_reference",
+    "hamiltonian_shape": [
+      4,
+      8,
+      4
+    ],
+    "performance_eligible": false,
+    "protocol": "tt-rqm-external-hamiltonian-lowering.v1",
+    "schema": "tt-rqm-external-hamiltonian-lowering-metrics.v1",
+    "stable_benchmark": false,
+    "stage": "conformance",
+    "timings_s": {
+      "candidate": 0.0042781450028996915,
+      "setup": 0.0005233850097283721
+    }
+  },
+  "claim_level": null,
+  "correctness": {
+    "checksum": "94312448519ff0ce609a9089e1c213a29897b57ae8c9be68a381ce2b4a1c2ac5",
+    "complex_matrix_reconstruction_error": 6.17072845635895e-08,
+    "failing_value_count": 0,
+    "max_phase_absolute_error": 3.39031867024886e-08,
+    "max_rotor_absolute_error": 5.213381792934513e-08,
+    "nonfinite_value_count": 0,
+    "passed": true,
+    "phase_norm_drift": 3.37100160008319e-08,
+    "rotor_norm_drift": 3.5498838646397246e-08
+  },
+  "dtype": "float32",
+  "execution_label": "cpu_reference",
+  "host_end_to_end_s": 1.8407132540014572,
+  "input_hashes": {
+    "dt_sha256": "22e7a0e10cf63d698c063769d5de1a3a3074c21ff0e19079d9789b01592b23f0",
+    "hamiltonians_sha256": "4fb126780511ecd063b3331d61baea8fb2cd680db6c09d4f1a5e2bebe1edf12c"
+  },
+  "performance_eligible": false,
+  "protocol": "tt-rqm-external-hamiltonian-lowering.v1",
+  "schema": "tt-rqm-hamiltonian-lowering-candidate-report.v1",
+  "stable_benchmark": false,
+  "stage": "conformance"
+}

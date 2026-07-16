@@ -36,15 +36,25 @@ def test_frozen_inputs_reproduce_byte_for_byte(tmp_path: Path) -> None:
     designated.freeze_inputs(generated)
     second = designated.validate_frozen_inputs(generated)
     assert second["input_manifest_sha256"] == first["input_manifest_sha256"]
-    for relative in sorted(path.relative_to(generated) for path in generated.rglob("*") if path.is_file()):
-        assert (generated / relative).read_bytes() == (ROOT / designated.INPUT_ROOT / relative).read_bytes()
+    for relative in sorted(
+        path.relative_to(generated) for path in generated.rglob("*") if path.is_file()
+    ):
+        assert (generated / relative).read_bytes() == (
+            ROOT / designated.INPUT_ROOT / relative
+        ).read_bytes()
 
 
 @pytest.mark.parametrize(
     ("field", "value"),
     [
-        ("candidate_binary_sha256", "433e74b827d2cf9a7a790a6c9d7bb3917fc1fed3915ec384de0486cdc014d306"),
-        ("source_bundle_sha256", "7fb65217e05139bf035952ebeb34602d49e5f1772b8dec4c336b7a296e1fba2f"),
+        (
+            "candidate_binary_sha256",
+            "433e74b827d2cf9a7a790a6c9d7bb3917fc1fed3915ec384de0486cdc014d306",
+        ),
+        (
+            "source_bundle_sha256",
+            "7fb65217e05139bf035952ebeb34602d49e5f1772b8dec4c336b7a296e1fba2f",
+        ),
         ("status", "collected"),
         ("claim_level", 0),
         ("stable_benchmark", True),
@@ -63,9 +73,9 @@ def test_designated_contract_rejects_promotion_or_development_identity(
         designated.validate_designated_manifest(changed, ROOT)
 
 
-def test_no_completed_h2a_session_or_release_exists() -> None:
-    assert not (ROOT / "benchmarks/manifests/wormhole-hamiltonian-lowering.json").exists()
-    assert not list((ROOT / "benchmarks/raw").glob("*hamiltonian-lowering*"))
+def test_frozen_contract_remains_immutable_after_separate_release() -> None:
+    assert (ROOT / "benchmarks/manifests/wormhole-hamiltonian-lowering.json").is_file()
+    assert (ROOT / "benchmarks/raw/hamiltonian-lowering-h2a").is_dir()
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     assert manifest["status"] == "frozen_not_collected"
     assert manifest["completed_session_id"] is None
@@ -122,7 +132,9 @@ def test_collector_retains_all_failed_cases_without_retry(
     assert all(item["attempt"] == 1 and item["passed"] is False for item in session["results"])
     assert session["retries"] == 0
     assert session["replacement_results"] == 0
-    assert all((output / "cases" / case_id / "error.txt").is_file() for case_id in designated.CASE_IDS)
+    assert all(
+        (output / "cases" / case_id / "error.txt").is_file() for case_id in designated.CASE_IDS
+    )
 
 
 def test_future_session_qualifier_accepts_complete_hash_bound_fixture(tmp_path: Path) -> None:

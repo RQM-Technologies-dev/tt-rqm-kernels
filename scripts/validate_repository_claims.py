@@ -21,7 +21,8 @@ def main() -> int:
         print(str(exc))
         return 1
     print(
-        "repository claims valid: qmul Level 2, SU2 fused-only Level 2, H2A pre-hardware foundation"
+        "repository claims valid: qmul Level 2, SU2 fused-only Level 2, "
+        "H2A Level 0 silicon conformance"
     )
     return 0
 

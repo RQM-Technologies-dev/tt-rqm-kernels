@@ -1,7 +1,9 @@
 # TT-Metalium H2A compensated Candidate B
 
-This is a distinct single-core correctness candidate. It preserves the
-original candidate and retained blocker unchanged and remains pre-Claim-Level-0.
+This is the distinct single-core correctness candidate used by the separate
+public H2A Claim Level 0 silicon-conformance release. It preserves the original
+candidate and retained blocker unchanged. The release remains
+`stable_benchmark=false` and performance-ineligible.
 
 The kernel forms `dt/hbar` and each `theta`/`alpha` product as an FP32 high/low
 pair. Pinned Wormhole exposes SFPMAD, but a device diagnostic showed that its
@@ -33,8 +35,10 @@ The clean implementation identity is commit
 `519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5`.
 Two isolated N300 builds were byte-identical at binary SHA-256
 `b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979`.
-The clean nine-case outputs exactly matched the retained pilot. The future
-designated contract is frozen but uncollected. This is a software arrangement
-of FP32 operations, not increased hardware precision, and it makes no
+The clean nine-case outputs exactly matched the retained pilot. After the
+designated contract was frozen, one designated N300 device-0 session passed
+all nine cases and was published separately at Claim Level 0. This is a
+software arrangement of FP32 operations, not increased hardware precision,
+and it makes no
 stability, performance, acceleration, bandwidth, energy, dual-device, H2B, or
 Tenstorrent-endorsement claim.

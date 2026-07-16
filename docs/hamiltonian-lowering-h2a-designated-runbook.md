@@ -1,9 +1,10 @@
 # H2A designated Claim Level 0 collection runbook
 
 The compensated candidate, source manifest, binary, compiler/runtime identity,
-and nine serialized inputs are frozen. The current status is
-`frozen_not_collected`; this runbook is not evidence that a session exists or
-will pass.
+and nine serialized inputs were frozen before collection. The one authorized
+session has completed and is retained in the public Claim Level 0 release.
+This historical runbook must not be used to create a retry, replacement, or
+second session under the frozen contract.
 
 Use two clean checkouts: the current governance checkout containing the frozen
 contract, and a detached source checkout exactly at implementation commit
@@ -23,8 +24,8 @@ python scripts/collect_hamiltonian_lowering_h2a_designated.py \
   --candidate-binary "$H2A_CANDIDATE"
 ```
 
-In the later authorized collection task, choose the one prescheduled session
-identity and a new output path, then run exactly:
+The authorized collection used the following command shape with the
+prescheduled session identity. It is retained for audit only; do not rerun it:
 
 ```bash
 python scripts/collect_hamiltonian_lowering_h2a_designated.py \
@@ -45,7 +46,8 @@ python scripts/qualify_hamiltonian_lowering_h2a_designated.py \
   --session-root "$H2A_SESSION_OUTPUT"
 ```
 
-Qualification may report `qualification_passed=true` for the retained session,
-but still leaves `claim_level=null`, `stable_benchmark=false`, and
-`performance_eligible=false`. A later publication task owns any Claim Level 0
-release decision.
+Qualification reported `qualification_passed=true` for the retained session,
+while leaving `claim_level=null`, `stable_benchmark=false`, and
+`performance_eligible=false`. The later publication task created the separate
+[Claim Level 0 release](../benchmarks/manifests/wormhole-hamiltonian-lowering.json)
+without mutating the frozen contract or source package.

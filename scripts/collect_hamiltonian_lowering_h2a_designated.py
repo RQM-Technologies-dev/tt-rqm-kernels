@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed collector for the future H2A designated session."""
+"""Fail-closed collector retained for the frozen H2A designated contract."""
 
 from __future__ import annotations
 

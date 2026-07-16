@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Offline qualifier for a future retained H2A designated session."""
+"""Offline qualifier for a retained H2A designated session."""
 
 from __future__ import annotations
 

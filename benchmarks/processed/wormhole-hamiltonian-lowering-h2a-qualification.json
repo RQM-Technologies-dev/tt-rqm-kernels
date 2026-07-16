@@ -1,0 +1,9 @@
+{
+  "claim_level": null,
+  "performance_eligible": false,
+  "qualification_passed": true,
+  "release_created": false,
+  "schema": "tt-rqm-hamiltonian-lowering-qualification.v1",
+  "stable_benchmark": false,
+  "target_claim_level": 0
+}

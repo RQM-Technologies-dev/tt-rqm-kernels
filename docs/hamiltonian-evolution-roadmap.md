@@ -3,10 +3,9 @@
 **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian
 simulation on Tenstorrent Wormhole.** H1 uses CPU-lowered FP32 rotors and phase
 pairs. Its protected v3 aggregate is Claim Level 2 for stable fused-only
-one-device performance. H2 is the next technical phase; the clean committed
-H2A candidate is frozen for later designated collection after reproducible
-builds and passing non-designated N300 revalidation, but no designated
-conformance release exists.
+one-device performance. H2 is the next technical phase. H2A Claim Level 0
+silicon conformance is established from one separately designated N300
+device-0 session; it is not a performance or stability result.
 
 ## Protected baselines
 
@@ -36,7 +35,7 @@ does not claim stable fused/unfused comparison performance or acceleration.
 
 ## H2A: device-side coefficient lowering
 
-H2A is the active implementation milestone:
+H2A is the completed coefficient-lowering conformance milestone:
 
 ```text
 hamiltonians [B,K,4] + dt
@@ -136,7 +135,7 @@ hardware residual proved quantized. No corrected magnitude or square root was
 needed. Candidate B passed all nine frozen cases and one retained
 non-designated pilot; the large case had zero failing values, `1.17e-04`
 maximum rotor error, and `4.73e-08` maximum phase error. This is still not
-Claim Level 0 evidence.
+Claim Level 0 evidence by itself.
 
 The candidate is now bound to implementation commit `225cb213…` and source
 bundle `519b2b9f…`. Two isolated clean builds produced byte-identical binary
@@ -155,13 +154,15 @@ nonfinite values. No designated result may be discarded or replaced.
 The [frozen designated manifest](../benchmarks/manifests/hamiltonian-lowering-h2a-designated-conformance.json),
 [serialized inputs](../benchmarks/inputs/hamiltonian-lowering-h2a-designated-conformance),
 collector, qualifier, and [runbook](hamiltonian-lowering-h2a-designated-runbook.md)
-are ready. Their status is `frozen_not_collected`: no session identity has
-been opened and no result is implied.
+were frozen before collection. The retained designated session then passed all
+nine cases with one attempt per case and no retries or replacements. The
+[separate public report](benchmarks/hamiltonian-lowering-h2a.md) and
+[release manifest](../benchmarks/manifests/wormhole-hamiltonian-lowering.json)
+establish Claim Level 0 silicon conformance.
 
-Until a later designated execution satisfies that contract, H2A remains pre-Claim-Level-0 with
-`stable_benchmark=false` and `performance_eligible=false`. It inherits no H1
-claim and makes no speedup, stability, full-H2, bandwidth, energy, dual-device,
-or endorsement claim.
+The release remains `stable_benchmark=false` and
+`performance_eligible=false`. It inherits no H1 claim and makes no speedup,
+stability, full-H2, bandwidth, energy, dual-device, or endorsement claim.
 
 ## H2B: future resident lowering plus H1 composition
 

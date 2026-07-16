@@ -1,8 +1,9 @@
 # TT-Metalium H2A single-core candidate
 
-This directory contains a real, compilable TT-Metalium correctness candidate
-for H2A coefficient lowering. It is experimental source, not a Claim Level 0
-release or performance benchmark.
+This directory preserves the original real, compilable TT-Metalium correctness
+candidate for H2A coefficient lowering. It is historical experimental source,
+not the compensated candidate used by the later Claim Level 0 release and not
+a performance benchmark.
 
 ## Frozen environment and architecture
 
@@ -72,7 +73,8 @@ missing SFPU range reduction. In accordance with the preregistered working
 order, the nine-case non-designated pilot did not start. The retained blocker
 is under `benchmarks/pilots/hamiltonian-lowering-h2a/`.
 
-H2A therefore still has no claim level, no performance eligibility, and no
-stable benchmark. A future change must resolve and independently test the
-large-angle precision contract before any pilot or later designated session.
-H2B remains out of scope until H2A conformance is established.
+This original candidate therefore did not qualify. A later, separately
+identified compensated candidate resolved the large-angle precision blocker
+and supports the public H2A Claim Level 0 silicon-conformance release. That
+release still has no performance eligibility or stable benchmark. H2B remains
+out of scope.

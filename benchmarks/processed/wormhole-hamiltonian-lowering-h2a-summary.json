@@ -1,0 +1,283 @@
+{
+  "benchmark_id": "wormhole-hamiltonian-lowering-h2a-fp32",
+  "case_order": [
+    "zero_vector",
+    "axis_x",
+    "axis_y",
+    "axis_z",
+    "tiny_norms",
+    "random_finite",
+    "varying_dt",
+    "large_angles",
+    "mixed_zero_nonzero"
+  ],
+  "cases": [
+    {
+      "B": 1,
+      "K": 2,
+      "case_id": "zero_vector",
+      "correctness": {
+        "checksum": "7aa7f13db2b4c8b47ae57546007c5202795bb2ba16ae3aa65c8c84322cdf6eaf",
+        "complex_matrix_reconstruction_error": 2.0882852939216762e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.7232677840262056e-08,
+        "max_rotor_absolute_error": 0.0,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 5.164785932265659e-09,
+        "rotor_norm_drift": 0.0
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "75e253f50979177eba47b2d0805ad36038789108924514d2a761a70de057d16f",
+        "hamiltonians_sha256": "142b11e703ce9543190323ce7749d4b3a7795a664b157818923f79675369fc9b"
+      },
+      "output_checksum": "7aa7f13db2b4c8b47ae57546007c5202795bb2ba16ae3aa65c8c84322cdf6eaf",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 1,
+      "K": 3,
+      "case_id": "axis_x",
+      "correctness": {
+        "checksum": "2666fc2128aa54b6426091c6a52159860fa7de7796bc60f316f12f82faf3ed06",
+        "complex_matrix_reconstruction_error": 7.978017057466398e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.99509934128983e-08,
+        "max_rotor_absolute_error": 6.055101298141352e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.9832648412432263e-08,
+        "rotor_norm_drift": 5.99417120383805e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+        "hamiltonians_sha256": "cc2ad620fd03b331864ddc0904cad2d3c3de8c6ac9dd033f401e4daaf85e94ef"
+      },
+      "output_checksum": "2666fc2128aa54b6426091c6a52159860fa7de7796bc60f316f12f82faf3ed06",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 1,
+      "K": 3,
+      "case_id": "axis_y",
+      "correctness": {
+        "checksum": "010b28eb01394d14973f5de72e0a312bdd96946e5679f3d1ab608f94df5aa28b",
+        "complex_matrix_reconstruction_error": 7.978017057466398e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.99509934128983e-08,
+        "max_rotor_absolute_error": 6.055101298141352e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.9832648412432263e-08,
+        "rotor_norm_drift": 5.99417120383805e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+        "hamiltonians_sha256": "5407e8586c848508229629685d9df0051747097d8dcc18c1ebf1a48e0a9c7d92"
+      },
+      "output_checksum": "010b28eb01394d14973f5de72e0a312bdd96946e5679f3d1ab608f94df5aa28b",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 1,
+      "K": 3,
+      "case_id": "axis_z",
+      "correctness": {
+        "checksum": "183b555c07de592649c3dea963af9470c2272719303b087c7ec83a11712f9877",
+        "complex_matrix_reconstruction_error": 8.059677337555362e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.99509934128983e-08,
+        "max_rotor_absolute_error": 6.055101298141352e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.9832648412432263e-08,
+        "rotor_norm_drift": 5.99417120383805e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+        "hamiltonians_sha256": "51c646b2af21997ed37db2b89f8456c0c4516a087356c52fd81658b7fd795b15"
+      },
+      "output_checksum": "183b555c07de592649c3dea963af9470c2272719303b087c7ec83a11712f9877",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "case_id": "tiny_norms",
+      "correctness": {
+        "checksum": "d9457bcc16e9fd6630b34dc15b0ac78c5025b2507ddf2e0b7098902851c2b8d1",
+        "complex_matrix_reconstruction_error": 1.5350691097784673e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.5280057996669427e-08,
+        "max_rotor_absolute_error": 2.220446049250313e-16,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.5223077909354288e-08,
+        "rotor_norm_drift": 0.0
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "9a8208635e00348ab64aac2b759e76391fd47089e9a749bbcec770d9eb5c6421",
+        "hamiltonians_sha256": "78f6b3ff0b8f8824f86df36bff8ec4bd295f60eb8b960f312dd1a266b1056de1"
+      },
+      "output_checksum": "d9457bcc16e9fd6630b34dc15b0ac78c5025b2507ddf2e0b7098902851c2b8d1",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 4,
+      "K": 7,
+      "case_id": "random_finite",
+      "correctness": {
+        "checksum": "22e31272a3a2d763d67ae5b3d10cebccd6959b7609976293f8c18a0dd9bf78fe",
+        "complex_matrix_reconstruction_error": 9.329875711199702e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 7.396376489055001e-08,
+        "max_rotor_absolute_error": 4.8005530772776694e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 7.368516952155346e-08,
+        "rotor_norm_drift": 4.7867614760832566e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "0b9d79ff0fc4d0a77ef398763bbe45c445501e826219f2b6a1aa709411ab631d",
+        "hamiltonians_sha256": "9731a8782d4f98b3152fcdde76cfd4cffc0ce066717d914920c0d5d669871284"
+      },
+      "output_checksum": "22e31272a3a2d763d67ae5b3d10cebccd6959b7609976293f8c18a0dd9bf78fe",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 2,
+      "K": 4,
+      "case_id": "varying_dt",
+      "correctness": {
+        "checksum": "a525937f0748b2794a8026aecfac576e19c36e7c1d6002830c404adeac04b0b2",
+        "complex_matrix_reconstruction_error": 7.142708927193814e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 3.132384163162527e-08,
+        "max_rotor_absolute_error": 5.3532828336866345e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 3.115115454477291e-08,
+        "rotor_norm_drift": 4.0594091421652934e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "9206a4761ef440addd7e5b52a6774e08cfc2d3d95430559144f44e5850d04329",
+        "hamiltonians_sha256": "d244666f09741266e2082999aa6012de8c0db7136cd46f2c2d4a6eb14be42713"
+      },
+      "output_checksum": "a525937f0748b2794a8026aecfac576e19c36e7c1d6002830c404adeac04b0b2",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 1,
+      "K": 2,
+      "case_id": "large_angles",
+      "correctness": {
+        "checksum": "22b6abd94525599fb8d38c5fe3b16efbd0daef84af593e84475979d72b1341c4",
+        "complex_matrix_reconstruction_error": 0.00012605900036450937,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 4.7257471491590763e-08,
+        "max_rotor_absolute_error": 0.00011688396223238917,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 5.3156770096762784e-08,
+        "rotor_norm_drift": 4.234450523554756e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+        "hamiltonians_sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443"
+      },
+      "output_checksum": "22b6abd94525599fb8d38c5fe3b16efbd0daef84af593e84475979d72b1341c4",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    },
+    {
+      "B": 1,
+      "K": 4,
+      "case_id": "mixed_zero_nonzero",
+      "correctness": {
+        "checksum": "c4d8a0c210ccbe3d9301dd3494973531b60506b77a5694b854db7d5475c9467a",
+        "complex_matrix_reconstruction_error": 6.254893806921399e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 4.764040129057179e-08,
+        "max_rotor_absolute_error": 3.154167704799704e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 4.707498102440866e-08,
+        "rotor_norm_drift": 1.22220328302447e-08
+      },
+      "device_close_count": 1,
+      "device_create_count": 1,
+      "input_hashes": {
+        "dt_sha256": "5d96a77c55b4ac1eea2d77815396c4349292b85e3b07beaca6aff933e7ef8752",
+        "hamiltonians_sha256": "5da14bc286d4879622c9b3ae437617e3504c15a73f7ad8f8fb9473c4bb6ea744"
+      },
+      "output_checksum": "c4d8a0c210ccbe3d9301dd3494973531b60506b77a5694b854db7d5475c9467a",
+      "performance_eligible": false,
+      "stable_benchmark": false
+    }
+  ],
+  "claim": {
+    "level": 0,
+    "name": "silicon_conformance",
+    "performance_eligible": false,
+    "public_session_count": 1,
+    "stable_benchmark": false
+  },
+  "hardware_execution": true,
+  "maxima": {
+    "complex_matrix_reconstruction_error": 0.00012605900036450937,
+    "max_phase_absolute_error": 7.396376489055001e-08,
+    "max_rotor_absolute_error": 0.00011688396223238917,
+    "phase_norm_drift": 7.368516952155346e-08,
+    "rotor_norm_drift": 5.99417120383805e-08
+  },
+  "nonclaims": [
+    "no_H2B_claim",
+    "no_Tenstorrent_endorsement",
+    "no_acceleration_claim",
+    "no_cpu_comparison",
+    "no_dual_device_claim",
+    "no_energy_claim",
+    "no_inheritance_from_H1",
+    "no_measured_bandwidth_claim",
+    "no_performance_claim",
+    "no_stability_claim"
+  ],
+  "provenance": {
+    "candidate_binary_sha256": "b12063fd8ff73ff7372713eeb3fbdea31c56462c94e314713909a1f07e225979",
+    "candidate_source_commit": "225cb213ae79df7acd43d6056841c3eae7b5fc40",
+    "compiler_identity": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "governance_commit": "a8ee3dfa02eea3e924f625bc7e7df18cb94ce5e4",
+    "runtime_identity": "tt-metal-dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+    "source_bundle_sha256": "519b2b9ffb7341893aed1574604ce3c0021b9c47830ca9c297d03d69b7cf80d5",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "qualification": {
+    "path": "benchmarks/processed/wormhole-hamiltonian-lowering-h2a-qualification.json",
+    "qualification_passed": true
+  },
+  "schema": "tt-rqm-hamiltonian-lowering-release-summary.v1",
+  "session_id": "h2a-designated-conformance-n300-20260716-session-1"
+}

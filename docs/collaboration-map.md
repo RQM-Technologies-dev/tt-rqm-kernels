@@ -23,6 +23,9 @@ statement of Tenstorrent endorsement.
 - The earlier three-session v2 fused/unfused campaign is retained but failed
   its frozen variability gates. It is historical, non-qualifying evidence and
   does not establish stable fused/unfused comparison performance.
+- H2A coefficient lowering has a separate Claim Level 0 silicon-conformance
+  release from one designated N300 device-0 session. It remains
+  `stable_benchmark=false` and performance-ineligible.
 
 The [qmul release report](benchmarks/wormhole-qmul.md),
 [hardware evidence](benchmarks/wormhole-qmul-hardware-evidence.md), and
@@ -108,15 +111,15 @@ diagnostic profiler report for the upstream-shaped implementation. A new port
 does not inherit the existing release's stability label.
 
 Inside this repository, qmul Level 2 and fused-only H1 Level 2 are protected
-baselines. H2A coefficient lowering is now the active implementation
-milestone, with CPU reference, real single-core candidate source, focused N300
-development probes, and pre-hardware conformance machinery.
-H2B fusion, two-qubit hardware execution, and broader benchmark families remain
-future work.
+baselines. H2A coefficient lowering has a separate Claim Level 0
+silicon-conformance release, with its CPU reference, candidate source,
+development probes, designated package, and qualification retained intact.
+H2B fusion has not begun; two-qubit hardware execution and broader benchmark
+families also remain future work.
 
 ## Nonclaims
 
 This collaboration path does not claim CPU acceleration, measured hardware
 bandwidth, application speedup, energy efficiency, dual-device scaling, stable
-fused/unfused SU2 comparison, H2 designated conformance, or Tenstorrent
-endorsement.
+fused/unfused SU2 comparison, H2 performance or stability, H2B integration, or
+Tenstorrent endorsement.

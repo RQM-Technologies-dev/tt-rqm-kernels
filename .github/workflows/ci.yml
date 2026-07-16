@@ -34,6 +34,9 @@ jobs:
         run: >-
           python -m ruff format --check
           scripts/repo_status.py
+          scripts/generate_hamiltonian_lowering_release.py
+          scripts/reproduce_wormhole_hamiltonian_lowering.py
+          scripts/validate_hamiltonian_lowering_release.py
           scripts/validate_repository_claims.py
           tt_rqm_kernels/entanglement_benchmark.py
           tt_rqm_kernels/hamiltonian_lowering_benchmark.py
@@ -42,6 +45,7 @@ jobs:
           tt_rqm_kernels/hamiltonian_lowering_evidence.py
           tt_rqm_kernels/hamiltonian_lowering_pilot.py
           tt_rqm_kernels/hamiltonian_lowering_preregistration.py
+          tt_rqm_kernels/hamiltonian_lowering_release.py
           tt_rqm_kernels/hamiltonian_lowering_source_identity.py
           tt_rqm_kernels/repository_claims.py
           tt_rqm_kernels/su2_benchmark.py
@@ -55,6 +59,7 @@ jobs:
           tests/test_hamiltonian_lowering_designated.py
           tests/test_hamiltonian_lowering_evidence.py
           tests/test_hamiltonian_lowering_pilot.py
+          tests/test_hamiltonian_lowering_release.py
           tests/test_hamiltonian_lowering_source_identity.py
           tests/test_repository_claims.py
           tests/test_tt_metalium_h2a_scaffold.py
@@ -103,6 +108,8 @@ jobs:
           python scripts/validate_hamiltonian_lowering_clean_reproduction.py
           python scripts/validate_hamiltonian_lowering_designated_contract.py
           python scripts/qualify_hamiltonian_lowering_h2a_designated.py --contract-only
+          python scripts/validate_hamiltonian_lowering_release.py
+          python scripts/reproduce_wormhole_hamiltonian_lowering.py --check
           python scripts/validate_hamiltonian_lowering_candidate.py \
             --command "python scripts/hamiltonian_lowering_external_reference.py"
           for manifest in benchmarks/pilots/hamiltonian-lowering-h2a/*/pilot-manifest.json; do
