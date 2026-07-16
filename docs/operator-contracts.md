@@ -9,7 +9,8 @@ The common quaternion convention is:
 ```
 
 Every public operator has a CPU/PyTorch reference. qmul and H1 also have
-protected TT-Metalium releases; H2A is currently reference and protocol only.
+protected TT-Metalium releases; H2A has a passing non-designated hardware pilot
+but no claim-level release.
 Any future TT-Metalium, TT-NN, or TT-MLIR path must match these contracts before
 adding backend-specific optimizations and cannot inherit an older stable label.
 
@@ -49,7 +50,7 @@ Float64 analytical lowering plus complex128 reconstruction of
 `exp(-i H dt/hbar)`.
 
 The logical contract does not prescribe a native quaternion datatype or device
-layout. The planned Wormhole boundary packs the six input/output component
+layout. The implemented Wormhole boundary packs the six input/output component
 planes into padded FP32 tiles and restores row-major `[B,K,*]` ordering before
 validation. See the [H2A roadmap](hamiltonian-evolution-roadmap.md#h2a-device-side-coefficient-lowering)
 and [design scaffold](../experimental/tt_metalium_hamiltonian_lowering/README.md).

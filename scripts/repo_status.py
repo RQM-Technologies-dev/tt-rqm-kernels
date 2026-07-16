@@ -20,6 +20,10 @@ from tt_rqm_kernels.entanglement_benchmark import validate_entanglement_preregis
 from tt_rqm_kernels.hamiltonian_lowering_preregistration import (
     load_preregistration as load_h2a_preregistration,
 )
+from tt_rqm_kernels.hamiltonian_lowering_pilot import (
+    HamiltonianLoweringPilotError,
+    validate_pilot_package as validate_h2a_pilot,
+)
 from tt_rqm_kernels.su2_benchmark import validate_su2_preregistration
 from tt_rqm_kernels.su2_benchmark_release import (
     published_manifest_path,
@@ -205,14 +209,11 @@ def _h2a_foundation_status(repo_root: Path) -> tuple[str, str]:
     )
     if not all(path.is_file() for path in required):
         return "not implemented", "The H2A reference/candidate foundation is incomplete."
-    unexpected = (
-        repo_root / "reports" / "tt_hardware_hamiltonian_lowering.json",
-        repo_root / "benchmarks" / "manifests" / "wormhole-hamiltonian-lowering.json",
-    )
-    if any(path.exists() for path in unexpected):
+    designated = repo_root / "benchmarks" / "manifests" / "wormhole-hamiltonian-lowering.json"
+    if designated.exists():
         return (
-            "unexpected hardware evidence present",
-            "H2A is preregistered for Claim Level 0 but no hardware result is authorized yet.",
+            "designated conformance present",
+            "An H2A designated release manifest is present; validate it separately before making a claim.",
         )
     try:
         manifest = load_h2a_preregistration(
@@ -222,6 +223,48 @@ def _h2a_foundation_status(repo_root: Path) -> tuple[str, str]:
         return "invalid reference foundation", "The H2A preregistration failed validation."
     if manifest.get("status") != "pre_hardware":
         return "invalid reference foundation", "H2A must remain explicitly pre-hardware."
+    pilot_root = repo_root / "benchmarks" / "pilots" / "hamiltonian-lowering-h2a"
+    pilot_manifests = sorted(pilot_root.glob("*/pilot-manifest.json"))
+    if pilot_manifests:
+        try:
+            result = validate_h2a_pilot(pilot_manifests[-1].parent)
+        except HamiltonianLoweringPilotError:
+            return (
+                "invalid non-designated hardware pilot",
+                "The retained H2A pilot failed offline package validation.",
+            )
+        status = (
+            "non-designated hardware pilot passed"
+            if result["pilot_passed"]
+            else "non-designated hardware pilot failed"
+        )
+        return (
+            status,
+            "The retained pilot is non-designated and qualification-ineligible; official H2A silicon conformance remains pending.",
+        )
+    candidate = (
+        repo_root
+        / "experimental"
+        / "tt_metalium_hamiltonian_lowering"
+        / "src"
+        / "hamiltonian_lowering_candidate.cpp"
+    )
+    compute = (
+        repo_root
+        / "experimental"
+        / "tt_metalium_hamiltonian_lowering"
+        / "src"
+        / "kernels"
+        / "compute_hamiltonian_lowering.cpp"
+    )
+    if candidate.is_file() and compute.is_file():
+        blocker = pilot_root / "h2a-n300-development-blocker-20260716" / "blocker-report.json"
+        detail = (
+            "Real single-core TT-Metal candidate source is present. The retained N300 large-angle development blocker stopped collection before the nine-case pilot; designated conformance remains absent."
+            if blocker.is_file()
+            else "Real single-core TT-Metal candidate source is present; non-designated pilot and designated conformance are absent."
+        )
+        return "TT-Metal candidate source present", detail
     return (
         "implementation-ready reference foundation",
         "CPU reference, independent oracles, external candidate protocol, pinned-API design audit, and Claim Level 0 preregistration are present; hardware execution is not implemented.",

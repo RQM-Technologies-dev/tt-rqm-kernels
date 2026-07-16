@@ -3,8 +3,9 @@
 **RQM runs fused time-ordered SU(2) evolution for two-level Hamiltonian
 simulation on Tenstorrent Wormhole.** H1 uses CPU-lowered FP32 rotors and phase
 pairs. Its protected v3 aggregate is Claim Level 2 for stable fused-only
-one-device performance. H2 is the next technical phase; no H2 hardware result
-exists yet.
+one-device performance. H2 is the next technical phase; a compensated H2A
+candidate and one passing non-designated pilot exist, but no designated
+conformance release exists.
 
 ## Protected baselines
 
@@ -113,13 +114,28 @@ datatype. A TT-Metal candidate may pack `h0`, `hx`, `hy`, `hz`, and broadcast
 tile boundaries. It must unpad and restore deterministic row-major `[B,K,*]`
 ordering at the protocol boundary.
 
-The intended per-core decomposition assigns contiguous flattened coefficient
-ranges. The reader moves coefficient and `dt` tiles into circular buffers; the
-compute kernel forms squared magnitude, masks exact zero, evaluates square
-root/reciprocal and sine/cosine, and produces six component planes; the writer
-stores them deterministically. Intermediate precision is FP32. The detailed
-pinned-API classification is in the
-[experimental H2A scaffold](../experimental/tt_metalium_hamiltonian_lowering/README.md).
+The implemented candidates use one Tensix core. Their reader moves six
+component planes into circular buffers; compute forms squared magnitude,
+performs exact-zero selection before reciprocal, evaluates native Wormhole
+square root and trigonometry, and produces six output planes; the writer stores
+them deterministically. Intermediate precision is FP32. Pinned `where_tile` is
+not valid for FP32, so the candidate uses a custom lane-wise SFPI selection.
+The detailed architecture is in the
+[experimental H2A candidate](../experimental/tt_metalium_hamiltonian_lowering/README.md).
+
+The original candidate's frozen large-angle case produced `9.36e-04` maximum
+rotor error and `4.34e-04` maximum phase error. Diagnostics localized the loss
+to ordinary one-value FP32 angle multiplication before trigonometry; `r²` was
+exact for the case, while pinned sine/cosine already used Cody–Waite reduction.
+
+The distinct [compensated Candidate B](../experimental/tt_metalium_hamiltonian_lowering_compensated/README.md)
+uses Dekker split products and carries high/low `theta` and `alpha` through a
+split-`2π` device reduction. SFPMAD was available but rejected after its
+hardware residual proved quantized. No corrected magnitude or square root was
+needed. Candidate B passed all nine frozen cases and one retained
+non-designated pilot; the large case had zero failing values, `1.17e-04`
+maximum rotor error, and `4.73e-08` maximum phase error. This is still not
+Claim Level 0 evidence.
 
 ### First hardware claim gate
 
@@ -129,7 +145,7 @@ commits, candidate binary hash, compiler/runtime provenance, deterministic
 serialized input hashes, whole-output validation, and zero failing or
 nonfinite values. No designated result may be discarded or replaced.
 
-Until real execution satisfies that contract, H2A remains pre-hardware with
+Until a later designated execution satisfies that contract, H2A remains pre-Claim-Level-0 with
 `stable_benchmark=false` and `performance_eligible=false`. It inherits no H1
 claim and makes no speedup, stability, full-H2, bandwidth, energy, dual-device,
 or endorsement claim.

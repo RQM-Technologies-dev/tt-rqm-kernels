@@ -1,0 +1,104 @@
+{
+  "schema": "tt-rqm-h2a-compensated-development-comparison.v1",
+  "designated": false,
+  "qualification_eligible": false,
+  "performance_eligible": false,
+  "stable_benchmark": false,
+  "claim_level": null,
+  "original_candidate": {
+    "candidate_sha256": "ca24f5253b8869ca92621e6031cc08c1d4bdafe669185e02593671a8727f3792",
+    "source_bundle_sha256": "a307055702acd4f370d80ee8fa9a59a48e81f209d3174e9d5358d61e544bdeed",
+    "large_angle_failing_value_count": 8,
+    "max_rotor_absolute_error": 0.0009357817553457826,
+    "max_phase_absolute_error": 0.000434147712645494,
+    "complex_matrix_reconstruction_error": 0.0012431001873617557
+  },
+  "compensated_candidate": {
+    "candidate_sha256": "433e74b827d2cf9a7a790a6c9d7bb3917fc1fed3915ec384de0486cdc014d306",
+    "source_bundle_sha256": "7fb65217e05139bf035952ebeb34602d49e5f1772b8dec4c336b7a296e1fba2f",
+    "source_commit": "08ace96da43f75c2dc65d93847f1b3bb3307b8eb",
+    "source_tree_clean": false,
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+    "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "runtime_version": "tt-metal-dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+    "device_arch": "wormhole_b0",
+    "device_id": 0,
+    "core_count": 1,
+    "large_angle_failing_value_count": 0,
+    "large_angle_nonfinite_value_count": 0,
+    "max_rotor_absolute_error": 0.00011688396223238917,
+    "max_rotor_relative_error": 0.0005483394971432245,
+    "max_phase_absolute_error": 4.7257471491590763e-08,
+    "max_phase_relative_error": 1.4302762489306706e-07,
+    "rotor_norm_drift": 4.234450523554756e-08,
+    "phase_norm_drift": 5.3156770096762784e-08,
+    "complex_matrix_reconstruction_error": 0.00012605900036450937
+  },
+  "pytorch_fp32_large_angle": {
+    "max_rotor_absolute_error": 0.0007835023094003579,
+    "max_phase_absolute_error": 0.00036253972861866046,
+    "complex_matrix_reconstruction_error": 0.0010403359259813238
+  },
+  "strategy_evaluation": [
+    {
+      "candidate": "A",
+      "result": "rejected before hardware retention",
+      "reason": "Correcting alpha alone leaves the known failing theta path unchanged."
+    },
+    {
+      "candidate": "B with SFPMAD residual",
+      "result": "hardware failed with 3 values outside tolerance",
+      "reason": "Wormhole SFPMAD compiled but quantized the residual; the largest theta residual error was 0.00020455988124012947."
+    },
+    {
+      "candidate": "B with split TwoProduct",
+      "result": "selected; all nine cases passed",
+      "reason": "Dekker splitting with 4097 recovered the exact FP32-input product residual and split-2pi reduction retained it until collapse."
+    },
+    {
+      "candidate": "C and D",
+      "result": "not retained",
+      "reason": "The frozen large case has zero r-squared accumulation error, and Candidate B already passes despite the measured sqrt error."
+    }
+  ],
+  "lane_error_decomposition": [
+    {
+      "lane": 0,
+      "vector_square_sum_error": 0.0,
+      "sqrt_error": 0.00036615495628211647,
+      "theta_multiplication_error": 0.0009369817562401295,
+      "theta_total_ordinary_error": 0.0011013117182301357,
+      "alpha_multiplication_error": 0.00020122528076171875,
+      "original_theta_reduction_error": -5.205864539448157e-08,
+      "compensated_theta_reduction_error": -5.531827440563575e-08,
+      "compensated_alpha_reduction_error": -2.7603860530689417e-08,
+      "compensated_sin_theta_sfpu_error": -6.025360987926831e-09,
+      "compensated_cos_theta_sfpu_error": -1.916471847884793e-08,
+      "compensated_sin_alpha_sfpu_error": -5.340093855998873e-08,
+      "compensated_cos_alpha_sfpu_error": 4.92082252723236e-09
+    },
+    {
+      "lane": 1,
+      "vector_square_sum_error": 0.0,
+      "sqrt_error": 0.00017657215357758105,
+      "theta_multiplication_error": -0.0006422051228582859,
+      "theta_total_ordinary_error": -0.0005629597253573593,
+      "alpha_multiplication_error": -0.0004024505615234375,
+      "original_theta_reduction_error": 2.8494341108853405e-08,
+      "compensated_theta_reduction_error": 3.814292881543224e-09,
+      "compensated_alpha_reduction_error": -8.365297787804593e-09,
+      "compensated_sin_theta_sfpu_error": -2.7098136734515776e-08,
+      "compensated_cos_theta_sfpu_error": 8.420782848794772e-09,
+      "compensated_sin_alpha_sfpu_error": -1.3060127312947145e-08,
+      "compensated_cos_alpha_sfpu_error": 3.760950384457118e-08
+    }
+  ],
+  "pilot": {
+    "pilot_id": "h2a-compensated-n300-pilot-20260716",
+    "suite_passed": true,
+    "case_count": 9,
+    "stable_benchmark": false,
+    "performance_eligible": false,
+    "claim_level": null
+  }
+}

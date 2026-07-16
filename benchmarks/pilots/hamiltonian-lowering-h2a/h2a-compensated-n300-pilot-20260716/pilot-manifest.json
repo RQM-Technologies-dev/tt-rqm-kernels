@@ -1,0 +1,62 @@
+{
+  "benchmark_family": "HamiltonianLoweringBench",
+  "case_ids": [
+    "zero_vector",
+    "axis_x",
+    "axis_y",
+    "axis_z",
+    "tiny_norms",
+    "random_finite",
+    "varying_dt",
+    "large_angles",
+    "mixed_zero_nonzero"
+  ],
+  "case_input_hashes": {
+    "axis_x": {
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "hamiltonians_sha256": "cc2ad620fd03b331864ddc0904cad2d3c3de8c6ac9dd033f401e4daaf85e94ef"
+    },
+    "axis_y": {
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "hamiltonians_sha256": "5407e8586c848508229629685d9df0051747097d8dcc18c1ebf1a48e0a9c7d92"
+    },
+    "axis_z": {
+      "dt_sha256": "31b67dba7cfd6e2d7540f9c96d90a45b8f2d44956620723024d4e1beeacd4602",
+      "hamiltonians_sha256": "51c646b2af21997ed37db2b89f8456c0c4516a087356c52fd81658b7fd795b15"
+    },
+    "large_angles": {
+      "dt_sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+      "hamiltonians_sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443"
+    },
+    "mixed_zero_nonzero": {
+      "dt_sha256": "5d96a77c55b4ac1eea2d77815396c4349292b85e3b07beaca6aff933e7ef8752",
+      "hamiltonians_sha256": "5da14bc286d4879622c9b3ae437617e3504c15a73f7ad8f8fb9473c4bb6ea744"
+    },
+    "random_finite": {
+      "dt_sha256": "0b9d79ff0fc4d0a77ef398763bbe45c445501e826219f2b6a1aa709411ab631d",
+      "hamiltonians_sha256": "9731a8782d4f98b3152fcdde76cfd4cffc0ce066717d914920c0d5d669871284"
+    },
+    "tiny_norms": {
+      "dt_sha256": "9a8208635e00348ab64aac2b759e76391fd47089e9a749bbcec770d9eb5c6421",
+      "hamiltonians_sha256": "78f6b3ff0b8f8824f86df36bff8ec4bd295f60eb8b960f312dd1a266b1056de1"
+    },
+    "varying_dt": {
+      "dt_sha256": "9206a4761ef440addd7e5b52a6774e08cfc2d3d95430559144f44e5850d04329",
+      "hamiltonians_sha256": "d244666f09741266e2082999aa6012de8c0db7136cd46f2c2d4a6eb14be42713"
+    },
+    "zero_vector": {
+      "dt_sha256": "75e253f50979177eba47b2d0805ad36038789108924514d2a761a70de057d16f",
+      "hamiltonians_sha256": "142b11e703ce9543190323ce7749d4b3a7795a664b157818923f79675369fc9b"
+    }
+  },
+  "claim_level": null,
+  "designated": false,
+  "hardware_execution": true,
+  "performance_eligible": false,
+  "pilot_id": "h2a-compensated-n300-pilot-20260716",
+  "pilot_started": true,
+  "qualification_eligible": false,
+  "schema": "tt-rqm-hamiltonian-lowering-pilot.v1",
+  "stable_benchmark": false,
+  "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+}

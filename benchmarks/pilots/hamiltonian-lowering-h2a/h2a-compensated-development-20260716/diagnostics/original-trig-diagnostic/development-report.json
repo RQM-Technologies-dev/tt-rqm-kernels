@@ -1,0 +1,84 @@
+{
+  "candidate_sha256": "f9bb58ed8adaaf4eb09e88bc544bd9774acd297299fd62a92b329ca8d3e58a22",
+  "case_id": "large_angles",
+  "claim_level": null,
+  "correctness": {
+    "complex_matrix_reconstruction_error": 3.2585386143839816,
+    "failing_value_count": 12,
+    "max_phase_absolute_error": 1.3352522666388387,
+    "max_phase_relative_error": 5.380282486638314,
+    "max_rotor_absolute_error": 3.3461477762786487,
+    "max_rotor_relative_error": 17.84591898354129,
+    "nonfinite_value_count": 0,
+    "passed": false,
+    "phase_norm_drift": 2.4445352742041848e-08,
+    "rotor_norm_drift": 2.5132333005471597
+  },
+  "designated": false,
+  "frozen_tolerances": {
+    "phase_atol": 0.0001,
+    "phase_rtol": 0.0001,
+    "rotor_atol": 0.0001,
+    "rotor_rtol": 0.0001
+  },
+  "performance_eligible": false,
+  "phases": [
+    [
+      [
+        0.9748742580413818,
+        -0.2227558195590973
+      ],
+      [
+        0.4343178868293762,
+        -0.9007596373558044
+      ]
+    ]
+  ],
+  "qualification_eligible": false,
+  "reference_phases": [
+    [
+      [
+        -0.22255967760416237,
+        -0.9749190683870796
+      ],
+      [
+        -0.9009343798094626,
+        -0.43395534710075756
+      ]
+    ]
+  ],
+  "reference_rotors": [
+    [
+      [
+        -0.9579380047004907,
+        -0.1065799225127307,
+        0.15986988376909603,
+        -0.2131598450254614
+      ],
+      [
+        0.5525486509797743,
+        -0.6538360125152208,
+        0.1634590031288052,
+        0.49037700938641565
+      ]
+    ]
+  ],
+  "rotors": [
+    [
+      [
+        -2.84942364692688,
+        1.7954367399215698,
+        -0.2880299985408783,
+        -0.9576213955879211
+      ],
+      [
+        0.9848144054412842,
+        2.6923117637634277,
+        0.8331694602966309,
+        0.5530177354812622
+      ]
+    ]
+  ],
+  "schema": "tt-rqm-h2a-development-probe.v1",
+  "stable_benchmark": false
+}

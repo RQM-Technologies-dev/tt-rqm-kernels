@@ -1,0 +1,87 @@
+{
+  "B": 2,
+  "K": 4,
+  "benchmark_family": "HamiltonianLoweringBench",
+  "candidate_metrics": {
+    "benchmark": "HamiltonianLoweringBench",
+    "candidate_metadata": {
+      "angle_representation": "two-product high/low retained through split-2pi reduction",
+      "arithmetic_path": "single Tensix compute core with FP32 SFPU",
+      "candidate_sha256": "433e74b827d2cf9a7a790a6c9d7bb3917fc1fed3915ec384de0486cdc014d306",
+      "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "core_count": 1,
+      "device_arch": "wormhole_b0",
+      "device_close_count": 1,
+      "device_count": 1,
+      "device_create_count": 1,
+      "device_id": 0,
+      "fma_mode": "audited and compile-probed; rejected for quantized product residual",
+      "implementation_class": "single_core_tensix_sfpu_h2a_compensated_b",
+      "input_layout": "component-planar Float32 tiles; row-major [B,K] lanes",
+      "magnitude_compensation": "none; ordinary FP32 r2 and sqrt retained",
+      "output_layout": "six component-planar Float32 tiles restored to row-major [B,K,*]",
+      "period_reduction": "device-side nearest-multiple split-2pi reduction",
+      "product_mode": "Dekker split TwoProduct with 4097 FP32 splitter",
+      "runtime_version": "tt-metal-dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+      "scalar_dt_expansion": false,
+      "sfpu_cosine_mode": "native Wormhole cos_tile with pinned four-stage Cody-Waite reduction",
+      "sfpu_reciprocal_mode": "recip_tile<false> on lane-wise nonzero safe_r",
+      "sfpu_sine_mode": "native Wormhole sin_tile with pinned four-stage Cody-Waite reduction",
+      "sfpu_sqrt_mode": "sqrt_tile<false>; fp32 destination",
+      "source_bundle_sha256": "7fb65217e05139bf035952ebeb34602d49e5f1772b8dec4c336b7a296e1fba2f",
+      "source_commit": "08ace96da43f75c2dc65d93847f1b3bb3307b8eb",
+      "source_tree_clean": false,
+      "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4",
+      "zero_mask_strategy": "eqz(r2), SFPI FP32 select r->1 before reciprocal, identity output select"
+    },
+    "claim_level": null,
+    "dt_shape": [
+      2,
+      4
+    ],
+    "dtype": "float32",
+    "execution_label": "hardware",
+    "hamiltonian_shape": [
+      2,
+      4,
+      4
+    ],
+    "performance_eligible": false,
+    "protocol": "tt-rqm-external-hamiltonian-lowering.v1",
+    "schema": "tt-rqm-external-hamiltonian-lowering-metrics.v1",
+    "stable_benchmark": false,
+    "stage": "conformance",
+    "timings_s": {
+      "candidate_process": 2.266826175,
+      "d2h": 0.000202548,
+      "device_close": 0.128030181,
+      "device_create": 2.098974757,
+      "diagnostic_device_execute": 0.023492371,
+      "h2d": 0.014417857
+    }
+  },
+  "claim_level": null,
+  "correctness": {
+    "checksum": "a525937f0748b2794a8026aecfac576e19c36e7c1d6002830c404adeac04b0b2",
+    "complex_matrix_reconstruction_error": 7.142708927193814e-08,
+    "failing_value_count": 0,
+    "max_phase_absolute_error": 3.132384163162527e-08,
+    "max_rotor_absolute_error": 5.3532828336866345e-08,
+    "nonfinite_value_count": 0,
+    "passed": true,
+    "phase_norm_drift": 3.115115454477291e-08,
+    "rotor_norm_drift": 4.0594091421652934e-08
+  },
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "host_end_to_end_s": 3.148892163997516,
+  "input_hashes": {
+    "dt_sha256": "9206a4761ef440addd7e5b52a6774e08cfc2d3d95430559144f44e5850d04329",
+    "hamiltonians_sha256": "d244666f09741266e2082999aa6012de8c0db7136cd46f2c2d4a6eb14be42713"
+  },
+  "performance_eligible": false,
+  "protocol": "tt-rqm-external-hamiltonian-lowering.v1",
+  "schema": "tt-rqm-hamiltonian-lowering-candidate-report.v1",
+  "stable_benchmark": false,
+  "stage": "conformance"
+}

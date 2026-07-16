@@ -42,8 +42,28 @@ CHECKS = {
     ),
     "select": (
         "tt_metal/hw/inc/api/compute/eltwise_unary/where.h",
-        ("where_tile_init", "where_tile("),
-        "available with restrictions",
+        ("where_tile_init", "where_tile(", "DataFormat::Int32", "DataFormat::UInt32"),
+        "integer formats only; not selected for FP32 H2A",
+    ),
+    "negation": (
+        "tt_metal/hw/inc/api/compute/eltwise_unary/negative.h",
+        ("negative_tile_init", "negative_tile("),
+        "verified available",
+    ),
+    "tile_pack": (
+        "tt_metal/hw/inc/api/compute/pack.h",
+        ("pack_tile(",),
+        "verified available with acquired/committed DST lifecycle",
+    ),
+    "reader_writer_dma": (
+        "tt_metal/hw/inc/api/dataflow/dataflow_api.h",
+        ("noc_async_read_page", "noc_async_write_page", "noc_async_read_barrier"),
+        "verified data-movement API",
+    ),
+    "circular_buffers": (
+        "tt_metal/hw/inc/api/dataflow/circular_buffer.h",
+        ("cb_wait_front", "cb_reserve_back", "cb_push_back", "cb_pop_front"),
+        "verified producer/consumer API",
     ),
 }
 
@@ -72,10 +92,19 @@ def audit(root: Path) -> dict[str, object]:
             "path": relative,
             "symbols": list(symbols),
         }
-    results["vector_magnitude"] = {
-        "classification": "requires approximation or composed implementation"
+    results["fp32_selection"] = {
+        "classification": "custom SFPI lane selection required",
+        "reason": "pinned where_tile documentation lists integer formats only",
     }
-    results["large_angle_accuracy"] = {"classification": "not yet verified"}
+    results["vector_magnitude"] = {
+        "classification": "composed FP32 square/add/sqrt implementation required"
+    }
+    results["native_trigonometry_range_reduction"] = {
+        "classification": "four-stage Cody-Waite reduction present in pinned Wormhole source"
+    }
+    results["large_angle_accuracy"] = {
+        "classification": "must still be verified end-to-end; range reduction presence is not a tolerance result"
+    }
     return {
         "schema": "tt-rqm-h2a-tt-metal-api-audit.v1",
         "tt_metal_commit": commit,

@@ -15,9 +15,11 @@ official Tenstorrent repository or a statement of Tenstorrent endorsement.
 H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
 rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
 H2A device-side Hamiltonian coefficient lowering is now the active technical
-milestone. Its CPU reference, independent oracle, candidate protocol, and
-pre-hardware conformance contract are implemented; no H2 hardware execution is
-claimed. H1 is a real stage of the simulation pipeline, not the complete
+milestone. A distinct compensated single-core candidate retains FP32 angle
+high/low components through device-side split-period reduction and passes the
+frozen nine-case N300 contract. Its one retained pilot is non-designated and
+qualification-ineligible, so no H2A claim level or hardware conformance release
+exists. H1 is a real stage of the simulation pipeline, not the complete
 device-side pipeline.
 
 ## For Tenstorrent engineers

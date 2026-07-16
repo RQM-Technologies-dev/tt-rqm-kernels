@@ -46,7 +46,7 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         ),
         (
             "plan.md",
-            "Hardware execution is not yet implemented.",
+            "one non-designated pilot; designated conformance is\n  absent.",
             "H2A hardware implementation: complete.",
             "plan status marker missing",
         ),

@@ -31,6 +31,8 @@ PROTOCOL = "tt-rqm-external-hamiltonian-lowering.v1"
 METRICS_SCHEMA = "tt-rqm-external-hamiltonian-lowering-metrics.v1"
 Stage = Literal["conformance", "performance"]
 ExecutionLabel = Literal["cpu_reference", "hardware"]
+HARDWARE_ATOL = 1e-4
+HARDWARE_RTOL = 1e-4
 
 
 class HamiltonianLoweringCandidateError(RuntimeError):
@@ -42,6 +44,8 @@ class CandidateRun:
     report: dict[str, Any]
     rotors: torch.Tensor
     phases: torch.Tensor
+    stdout: str = ""
+    stderr: str = ""
 
 
 def run_external_candidate(
@@ -107,7 +111,9 @@ def run_external_candidate(
         manifest_path.write_text(
             json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
-        host_elapsed = _execute(command, work_dir, manifest_path)
+        host_elapsed, candidate_stdout, candidate_stderr = _execute(
+            command, work_dir, manifest_path
+        )
         metrics = _load_metrics(work_dir / "metrics.json")
         _validate_metrics(metrics, manifest, execution_label=execution_label)
         rotors = _read_float32(work_dir / "rotors.bin", (shape[0], shape[1], 4))
@@ -117,7 +123,15 @@ def run_external_candidate(
         coefficients, dt_value, hbar=hbar
     )
     correctness = _validate_outputs(
-        rotors, phases, reference_rotors, reference_phases, coefficients, dt_value, hbar
+        rotors,
+        phases,
+        reference_rotors,
+        reference_phases,
+        coefficients,
+        dt_value,
+        hbar,
+        atol=HARDWARE_ATOL if execution_label == "hardware" else ATOL,
+        rtol=HARDWARE_RTOL if execution_label == "hardware" else RTOL,
     )
     report = {
         "schema": "tt-rqm-hamiltonian-lowering-candidate-report.v1",
@@ -139,7 +153,13 @@ def run_external_candidate(
         "performance_eligible": False,
         "claim_level": None,
     }
-    return CandidateRun(report=report, rotors=rotors, phases=phases)
+    return CandidateRun(
+        report=report,
+        rotors=rotors,
+        phases=phases,
+        stdout=candidate_stdout,
+        stderr=candidate_stderr,
+    )
 
 
 def deterministic_candidate_inputs(
@@ -165,6 +185,9 @@ def _validate_outputs(
     coefficients: torch.Tensor,
     dt: torch.Tensor,
     hbar: float,
+    *,
+    atol: float,
+    rtol: float,
 ) -> dict[str, Any]:
     nonfinite = int((~torch.isfinite(rotors)).sum().item() + (~torch.isfinite(phases)).sum().item())
     if nonfinite:
@@ -174,8 +197,8 @@ def _validate_outputs(
     rotor64, phase64 = rotors.double(), phases.double()
     rotor_error = torch.abs(rotor64 - reference_rotors)
     phase_error = torch.abs(phase64 - reference_phases)
-    rotor_fail = rotor_error > (ATOL + RTOL * torch.abs(reference_rotors))
-    phase_fail = phase_error > (ATOL + RTOL * torch.abs(reference_phases))
+    rotor_fail = rotor_error > (atol + rtol * torch.abs(reference_rotors))
+    phase_fail = phase_error > (atol + rtol * torch.abs(reference_phases))
     failing = int(rotor_fail.sum().item() + phase_fail.sum().item())
     if failing:
         raise HamiltonianLoweringCandidateError(
@@ -251,19 +274,79 @@ def _validate_metrics(
                 "CPU candidate must use device=cpu/pytorch-reference"
             )
     else:
-        required = {
+        required_strings = {
+            "implementation_class",
             "candidate_sha256",
             "source_commit",
+            "source_bundle_sha256",
             "tt_metal_commit",
             "compiler_version",
             "runtime_version",
+            "device_arch",
+            "arithmetic_path",
+            "input_layout",
+            "output_layout",
+            "sfpu_sqrt_mode",
+            "sfpu_reciprocal_mode",
+            "sfpu_sine_mode",
+            "sfpu_cosine_mode",
+            "zero_mask_strategy",
+        }
+        required = required_strings | {
+            "source_tree_clean",
+            "device_count",
             "device_id",
+            "core_count",
+            "scalar_dt_expansion",
+            "device_create_count",
+            "device_close_count",
         }
         if not required.issubset(metadata):
             raise HamiltonianLoweringCandidateError("hardware candidate metadata is incomplete")
+        if any(not isinstance(metadata[key], str) or not metadata[key] for key in required_strings):
+            raise HamiltonianLoweringCandidateError(
+                "hardware candidate metadata strings must be nonempty"
+            )
+        for key in ("candidate_sha256", "source_bundle_sha256"):
+            value = metadata[key]
+            if len(value) != 64 or any(character not in "0123456789abcdef" for character in value):
+                raise HamiltonianLoweringCandidateError(
+                    f"hardware candidate metadata {key} must be lowercase SHA-256"
+                )
+        if len(metadata["source_commit"]) != 40:
+            raise HamiltonianLoweringCandidateError(
+                "hardware candidate source_commit must be a full Git commit"
+            )
+        if metadata["tt_metal_commit"] != "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4":
+            raise HamiltonianLoweringCandidateError("hardware candidate TT-Metal commit mismatch")
+        if (
+            metadata["implementation_class"] == "cpu_reference"
+            or "cpu" in metadata.get("arithmetic_path", "").lower()
+        ):
+            raise HamiltonianLoweringCandidateError(
+                "hardware candidate falsely reports CPU execution"
+            )
+        if type(metadata["source_tree_clean"]) is not bool:  # noqa: E721
+            raise HamiltonianLoweringCandidateError("source_tree_clean must be boolean")
+        if type(metadata["scalar_dt_expansion"]) is not bool:  # noqa: E721
+            raise HamiltonianLoweringCandidateError("scalar_dt_expansion must be boolean")
+        expected_integers = {
+            "device_count": 1,
+            "device_id": 0,
+            "core_count": 1,
+            "device_create_count": 1,
+            "device_close_count": 1,
+        }
+        for key, value in expected_integers.items():
+            if type(metadata[key]) is not int or metadata[key] != value:  # noqa: E721
+                raise HamiltonianLoweringCandidateError(
+                    f"hardware candidate metadata {key} must equal {value}"
+                )
+        if "wormhole" not in metadata["device_arch"].lower():
+            raise HamiltonianLoweringCandidateError("hardware candidate must identify Wormhole")
 
 
-def _execute(command_text: str, work_dir: Path, manifest_path: Path) -> float:
+def _execute(command_text: str, work_dir: Path, manifest_path: Path) -> tuple[float, str, str]:
     env = os.environ.copy()
     env["TT_RQM_H2A_DIR"] = str(work_dir)
     env["TT_RQM_H2A_MANIFEST"] = str(manifest_path)
@@ -274,7 +357,7 @@ def _execute(command_text: str, work_dir: Path, manifest_path: Path) -> float:
         raise HamiltonianLoweringCandidateError(
             f"candidate command failed\nstdout:\n{completed.stdout}\nstderr:\n{completed.stderr}"
         )
-    return elapsed
+    return elapsed, completed.stdout, completed.stderr
 
 
 def _load_metrics(path: Path) -> dict[str, Any]:

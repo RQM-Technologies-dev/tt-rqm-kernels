@@ -1,0 +1,610 @@
+{
+  "packages": [
+    {
+      "files": [
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/README.md",
+          "sha256": "cc5b673bdd6f890b3fe416d47a6dd83362ee3defb7f5df3ff7ebbf7db1b8cfc5",
+          "size_bytes": 1155
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/blocker-report.json",
+          "sha256": "80e9b55b5823e28cc4b7aca89736b394f1009f6b53213dd3b7153c236f3b6aa1",
+          "size_bytes": 3412
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/environment.txt",
+          "sha256": "5a68bb5a9cf3a3428739996946c6a57e08a55421ecef682e67d4a0758fd3c81f",
+          "size_bytes": 739
+        }
+      ],
+      "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716"
+    },
+    {
+      "files": [
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/README.md",
+          "sha256": "ed7b35995b61fcfe65c879f449e3a26738ccfe375a0857f50aaf8d76f56bf582",
+          "size_bytes": 1527
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/comparison-report.json",
+          "sha256": "f418b3f29ed674b77d89775879e32215bb86a1031d6b80106614a0ef6bbd6366",
+          "size_bytes": 4624
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/development-report.json",
+          "sha256": "aebd9c112dc115f4623081cd2a87a8cf9fa699e64d8e26b173f6dde21be2f81b",
+          "size_bytes": 1893
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/metrics.json",
+          "sha256": "8ee903e5471a55d3105725277f8f4a6fb8a34177a4401362984e1d694522fbab",
+          "size_bytes": 2370
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/phases.bin",
+          "sha256": "cc0513a31eede7904d496786504315759a68c5a30521af067cac5ce1568c9d97",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/rotors.bin",
+          "sha256": "a96c0b906d89cede0e3d5b0c8e43cd8d5fba2eebe5de851f89999588aaf4bca3",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-raw/stdout.txt",
+          "sha256": "63b8eb143e151d9b0b7e67d45783c460d530cf7a98488499de96cea1a70e9222",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/development-report.json",
+          "sha256": "caf31be98ff754072a065e3cd2afcf85137d742d17a1f5e42284be88efe8fd54",
+          "size_bytes": 1899
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/metrics.json",
+          "sha256": "9d357f3a4e4afe415fdc24336162d48481b69b298bd047cb1d9f34f0e3dfe4fe",
+          "size_bytes": 2472
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/phases.bin",
+          "sha256": "a8363ea4c36c26ca98eaec1a8f0d226730b2a939d00612f4e8e724ef70bd442b",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/rotors.bin",
+          "sha256": "22df0acfbd47e7c93a9b483baa110b0aa975352904275e5565522a951f4df3cf",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/stderr.txt",
+          "sha256": "fb17e2436c29ae0336ee2e48861716005b892b2de098e58834dbca84823e3032",
+          "size_bytes": 6229
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/comp-b-split-raw3/stdout.txt",
+          "sha256": "bded0344dbea7b5b6aece02ac29a34d9a1445ac595b06e168bf82accf3b37dd1",
+          "size_bytes": 4968
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/development-report.json",
+          "sha256": "1a562ec58cd68f9b5b26bdfc76866cc3f110e06600393a8129d589f3d8db6f2d",
+          "size_bytes": 1868
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/metrics.json",
+          "sha256": "3e14c20a55399416272e0c9eec0d57c48a81b26113762b3f4981dbeb35220017",
+          "size_bytes": 2472
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/phases.bin",
+          "sha256": "ed9f2f9744994246cfb3cbec854694443bcefdb6f50f848db02c1b0c34b44ecb",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/rotors.bin",
+          "sha256": "56a8d3b200ac3a3f4ea0f00eeaccd118805b48627970d12756bde3673804f55c",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/stderr.txt",
+          "sha256": "6918157362f78f8541e934184aa521b81dc6f289da34b8b0f81af5d562954c69",
+          "size_bytes": 6442
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/original-trig-diagnostic/stdout.txt",
+          "sha256": "5a6faef77310b3a49c4d45896c667ff7900e08f2b68c1577ea30638c108f9f05",
+          "size_bytes": 4968
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/development-report.json",
+          "sha256": "35400b3de8f6f5d4d7153325db9f257736ef953c616bfe9bdcd0510fe6e8bb9b",
+          "size_bytes": 1808
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/metrics.json",
+          "sha256": "85d921591f35ec870bbf9e64adf31762948bad5f5122aa157c45d58c3c127734",
+          "size_bytes": 2372
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/phases.bin",
+          "sha256": "640ed4621c9afa1727311b2615af769388b746329cdf860071b5bf141bf16c44",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/rotors.bin",
+          "sha256": "033c111077fc1980544e20ba566fdfa0db77d386c1b8642b7139bfd8b37b0b1c",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic/stdout.txt",
+          "sha256": "7fdb02914ad5175505409e1a81630079431f3b9f29fe7502d5bdeb4014a5b13e",
+          "size_bytes": 4968
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/development-report.json",
+          "sha256": "f09e8865c8598fe625bd17dba807f2284d82babb3411b35767ef66a7b74f3b2a",
+          "size_bytes": 1832
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/metrics.json",
+          "sha256": "a402bce617625a87141c825492172d9997bb5d3a620332069ce1c91d8bfe4e07",
+          "size_bytes": 2372
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/phases.bin",
+          "sha256": "529a35ac3dce6a38b956b932421bbeb4dcc9451aafd7d53f1e082373e791177f",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/rotors.bin",
+          "sha256": "983b6cc6fe24334fd57088ad365cc9514004a4de6c7e7fcb1ff54c930a04f637",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/product-diagnostic-split/stdout.txt",
+          "sha256": "b1671cfab697445f523e0d49ed7ddb8322b8acdd589d248652bba1a701394a4f",
+          "size_bytes": 4968
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/development-report.json",
+          "sha256": "a7ef4f574d57d88797143ad2af9251d23d65e41b455b7b4edada41cb7e51499e",
+          "size_bytes": 1865
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/metrics.json",
+          "sha256": "6078e496b40e8ac1604408ff7ecee6d45b927e568b45e02e17ed68b06e430696",
+          "size_bytes": 2470
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/phases.bin",
+          "sha256": "b09eecf333ac0dd4569f3843646cee4b9d2fa88ae79e7981fe30dcede17406f9",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/rotors.bin",
+          "sha256": "417577921bbc28761e5f6323d91352fddd1c769144e7d575e66de66481092e58",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/stderr.txt",
+          "sha256": "33b8533f1bc81c23bdcdfe3cf7d74cc345f4f21b2310cfc0b4c5ab4157cdcefa",
+          "size_bytes": 6393
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/trig-diagnostic/stdout.txt",
+          "sha256": "6540bd1facc5e590c894b2f922cd8a0212d3d54ec0df48f0c228165071918e9e",
+          "size_bytes": 4968
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/development-report.json",
+          "sha256": "53f9f9d01e132a62d4833ec108e896d956bac169a1207c9ddf49395358e1e0ec",
+          "size_bytes": 1825
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/dt.bin",
+          "sha256": "f9a5c40c70ab0450d77877ba720000ec7ad9b61c1ee77a9a173a57b3283c0ddd",
+          "size_bytes": 4
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/hamiltonians.bin",
+          "sha256": "2ae466c30b4b26e768171b3c69d2df60c3704a390d5bc28aae7fbdce7975e443",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/manifest.json",
+          "sha256": "fe5e164393128a8c8b962c24065507d7cebc47eb79dd66bb9a847462e4f00d3a",
+          "size_bytes": 925
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/metrics.json",
+          "sha256": "2b4cb62162de44d55c50a90da74db04846d5577298bc0352a0ce54ec33ae5dbf",
+          "size_bytes": 2472
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/phases.bin",
+          "sha256": "1914eb0947940ab41f7ba68f572d5352429d1ecc2787faa22a3fb82c81d8134a",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/rotors.bin",
+          "sha256": "008252d1b8d9d80a59fa60a50f5426a964390b1c3f79cb7d60f4d7239a966b70",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/stderr.txt",
+          "sha256": "5c5a9a0ccd72cdbf56f41dcebbafbae48c9721f1053e8ab72c808eef0d84e100",
+          "size_bytes": 6408
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/diagnostics/value-diagnostic/stdout.txt",
+          "sha256": "045d197e96cdefea7d9021e959ec051a290e367604c3652177dd77eaa2412776",
+          "size_bytes": 4968
+        }
+      ],
+      "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716"
+    },
+    {
+      "files": [
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/candidate-metadata.json",
+          "sha256": "b014b20ddf5ed0ff8e2f47e0eddfb9dd4723282cb483274e80fd3bb57f4cc7a4",
+          "size_bytes": 1769
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_x/phases.bin",
+          "sha256": "28e5b7e35986aa34417160152519adf5679aec830bf573aada22b5737b9e6579",
+          "size_bytes": 24
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_x/report.json",
+          "sha256": "1320ae6d1a8dd32b8bbedf81e375cd4b3bfaa153c6eaf32ceb75d186e75b69f0",
+          "size_bytes": 3667
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_x/rotors.bin",
+          "sha256": "f676f7e7a4cb36a0aea135f5518ee0dee540473c592ee7be7f72f701a849d6d3",
+          "size_bytes": 48
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_x/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_x/stdout.txt",
+          "sha256": "6c84827cefb73ea1990ae80aed424de981e9f12f098560498539ffe6080a623a",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_y/phases.bin",
+          "sha256": "28e5b7e35986aa34417160152519adf5679aec830bf573aada22b5737b9e6579",
+          "size_bytes": 24
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_y/report.json",
+          "sha256": "e644937e41adc35a0e8c7344753646cb3225e9f7b6a4c2a5f9f97d6f3e40cb62",
+          "size_bytes": 3667
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_y/rotors.bin",
+          "sha256": "67e1491ed27079867068a0785e3468ac3f146d23dc75d2a2e08633fa087b695c",
+          "size_bytes": 48
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_y/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_y/stdout.txt",
+          "sha256": "275b49c78331c5868eced613c4750c5657606f6051995841e42e36eeafa463db",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_z/phases.bin",
+          "sha256": "28e5b7e35986aa34417160152519adf5679aec830bf573aada22b5737b9e6579",
+          "size_bytes": 24
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_z/report.json",
+          "sha256": "fecba60c372262f9d6787066ab8cb23ed32b922d5706f32483f751bb2e546342",
+          "size_bytes": 3668
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_z/rotors.bin",
+          "sha256": "75c0a2d4ad5726a49f62ce517d40f75a907aadfc01cf5f94835a6726e6fa9c7f",
+          "size_bytes": 48
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_z/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/axis_z/stdout.txt",
+          "sha256": "ffe2e0a5250dc8e3c2d2e13bd8adde4d43d6ab1874e0ce77f9d1aadd71073142",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/large_angles/phases.bin",
+          "sha256": "a8363ea4c36c26ca98eaec1a8f0d226730b2a939d00612f4e8e724ef70bd442b",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/large_angles/report.json",
+          "sha256": "abed0a3d1323a5040fae9a796d8041c4138bfe7dd6eba9995d049931f3a1af85",
+          "size_bytes": 3671
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/large_angles/rotors.bin",
+          "sha256": "22df0acfbd47e7c93a9b483baa110b0aa975352904275e5565522a951f4df3cf",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/large_angles/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/large_angles/stdout.txt",
+          "sha256": "d28423010b9097aeb32d446c0be53239d22c7101bd02ec9c33d21203e551cc4d",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/mixed_zero_nonzero/phases.bin",
+          "sha256": "54f6d65d9be73b2de157718ecaafabf097b46d961f4b863884a4a75431bae898",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/mixed_zero_nonzero/report.json",
+          "sha256": "af7c613b3517d87fa9754a5cedb0f656c8824ff14494965ba4408b7e45aa2eab",
+          "size_bytes": 3668
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/mixed_zero_nonzero/rotors.bin",
+          "sha256": "a44d5a0ec01e5c8bec34f5e3f67cf1af0fc356d77554a05e4bd7a1d88d78e5f3",
+          "size_bytes": 64
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/mixed_zero_nonzero/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/mixed_zero_nonzero/stdout.txt",
+          "sha256": "0de1087eb4f25d70a894cccfcae76c5e0b6c49b6237d8e77982151424aa25505",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/random_finite/phases.bin",
+          "sha256": "c109f8989eed06986468347b1606c10f63ec3efb31180925c6b15d347b21d112",
+          "size_bytes": 224
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/random_finite/report.json",
+          "sha256": "36d4ea4de8be7fc7899d940517dd2f7423d696827896962120fbe9238580e1c3",
+          "size_bytes": 3669
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/random_finite/rotors.bin",
+          "sha256": "9469e6dac4c10cf732b5fdb500f33f2a8ebd9cf417b0ebcb1bee8860eff9ce7e",
+          "size_bytes": 448
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/random_finite/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/random_finite/stdout.txt",
+          "sha256": "a8c534a8e412539b6e1cc1e5ce401859b2d026865e09f847305c1e2c255126ef",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/tiny_norms/phases.bin",
+          "sha256": "788f87449ccebe1339205c27ecac0407e2179f1e28884e0fb2685e8545f94257",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/tiny_norms/report.json",
+          "sha256": "b23321272cb8f44f7cc030cc0fbf51ace4829d4a7ace0bfedb352318c769f368",
+          "size_bytes": 3653
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/tiny_norms/rotors.bin",
+          "sha256": "089d85017ea9ca09e172d030d074a80dd5d857044b9dfa0e8ef5aa3944de431f",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/tiny_norms/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/tiny_norms/stdout.txt",
+          "sha256": "9f62a5eadc949df84702400e6a298ffc9cddb6dd1909e068555cabf8c53fa7f2",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/varying_dt/phases.bin",
+          "sha256": "723754b477686e389235375020dcb4b6f7a596b6cfba1f30a399df9322baa066",
+          "size_bytes": 64
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/varying_dt/report.json",
+          "sha256": "c1789a3c650349ec90c9f526ecc4b465108d71c7bf69da685d10b51bb6a43b87",
+          "size_bytes": 3693
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/varying_dt/rotors.bin",
+          "sha256": "707515a6549fcba672cbf27f130622da161096b32e4d2d9815dc47508fe30ea4",
+          "size_bytes": 128
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/varying_dt/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/varying_dt/stdout.txt",
+          "sha256": "cee4a333e448e0f0f085f9383881842d75a5f3f8b8a1af3c1bea89fa2a77f9b8",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/zero_vector/phases.bin",
+          "sha256": "5e1f5ea6dd0b8f9b09bde0400cf7c3ef82ffec5f3ff5ddbaf1a404e6fd59781d",
+          "size_bytes": 16
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/zero_vector/report.json",
+          "sha256": "bb730e0a4123210e2c80020095b1cde0a7835829b7694ecc1a1cfbe864b123e5",
+          "size_bytes": 3634
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/zero_vector/rotors.bin",
+          "sha256": "56e94d4f8d9e543d1260250ae1fdc346aea6fc5468f1a7865e77534e2fce98a1",
+          "size_bytes": 32
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/zero_vector/stderr.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/cases/zero_vector/stdout.txt",
+          "sha256": "09b1e81f683b7573ef74015439c6d0e68a7006b7d0b013f88a3ce2c462572baa",
+          "size_bytes": 4969
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/environment.txt",
+          "sha256": "2c2fcd4df929fcbbc367098aeca797c4fcbcdd1db91c909bc684ff2be7b1425a",
+          "size_bytes": 321
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/pilot-manifest.json",
+          "sha256": "69f395d4bf1741a2e31c17ac77081c0924922c3b66729a6567dc3fec6dcef8ed",
+          "size_bytes": 2526
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/suite-report.json",
+          "sha256": "112b8a1b1cbca44019f7cd3bcba7729caafdf4d9ac30d6b9e356696467d276df",
+          "size_bytes": 7232
+        },
+        {
+          "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/suite-report.md",
+          "sha256": "46d003d1d78a36f656196a8d31f92fd12c368745404540e14fe1ec0a98f4dbae",
+          "size_bytes": 387
+        }
+      ],
+      "path": "benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716"
+    }
+  ],
+  "schema": "tt-rqm-h2a-retained-evidence-index.v1"
+}

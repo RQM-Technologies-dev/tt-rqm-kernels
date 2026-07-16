@@ -1,0 +1,7 @@
+host=f05cs07
+platform=Linux-6.8.0-124-generic-x86_64-with-glibc2.35
+python=3.10.12
+command=/home/user/src/tt-rqm-kernels/.venv/bin/python /home/user/h2a-dev/repo/experimental/tt_metalium_hamiltonian_lowering_compensated/run_candidate.py
+tt_metal_home=/home/user/src/tt-metal
+designated=false
+qualification_eligible=false

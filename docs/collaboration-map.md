@@ -109,7 +109,8 @@ does not inherit the existing release's stability label.
 
 Inside this repository, qmul Level 2 and fused-only H1 Level 2 are protected
 baselines. H2A coefficient lowering is now the active implementation
-foundation, with CPU reference and pre-hardware conformance machinery only.
+milestone, with CPU reference, real single-core candidate source, focused N300
+development probes, and pre-hardware conformance machinery.
 H2B fusion, two-qubit hardware execution, and broader benchmark families remain
 future work.
 
@@ -117,5 +118,5 @@ future work.
 
 This collaboration path does not claim CPU acceleration, measured hardware
 bandwidth, application speedup, energy efficiency, dual-device scaling, stable
-fused/unfused SU2 comparison, H2 hardware execution, or Tenstorrent
+fused/unfused SU2 comparison, H2 designated conformance, or Tenstorrent
 endorsement.

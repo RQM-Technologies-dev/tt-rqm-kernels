@@ -42,17 +42,22 @@ and three-session stability. It is not a CPU comparison, acceleration claim,
 hardware-bandwidth result, energy result, application speedup, dual-device
 result, or Tenstorrent endorsement.
 
-## H2A reference foundation
+## H2A candidate and reference foundation
 
 - Family: `HamiltonianLoweringBench`; stage: H2A coefficient lowering
-- Status: deterministic CPU reference benchmark, independent Float64 and
-  complex128 oracles, and external candidate protocol implemented
+- Status: deterministic CPU reference, independent Float64/complex128 oracles,
+  external protocol, and real single-core TT-Metalium candidate implemented
 - [Pre-hardware Claim Level 0 preregistration](../../benchmarks/manifests/hamiltonian-lowering-h2a-preregistration.json)
-- Hardware execution, performance eligibility, and stability: absent
+- [Retained N300 development blocker](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-n300-development-blocker-20260716/README.md)
+- [Compensated development comparison](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-development-20260716/README.md)
+- [Passing non-designated nine-case pilot](../../benchmarks/pilots/hamiltonian-lowering-h2a/h2a-compensated-n300-pilot-20260716/suite-report.md)
+- Claim Level 0 release, performance eligibility, and stability: absent
 
-H2A is the active technical milestone. It produces per-step rotors and phases
-for the protected H1 boundary, but currently makes no hardware, full-H2,
-speedup, bandwidth, energy, dual-device, or inherited-stability claim.
+H2A is the active technical milestone. The original large-angle blocker is
+preserved; a distinct compensated candidate later passed all nine frozen cases
+and one qualification-ineligible pilot. It makes no designated
+hardware-conformance, full-H2, speedup, bandwidth, energy, dual-device, or
+inherited-stability claim.
 
 ## Two-qubit reference foundation
 

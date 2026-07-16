@@ -17,7 +17,9 @@ validators remain the source of truth.
 - The historical H1 v2 fused/unfused campaign is retained and non-qualifying;
   it is not the current release.
 - Active implementation milestone: H2A device-side two-level Hamiltonian
-  coefficient lowering foundation. Hardware execution is not yet implemented.
+  coefficient lowering. A compensated single-core candidate passes all nine
+  frozen N300 cases and one non-designated pilot; designated conformance is
+  absent.
 - Future integration: H2B device-resident H2A lowering directly feeding the
   protected fused H1 composition path.
 <!-- repository-claims:end -->
@@ -59,13 +61,18 @@ H2A accepts FP32 Hamiltonian coefficients `[B,K,4]` in `[h0,hx,hy,hz]`
 order and scalar or broadcastable `[B,K]` FP32 `dt`. It produces FP32 rotors
 `[B,K,4]` and phases `[B,K,2]` for the existing H1 boundary.
 
-The current H2A scope is an implementation-ready CPU reference benchmark,
-independent analytical and complex128 oracles, a fail-closed external candidate
-protocol, a pinned-API design audit, and a pre-hardware Claim Level 0
-preregistration. It contains no TT-Metal candidate, hardware report,
-performance-eligible result, or release manifest.
+The current H2A scope now includes the CPU reference benchmark, independent
+analytical and complex128 oracles, fail-closed external protocol, pinned API
+audit, a real single-core TT-Metalium candidate, and non-designated pilot
+collection/validation machinery. The original candidate's large-angle probe
+failed because one-value FP32 angle formation discarded product residuals
+before trigonometric reduction. A distinct Candidate B uses split TwoProduct
+and split-`2π` device reduction; all nine frozen cases and its one retained
+non-designated pilot pass. Neither the original blocker nor the pilot is a
+claim level, performance result, or release.
 
-The first hardware milestone is conformance only: one Wormhole device, pinned
+The next hardware milestone remains designated conformance only: one Wormhole
+device, pinned
 candidate/source/runtime provenance, deterministic serialized input hashes,
 whole-output validation, zero failing and nonfinite values, and
 `stable_benchmark=false`.

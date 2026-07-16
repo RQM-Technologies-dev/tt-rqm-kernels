@@ -38,7 +38,10 @@ jobs:
           tt_rqm_kernels/entanglement_benchmark.py
           tt_rqm_kernels/hamiltonian_lowering_benchmark.py
           tt_rqm_kernels/hamiltonian_lowering_candidate.py
+          tt_rqm_kernels/hamiltonian_lowering_evidence.py
+          tt_rqm_kernels/hamiltonian_lowering_pilot.py
           tt_rqm_kernels/hamiltonian_lowering_preregistration.py
+          tt_rqm_kernels/hamiltonian_lowering_source_identity.py
           tt_rqm_kernels/repository_claims.py
           tt_rqm_kernels/su2_benchmark.py
           tt_rqm_kernels/su2_candidate_experiment.py
@@ -48,6 +51,9 @@ jobs:
           tests/test_entanglement_benchmark.py
           tests/test_hamiltonian_lowering_benchmark.py
           tests/test_hamiltonian_lowering_candidate.py
+          tests/test_hamiltonian_lowering_evidence.py
+          tests/test_hamiltonian_lowering_pilot.py
+          tests/test_hamiltonian_lowering_source_identity.py
           tests/test_repository_claims.py
           tests/test_tt_metalium_h2a_scaffold.py
           tests/test_repo_status.py
@@ -91,8 +97,14 @@ jobs:
       - name: Validate H2A foundation
         run: |
           python scripts/validate_hamiltonian_lowering_preregistration.py
+          python scripts/validate_hamiltonian_lowering_evidence.py
           python scripts/validate_hamiltonian_lowering_candidate.py \
             --command "python scripts/hamiltonian_lowering_external_reference.py"
+          for manifest in benchmarks/pilots/hamiltonian-lowering-h2a/*/pilot-manifest.json; do
+            if [ -f "$manifest" ]; then
+              python scripts/validate_hamiltonian_lowering_pilot.py "$(dirname "$manifest")"
+            fi
+          done
 
       - name: Validate repository status
         run: |

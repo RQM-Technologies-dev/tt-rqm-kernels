@@ -1,2 +1,3 @@
 # Raw hardware captures are byte-preserved evidence, including terminal whitespace.
 benchmarks/raw/** -whitespace
+benchmarks/pilots/hamiltonian-lowering-h2a/**/stderr.txt -whitespace

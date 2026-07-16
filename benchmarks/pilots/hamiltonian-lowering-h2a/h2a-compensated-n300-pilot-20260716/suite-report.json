@@ -1,0 +1,184 @@
+{
+  "candidate_identity": {
+    "candidate_sha256": "433e74b827d2cf9a7a790a6c9d7bb3917fc1fed3915ec384de0486cdc014d306",
+    "core_count": 1,
+    "device_arch": "wormhole_b0",
+    "device_id": 0,
+    "source_bundle_sha256": "7fb65217e05139bf035952ebeb34602d49e5f1772b8dec4c336b7a296e1fba2f",
+    "source_commit": "08ace96da43f75c2dc65d93847f1b3bb3307b8eb",
+    "tt_metal_commit": "dd2849b5bc6b7a5d38a9eafbeba31ef8d530f8d4"
+  },
+  "candidate_identity_consistent": true,
+  "case_ids": [
+    "zero_vector",
+    "axis_x",
+    "axis_y",
+    "axis_z",
+    "tiny_norms",
+    "random_finite",
+    "varying_dt",
+    "large_angles",
+    "mixed_zero_nonzero"
+  ],
+  "claim_level": null,
+  "performance_eligible": false,
+  "pilot_id": "h2a-compensated-n300-pilot-20260716",
+  "results": [
+    {
+      "case_id": "zero_vector",
+      "correctness": {
+        "checksum": "7aa7f13db2b4c8b47ae57546007c5202795bb2ba16ae3aa65c8c84322cdf6eaf",
+        "complex_matrix_reconstruction_error": 2.0882852939216762e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.7232677840262056e-08,
+        "max_rotor_absolute_error": 0.0,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 5.164785932265659e-09,
+        "rotor_norm_drift": 0.0
+      },
+      "output_checksum": "7aa7f13db2b4c8b47ae57546007c5202795bb2ba16ae3aa65c8c84322cdf6eaf",
+      "passed": true,
+      "report": "cases/zero_vector/report.json"
+    },
+    {
+      "case_id": "axis_x",
+      "correctness": {
+        "checksum": "2666fc2128aa54b6426091c6a52159860fa7de7796bc60f316f12f82faf3ed06",
+        "complex_matrix_reconstruction_error": 7.978017057466398e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.99509934128983e-08,
+        "max_rotor_absolute_error": 6.055101298141352e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.9832648412432263e-08,
+        "rotor_norm_drift": 5.99417120383805e-08
+      },
+      "output_checksum": "2666fc2128aa54b6426091c6a52159860fa7de7796bc60f316f12f82faf3ed06",
+      "passed": true,
+      "report": "cases/axis_x/report.json"
+    },
+    {
+      "case_id": "axis_y",
+      "correctness": {
+        "checksum": "010b28eb01394d14973f5de72e0a312bdd96946e5679f3d1ab608f94df5aa28b",
+        "complex_matrix_reconstruction_error": 7.978017057466398e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.99509934128983e-08,
+        "max_rotor_absolute_error": 6.055101298141352e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.9832648412432263e-08,
+        "rotor_norm_drift": 5.99417120383805e-08
+      },
+      "output_checksum": "010b28eb01394d14973f5de72e0a312bdd96946e5679f3d1ab608f94df5aa28b",
+      "passed": true,
+      "report": "cases/axis_y/report.json"
+    },
+    {
+      "case_id": "axis_z",
+      "correctness": {
+        "checksum": "183b555c07de592649c3dea963af9470c2272719303b087c7ec83a11712f9877",
+        "complex_matrix_reconstruction_error": 8.059677337555362e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.99509934128983e-08,
+        "max_rotor_absolute_error": 6.055101298141352e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.9832648412432263e-08,
+        "rotor_norm_drift": 5.99417120383805e-08
+      },
+      "output_checksum": "183b555c07de592649c3dea963af9470c2272719303b087c7ec83a11712f9877",
+      "passed": true,
+      "report": "cases/axis_z/report.json"
+    },
+    {
+      "case_id": "tiny_norms",
+      "correctness": {
+        "checksum": "d9457bcc16e9fd6630b34dc15b0ac78c5025b2507ddf2e0b7098902851c2b8d1",
+        "complex_matrix_reconstruction_error": 1.5350691097784673e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 1.5280057996669427e-08,
+        "max_rotor_absolute_error": 2.220446049250313e-16,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 1.5223077909354288e-08,
+        "rotor_norm_drift": 0.0
+      },
+      "output_checksum": "d9457bcc16e9fd6630b34dc15b0ac78c5025b2507ddf2e0b7098902851c2b8d1",
+      "passed": true,
+      "report": "cases/tiny_norms/report.json"
+    },
+    {
+      "case_id": "random_finite",
+      "correctness": {
+        "checksum": "22e31272a3a2d763d67ae5b3d10cebccd6959b7609976293f8c18a0dd9bf78fe",
+        "complex_matrix_reconstruction_error": 9.329875711199702e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 7.396376489055001e-08,
+        "max_rotor_absolute_error": 4.8005530772776694e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 7.368516952155346e-08,
+        "rotor_norm_drift": 4.7867614760832566e-08
+      },
+      "output_checksum": "22e31272a3a2d763d67ae5b3d10cebccd6959b7609976293f8c18a0dd9bf78fe",
+      "passed": true,
+      "report": "cases/random_finite/report.json"
+    },
+    {
+      "case_id": "varying_dt",
+      "correctness": {
+        "checksum": "a525937f0748b2794a8026aecfac576e19c36e7c1d6002830c404adeac04b0b2",
+        "complex_matrix_reconstruction_error": 7.142708927193814e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 3.132384163162527e-08,
+        "max_rotor_absolute_error": 5.3532828336866345e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 3.115115454477291e-08,
+        "rotor_norm_drift": 4.0594091421652934e-08
+      },
+      "output_checksum": "a525937f0748b2794a8026aecfac576e19c36e7c1d6002830c404adeac04b0b2",
+      "passed": true,
+      "report": "cases/varying_dt/report.json"
+    },
+    {
+      "case_id": "large_angles",
+      "correctness": {
+        "checksum": "22b6abd94525599fb8d38c5fe3b16efbd0daef84af593e84475979d72b1341c4",
+        "complex_matrix_reconstruction_error": 0.00012605900036450937,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 4.7257471491590763e-08,
+        "max_rotor_absolute_error": 0.00011688396223238917,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 5.3156770096762784e-08,
+        "rotor_norm_drift": 4.234450523554756e-08
+      },
+      "output_checksum": "22b6abd94525599fb8d38c5fe3b16efbd0daef84af593e84475979d72b1341c4",
+      "passed": true,
+      "report": "cases/large_angles/report.json"
+    },
+    {
+      "case_id": "mixed_zero_nonzero",
+      "correctness": {
+        "checksum": "c4d8a0c210ccbe3d9301dd3494973531b60506b77a5694b854db7d5475c9467a",
+        "complex_matrix_reconstruction_error": 6.254893806921399e-08,
+        "failing_value_count": 0,
+        "max_phase_absolute_error": 4.764040129057179e-08,
+        "max_rotor_absolute_error": 3.154167704799704e-08,
+        "nonfinite_value_count": 0,
+        "passed": true,
+        "phase_norm_drift": 4.707498102440866e-08,
+        "rotor_norm_drift": 1.22220328302447e-08
+      },
+      "output_checksum": "c4d8a0c210ccbe3d9301dd3494973531b60506b77a5694b854db7d5475c9467a",
+      "passed": true,
+      "report": "cases/mixed_zero_nonzero/report.json"
+    }
+  ],
+  "schema": "tt-rqm-hamiltonian-lowering-pilot-suite.v1",
+  "stable_benchmark": false,
+  "suite_passed": true
+}

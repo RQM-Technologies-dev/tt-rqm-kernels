@@ -85,8 +85,8 @@ def validate_repository_claims(
         "repo_status.py does not report SU2 stability as established",
     )
     _require(
-        _h2a_foundation_status(evidence_root)[0] == "implementation-ready reference foundation",
-        "repo_status.py does not report the H2A reference foundation",
+        _h2a_foundation_status(evidence_root)[0] == "non-designated hardware pilot passed",
+        "repo_status.py does not report the H2A pilot without claim promotion",
     )
     documents = _load_status_documents(repo_root)
     _validate_status_surfaces(documents)
@@ -115,7 +115,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "SU2ComposeBench H1: Claim Level 2 stable one-device **fused-only** performance",
         "Every individual qmul and H1 source-session report remains `stable_benchmark=false`",
         "historical H1 v2 fused/unfused campaign is retained and non-qualifying",
-        "Active implementation milestone: H2A device-side two-level Hamiltonian coefficient lowering foundation. Hardware execution is not yet implemented.",
+        "Active implementation milestone: H2A device-side two-level Hamiltonian coefficient lowering. A compensated single-core candidate passes all nine frozen N300 cases and one non-designated pilot; designated conformance is absent.",
         "Future integration: H2B device-resident H2A lowering directly feeding the protected fused H1 composition path.",
     )
     for marker in required_plan:
@@ -125,7 +125,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "README.md": (
             "SU2ComposeBench` is fused-only",
             "| SU2ComposeBench | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |",
-            "no H2 hardware execution is claimed",
+            "no H2A claim level or hardware conformance release exists",
         ),
         "docs/index.md": ("fused-only v3 campaign established the public Claim Level 2 release",),
         "docs/benchmarks/index.md": (
@@ -144,16 +144,16 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "docs/hamiltonian-evolution-roadmap.md": (
             "H1: completed fused-composition baseline",
             "H2A: device-side coefficient lowering",
-            "no H2 hardware result exists yet",
+            "a compensated H2A candidate and one passing non-designated pilot exist",
             "H2B: future resident lowering plus H1 composition",
         ),
         "docs/tenstorrent-landing.md": (
             "SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release",
-            "there is no H2 hardware result",
+            "there is no designated H2A conformance release",
         ),
         "docs/collaboration-map.md": (
             "SU2ComposeBench` has a fused-only Claim Level 2 release",
-            "H2A coefficient lowering is now the active implementation foundation",
+            "H2A coefficient lowering is now the active implementation milestone",
         ),
     }
     for relative, markers in required_markers.items():
