@@ -20,6 +20,7 @@ STATUS_FILES = (
     "docs/index.md",
     "docs/benchmarks/index.md",
     "docs/benchmarks/hamiltonian-lowering-h2a.md",
+    "docs/benchmarks/hamiltonian-evolution-h2b.md",
     "docs/benchmarks/su2-compose-bench.md",
     "docs/benchmarks/su2-compose-claim-policy.md",
     "docs/hamiltonian-evolution-roadmap.md",
@@ -85,7 +86,11 @@ def validate_repository_claims(
     }
     _require(h2a.get("claim") == expected_h2a_claim, "H2A release is not Claim Level 0")
 
-    from scripts.repo_status import _h2a_foundation_status, _su2_stability_status
+    from scripts.repo_status import (
+        _h2a_foundation_status,
+        _h2b_foundation_status,
+        _su2_stability_status,
+    )
 
     _require(
         _su2_stability_status(evidence_root)[0] == "established",
@@ -95,6 +100,11 @@ def validate_repository_claims(
         _h2a_foundation_status(evidence_root)[0] == "Claim Level 0 silicon conformance present",
         "repo_status.py does not report the validated H2A Claim Level 0 release",
     )
+    _require(
+        _h2b_foundation_status(repo_root)[0]
+        == "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
+        "repo_status.py does not report the H2B source foundation",
+    )
     documents = _load_status_documents(repo_root)
     _validate_status_surfaces(documents)
     return {
@@ -102,6 +112,13 @@ def validate_repository_claims(
         "qmul": expected_claim,
         "su2": {**expected_claim, "scope": "fused_only"},
         "h2a": {"status": "claim_level_0", **expected_h2a_claim},
+        "h2b": {
+            "status": "source_foundation",
+            "stable_benchmark": False,
+            "performance_eligible": False,
+            "claim_level": None,
+            "hardware_run": False,
+        },
         "status_files": list(STATUS_FILES),
     }
 
@@ -123,7 +140,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "Every individual qmul and H1 source-session report remains `stable_benchmark=false`",
         "historical H1 v2 fused/unfused campaign is retained and non-qualifying",
         "H2A device-side coefficient lowering: Claim Level 0 silicon conformance from one designated N300 device-0 session; `stable_benchmark=false` and `performance_eligible=false`.",
-        "Future integration: H2B device-resident H2A lowering directly feeding the protected fused H1 composition path.",
+        "H2B integration foundation: CPU/reference API and fail-closed protocol are implemented; a two-program TT-Metal candidate feeds protected fused H1 from a device-DRAM intermediate. Hardware has not yet been run; `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
     )
     for marker in required_plan:
         _require(marker in " ".join(plan.split()), f"plan status marker missing: {marker}")
@@ -147,6 +164,12 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "Attempts per case | 1",
             "Retries or replacements | 0",
         ),
+        "docs/benchmarks/hamiltonian-evolution-h2b.md": (
+            "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
+            "program_count=2",
+            "host_round_trip_count=0",
+            "claim_level=null",
+        ),
         "docs/benchmarks/su2-compose-bench.md": (
             "Level 2: stable one-device fused performance",
             "retained v2 campaign remains historical and non-qualifying",
@@ -160,11 +183,12 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "H1: completed fused-composition baseline",
             "H2A: device-side coefficient lowering",
             "H2A Claim Level 0 silicon conformance is established",
-            "H2B: future resident lowering plus H1 composition",
+            "H2B: resident lowering plus H1 composition foundation implemented",
         ),
         "docs/tenstorrent-landing.md": (
             "SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release",
             "HamiltonianLoweringBench H2A: Claim Level 0 silicon conformance",
+            "HamiltonianEvolutionBench H2B: CPU/reference foundation and TT-Metal candidate source; hardware not yet run; no claim level",
         ),
         "docs/collaboration-map.md": (
             "SU2ComposeBench` has a fused-only Claim Level 2 release",
@@ -188,6 +212,14 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "h2a stable benchmark: established",
         "cpu acceleration: established",
         "application acceleration: established",
+        "h2b claim level 0 established",
+        "h2b stable benchmark: established",
+        "h2b performance eligible: true",
+        "h2b acceleration: established",
+        "h2b is a single fused kernel",
+        "h2b inherits h1 stability",
+        "h2b inherits h2a conformance",
+        "complete h2b pipeline avoids device dram",
     )
     for phrase in forbidden:
         _require(phrase not in combined, f"forbidden claim escalation: {phrase}")

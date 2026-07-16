@@ -66,6 +66,20 @@ retry or replacement. This establishes silicon conformance only. It makes no
 performance, stability, full-H2, speedup, bandwidth, energy, dual-device, or
 inherited-H1 claim.
 
+## H2B device-resident evolution foundation
+
+- Family: `HamiltonianEvolutionBench`; stage: H2B complete two-level evolution
+- Status: CPU/reference foundation implemented; TT-Metal candidate source
+  present; hardware not yet run
+- Architecture: two programs, one device session, device-DRAM intermediate,
+  zero intermediate host round trips
+- Stability and performance eligibility: `stable_benchmark=false`,
+  `performance_eligible=false`, `claim_level=null`
+- [H2B foundation report](hamiltonian-evolution-h2b.md)
+
+H2B does not inherit the H1 Level 2 or H2A Level 0 results. It is not a
+single fused kernel or an acceleration result.
+
 ## Two-qubit reference foundation
 
 - [EntanglementDynamicsBench reference foundation](entanglement-dynamics-bench.md)
@@ -95,5 +109,7 @@ python scripts/reproduce_wormhole_qmul.py --check
 python scripts/reproduce_wormhole_su2_compose.py --check
 python scripts/validate_entanglement_dynamics_preregistration.py
 python scripts/validate_hamiltonian_lowering_preregistration.py
+python scripts/validate_hamiltonian_evolution_candidate.py \
+  --command "python scripts/hamiltonian_evolution_external_reference.py"
 python scripts/validate_repository_claims.py
 ```

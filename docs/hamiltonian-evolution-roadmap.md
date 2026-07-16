@@ -164,7 +164,7 @@ The release remains `stable_benchmark=false` and
 `performance_eligible=false`. It inherits no H1 claim and makes no speedup,
 stability, full-H2, bandwidth, energy, dual-device, or endorsement claim.
 
-## H2B: future resident lowering plus H1 composition
+## H2B: resident lowering plus H1 composition foundation implemented
 
 H2B is precisely:
 
@@ -182,10 +182,22 @@ output:
   final phase [B,2]
 ```
 
-H2B begins only after H2A correctness is established and H1 compatibility is
-revalidated on the selected TT-Metal baseline. It must preserve exact time
-order, perform complex128 whole-output comparison, avoid automatic
-normalization, and use claim language separate from the historical H1 release.
+H2B now has a direct CPU API, deterministic `HamiltonianEvolutionBench`
+semantic cases, complex128 whole-chain comparison, a fail-closed external
+protocol, and a real two-program TT-Metal candidate source. The candidate
+creates Wormhole device 0 once, writes the six-plane coefficient input once,
+runs compensated H2A into a device-DRAM intermediate, runs protected fused H1
+against that exact buffer, reads only final rotor/phase planes, and closes the
+device once. Hardware has not yet been run.
+
+The H2A and intermediate layouts both use
+`(step*6+lane)*component_tiles+batch_tile`. Input lanes are
+`[h0,hx,hy,hz,dt,inverse_hbar]`; H2A output/H1 input lanes are
+`[w,x,y,z,phase_real,phase_imag]`. There is no intermediate host read, host
+repacking, or host write. This is a device-resident pipeline whose H1 stage is
+fused, not one fused kernel. H2B remains `stable_benchmark=false`,
+`performance_eligible=false`, and `claim_level=null`, and inherits no H1 or
+H2A evidence.
 
 ## Sibling and later work
 

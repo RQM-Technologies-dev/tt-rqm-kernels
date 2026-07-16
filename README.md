@@ -36,6 +36,7 @@ instead of abstract optimizations.
 | Quaternion multiplication — `qmul` | Batched Hamilton products over ordinary FP32 `[N,4]` tensors in `[real, i, j, k]` order, for structured rotations and transformations where order matters | Claim Level 2 stable one-device performance from three qualified N300 sessions |
 | Fused time-ordered SU(2) composition — H1 / `SU2ComposeBench` | Exact-time-order composition of pre-lowered rotor and phase steps; a real stage of two-level Hamiltonian simulation | Claim Level 2 fused-only stable one-device performance from three qualified v3 sessions |
 | Device-side Hamiltonian coefficient lowering — H2A | Converts two-level Hamiltonian coefficients and `dt` into the rotor and phase steps consumed by H1 | Claim Level 0 silicon conformance from one designated N300 session; `stable_benchmark=false`, `performance_eligible=false` |
+| Device-resident two-level evolution — H2B / `HamiltonianEvolutionBench` | Compensated H2A feeds protected fused H1 through a device-DRAM intermediate without a host round trip | CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run; no claim level |
 
 The H1 result does not establish a stable fused/unfused comparison or an
 acceleration claim. H2A is a completed hardware-conformance milestone, not
@@ -97,10 +98,10 @@ fusion, intermediate DRAM avoidance, and whole-output numerical validation.
 
 ## What this is building toward
 
-H2B has not begun. It would make the first device-resident two-level
-Hamiltonian-evolution pipeline in this project by feeding H2A directly into
-fused H1 composition, without a host round trip for intermediate rotor and
-phase tensors:
+H2B now has a CPU/reference foundation, fail-closed external protocol, and a
+two-program TT-Metal candidate source. It feeds compensated H2A directly into
+protected fused H1 through a device-resident DRAM intermediate, without a host
+round trip for intermediate rotor and phase tensors:
 
 ```text
 Hamiltonian coefficients + dt
@@ -112,7 +113,8 @@ directly into fused H1 composition
 final rotor and phase
 ```
 
-H2B must earn separate evidence and cannot inherit H1 or H2A claim status. The
+Hardware has not yet been run. H2B is not stable or performance-eligible, has
+no claim level, and cannot inherit H1 or H2A claim status. The
 broader purpose is to move RQM mathematics from theory and Python references
 into inspectable, reproducible, hardware-backed Tenstorrent workloads that
 outside engineers can evaluate and potentially integrate.
@@ -134,6 +136,9 @@ accepted either placement.
 For detailed evidence, see the [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md),
 [SU2ComposeBench report](docs/benchmarks/su2-compose-bench.md), and
 [H2A report](docs/benchmarks/hamiltonian-lowering-h2a.md).
+
+The separate [H2B foundation](docs/benchmarks/hamiltonian-evolution-h2b.md)
+documents the new reference, protocol, and two-program candidate boundary.
 
 ## Current proven result
 
@@ -200,10 +205,11 @@ and H2A silicon conformance within their separate contracts. They do not prove
 end-to-end speedup for rotation, scientific-simulation, or physical-AI
 applications. They also do not establish CPU acceleration, a stable
 fused/unfused SU2 comparison, measured hardware bandwidth, energy efficiency,
-dual-device scaling, a complete H2B pipeline, or Tenstorrent endorsement.
+dual-device scaling, H2B hardware execution or evidence, or Tenstorrent
+endorsement.
 
-H2B integration, broader physical-AI application benchmarks, and two-qubit
-hardware execution remain future work. See the
+H2B hardware validation, broader physical-AI application benchmarks, and
+two-qubit hardware execution remain future work. See the
 [operator contract](docs/operator-contracts.md#qmul) for exact tensor shapes,
 equations, and SU(2) conventions.
 

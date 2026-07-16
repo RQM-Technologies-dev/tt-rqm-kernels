@@ -37,6 +37,8 @@ jobs:
           scripts/generate_hamiltonian_lowering_release.py
           scripts/reproduce_wormhole_hamiltonian_lowering.py
           scripts/validate_hamiltonian_lowering_release.py
+          scripts/hamiltonian_evolution_external_reference.py
+          scripts/validate_hamiltonian_evolution_candidate.py
           scripts/validate_repository_claims.py
           tt_rqm_kernels/entanglement_benchmark.py
           tt_rqm_kernels/hamiltonian_lowering_benchmark.py
@@ -47,6 +49,8 @@ jobs:
           tt_rqm_kernels/hamiltonian_lowering_preregistration.py
           tt_rqm_kernels/hamiltonian_lowering_release.py
           tt_rqm_kernels/hamiltonian_lowering_source_identity.py
+          tt_rqm_kernels/hamiltonian_evolution_benchmark.py
+          tt_rqm_kernels/hamiltonian_evolution_candidate.py
           tt_rqm_kernels/repository_claims.py
           tt_rqm_kernels/su2_benchmark.py
           tt_rqm_kernels/su2_candidate_experiment.py
@@ -61,6 +65,10 @@ jobs:
           tests/test_hamiltonian_lowering_pilot.py
           tests/test_hamiltonian_lowering_release.py
           tests/test_hamiltonian_lowering_source_identity.py
+          tests/test_hamiltonian_evolution.py
+          tests/test_hamiltonian_evolution_benchmark.py
+          tests/test_hamiltonian_evolution_candidate.py
+          tests/test_tt_metalium_h2b_scaffold.py
           tests/test_repository_claims.py
           tests/test_tt_metalium_h2a_scaffold.py
           tests/test_repo_status.py
@@ -117,6 +125,11 @@ jobs:
               python scripts/validate_hamiltonian_lowering_pilot.py "$(dirname "$manifest")"
             fi
           done
+
+      - name: Validate H2B foundation
+        run: |
+          python scripts/validate_hamiltonian_evolution_candidate.py \
+            --command "python scripts/hamiltonian_evolution_external_reference.py"
 
       - name: Validate repository status
         run: |

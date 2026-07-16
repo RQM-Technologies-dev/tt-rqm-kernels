@@ -11,6 +11,7 @@ from scripts.repo_status import (
     _entanglement_foundation_status,
     _entanglement_hardware_status,
     _h2a_foundation_status,
+    _h2b_foundation_status,
     _su2_comparison_status,
     _su2_conformance_status,
     _su2_foundation_status,
@@ -47,6 +48,9 @@ def test_repo_status_json_reports_current_gaps() -> None:
     )
     assert statuses["SU2ComposeBench stability"] == "established"
     assert statuses["HamiltonianLoweringBench H2A"] == "Claim Level 0 silicon conformance present"
+    assert statuses["HamiltonianEvolutionBench H2B"] == (
+        "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run"
+    )
     assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
     assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
 
@@ -79,6 +83,7 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
         "HamiltonianLoweringBench H2A: Claim Level 0 silicon conformance present"
         in completed.stdout
     )
+    assert "HamiltonianEvolutionBench H2B: CPU/reference foundation implemented" in completed.stdout
     assert (
         "One designated N300 device-0 session passed all nine frozen H2A cases" in completed.stdout
     )
@@ -106,6 +111,10 @@ def test_entanglement_status_fails_clearly_when_foundation_is_absent(tmp_path: P
 
 def test_h2a_status_fails_clearly_when_foundation_is_absent(tmp_path: Path) -> None:
     assert _h2a_foundation_status(tmp_path)[0] == "not implemented"
+
+
+def test_h2b_status_fails_clearly_when_foundation_is_absent(tmp_path: Path) -> None:
+    assert _h2b_foundation_status(tmp_path)[0] == "not implemented"
 
 
 def test_entanglement_status_rejects_preregistration_claim_escalation(

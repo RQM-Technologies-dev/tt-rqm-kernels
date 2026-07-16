@@ -28,6 +28,13 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         "stable_benchmark": False,
         "performance_eligible": False,
     }
+    assert result["h2b"] == {
+        "status": "source_foundation",
+        "stable_benchmark": False,
+        "performance_eligible": False,
+        "claim_level": None,
+        "hardware_run": False,
+    }
 
 
 @pytest.mark.parametrize(
@@ -55,6 +62,12 @@ def test_repository_claims_agree_with_protected_releases() -> None:
             "plan.md",
             "H2A device-side coefficient lowering: Claim Level 0 silicon conformance from\n  one designated N300 device-0 session; `stable_benchmark=false` and\n  `performance_eligible=false`.",
             "H2A hardware implementation: complete.",
+            "plan status marker missing",
+        ),
+        (
+            "plan.md",
+            "H2B integration foundation: CPU/reference API and fail-closed protocol are\n  implemented; a two-program TT-Metal candidate feeds protected fused H1 from\n  a device-DRAM intermediate. Hardware has not yet been run;\n  `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
+            "H2B claim level 0 established.",
             "plan status marker missing",
         ),
     ],

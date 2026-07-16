@@ -19,8 +19,10 @@ validators remain the source of truth.
 - H2A device-side coefficient lowering: Claim Level 0 silicon conformance from
   one designated N300 device-0 session; `stable_benchmark=false` and
   `performance_eligible=false`.
-- Future integration: H2B device-resident H2A lowering directly feeding the
-  protected fused H1 composition path.
+- H2B integration foundation: CPU/reference API and fail-closed protocol are
+  implemented; a two-program TT-Metal candidate feeds protected fused H1 from
+  a device-DRAM intermediate. Hardware has not yet been run;
+  `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.
 <!-- repository-claims:end -->
 
 Neither Level 2 release is a CPU or application acceleration claim. The
@@ -79,18 +81,22 @@ N300 device-0 session then passed all nine cases with pinned
 candidate/source/runtime provenance, whole-output validation, zero failing and
 nonfinite values, one attempt per case, and no retries or replacements. The
 separate public Level 0 release remains `stable_benchmark=false` and
-performance-ineligible; it does not authorize H2B work or inherit H1 claims.
+performance-ineligible; it does not confer H2B evidence or inherit H1 claims.
 
-## Future integration: H2B
+## Active integration: H2B foundation
 
 H2B is device-resident H2A lowering directly feeding fused H1 ordered
 composition without a host round-trip for intermediate rotors or phases. Its
 input is coefficients plus `dt`; its output is final `[B,4]` rotors and
 `[B,2]` phases.
 
-H2B waits for H2A correctness, revalidation of H1 compatibility on the chosen
-TT-Metal baseline, exact time-order tests, and complex128 whole-output checks.
-It will receive new claim language and cannot reuse historical H1 status.
+The reference API, exact-order tests, complex128 whole-output oracle,
+deterministic benchmark family, external protocol, and two-program candidate
+source now exist. The candidate creates device 0 once, runs compensated H2A
+and protected fused H1 against one device-DRAM intermediate, reads only final
+rotor/phase output, and closes once. Hardware has not yet been run. H2B
+requires separate retained evidence and cannot reuse historical H1 or H2A
+status.
 
 ## Deferred work
 
@@ -110,6 +116,7 @@ It will receive new claim language and cannot reuse historical H1 status.
 - [Wormhole qmul report](docs/benchmarks/wormhole-qmul.md)
 - [H2A/H2B roadmap and contract](docs/hamiltonian-evolution-roadmap.md)
 - [H2A Claim Level 0 report](docs/benchmarks/hamiltonian-lowering-h2a.md)
+- [H2B foundation](docs/benchmarks/hamiltonian-evolution-h2b.md)
 - [Operator contracts](docs/operator-contracts.md)
 - [Benchmark claim policy](docs/benchmarks/claim-policy.md)
 - [Documentation index](docs/index.md)

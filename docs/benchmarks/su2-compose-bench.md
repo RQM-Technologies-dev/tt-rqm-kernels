@@ -4,10 +4,11 @@
 
 H1 lowers piecewise-constant two-level Hamiltonian coefficients into FP32
 rotors and phase pairs on the CPU. Wormhole performs their ordered composition.
-H2A device-side Hamiltonian coefficient lowering is the next implementation
-milestone. Its CPU reference and pre-hardware conformance foundation exist, but
-no H2 hardware result exists. H1 is a real stage of a Hamiltonian-simulation
-pipeline, not the complete device-side pipeline.
+H2A device-side Hamiltonian coefficient lowering has a separate Claim Level 0
+release. H2B now has a CPU/reference foundation and a two-program TT-Metal
+candidate source that feeds H2A output directly into H1 without an intermediate
+host round trip; H2B hardware has not yet been run. H1 remains a separately
+protected stage and H2B inherits none of its evidence.
 
 The fused and unfused paths passed N300 device-0 conformance before and after
 the audited eligibility promotion. The historical first comparison remains

@@ -71,6 +71,7 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     su2_comparison_status, su2_comparison_detail = _su2_comparison_status(repo_root)
     su2_stability_status, su2_stability_detail = _su2_stability_status(repo_root)
     h2a_status, h2a_detail = _h2a_foundation_status(repo_root)
+    h2b_status, h2b_detail = _h2b_foundation_status(repo_root)
     entanglement_foundation_status, entanglement_foundation_detail = (
         _entanglement_foundation_status(repo_root)
     )
@@ -165,6 +166,11 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
                 "HamiltonianLoweringBench H2A",
                 h2a_status,
                 h2a_detail,
+            ),
+            _item(
+                "HamiltonianEvolutionBench H2B",
+                h2b_status,
+                h2b_detail,
             ),
             _item(
                 "EntanglementDynamicsBench reference foundation",
@@ -305,6 +311,38 @@ def _h2a_foundation_status(repo_root: Path) -> tuple[str, str]:
     return (
         "implementation-ready reference foundation",
         "CPU reference, independent oracles, external candidate protocol, pinned-API design audit, and Claim Level 0 preregistration are present; hardware execution is not implemented.",
+    )
+
+
+def _h2b_foundation_status(repo_root: Path) -> tuple[str, str]:
+    required = (
+        repo_root / "tt_rqm_kernels/hamiltonian/su2_evolution.py",
+        repo_root / "tt_rqm_kernels/hamiltonian_evolution_benchmark.py",
+        repo_root / "tt_rqm_kernels/hamiltonian_evolution_candidate.py",
+        repo_root / "scripts/hamiltonian_evolution_external_reference.py",
+        repo_root / "scripts/validate_hamiltonian_evolution_candidate.py",
+        repo_root
+        / "experimental/tt_metalium_hamiltonian_evolution/src/hamiltonian_evolution_candidate.cpp",
+        repo_root / "experimental/tt_metalium_hamiltonian_evolution/CMakeLists.txt",
+    )
+    if not all(path.is_file() for path in required):
+        return "not implemented", "The H2B reference, protocol, or TT-Metal candidate is absent."
+    source = required[-2].read_text(encoding="utf-8")
+    invariants = (
+        source.count("MeshDevice::create_unit_mesh(0)") == 1,
+        source.count("EnqueueMeshWorkload") == 2,
+        source.count("EnqueueWriteMeshBuffer") == 1,
+        source.count("EnqueueReadMeshBuffer") == 1,
+        "build_h2a_program(device, input, intermediate" in source,
+        "build_h1_program(device, intermediate, final_output" in source,
+        '"program_count", 2' in source,
+        '"host_round_trip_count", 0' in source,
+    )
+    if not all(invariants):
+        return "invalid candidate architecture", "The H2B device-resident source audit failed."
+    return (
+        "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
+        "Two programs share one Wormhole device session and a device-DRAM intermediate; stable_benchmark=false, performance_eligible=false, and claim_level=null.",
     )
 
 

@@ -22,7 +22,7 @@ def main() -> int:
         return 1
     print(
         "repository claims valid: qmul Level 2, SU2 fused-only Level 2, "
-        "H2A Level 0 silicon conformance"
+        "H2A Level 0 silicon conformance, H2B source foundation claim-level null"
     )
     return 0
 

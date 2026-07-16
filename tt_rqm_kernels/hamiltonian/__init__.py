@@ -1,6 +1,7 @@
 """Two-level Hamiltonian lowering and SU(2) composition references."""
 
 from tt_rqm_kernels.hamiltonian.su2_compose import su2_compose_chain
+from tt_rqm_kernels.hamiltonian.su2_evolution import evolve_two_level_hamiltonian
 from tt_rqm_kernels.hamiltonian.su2_lowering import lower_two_level_hamiltonian
 from tt_rqm_kernels.hamiltonian.su2_reference import (
     compose_hamiltonian_matrices,
@@ -26,6 +27,7 @@ __all__ = [
     "compare_two_qubit_states",
     "apply_local_rotor_pair",
     "evolve_two_qubit_state_reference",
+    "evolve_two_level_hamiltonian",
     "lower_two_level_hamiltonian",
     "lower_two_qubit_hamiltonian",
     "su2_compose_chain",

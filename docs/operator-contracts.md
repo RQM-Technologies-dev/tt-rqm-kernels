@@ -9,8 +9,9 @@ The common quaternion convention is:
 ```
 
 Every public operator has a CPU/PyTorch reference. qmul and H1 also have
-protected TT-Metalium releases; H2A has a passing non-designated hardware pilot
-but no claim-level release.
+protected TT-Metalium releases; H2A has a separate Claim Level 0 silicon-
+conformance release. H2B has a reference/protocol/TT-Metal source foundation
+but no hardware run or claim level.
 Any future TT-Metalium, TT-NN, or TT-MLIR path must match these contracts before
 adding backend-specific optimizations and cannot inherit an older stable label.
 
@@ -54,6 +55,36 @@ layout. The implemented Wormhole boundary packs the six input/output component
 planes into padded FP32 tiles and restores row-major `[B,K,*]` ordering before
 validation. See the [H2A roadmap](hamiltonian-evolution-roadmap.md#h2a-device-side-coefficient-lowering)
 and [design scaffold](../experimental/tt_metalium_hamiltonian_lowering/README.md).
+
+## H2B complete two-level Hamiltonian evolution
+
+H2B composes the validated H2A output under the exact H1 order:
+
+```text
+hamiltonians: [B,K,4] Float32, [h0,hx,hy,hz]
+dt:           scalar Float32 or exact [B,K] Float32
+final_rotor:  [B,4] Float32, [w,x,y,z]
+final_phase:  [B,2] Float32, [real,imag]
+
+total = step[K-1] * ... * step[0]
+```
+
+The public `evolve_two_level_hamiltonian` function inherits H2A input
+validation and preserves dtype/device behavior. It supports B>=1 and K>=1 and
+never normalizes. `compose_hamiltonian_matrices` is the independent complex128
+whole-chain oracle.
+
+The candidate device layout is step-major component-planar:
+
+```text
+page = (step * 6 + lane) * ceil(B/1024) + batch_tile
+```
+
+Input lanes are `[h0,hx,hy,hz,dt,inverse_hbar]`; intermediate lanes are
+`[w,x,y,z,phase_real,phase_imag]`. Scalar `dt` expands only at host packing.
+Compensated H2A and protected fused H1 run as two programs in one device
+session with a device-DRAM intermediate and zero intermediate D2H/H2D
+transfers. See the [H2B foundation](benchmarks/hamiltonian-evolution-h2b.md).
 
 ## `qmul`
 
