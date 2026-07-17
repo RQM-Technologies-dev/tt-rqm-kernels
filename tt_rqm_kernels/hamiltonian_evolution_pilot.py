@@ -24,10 +24,11 @@ from tt_rqm_kernels.hamiltonian_evolution_pilot_contract import (
     load_frozen_case,
     validate_pilot_contract,
 )
-from tt_rqm_kernels.hardware_session import compare_device_health, validate_device_health
+from tt_rqm_kernels.hardware_session import validate_device_health
 
 PILOT_SCHEMA = "tt-rqm-hamiltonian-evolution-pilot.v1"
 SUITE_SCHEMA = "tt-rqm-hamiltonian-evolution-pilot-suite.v1"
+PREFLIGHT_SCHEMA = "tt-rqm-hamiltonian-evolution-pilot-preflight.v1"
 
 
 class HamiltonianEvolutionPilotError(RuntimeError):
@@ -40,6 +41,7 @@ def collect_pilot(
     output_dir: Path,
     pilot_id: str,
     command: str,
+    preflight_command: str,
     health_command: str,
     environment_command: str,
 ) -> dict[str, Any]:
@@ -50,6 +52,7 @@ def collect_pilot(
     if output_dir.exists():
         raise HamiltonianEvolutionPilotError("pilot output directory must not already exist")
     contract = validate_pilot_contract(repo_root / DEFAULT_MANIFEST, repo_root)
+    preflight = run_pilot_preflight(preflight_command, contract)
     output_dir.mkdir(parents=True)
     (output_dir / "cases").mkdir()
     shutil.copy2(repo_root / DEFAULT_MANIFEST, output_dir / "contract.json")
@@ -58,6 +61,7 @@ def collect_pilot(
         repo_root / contract["build_reproduction_report"],
         output_dir / "build-reproduction.json",
     )
+    _write_json(output_dir / "preflight.json", preflight)
     environment = _run_json_command(environment_command, "environment")
     _write_json(output_dir / "environment.json", environment)
     pre_health = _run_json_command(health_command, "pre-run device health")
@@ -74,6 +78,7 @@ def collect_pilot(
         "performance_eligible": False,
         "hardware_execution": True,
         "contract_sha256": _sha256(output_dir / "contract.json"),
+        "preflight_sha256": _sha256(output_dir / "preflight.json"),
         "candidate_binary_sha256": contract["candidate_binary_sha256"],
         "source_commit": contract["source_commit"],
         "source_bundle_sha256": contract["source_bundle_sha256"],
@@ -202,6 +207,58 @@ def collect_pilot(
     return suite
 
 
+def run_pilot_preflight(command: str, contract: dict[str, Any]) -> dict[str, Any]:
+    """Run and validate the shared environment before any case attempt exists."""
+
+    payload = _run_json_command(command, "pilot preflight")
+    return validate_pilot_preflight(payload, contract)
+
+
+def validate_pilot_preflight(payload: dict[str, Any], contract: dict[str, Any]) -> dict[str, Any]:
+    """Validate a captured shared-environment preflight."""
+
+    if payload.get("schema") != PREFLIGHT_SCHEMA or payload.get("passed") is not True:
+        raise HamiltonianEvolutionPilotError("pilot preflight did not pass")
+    expected = {
+        "candidate_sha256": contract["candidate_binary_sha256"],
+        "source_commit": contract["source_commit"],
+        "source_bundle_sha256": contract["source_bundle_sha256"],
+        "tt_metal_commit": contract["tt_metal_commit"],
+    }
+    for key, value in expected.items():
+        if payload.get(key) != value:
+            raise HamiltonianEvolutionPilotError(f"pilot preflight identity mismatch for {key}")
+    required_true = (
+        "tt_metal_home_set",
+        "tt_metal_runtime_root_set",
+        "runtime_roots_resolve_same",
+        "runtime_root_exists",
+        "runtime_discoverable",
+        "candidate_exists",
+        "candidate_executable",
+        "source_exists",
+        "source_tree_clean",
+        "tt_metal_tree_clean",
+        "shared_libraries_resolved",
+        "tt_metal_library_from_expected_root",
+        "runtime_cache_parent_writable",
+        "runtime_cache_session_root_new",
+    )
+    for key in required_true:
+        if payload.get(key) is not True:
+            raise HamiltonianEvolutionPilotError(f"pilot preflight {key} must be true")
+    health = payload.get("device_health")
+    if not isinstance(health, dict):
+        raise HamiltonianEvolutionPilotError("pilot preflight device health is missing")
+    try:
+        validate_device_health(json.dumps(health), device_id=0)
+    except Exception as exc:
+        raise HamiltonianEvolutionPilotError(
+            f"pilot preflight device health failed: {exc}"
+        ) from exc
+    return payload
+
+
 def validate_pilot_package(root: Path, repo_root: Path) -> dict[str, Any]:
     """Qualify a retained package using only local files and hashes."""
 
@@ -229,6 +286,11 @@ def validate_pilot_package(root: Path, repo_root: Path) -> dict[str, Any]:
             raise HamiltonianEvolutionPilotError(f"pilot manifest {key} mismatch")
     if manifest.get("contract_sha256") != _sha256(root / "contract.json"):
         raise HamiltonianEvolutionPilotError("retained contract hash mismatch")
+    if "preflight_sha256" in manifest:
+        preflight = _load_json(root / "preflight.json")
+        if manifest["preflight_sha256"] != _sha256(root / "preflight.json"):
+            raise HamiltonianEvolutionPilotError("retained preflight hash mismatch")
+        validate_pilot_preflight(preflight, contract)
     for key in (
         "candidate_binary_sha256",
         "source_commit",
@@ -246,7 +308,7 @@ def validate_pilot_package(root: Path, repo_root: Path) -> dict[str, Any]:
     if _sha256(root / "build-reproduction.json") != contract["build_reproduction_sha256"]:
         raise HamiltonianEvolutionPilotError("retained build report mismatch")
     environment = _load_json(root / "environment.json")
-    for key, expected in {
+    environment_expected = {
         "candidate_sha256": contract["candidate_binary_sha256"],
         "source_commit": contract["source_commit"],
         "source_tree_clean": True,
@@ -256,7 +318,17 @@ def validate_pilot_package(root: Path, repo_root: Path) -> dict[str, Any]:
         "performance_collection": False,
         "profiler_enabled": False,
         "watcher_enabled": False,
-    }.items():
+    }
+    if "preflight_sha256" in manifest:
+        environment_expected.update(
+            {
+                "tt_metal_home_set": True,
+                "tt_metal_runtime_root_set": True,
+                "runtime_roots_resolve_same": True,
+                "runtime_cache_policy": "fresh empty TT_METAL_CACHE per case",
+            }
+        )
+    for key, expected in environment_expected.items():
         if environment.get(key) != expected:
             raise HamiltonianEvolutionPilotError(f"environment mismatch for {key}")
     pre_health = _load_json(root / "pre-run-device-health.json")
@@ -266,9 +338,7 @@ def validate_pilot_package(root: Path, repo_root: Path) -> dict[str, Any]:
     try:
         pre_raw = json.dumps(pre_health)
         post_raw = json.dumps(post_health)
-        validate_device_health(pre_raw, device_id=0)
-        validate_device_health(post_raw, device_id=0)
-        compare_device_health(pre_raw, post_raw, device_id=0)
+        _compare_conformance_health(pre_raw, post_raw)
     except Exception as exc:
         raise HamiltonianEvolutionPilotError(f"device-health inconsistency: {exc}") from exc
 
@@ -359,6 +429,7 @@ def build_qualification(root: Path, repo_root: Path) -> dict[str, Any]:
 
     result = validate_pilot_package(root, repo_root)
     suite = _load_json(root.resolve() / "suite-report.json")
+    failure_classification = _classify_failure(suite)
     return {
         "schema": "tt-rqm-hamiltonian-evolution-pilot-qualification.v1",
         "pilot_id": suite["pilot_id"],
@@ -369,7 +440,7 @@ def build_qualification(root: Path, repo_root: Path) -> dict[str, Any]:
         "claim_level": None,
         "stable_benchmark": False,
         "performance_eligible": False,
-        "failure_classification": None if result["pilot_passed"] else "environment",
+        "failure_classification": failure_classification,
         "results": suite["results"],
     }
 
@@ -391,14 +462,126 @@ def render_qualification(payload: dict[str, Any]) -> str:
         lines.append(
             f"- `{result['case_id']}` ({result['role']}): {'pass' if result['passed'] else 'fail'}"
         )
-    lines += [
-        "",
-        "All cases stopped at the same pre-device TT-Metal runtime-root initialization blocker; no numerical output was produced.",
-        "",
-        "No H2B hardware claim exists.",
-        "",
-    ]
+    if payload["failure_classification"] == "environment":
+        lines += [
+            "",
+            "All cases stopped at the same pre-device TT-Metal runtime-root initialization blocker; no numerical output was produced.",
+        ]
+    lines += ["", "No H2B hardware claim exists.", ""]
     return "\n".join(lines)
+
+
+def build_blocker_report(root: Path, repo_root: Path) -> dict[str, Any]:
+    """Classify a failed retained pilot from package evidence only."""
+
+    result = validate_pilot_package(root, repo_root)
+    if result["pilot_passed"]:
+        raise HamiltonianEvolutionPilotError("a passing pilot has no blocker report")
+    root = root.resolve()
+    suite = _load_json(root / "suite-report.json")
+    signature_cases: list[str] = []
+    for item in suite["results"]:
+        case_dir = root / "cases" / item["case_id"]
+        text = "\n".join(
+            (case_dir / name).read_text(encoding="utf-8", errors="replace")
+            for name in ("stdout.txt", "stderr.txt")
+        )
+        if (
+            "Read unexpected run_mailbox value" in text
+            and "failed to complete an early exit" in text
+            and "active ethernet dispatch core" in text
+        ):
+            signature_cases.append(item["case_id"])
+    if not signature_cases:
+        raise HamiltonianEvolutionPilotError(
+            "failed pilot has no evidence for an approved blocker classification"
+        )
+    metrics_count = len(list((root / "cases").glob("*/metrics.json")))
+    rotor_count = len(list((root / "cases").glob("*/final_rotors.bin")))
+    phase_count = len(list((root / "cases").glob("*/final_phases.bin")))
+    return {
+        "schema": "tt-rqm-hamiltonian-evolution-pilot-blocker.v2",
+        "pilot_id": suite["pilot_id"],
+        "pilot_package": root.relative_to(repo_root.resolve()).as_posix(),
+        "package_valid": True,
+        "pilot_passed": False,
+        "failure_classification": "runtime",
+        "observed_mechanism": "dispatch_mailbox_synchronization_during_device_initialization",
+        "approved_categories": [
+            "build",
+            "runtime",
+            "synchronization",
+            "layout",
+            "lowering",
+            "composition",
+            "ordering",
+            "numerical_domain",
+        ],
+        "attempt_evidence": {
+            "case_count": len(suite["results"]),
+            "conformance_case_count": suite["conformance_case_count"],
+            "stress_diagnostic_case_count": suite["stress_diagnostic_case_count"],
+            "attempt_counts": sorted({item["attempt_count"] for item in suite["results"]}),
+            "retry_counts": sorted({item["retry_count"] for item in suite["results"]}),
+            "candidate_completed_count": sum(
+                item["candidate_completed"] is True for item in suite["results"]
+            ),
+        },
+        "runtime_evidence": {
+            "signature_case_count": len(signature_cases),
+            "signature_case_ids": signature_cases,
+            "signature": [
+                "active ethernet dispatch core detected as still running",
+                "failed to complete an early exit",
+                "Read unexpected run_mailbox value: 0x40",
+            ],
+            "metrics_file_count": metrics_count,
+            "final_rotor_file_count": rotor_count,
+            "final_phase_file_count": phase_count,
+        },
+        "numerical_conclusion": "No numerical output was produced; the bounded angle domain is not hardware-confirmed.",
+        "claim_level": None,
+        "stable_benchmark": False,
+        "performance_eligible": False,
+        "designated_contract_created": False,
+        "designated_session_executed": False,
+    }
+
+
+def render_blocker_report(payload: dict[str, Any]) -> str:
+    evidence = payload["runtime_evidence"]
+    attempts = payload["attempt_evidence"]
+    return "\n".join(
+        [
+            "# H2B N300 pilot Session 2 blocker",
+            "",
+            f"Session 2 is valid and did not pass. The first evidenced failing layer is `{payload['failure_classification']}`; the observed mechanism is dispatch/mailbox synchronization during device initialization.",
+            "",
+            f"All {attempts['case_count']} frozen cases were invoked once in order with zero retries or replacements. None completed, and no metrics, final rotors, or final phases were produced.",
+            "",
+            f"Retained stdout/stderr for {evidence['signature_case_count']} cases records active dispatch cores, failure to complete early exit, and unexpected run-mailbox value `0x40`. Preflight passed before collection, and post-run health retained both visible N300 entries without DRAM faults, hardware faults, throttling, or reboot.",
+            "",
+            "This is not build, layout, lowering, composition, ordering, or numerical-domain evidence. The bounded angle domain remains a CPU/reference contract and is not hardware-confirmed.",
+            "",
+            "No designated contract was created or executed. No H2B hardware claim exists; `claim_level=null`, `stable_benchmark=false`, and `performance_eligible=false`.",
+            "",
+        ]
+    )
+
+
+def _classify_failure(suite: dict[str, Any]) -> str | None:
+    if suite.get("suite_passed") is True:
+        return None
+    results = suite.get("results", [])
+    messages = [
+        str(item.get("error", {}).get("message", "")) for item in results if isinstance(item, dict)
+    ]
+    if messages and all(
+        "TT_METAL_RUNTIME_ROOT" in message or "Root Directory is not set" in message
+        for message in messages
+    ):
+        return "environment"
+    return None
 
 
 def _identity(metadata: dict[str, Any]) -> dict[str, Any]:
@@ -422,8 +605,25 @@ def _identity(metadata: dict[str, Any]) -> dict[str, Any]:
         "composition_order",
     )
     identity = {key: metadata.get(key) for key in keys}
-    if identity["device_id"] != 0 or identity["device_count"] != 1:
-        raise HamiltonianEvolutionPilotError("pilot must use one Wormhole device at id 0")
+    expected = {
+        "device_id": 0,
+        "device_count": 1,
+        "device_create_count": 1,
+        "device_close_count": 1,
+        "program_count": 2,
+        "intermediate_storage": "device_dram",
+        "device_resident_intermediate": True,
+        "intermediate_d2h_count": 0,
+        "intermediate_h2d_count": 0,
+        "host_round_trip_count": 0,
+        "automatic_normalization": False,
+        "composition_order": "K-1 ... 0",
+    }
+    for key, value in expected.items():
+        if identity.get(key) != value:
+            raise HamiltonianEvolutionPilotError(
+                f"pilot lifecycle metadata {key} must equal {value!r}"
+            )
     if "wormhole" not in str(identity["device_arch"]).lower():
         raise HamiltonianEvolutionPilotError("pilot device architecture is not Wormhole")
     return identity
@@ -440,6 +640,20 @@ def _run_json_command(command: str, label: str) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise HamiltonianEvolutionPilotError(f"{label} must be a JSON object")
     return payload
+
+
+def _compare_conformance_health(pre_raw: str, post_raw: str) -> None:
+    """Require healthy stable devices while allowing non-performance AICLK scaling."""
+
+    pre = validate_device_health(pre_raw, device_id=0)
+    post = validate_device_health(post_raw, device_id=0)
+    if pre["visible_device_count"] != post["visible_device_count"]:
+        raise HamiltonianEvolutionPilotError("visible device count changed during pilot")
+    for before, after in zip(pre["devices"], post["devices"], strict=True):
+        if before["board_id"] != after["board_id"] or before["boot_date"] != after["boot_date"]:
+            raise HamiltonianEvolutionPilotError(
+                "device identity or boot state changed during pilot"
+            )
 
 
 def _load_json(path: Path) -> dict[str, Any]:

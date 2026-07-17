@@ -164,7 +164,7 @@ The release remains `stable_benchmark=false` and
 `performance_eligible=false`. It inherits no H1 claim and makes no speedup,
 stability, full-H2, bandwidth, energy, dual-device, or endorsement claim.
 
-## H2B: resident lowering plus H1 composition; first pilot failed
+## H2B: resident lowering plus H1 composition; Session 2 failed at runtime
 
 H2B is precisely:
 
@@ -188,10 +188,12 @@ protocol, and a real two-program TT-Metal candidate source. The candidate
 creates Wormhole device 0 once, writes the six-plane coefficient input once,
 runs compensated H2A into a device-DRAM intermediate, runs protected fused H1
 against that exact buffer, reads only final rotor/phase planes, and closes the
-device once. The first non-designated N300 pilot is retained and did not pass.
-All 20 frozen invocations stopped before device execution because the launcher
-did not set the separately required TT-Metal runtime root. This is an
-`environment` failure, not a numerical result; no case was retried or replaced.
+device once. Session 1 retains the missing-runtime-root environment failure.
+Contract-v1 Session 2 propagated both required roots, passed preflight, and
+invoked all 20 frozen cases once. It did not pass: runtime/dispatch
+synchronization stalled and later cases retained unexpected run-mailbox value
+`0x40`. This is a `runtime` failure, not a numerical result; no case was
+retried or replaced.
 
 The H2A and intermediate layouts both use
 `(step*6+lane)*component_tiles+batch_tile`. Input lanes are
@@ -202,8 +204,7 @@ fused, not one fused kernel. H2B remains `stable_benchmark=false`,
 `performance_eligible=false`, and `claim_level=null`, and inherits no H1 or
 H2A evidence.
 
-The next hardware action, if pursued, requires a new versioned non-designated
-contract that explicitly binds the runtime root. Session 1 remains immutable.
+No designated contract was prepared. Both retained sessions remain immutable.
 
 ## Sibling and later work
 

@@ -36,7 +36,7 @@ instead of abstract optimizations.
 | Quaternion multiplication — `qmul` | Batched Hamilton products over ordinary FP32 `[N,4]` tensors in `[real, i, j, k]` order, for structured rotations and transformations where order matters | Claim Level 2 stable one-device performance from three qualified N300 sessions |
 | Fused time-ordered SU(2) composition — H1 / `SU2ComposeBench` | Exact-time-order composition of pre-lowered rotor and phase steps; a real stage of two-level Hamiltonian simulation | Claim Level 2 fused-only stable one-device performance from three qualified v3 sessions |
 | Device-side Hamiltonian coefficient lowering — H2A | Converts two-level Hamiltonian coefficients and `dt` into the rotor and phase steps consumed by H1 | Claim Level 0 silicon conformance from one designated N300 session; `stable_benchmark=false`, `performance_eligible=false` |
-| Device-resident two-level evolution — H2B / `HamiltonianEvolutionBench` | Compensated H2A feeds protected fused H1 through a device-DRAM intermediate without a host round trip | First non-designated N300 pilot retained; did not pass (`environment`); no claim level |
+| Device-resident two-level evolution — H2B / `HamiltonianEvolutionBench` | Compensated H2A feeds protected fused H1 through a device-DRAM intermediate without a host round trip | Contract-v1 Session 2 retained; did not pass (`runtime`); no claim level |
 
 The H1 result does not establish a stable fused/unfused comparison or an
 acceleration claim. H2A is a completed hardware-conformance milestone, not
@@ -113,10 +113,12 @@ directly into fused H1 composition
 final rotor and phase
 ```
 
-The first non-designated N300 pilot is retained and did not pass. All 20
-frozen cases stopped at TT-Metal runtime-root initialization before device
-execution; the failure is classified as `environment`. H2B is not stable or
-performance-eligible, has no claim level, and cannot inherit H1 or H2A claim status. The
+The first non-designated N300 pilot remains immutable. Contract-v1 Session 2
+passed the corrected environment preflight and invoked all 20 frozen cases
+once, but did not pass: TT-Metal stalled in device runtime/dispatch
+synchronization and later retained unexpected run-mailbox evidence. No case
+produced numerical output. H2B is not stable or performance-eligible, has no
+claim level, and cannot inherit H1 or H2A claim status. The
 broader purpose is to move RQM mathematics from theory and Python references
 into inspectable, reproducible, hardware-backed Tenstorrent workloads that
 outside engineers can evaluate and potentially integrate.

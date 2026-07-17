@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--command", required=True)
+    parser.add_argument("--preflight-command", required=True)
     parser.add_argument("--health-command", required=True)
     parser.add_argument("--environment-command", required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -24,6 +25,7 @@ def main() -> int:
         output_dir=args.output_dir,
         pilot_id=args.pilot_id,
         command=args.command,
+        preflight_command=args.preflight_command,
         health_command=args.health_command,
         environment_command=args.environment_command,
     )

@@ -1,0 +1,69 @@
+{
+  "approved_categories": [
+    "build",
+    "runtime",
+    "synchronization",
+    "layout",
+    "lowering",
+    "composition",
+    "ordering",
+    "numerical_domain"
+  ],
+  "attempt_evidence": {
+    "attempt_counts": [
+      1
+    ],
+    "candidate_completed_count": 0,
+    "case_count": 20,
+    "conformance_case_count": 19,
+    "retry_counts": [
+      0
+    ],
+    "stress_diagnostic_case_count": 1
+  },
+  "claim_level": null,
+  "designated_contract_created": false,
+  "designated_session_executed": false,
+  "failure_classification": "runtime",
+  "numerical_conclusion": "No numerical output was produced; the bounded angle domain is not hardware-confirmed.",
+  "observed_mechanism": "dispatch_mailbox_synchronization_during_device_initialization",
+  "package_valid": true,
+  "performance_eligible": false,
+  "pilot_id": "h2b-n300-pilot-20260716-session-2",
+  "pilot_package": "benchmarks/pilots/hamiltonian-evolution-h2b/h2b-n300-pilot-20260716-session-2",
+  "pilot_passed": false,
+  "runtime_evidence": {
+    "final_phase_file_count": 0,
+    "final_rotor_file_count": 0,
+    "metrics_file_count": 0,
+    "signature": [
+      "active ethernet dispatch core detected as still running",
+      "failed to complete an early exit",
+      "Read unexpected run_mailbox value: 0x40"
+    ],
+    "signature_case_count": 19,
+    "signature_case_ids": [
+      "zero_vector_phase_chain",
+      "axis_x",
+      "axis_y",
+      "axis_z",
+      "noncommuting_xy",
+      "noncommuting_yx",
+      "mixed_zero_nonzero",
+      "tiny_norms",
+      "varying_dt",
+      "random_finite",
+      "long_chain",
+      "boundary_rotor_positive",
+      "boundary_rotor_negative",
+      "boundary_phase_positive",
+      "boundary_phase_negative",
+      "boundary_combined",
+      "boundary_noncommuting_xy",
+      "boundary_noncommuting_yx",
+      "large_angle_short_chain"
+    ]
+  },
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-blocker.v2",
+  "stable_benchmark": false
+}

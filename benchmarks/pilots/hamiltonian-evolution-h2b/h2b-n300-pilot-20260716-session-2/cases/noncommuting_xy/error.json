@@ -1,0 +1,4 @@
+{
+  "message": "candidate command failed\nstdout:\n\nstderr:\n",
+  "type": "HamiltonianEvolutionCandidateError"
+}

@@ -340,8 +340,13 @@ def _h2b_foundation_status(repo_root: Path) -> tuple[str, str]:
     )
     if not all(invariants):
         return "invalid candidate architecture", "The H2B device-resident source audit failed."
+    session_2 = repo_root / (
+        "benchmarks/processed/hamiltonian-evolution-h2b-pilot-session-2-qualification.json"
+    )
     qualification_path = (
-        repo_root / "benchmarks/processed/hamiltonian-evolution-h2b-pilot-qualification.json"
+        session_2
+        if session_2.is_file()
+        else repo_root / "benchmarks/processed/hamiltonian-evolution-h2b-pilot-qualification.json"
     )
     if qualification_path.is_file():
         try:
@@ -351,6 +356,11 @@ def _h2b_foundation_status(repo_root: Path) -> tuple[str, str]:
         if qualification.get("package_valid") is not True:
             return "invalid pilot qualification", "The retained H2B pilot package is invalid."
         if qualification.get("pilot_passed") is False:
+            if qualification.get("pilot_id") == "h2b-n300-pilot-20260716-session-2":
+                return (
+                    "Contract-v1 Session 2 retained; did not pass (runtime)",
+                    "All 20 frozen cases were attempted once without retry or replacement after a passing preflight. Runtime/dispatch synchronization failed before numerical output. No H2B hardware claim exists.",
+                )
             return (
                 "first non-designated N300 pilot retained; did not pass (environment)",
                 "All 20 frozen cases were attempted once without retry or replacement and stopped at TT-Metal runtime-root initialization before device execution. No H2B hardware claim exists.",

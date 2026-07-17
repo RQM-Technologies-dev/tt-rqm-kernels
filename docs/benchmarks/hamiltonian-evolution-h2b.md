@@ -1,9 +1,11 @@
 # H2B Device-Resident Hamiltonian Evolution Pilot
 
 HamiltonianEvolutionBench H2B has a CPU/reference foundation, fail-closed
-external protocol, TT-Metal candidate source, and retained first
-non-designated N300 pilot. The first non-designated H2B N300 pilot is retained
-and did not pass; the failure is classified as `environment`. H2B has no claim
+external protocol, TT-Metal candidate source, and two retained Contract-v1
+non-designated N300 sessions. Session 1 remains immutable. Session 2 passed
+the corrected launcher preflight but did not pass; the first evidenced failing
+layer is `runtime`, with dispatch/mailbox synchronization during device
+initialization. H2B has no claim
 level and remains `stable_benchmark=false`, `performance_eligible=false`, and
 `claim_level=null`.
 
@@ -99,23 +101,24 @@ and `host_round_trip_count=0`.
 
 ## Current status and nonclaims
 
-Current status: **The first non-designated H2B N300 pilot is retained and did
-not pass. The failure is classified as `environment`. No H2B hardware claim
-exists.**
+Current status: **Contract-v1 Session 2 is retained and did not pass. The first
+evidenced failing layer is `runtime`. No H2B hardware claim exists.**
 
 All 20 frozen cases were invoked once in order without retry or replacement.
-Every invocation stopped during TT-Metal runtime initialization before device
-execution because the frozen launcher supplied `TT_METAL_HOME` but omitted the
-separately required `TT_METAL_RUNTIME_ROOT`. No numerical output was produced.
-Both N300 device entries remained visible before and after collection. The
-offline package qualifier reports `package_valid=true` and
-`pilot_passed=false`.
+The standalone and collector preflights propagated both runtime roots and
+validated the pinned source, binary, TT-Metal checkout, shared libraries,
+fresh cache root, and both N300 entries. Candidate execution then stalled in
+runtime/dispatch synchronization; retained logs for 19 cases report active
+dispatch cores, failure to complete early exit, and unexpected run-mailbox
+value `0x40`. No metrics or final numerical outputs were produced. Both N300
+entries remained healthy and visible after collection. The independent
+Session 2 qualifier reports `package_valid=true` and `pilot_passed=false`.
 
 This foundation is not stable, performance-eligible, accelerated, or Claim
 Level 0 or higher. It does not inherit H1 stability or H2A conformance. It does
 not claim a single fused kernel, avoidance of device DRAM, or Tenstorrent
 endorsement.
 
-No designated Claim Level 0 contract was prepared because the non-designated
-pilot did not pass. Any future pilot requires a separately versioned frozen
-contract; retained session 1 is immutable.
+No designated Claim Level 0 contract was prepared because Session 2 did not
+pass. Session 1 and Session 2 remain separately retained; neither may be
+retried, replaced, or overwritten.

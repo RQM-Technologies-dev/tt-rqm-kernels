@@ -1,0 +1,274 @@
+{
+  "case_count": 20,
+  "claim_level": null,
+  "failure_classification": null,
+  "non_designated": true,
+  "package_valid": true,
+  "performance_eligible": false,
+  "pilot_id": "h2b-n300-pilot-20260716-session-2",
+  "pilot_passed": false,
+  "results": [
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "identity_k1",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "zero_vector_phase_chain",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "axis_x",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "axis_y",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "axis_z",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "noncommuting_xy",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "noncommuting_yx",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "mixed_zero_nonzero",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "tiny_norms",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "varying_dt",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "random_finite",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "long_chain",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_rotor_positive",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_rotor_negative",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_phase_positive",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_phase_negative",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_combined",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_noncommuting_xy",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "boundary_noncommuting_yx",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "conformance"
+    },
+    {
+      "attempt_count": 1,
+      "candidate_completed": false,
+      "case_id": "large_angle_short_chain",
+      "error": {
+        "message": "candidate command failed\nstdout:\n\nstderr:\n",
+        "type": "HamiltonianEvolutionCandidateError"
+      },
+      "passed": false,
+      "replacement": false,
+      "retry_count": 0,
+      "role": "stress_diagnostic"
+    }
+  ],
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-qualification.v1",
+  "stable_benchmark": false
+}

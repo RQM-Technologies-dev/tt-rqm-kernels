@@ -114,8 +114,9 @@ Inside this repository, qmul Level 2 and fused-only H1 Level 2 are protected
 baselines. H2A coefficient lowering has a separate Claim Level 0
 silicon-conformance release, with its CPU reference, candidate source,
 development probes, designated package, and qualification retained intact.
-H2B fusion has not begun; two-qubit hardware execution and broader benchmark
-families also remain future work.
+H2B has a two-program device-resident candidate and two retained failed
+non-designated sessions, but no H2B hardware claim. Two-qubit hardware
+execution and broader benchmark families remain future work.
 
 ## Nonclaims
 

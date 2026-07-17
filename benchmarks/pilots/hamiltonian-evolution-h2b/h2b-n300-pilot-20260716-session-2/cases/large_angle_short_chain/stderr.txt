@@ -1,0 +1,37 @@
+Read unexpected run_mailbox value: 0x40 (expected 0x80 or 0x0)
+Read unexpected run_mailbox value: 0x40 (expected 0x80 or 0x0)
+Building trisc1, compile step:
+cd <runtime-cache-root>/large_angle_short_chain/tt-metal-cache1173036929715483899/kernels/compute_hamiltonian_lowering_compensated/13215005376100195115/trisc1/ && <tt-metal-root>/runtime/sfpi/compiler/bin/riscv-tt-elf-g++ -O3 -std=c++17 -ftt-nttp -ftt-constinit -ftt-consteval -ftt-no-dyninit -flto=auto -ffast-math -fno-exceptions -fno-rtti -fno-use-cxa-atexit -g -MMD -Wall -Werror -Wno-error=deprecated-declarations -Wno-error=multistatement-macros -Wno-error=parentheses -Wno-error=unused-but-set-variable -Wno-unused-variable -Wno-unused-function -mcpu=tt-wh-tensix -I. -I.. -I<tt-metal-root>/ -I<tt-metal-root>/ttnn -I<tt-metal-root>/ttnn/cpp -I<tt-metal-root>/tt_metal -I<tt-metal-root>/tt_metal/hw/inc -I<tt-metal-root>/tt_metal/tt-llk/common -I<tt-metal-root>/tt_metal/hostdevcommon/api -I<tt-metal-root>/tt_metal/api/ -I<tt-metal-root>/runtime/sfpi/include -I<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/common -I<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_io -I<tt-metal-root>/tt_metal/hw/inc/internal/tt-1xx -I<tt-metal-root>/tt_metal/hw/inc/internal/tt-1xx/wormhole -I<tt-metal-root>/tt_metal/hw/inc/internal/tt-1xx/wormhole/wormhole_b0_defines -I<tt-metal-root>/tt_metal/hw/inc/internal/tt-1xx/wormhole/noc -I<tt-metal-root>/tt_metal/tt-llk/tt_llk_wormhole_b0/common/inc -I<tt-metal-root>/tt_metal/tt-llk/tt_llk_wormhole_b0/llk_lib -I<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api -I<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu -I<tt-metal-root>/tt_metal/hw/firmware/src/tt-1xx -I<candidate-source>/experimental/tt_metalium_hamiltonian_evolution/../tt_metalium_hamiltonian_lowering_compensated/kernels -c -o <runtime-cache-root>/large_angle_short_chain/tt-metal-cache1173036929715483899/kernels/compute_hamiltonian_lowering_compensated/13215005376100195115/trisc1/trisck.16302911078954156098.o <tt-metal-root>/tt_metal/hw/firmware/src/tt-1xx/trisck.cc -MF <runtime-cache-root>/large_angle_short_chain/tt-metal-cache1173036929715483899/kernels/compute_hamiltonian_lowering_compensated/13215005376100195115/trisc1/trisck.16302911078954156098.d -DIS_NOT_POW2_NUM_DRAM_BANKS=1 -DIS_NOT_POW2_NUM_L1_BANKS=1 -DNUM_DRAM_BANKS=12 -DNUM_L1_BANKS=56 -DPCIE_NOC_X=0 -DPCIE_NOC_Y=3 -DTENSIX_FIRMWARE -DLOCAL_MEM_EN=0 -DROUTING_FW_ENABLED -DPROCESSOR_INDEX=3 -DUCK_CHLKC_MATH -DCOMPILE_FOR_TRISC=1 -DARCH_WORMHOLE -DDISPATCH_MESSAGE_ADDR=4290183304 -DKERNEL_BUILD -DFULL_KERNEL_NAME="\"compute_hamiltonian_lowering_compensated/13215005376100195115/\"" 
+In file included from <tt-metal-root>/tt_metal/hw/inc/api/compute/eltwise_unary/trigonometry.h:9,
+                 from <candidate-source>/experimental/tt_metalium_hamiltonian_evolution/../tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_compensated.cpp:13,
+                 from ../chlkc_math.cpp:3,
+                 from <tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/common/chlkc_list.h:16,
+                 from <tt-metal-root>/tt_metal/hw/firmware/src/tt-1xx/trisck.cc:13:
+<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu/ckernel_sfpu_trigonometry.h: In function 'void ckernel::sfpu::calculate_acosh()':
+<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu/ckernel_sfpu_trigonometry.h:901:72: warning: 'sfpi::RoundMode::NearestEven' is deprecated: Use RoundMode::Nearest or RoundMode::NearestAway [-Wdeprecated-declarations]
+  901 |             res = sfpi::convert<sfpi::vFloat16b>(res, sfpi::RoundMode::NearestEven);
+      |                                                                        ^~~~~~~~~~~
+In file included from <tt-metal-root>/runtime/sfpi/include/sfpi.h:690,
+                 from <tt-metal-root>/tt_metal/tt-llk/tt_llk_wormhole_b0/common/inc/ckernel_sfpu.h:12,
+                 from <tt-metal-root>/tt_metal/tt-llk/tt_llk_wormhole_b0/common/inc/cmath_common.h:13,
+                 from <tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_math_common_api.h:10,
+                 from <tt-metal-root>/tt_metal/hw/inc/api/compute/common_globals.h:16,
+                 from <tt-metal-root>/tt_metal/hw/inc/api/compute/common.h:7,
+                 from <candidate-source>/experimental/tt_metalium_hamiltonian_evolution/../tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_compensated.cpp:6:
+<tt-metal-root>/runtime/sfpi/include/sfpi_lib.h:611:26: note: declared here
+  611 |  static constexpr Values NearestEven = NearestAway;
+      |                          ^~~~~~~~~~~
+<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu/ckernel_sfpu_trigonometry.h: In function 'void ckernel::sfpu::calculate_asinh()':
+<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu/ckernel_sfpu_trigonometry.h:975:72: warning: 'sfpi::RoundMode::NearestEven' is deprecated: Use RoundMode::Nearest or RoundMode::NearestAway [-Wdeprecated-declarations]
+  975 |             res = sfpi::convert<sfpi::vFloat16b>(res, sfpi::RoundMode::NearestEven);
+      |                                                                        ^~~~~~~~~~~
+<tt-metal-root>/runtime/sfpi/include/sfpi_lib.h:611:26: note: declared here
+  611 |  static constexpr Values NearestEven = NearestAway;
+      |                          ^~~~~~~~~~~
+<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu/ckernel_sfpu_trigonometry.h: In function 'void ckernel::sfpu::calculate_atanh()':
+<tt-metal-root>/tt_metal/hw/ckernels/wormhole_b0/metal/llk_api/llk_sfpu/ckernel_sfpu_trigonometry.h:1024:72: warning: 'sfpi::RoundMode::NearestEven' is deprecated: Use RoundMode::Nearest or RoundMode::NearestAway [-Wdeprecated-declarations]
+ 1024 |             res = sfpi::convert<sfpi::vFloat16b>(res, sfpi::RoundMode::NearestEven);
+      |                                                                        ^~~~~~~~~~~
+<tt-metal-root>/runtime/sfpi/include/sfpi_lib.h:611:26: note: declared here
+  611 |  static constexpr Values NearestEven = NearestAway;
+      |                          ^~~~~~~~~~~

@@ -29,7 +29,7 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         "performance_eligible": False,
     }
     assert result["h2b"] == {
-        "status": "non_designated_pilot_failed_environment",
+        "status": "non_designated_pilot_session_2_failed_runtime",
         "stable_benchmark": False,
         "performance_eligible": False,
         "claim_level": None,
@@ -67,7 +67,7 @@ def test_repository_claims_agree_with_protected_releases() -> None:
         ),
         (
             "plan.md",
-            "H2B first non-designated N300 pilot: retained and did not pass; the failure\n  is classified as environment. All 20 frozen cases were attempted once\n  without retry or replacement. No H2B hardware claim exists;\n  `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
+            "H2B Contract-v1 Session 2: retained and did not pass; the first evidenced\n  failing layer is runtime. All 20 frozen cases were attempted once without\n  retry or replacement and produced no numerical output. No H2B hardware claim exists;\n  `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
             "H2B claim level 0 established.",
             "plan status marker missing",
         ),

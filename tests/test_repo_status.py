@@ -49,7 +49,7 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["SU2ComposeBench stability"] == "established"
     assert statuses["HamiltonianLoweringBench H2A"] == "Claim Level 0 silicon conformance present"
     assert statuses["HamiltonianEvolutionBench H2B"] == (
-        "first non-designated N300 pilot retained; did not pass (environment)"
+        "Contract-v1 Session 2 retained; did not pass (runtime)"
     )
     assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
     assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
@@ -84,8 +84,8 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
         in completed.stdout
     )
     assert (
-        "HamiltonianEvolutionBench H2B: first non-designated N300 pilot retained; "
-        "did not pass (environment)" in completed.stdout
+        "HamiltonianEvolutionBench H2B: Contract-v1 Session 2 retained; "
+        "did not pass (runtime)" in completed.stdout
     )
     assert (
         "One designated N300 device-0 session passed all nine frozen H2A cases" in completed.stdout

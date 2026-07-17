@@ -69,8 +69,8 @@ inherited-H1 claim.
 ## H2B device-resident evolution pilot
 
 - Family: `HamiltonianEvolutionBench`; stage: H2B complete two-level evolution
-- Status: first non-designated N300 pilot retained; did not pass
-  (`environment`); no H2B hardware claim exists
+- Status: Contract-v1 Session 2 retained; did not pass (`runtime`); no H2B
+  hardware claim exists
 - Architecture: two programs, one device session, device-DRAM intermediate,
   zero intermediate host round trips
 - Stability and performance eligibility: `stable_benchmark=false`,
@@ -78,6 +78,8 @@ inherited-H1 claim.
 - [H2B foundation report](hamiltonian-evolution-h2b.md)
 - [Processed pilot qualification](../../benchmarks/processed/hamiltonian-evolution-h2b-pilot-qualification.json)
 - [Pilot blocker](../../reports/h2b_n300_pilot_blocker.md)
+- [Session 2 qualification](../../benchmarks/processed/hamiltonian-evolution-h2b-pilot-session-2-qualification.json)
+- [Session 2 blocker](../../reports/h2b_n300_pilot_session_2_blocker.md)
 
 H2B does not inherit the H1 Level 2 or H2A Level 0 results. It is not a
 single fused kernel or an acceleration result.

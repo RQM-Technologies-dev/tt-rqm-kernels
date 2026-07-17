@@ -14,8 +14,9 @@ session passed the same frozen contract, establishing a separate Claim Level 0
 silicon-conformance release with no performance or stability claim. H1 is a real stage of a
 Hamiltonian-simulation pipeline. H2B now has a CPU/reference foundation and a
 two-program TT-Metal candidate source that keeps the H2A-to-H1 intermediate on
-device. Its first non-designated N300 pilot is retained and did not pass due to
-an environment blocker before device execution. The exact boundaries are documented in
+device. Contract-v1 Session 2 passed the corrected environment preflight but
+did not pass due to runtime/dispatch synchronization during device
+initialization. The exact boundaries are documented in
 [SU2ComposeBench](benchmarks/su2-compose-bench.md).
 
 ## What This Is
@@ -52,7 +53,7 @@ persistent multicore/SFPU qmul: Claim Level 2 from three qualified device-0 sess
 SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release plus retained historical v2 campaign
 EntanglementDynamicsBench: CPU reference foundation only; no hardware claim or claim level
 HamiltonianLoweringBench H2A: Claim Level 0 silicon conformance; stable_benchmark=false
-HamiltonianEvolutionBench H2B: first non-designated N300 pilot retained; did not pass (environment); no claim level
+HamiltonianEvolutionBench H2B: Contract-v1 Session 2 retained; did not pass (runtime); no claim level
 ```
 
 The committed TT-Lang and tt-emule reports are simulator/emulation artifacts.
@@ -89,10 +90,11 @@ evidence ladder until a separate device contract is designed and qualified.
 The [H2B foundation](benchmarks/hamiltonian-evolution-h2b.md) uses the pinned
 TT-Metal baseline and directly connects compensated H2A to protected fused H1
 through device DRAM. It performs one input H2D and one final-output D2H with no
-intermediate host transfer. The retained first pilot attempted all 20 frozen
-cases once, but TT-Metal runtime initialization rejected the missing runtime
-root before device execution. It remains non-stable, performance-ineligible,
-and claim-level null.
+intermediate host transfer. Session 1 retains the original missing-runtime-root
+failure. Session 2 propagated both roots and attempted all 20 frozen cases
+once, but TT-Metal stalled in dispatch/mailbox synchronization and produced no
+numerical outputs. It remains non-stable, performance-ineligible, and
+claim-level null.
 
 ## Run It In 10 Minutes
 

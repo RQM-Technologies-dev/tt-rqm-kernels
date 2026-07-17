@@ -102,7 +102,7 @@ def validate_repository_claims(
     )
     _require(
         _h2b_foundation_status(repo_root)[0]
-        == "first non-designated N300 pilot retained; did not pass (environment)",
+        == "Contract-v1 Session 2 retained; did not pass (runtime)",
         "repo_status.py does not report the retained failed H2B pilot",
     )
     documents = _load_status_documents(repo_root)
@@ -113,7 +113,7 @@ def validate_repository_claims(
         "su2": {**expected_claim, "scope": "fused_only"},
         "h2a": {"status": "claim_level_0", **expected_h2a_claim},
         "h2b": {
-            "status": "non_designated_pilot_failed_environment",
+            "status": "non_designated_pilot_session_2_failed_runtime",
             "stable_benchmark": False,
             "performance_eligible": False,
             "claim_level": None,
@@ -141,7 +141,7 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
         "Every individual qmul and H1 source-session report remains `stable_benchmark=false`",
         "historical H1 v2 fused/unfused campaign is retained and non-qualifying",
         "H2A device-side coefficient lowering: Claim Level 0 silicon conformance from one designated N300 device-0 session; `stable_benchmark=false` and `performance_eligible=false`.",
-        "H2B first non-designated N300 pilot: retained and did not pass; the failure is classified as environment. All 20 frozen cases were attempted once without retry or replacement. No H2B hardware claim exists; `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
+        "H2B Contract-v1 Session 2: retained and did not pass; the first evidenced failing layer is runtime. All 20 frozen cases were attempted once without retry or replacement and produced no numerical output. No H2B hardware claim exists; `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.",
     )
     for marker in required_plan:
         _require(marker in " ".join(plan.split()), f"plan status marker missing: {marker}")
@@ -166,8 +166,8 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "Retries or replacements | 0",
         ),
         "docs/benchmarks/hamiltonian-evolution-h2b.md": (
-            "The first non-designated H2B N300 pilot is retained and did not pass",
-            "failure is classified as `environment`",
+            "Contract-v1 Session 2 is retained and did not pass",
+            "first evidenced failing layer is `runtime`",
             "program_count=2",
             "host_round_trip_count=0",
             "claim_level=null",
@@ -185,12 +185,12 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "H1: completed fused-composition baseline",
             "H2A: device-side coefficient lowering",
             "H2A Claim Level 0 silicon conformance is established",
-            "H2B: resident lowering plus H1 composition; first pilot failed",
+            "H2B: resident lowering plus H1 composition; Session 2 failed at runtime",
         ),
         "docs/tenstorrent-landing.md": (
             "SU2ComposeBench fused H1 path: Claim Level 2 stable one-device release",
             "HamiltonianLoweringBench H2A: Claim Level 0 silicon conformance",
-            "HamiltonianEvolutionBench H2B: first non-designated N300 pilot retained; did not pass (environment); no claim level",
+            "HamiltonianEvolutionBench H2B: Contract-v1 Session 2 retained; did not pass (runtime); no claim level",
         ),
         "docs/collaboration-map.md": (
             "SU2ComposeBench` has a fused-only Claim Level 2 release",

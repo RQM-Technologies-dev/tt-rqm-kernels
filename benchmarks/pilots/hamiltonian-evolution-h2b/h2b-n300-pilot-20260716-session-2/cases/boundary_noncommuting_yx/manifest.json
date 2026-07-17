@@ -1,0 +1,26 @@
+{
+  "B": 1,
+  "K": 2,
+  "angle_extrema": {
+    "max_phase_angle": 8000.0,
+    "max_rotor_angle": 1000.0
+  },
+  "attempt": 1,
+  "case_id": "boundary_noncommuting_yx",
+  "dt_path": "boundary_noncommuting_yx/dt.bin",
+  "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    2,
+    4
+  ],
+  "hamiltonians_path": "boundary_noncommuting_yx/hamiltonians.bin",
+  "hamiltonians_sha256": "d35ddd6594026b9960e071cc7397bd0ded440812b0ab677cf3e7de6deb9cd708",
+  "hbar": 1.0,
+  "replacement": false,
+  "retry_count": 0,
+  "role": "conformance",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+}

@@ -1,0 +1,142 @@
+{
+  "definition": {
+    "excluded_parts": [
+      "__pycache__",
+      "build"
+    ],
+    "roots": [
+      "experimental/tt_metalium_hamiltonian_evolution",
+      "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels",
+      "experimental/tt_metalium_su2_compose/kernels"
+    ],
+    "suffixes": [
+      ".cpp",
+      ".h",
+      ".py",
+      ".txt"
+    ]
+  },
+  "file_count": 23,
+  "files": [
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/CMakeLists.txt",
+      "sha256": "3280a30c4bb5fc2f7b4a49e94f2719ca4b9be1c00020bd099122b71cd5ee7f68",
+      "size_bytes": 1708
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/build_candidate.py",
+      "sha256": "e87763f67badf38539b818d5230d8745f0224f0c73a93dbb635599094437633b",
+      "size_bytes": 2335
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/check_environment.py",
+      "sha256": "15fe7fbe64aaf9afb2e0814bf8d62671f28a6b8b8a175889677c2f3664beb84b",
+      "size_bytes": 1448
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/kernels/reader_hamiltonian_lowering_step_major.cpp",
+      "sha256": "4b1d0966f8f6e44e609bef19a42e914cfeb69cdcfff81aa8f4e8be256ce7e704",
+      "size_bytes": 1034
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/kernels/writer_hamiltonian_lowering_step_major.cpp",
+      "sha256": "6ff95dc942fc8ac7b2dd935c29738444cf75683eed21832c0051ae920a2af4e1",
+      "size_bytes": 1083
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/run_candidate.py",
+      "sha256": "3a20323e6a08f4e9c9adaa50cc1475cf88a000add87c2b1615c9c0d80b5682d4",
+      "size_bytes": 4571
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_evolution/src/hamiltonian_evolution_candidate.cpp",
+      "sha256": "7a53d318eaa2ff6d190c8ac50bfeb6b0bcaa184add08a99196fda87589cb4ffc",
+      "size_bytes": 19143
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_compensated.cpp",
+      "sha256": "c9b45e774924a8d67079bd330d39238ad3d73f8f163830274c579dbd756f1592",
+      "size_bytes": 6747
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_original_trig_diagnostic.cpp",
+      "sha256": "c62ded8324ead3121a7a5f1f4b493cca5220eed7e2d730bcaf8401c8d643c8ae",
+      "size_bytes": 177
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_product_diagnostic.cpp",
+      "sha256": "89b4b415d6b09d0acc3d3cd2598852543f920987f2cd0d7384786754ed07ba5a",
+      "size_bytes": 3913
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_trig_diagnostic.cpp",
+      "sha256": "75fbef4168681f8b3e9b462824c3c1bb1682c7a647e609b60cc3fecddfd5968f",
+      "size_bytes": 168
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/compute_hamiltonian_lowering_value_diagnostic.cpp",
+      "sha256": "c66f6615928fd5db1166ac08f9c1ab559b6c51b1d34bfe21c636de5ff0b0830b",
+      "size_bytes": 169
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/h2a_compensated_diagnostic_kernel.h",
+      "sha256": "a0fadbd2fc7bb82667fa0f730507193b26c832ce254e1037331a8a7d6af4ca0d",
+      "size_bytes": 6282
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/h2a_compensated_sfpu.h",
+      "sha256": "01476a689ff6dd84ce4e96ff7e8f0307522d595a4fad4bd1eb215277ac1b9330",
+      "size_bytes": 8637
+    },
+    {
+      "path": "experimental/tt_metalium_hamiltonian_lowering_compensated/kernels/primitive_probe_hamiltonian_lowering_compensated.cpp",
+      "sha256": "1879dce6d5f597fd16c6b70f9fcf993109c37fe6ba3a5395f9f4924c964c2217",
+      "size_bytes": 149
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_compute_common.h",
+      "sha256": "8fb8d0634cfa80c158284ed8b08b1821de8e66698925ae1c317845cc555b20ad",
+      "size_bytes": 3206
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_fused_compute.cpp",
+      "sha256": "a721d4caeec48c73293c010b4395891e0196b9993b169f02ef5722e7fe5d0b58",
+      "size_bytes": 2095
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_fused_reader.cpp",
+      "sha256": "b8bb98fe6be44083cac654382397b2740eaef88af6ed4759e429391e8398b909",
+      "size_bytes": 1321
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_fused_writer.cpp",
+      "sha256": "38bd138019607e0befc6ba3f02a918be725728936958f794c0c5ca11c0662819",
+      "size_bytes": 1091
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_sfpu.h",
+      "sha256": "d2e2b26a988377588f1d49d10a4c7a664c5520cc24938471b8a46cfe21c58542",
+      "size_bytes": 1850
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_unfused_compute.cpp",
+      "sha256": "37a2518f9af9f0018e065ac29743328be1348dd4643e5d2dfcd5bd490c36ff03",
+      "size_bytes": 791
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_unfused_reader.cpp",
+      "sha256": "f1fcd53462bbabc1845a38ba8e36d70f16f1ceae266dc759ac8cd5de5fc211e5",
+      "size_bytes": 1620
+    },
+    {
+      "path": "experimental/tt_metalium_su2_compose/kernels/su2_unfused_writer.cpp",
+      "sha256": "e4516f0ba71304cf226e79fb1f01362890d5df960356cf80aa86c01fe1e97cdc",
+      "size_bytes": 1110
+    }
+  ],
+  "repository_commit": "796e7459c61a81196da1cafd51eb78af6bc9fc27",
+  "repository_worktree_clean": false,
+  "schema": "tt-rqm-hamiltonian-evolution-source-manifest.v1",
+  "source_bundle_sha256": "57a6f741dae34d4d029cbd4274fd59cb5e4e2d34a2617e841d4bbb95d4486d01",
+  "source_scope_clean": true
+}

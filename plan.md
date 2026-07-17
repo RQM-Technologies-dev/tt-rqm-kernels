@@ -19,9 +19,9 @@ validators remain the source of truth.
 - H2A device-side coefficient lowering: Claim Level 0 silicon conformance from
   one designated N300 device-0 session; `stable_benchmark=false` and
   `performance_eligible=false`.
-- H2B first non-designated N300 pilot: retained and did not pass; the failure
-  is classified as environment. All 20 frozen cases were attempted once
-  without retry or replacement. No H2B hardware claim exists;
+- H2B Contract-v1 Session 2: retained and did not pass; the first evidenced
+  failing layer is runtime. All 20 frozen cases were attempted once without
+  retry or replacement and produced no numerical output. No H2B hardware claim exists;
   `stable_benchmark=false`, `performance_eligible=false`, `claim_level=null`.
 <!-- repository-claims:end -->
 

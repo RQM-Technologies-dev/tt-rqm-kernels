@@ -1,0 +1,26 @@
+{
+  "B": 1,
+  "K": 1,
+  "angle_extrema": {
+    "max_phase_angle": 8192.0,
+    "max_rotor_angle": 0.0
+  },
+  "attempt": 1,
+  "case_id": "boundary_phase_negative",
+  "dt_path": "boundary_phase_negative/dt.bin",
+  "dt_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+  "dt_shape": [],
+  "dtype": "float32",
+  "hamiltonian_shape": [
+    1,
+    1,
+    4
+  ],
+  "hamiltonians_path": "boundary_phase_negative/hamiltonians.bin",
+  "hamiltonians_sha256": "9edb5ec6fa3f926423e1be20217a9ed19115cb14377a719bb309f1389b9190eb",
+  "hbar": 1.0,
+  "replacement": false,
+  "retry_count": 0,
+  "role": "conformance",
+  "schema": "tt-rqm-hamiltonian-evolution-pilot-case.v1"
+}
