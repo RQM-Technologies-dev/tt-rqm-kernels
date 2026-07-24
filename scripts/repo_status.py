@@ -72,6 +72,7 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     su2_stability_status, su2_stability_detail = _su2_stability_status(repo_root)
     h2a_status, h2a_detail = _h2a_foundation_status(repo_root)
     h2b_status, h2b_detail = _h2b_foundation_status(repo_root)
+    h2b_isolation = _h2b_runtime_isolation_status(repo_root)
     entanglement_foundation_status, entanglement_foundation_detail = (
         _entanglement_foundation_status(repo_root)
     )
@@ -171,6 +172,11 @@ def build_status(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
                 "HamiltonianEvolutionBench H2B",
                 h2b_status,
                 h2b_detail,
+            ),
+            _item(
+                "H2B D0-D5 runtime isolation",
+                h2b_isolation[0],
+                h2b_isolation[1],
             ),
             _item(
                 "EntanglementDynamicsBench reference foundation",
@@ -368,6 +374,21 @@ def _h2b_foundation_status(repo_root: Path) -> tuple[str, str]:
     return (
         "CPU/reference foundation implemented; TT-Metal candidate source present; hardware not yet run",
         "Two programs share one Wormhole device session and a device-DRAM intermediate; stable_benchmark=false, performance_eligible=false, and claim_level=null.",
+    )
+
+
+def _h2b_runtime_isolation_status(repo_root: Path) -> tuple[str, str]:
+    required = (
+        repo_root / "scripts/run_h2b_runtime_diagnostic.py",
+        repo_root / "tools/h2b_n300_runtime_diagnostic/probe.cpp",
+        repo_root / "tt_rqm_kernels/hamiltonian_evolution_runtime_isolation.py",
+        repo_root / "docs/benchmarks/h2b-runtime-isolation.md",
+    )
+    if not all(path.is_file() for path in required):
+        return "not implemented", "The development D0-D5 isolation harness is incomplete."
+    return (
+        "implemented; hardware configuration required",
+        "Development-only D0-D5 single-stage tooling is present. Begin with D0 on the approved N300 host; it is not benchmark or claim evidence.",
     )
 
 

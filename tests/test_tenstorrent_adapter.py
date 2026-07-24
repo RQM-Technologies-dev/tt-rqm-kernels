@@ -58,6 +58,22 @@ def test_tenstorrent_readiness_missing_environment_is_explicit(tmp_path: Path) -
     assert "TT_EMULE_HOME unset" in details["TT_EMULE_HOME"]
 
 
+def test_quickstart_check_reports_h2b_diagnostic_readiness() -> None:
+    env = os.environ.copy()
+    for name in ("TT_METAL_HOME", "TT_METAL_RUNTIME_ROOT", "TT_RQM_H2B_DIAGNOSTIC_COMMAND"):
+        env.pop(name, None)
+    completed = subprocess.run(
+        [sys.executable, "scripts/rqm_tt_quickstart.py", "--check"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert "h2b D0 diagnostic ready: false" in completed.stdout
+    assert "h2b D0 next stage: d0" in completed.stdout
+    assert "run_h2b_runtime_diagnostic.py --stage d0" in completed.stdout
+
+
 def test_resolve_hardware_path_requires_configured_command() -> None:
     path = resolve_execution_path("hardware", env={})
 
@@ -109,10 +125,7 @@ def test_report_label_validation_keeps_emulation_out_of_hardware() -> None:
         )
         == "emulation"
     )
-    assert (
-        validate_external_qmul_label("hardware", command="/opt/tt/qmul_hw")
-        == "hardware"
-    )
+    assert validate_external_qmul_label("hardware", command="/opt/tt/qmul_hw") == "hardware"
 
     with pytest.raises(ReportLabelError, match="tt-emule"):
         validate_external_qmul_label(

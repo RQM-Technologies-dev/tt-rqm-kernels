@@ -12,3 +12,7 @@ experimental/tt_metalium_qmul/build/
 experimental/tt_metalium_qmul/build_*_candidate/
 generated/
 .DS_Store
+# Development-only H2B runtime-isolation output is never benchmark evidence.
+/reports/development/h2b-runtime/
+# Pre-schema July 17 exploratory output remains local and immutable.
+/reports/h2b_n300_runtime_diagnostic_20260717/

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -53,10 +54,7 @@ def main() -> int:
     parser.add_argument(
         "--command",
         default=None,
-        help=(
-            "External qmul command. Hardware mode also reads "
-            f"{DEFAULT_HARDWARE_COMMAND_ENV}."
-        ),
+        help=(f"External qmul command. Hardware mode also reads {DEFAULT_HARDWARE_COMMAND_ENV}."),
     )
     parser.add_argument("--items", type=_positive_int, default=128)
     parser.add_argument("--iters", type=_positive_int, default=1)
@@ -180,6 +178,10 @@ def _print_readiness(readiness) -> None:
     print("")
     print(f"emule mode ready: {str(readiness.emule_ready).lower()}")
     print(f"hardware mode ready: {str(readiness.hardware_ready).lower()}")
+    h2b_command = os.environ.get("TT_RQM_H2B_DIAGNOSTIC_COMMAND")
+    h2b_roots = bool(os.environ.get("TT_METAL_HOME") and os.environ.get("TT_METAL_RUNTIME_ROOT"))
+    print(f"h2b D0 diagnostic ready: {str(bool(h2b_command and h2b_roots)).lower()}")
+    print("h2b D0 next stage: d0")
     _print_next_actions(readiness)
 
 
@@ -205,20 +207,23 @@ def _print_next_actions(readiness) -> None:
             f"Set {DEFAULT_HARDWARE_COMMAND_ENV}=<real Tenstorrent hardware "
             "qmul command> or pass --command."
         )
-        print(
-            "The command must implement "
-            "docs/tenstorrent-hardware-command-contract.md."
-        )
-        print(
-            "Delegated hardware packet: "
-            "docs/tenstorrent-engineer-copy-paste-packet.md."
-        )
+        print("The command must implement docs/tenstorrent-hardware-command-contract.md.")
+        print("Delegated hardware packet: docs/tenstorrent-engineer-copy-paste-packet.md.")
         print(
             "Do not use tt-emule, run_candidate_docker.sh, Docker emulation, "
             "or CPU reference commands for hardware-labeled reports."
         )
         print("After a real hardware command is configured:")
         _print_indented_command(HARDWARE_REFRESH_COMMAND)
+
+    print("")
+    print("H2B D0-D5 runtime isolation (development-only; not benchmark evidence):")
+    print("  Configure TT_METAL_HOME, TT_METAL_RUNTIME_ROOT, and TT_RQM_H2B_DIAGNOSTIC_COMMAND.")
+    print(
+        "  python scripts/run_h2b_runtime_diagnostic.py --stage d0 "
+        '--command "$TT_RQM_H2B_DIAGNOSTIC_COMMAND" '
+        "--output-root reports/development/h2b-runtime"
+    )
 
 
 def _print_indented_command(command: str) -> None:

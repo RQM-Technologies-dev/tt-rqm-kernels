@@ -122,3 +122,24 @@ endorsement.
 No designated Claim Level 0 contract was prepared because Session 2 did not
 pass. Session 1 and Session 2 remain separately retained; neither may be
 retried, replaced, or overwritten.
+
+## Runtime diagnostic path
+
+The current implementation milestone is the separately versioned
+[D0-D5 development runtime-isolation ladder](h2b-runtime-isolation.md). It runs
+one selected stage per fresh process and must not be confused with either
+retained Contract-v1 session or the older exploratory probe output.
+
+The retained `run_mailbox=0x40`, active Ethernet dispatch-core, and incomplete
+early-exit messages keep device lifecycle and dispatch initialization as the
+first unresolved boundary. D0 tests only device creation, queue acquisition,
+and shutdown. D1 then adds a bitwise DRAM loopback without RQM kernels. D2-D5
+progressively add compensated H2A, protected fused H1, the device-resident
+handoff, and one external-protocol case.
+
+Every invocation runs exactly one stage, uses a fresh output/cache directory,
+emits immediately flushed structured events, and records one nonclaiming
+result. Diagnostic outputs are not benchmark evidence. The exact commands,
+progression rule, failure table, and operator-only
+runtime concerns are maintained in the linked isolation runbook. Begin with D0;
+do not prepare another pilot contract until D0-D5 pass in fresh invocations.

@@ -95,11 +95,25 @@ deterministic benchmark family, external protocol, and two-program candidate
 source now exist. The candidate creates device 0 once, runs compensated H2A
 and protected fused H1 against one device-DRAM intermediate, reads only final
 rotor/phase output, and closes once. The first frozen 20-case N300 pilot is
-retained, but every invocation stopped before device execution because the
-launcher omitted the separately required TT-Metal runtime-root variable. The
-failure is classified as `environment`; no retry or replacement occurred.
-H2B requires a newly versioned non-designated contract before any future run
-and cannot reuse historical H1 or H2A status.
+retained and failed at the environment layer because its launcher omitted the
+separately required TT-Metal runtime-root variable. Contract-v1 Session 2
+corrected that environment defect and attempted all 20 frozen cases once,
+without retry or replacement. It then failed at TT-Metal runtime/dispatch
+synchronization; retained logs include unexpected run-mailbox value `0x40`.
+No metrics or numerical output were produced, and no H2B hardware claim exists.
+
+The next step is diagnostic-only lifecycle isolation. It does not create or
+upgrade benchmark evidence. A new, separately versioned non-designated pilot
+contract may be prepared only after the diagnostic full path completes cleanly
+and produces structurally valid numerical output with the pinned source and
+runtime provenance. H2B cannot reuse historical H1 or H2A status.
+
+The development-only
+[D0-D5 runtime-isolation ladder](docs/benchmarks/h2b-runtime-isolation.md)
+separates device lifecycle, DRAM loopback, H2A-only, H1-only, sequential
+device-resident H2A-to-H1, and one-case external-protocol boundaries. It does
+not replace or reinterpret Contract-v1 Session 2 and creates no benchmark or
+claim evidence.
 
 ## Deferred work
 

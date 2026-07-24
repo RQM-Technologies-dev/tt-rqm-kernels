@@ -144,6 +144,26 @@ For detailed evidence, see the [Wormhole qmul report](docs/benchmarks/wormhole-q
 The separate [H2B foundation](docs/benchmarks/hamiltonian-evolution-h2b.md)
 documents the new reference, protocol, and two-program candidate boundary.
 
+### H2B D0-D5 runtime-isolation ladder
+
+H2B now has a separate, diagnostic-only six-stage lifecycle path for isolating
+device open/close, DRAM loopback, compensated H2A, protected H1, sequential
+device-resident H2A-to-H1, and one external-protocol case. D0-D4 emit ordered
+device-lifecycle events; D5 records the external-protocol and independent
+validation boundaries without fabricating internal events. Every invocation
+produces a `tt-rqm-h2b-runtime-isolation-result.v1` result.
+These outputs are not benchmark or claim evidence.
+
+Check whether the TT-Metal roots and diagnostic executable command are
+configured and print the exact next command:
+
+```bash
+python scripts/rqm_tt_quickstart.py --check
+```
+
+The first stage is always D0, with one attempt and zero retries. See the
+[H2B runtime-isolation runbook](docs/benchmarks/h2b-runtime-isolation.md).
+
 ## Current proven result
 
 The repository has three public N300 device-0 benchmark releases. qmul and

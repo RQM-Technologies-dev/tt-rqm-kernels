@@ -56,6 +56,8 @@ def test_source_manifest_and_large_angle_diagnostic_are_hash_bound() -> None:
     diagnostic = json.loads((ROOT / "reports/h2b_large_angle_diagnostic.json").read_text())
     assert diagnostic["diagnosis"]["acceptance_path"] == "B_formally_bounded_operating_domain"
     assert diagnostic["sweep"]["case_count"] == 166
+    markdown = (ROOT / "reports/h2b_large_angle_diagnostic.md").read_text()
+    assert all(line == line.rstrip() for line in markdown.splitlines())
 
 
 def test_source_manifest_rejects_manifest_tampering(tmp_path: Path) -> None:

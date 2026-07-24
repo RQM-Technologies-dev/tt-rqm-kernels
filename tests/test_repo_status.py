@@ -51,6 +51,9 @@ def test_repo_status_json_reports_current_gaps() -> None:
     assert statuses["HamiltonianEvolutionBench H2B"] == (
         "Contract-v1 Session 2 retained; did not pass (runtime)"
     )
+    assert statuses["H2B D0-D5 runtime isolation"] == (
+        "implemented; hardware configuration required"
+    )
     assert statuses["EntanglementDynamicsBench reference foundation"] == "implemented reference"
     assert statuses["EntanglementDynamicsBench hardware"] == "not implemented"
 
@@ -86,6 +89,10 @@ def test_repo_status_text_is_maintainer_scannable() -> None:
     assert (
         "HamiltonianEvolutionBench H2B: Contract-v1 Session 2 retained; "
         "did not pass (runtime)" in completed.stdout
+    )
+    assert (
+        "H2B D0-D5 runtime isolation: implemented; hardware configuration required"
+        in completed.stdout
     )
     assert (
         "One designated N300 device-0 session passed all nine frozen H2A cases" in completed.stdout

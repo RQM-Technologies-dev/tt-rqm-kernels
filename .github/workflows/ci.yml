@@ -38,6 +38,7 @@ jobs:
           scripts/reproduce_wormhole_hamiltonian_lowering.py
           scripts/validate_hamiltonian_lowering_release.py
           scripts/hamiltonian_evolution_external_reference.py
+          scripts/run_h2b_runtime_diagnostic.py
           scripts/validate_hamiltonian_evolution_candidate.py
           scripts/validate_repository_claims.py
           tt_rqm_kernels/entanglement_benchmark.py
@@ -51,6 +52,7 @@ jobs:
           tt_rqm_kernels/hamiltonian_lowering_source_identity.py
           tt_rqm_kernels/hamiltonian_evolution_benchmark.py
           tt_rqm_kernels/hamiltonian_evolution_candidate.py
+          tt_rqm_kernels/hamiltonian_evolution_runtime_isolation.py
           tt_rqm_kernels/repository_claims.py
           tt_rqm_kernels/su2_benchmark.py
           tt_rqm_kernels/su2_candidate_experiment.py
@@ -68,6 +70,8 @@ jobs:
           tests/test_hamiltonian_evolution.py
           tests/test_hamiltonian_evolution_benchmark.py
           tests/test_hamiltonian_evolution_candidate.py
+          tests/test_h2b_runtime_diagnostic.py
+          tests/test_tt_metalium_h2b_runtime_diagnostic_scaffold.py
           tests/test_tt_metalium_h2b_scaffold.py
           tests/test_repository_claims.py
           tests/test_tt_metalium_h2a_scaffold.py
@@ -128,6 +132,9 @@ jobs:
 
       - name: Validate H2B foundation
         run: |
+          python -m pytest \
+            tests/test_h2b_runtime_diagnostic.py \
+            tests/test_tt_metalium_h2b_runtime_diagnostic_scaffold.py
           python scripts/validate_hamiltonian_evolution_candidate.py \
             --command "python scripts/hamiltonian_evolution_external_reference.py"
           python scripts/generate_h2b_large_angle_diagnostic.py --check

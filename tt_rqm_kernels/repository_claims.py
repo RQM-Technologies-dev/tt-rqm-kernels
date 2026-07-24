@@ -151,6 +151,8 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "SU2ComposeBench` is fused-only",
             "| SU2ComposeBench | fused time-ordered SU(2) composition on one Wormhole device | Level 2 | `true` |",
             "| HamiltonianLoweringBench H2A | device-side Hamiltonian coefficient lowering on one Wormhole device | Level 0 | `false` |",
+            "tt-rqm-h2b-runtime-isolation-result.v1",
+            "These outputs are not benchmark or claim evidence",
         ),
         "docs/index.md": ("fused-only v3 campaign established the public Claim Level 2 release",),
         "docs/benchmarks/index.md": (
@@ -171,6 +173,8 @@ def _validate_status_surfaces(documents: dict[str, str]) -> None:
             "program_count=2",
             "host_round_trip_count=0",
             "claim_level=null",
+            "D0-D5 development runtime-isolation ladder",
+            "Diagnostic outputs are not benchmark evidence",
         ),
         "docs/benchmarks/su2-compose-bench.md": (
             "Level 2: stable one-device fused performance",
