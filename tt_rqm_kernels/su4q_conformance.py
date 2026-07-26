@@ -76,6 +76,15 @@ def _require_pin(path: Path, expected: str, label: str) -> None:
         raise ValueError(f"{label} commit mismatch: expected {expected}, got {actual}")
 
 
+def _require_base(path: Path, expected: str, label: str) -> None:
+    actual = git_commit(path)
+    result = subprocess.run(
+        ["git", "-C", str(path), "merge-base", "--is-ancestor", expected, actual]
+    )
+    if result.returncode != 0:
+        raise ValueError(f"{label} is not based on required commit {expected}")
+
+
 def quaternion_to_su2(values: np.ndarray) -> np.ndarray:
     w, x, y, z = np.asarray(values, dtype=np.float64)
     return np.asarray(
@@ -404,11 +413,11 @@ def prepare_session(
     roots = (
         (compiler_root, RQMC_COMMIT, "rqm-compiler"),
         (entanglement_root, RQME_COMMIT, "rqm-entanglement"),
-        (tt_rqm_root, TT_RQM_COMMIT, "tt-rqm-kernels"),
         (tt_metal_root, TT_METAL_COMMIT, "tt-metal"),
     )
     for root, expected, label in roots:
         _require_pin(root.resolve(), expected, label)
+    _require_base(tt_rqm_root.resolve(), TT_RQM_COMMIT, "tt-rqm-kernels")
     output_dir.mkdir(parents=True, exist_ok=False)
     compiler_cases, routing = _compiler_cases()
     cases = compiler_cases + _sentinel_cases()
@@ -482,6 +491,7 @@ def prepare_session(
             "rqm_compiler_commit": RQMC_COMMIT,
             "rqm_entanglement_commit": RQME_COMMIT,
             "tt_rqm_kernels_commit": TT_RQM_COMMIT,
+            "tt_rqm_kernels_source_commit": git_commit(tt_rqm_root.resolve()),
             "tt_metal_commit": TT_METAL_COMMIT,
         },
     }
