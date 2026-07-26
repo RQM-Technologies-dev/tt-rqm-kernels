@@ -1,0 +1,21 @@
+{
+  "schema": "tt-rqm-su4q-conformance-health.v1",
+  "label": "su4q-n300-conformance",
+  "phase": "preflight",
+  "sanitized": true,
+  "capture": "interactive tt-smi -s before device execution",
+  "device_count": 2,
+  "selected_device_id": 0,
+  "selected_device": {
+    "board_type": "n300 L",
+    "dram_status": true,
+    "faults": "0x0"
+  },
+  "unused_device": {
+    "board_type": "n300 R",
+    "dram_status": true,
+    "faults": "0x0"
+  },
+  "network_identifiers_retained": false,
+  "board_identifiers_retained": false
+}
