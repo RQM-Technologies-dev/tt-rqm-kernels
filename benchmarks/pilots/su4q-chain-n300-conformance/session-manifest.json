@@ -1,0 +1,79 @@
+{
+  "schema": "tt-rqm-su4q-chain-conformance-session.v1",
+  "label": "su4q-chain-n300-conformance",
+  "protocol": "tt-rqm-su4q-chain-conformance.v1",
+  "claim": "correctness-only",
+  "performance_eligible": false,
+  "items_per_depth": 128,
+  "execution_order": [1, 8, 32, 128],
+  "dependency_commits": {
+    "rqm-compiler": "38408fac8bec95f5e243727395161360af5223b6",
+    "rqm-entanglement": "b5fa69f6a57eccc0f43765341cf84203c790920a",
+    "tt-rqm-kernels-base": "fffa30784a00656a1a26ee89406633fecc9574ed",
+    "tt-rqm-kernels-parent": "6e75ebbe143fcc779deff718ad436e91d5988d3a",
+    "tt-rqm-kernels-execution-source": "709ce601764f3344201463ac6042229c6fa0ff96",
+    "tt-metal": "9802b80464cfd213b1146189753d8aedf86193fe"
+  },
+  "device": {
+    "id": 0,
+    "architecture": "wormhole_b0",
+    "board_type": "n300 L"
+  },
+  "sessions": [
+    {
+      "depth": 1,
+      "passed": true,
+      "failure_count": 0,
+      "nonfinite_value_count": 0,
+      "max_abs_error": 1.955462722857959e-7,
+      "max_phase_aligned_abs_error": 2.2413163531831973e-7,
+      "max_state_norm_error": 1.8590227646164692e-7,
+      "output_sha256": "4adf100bdee05bac1911de9d47aa51b43e6a86871a1c9563cae373803196030c"
+    },
+    {
+      "depth": 8,
+      "passed": true,
+      "failure_count": 0,
+      "nonfinite_value_count": 0,
+      "max_abs_error": 7.213143653483911e-7,
+      "max_phase_aligned_abs_error": 5.863488154659311e-7,
+      "max_state_norm_error": 8.638757094114879e-7,
+      "output_sha256": "2636626028e5903eb41ef8a629a4f62083e887e4ebfcaa6bf9da4874e9df1ca6"
+    },
+    {
+      "depth": 32,
+      "passed": true,
+      "failure_count": 0,
+      "nonfinite_value_count": 0,
+      "max_abs_error": 2.4827369807800537e-6,
+      "max_phase_aligned_abs_error": 2.390511504972313e-6,
+      "max_state_norm_error": 3.031551712551206e-6,
+      "output_sha256": "b1d59b136ff6f6e7aac1d91de6c7a2e28bd399dfe4a26621718ec57937709c08"
+    },
+    {
+      "depth": 128,
+      "passed": true,
+      "failure_count": 0,
+      "nonfinite_value_count": 0,
+      "max_abs_error": 1.1740932621240319e-5,
+      "max_phase_aligned_abs_error": 8.304053066040745e-6,
+      "max_state_norm_error": 1.0587272758932897e-5,
+      "output_sha256": "4d2fbb8b86e1be30a305909a2cae1e315e6e0c17166649a2419feaa24a95813d"
+    }
+  ],
+  "all_sessions": {
+    "all_cases_represented": true,
+    "provenance_match": true,
+    "transfer_contract_match": true,
+    "device_create_count": 1,
+    "device_close_count": 1,
+    "initial_block_upload_count": 1,
+    "initial_state_upload_count": 1,
+    "intermediate_h2d_count": 0,
+    "intermediate_d2h_count": 0,
+    "final_state_download_count": 1
+  },
+  "routing_and_device_correctness_reported_separately": true,
+  "second_chip_used": false,
+  "published": false
+}

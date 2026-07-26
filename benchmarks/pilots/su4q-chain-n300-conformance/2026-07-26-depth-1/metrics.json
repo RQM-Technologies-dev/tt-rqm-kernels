@@ -1,0 +1,90 @@
+{
+  "block_shape": [
+    1,
+    128,
+    20
+  ],
+  "candidate_metadata": {
+    "automatic_normalization": false,
+    "basis_order": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ],
+    "block_convention_version": "rqm-su4q-v1-exp+iabc-qiskit-Klr:kron(q1=Kl,q0=Kr);circuit-little-endian",
+    "candidate_sha256": "67bd3097b2e20c7c582bc6d0a7eadbdc4e0d9b8337908d742b26737f8006decd",
+    "cartan_convention": "exp[i(aXX+bYY+cZZ)]",
+    "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "depth": 1,
+    "device_arch": "wormhole_b0",
+    "device_close_count": 1,
+    "device_count": 1,
+    "device_create_count": 1,
+    "device_id": 0,
+    "final_state_download_count": 1,
+    "implementation_class": "depth_chained_device_resident_su4q",
+    "initial_block_upload_count": 1,
+    "initial_state_upload_count": 1,
+    "intermediate_d2h_count": 0,
+    "intermediate_h2d_count": 0,
+    "intermediate_storage": "device_dram_ping_pong",
+    "local_factor_order": "SU(2)(q1) tensor SU(2)(q0)",
+    "program_count": 8,
+    "runtime_version": "tt-metal-9802b80464cfd213b1146189753d8aedf86193fe",
+    "source_bundle_sha256": "9b83b0a6e58629c2e59442124600aeccc4775012d88457be93c9c8a3670e2623",
+    "source_commit": "709ce601764f3344201463ac6042229c6fa0ff96",
+    "source_tree_clean": true,
+    "stage_core_counts": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stage_order": [
+      "right_q0",
+      "right_q1",
+      "cartan_xx",
+      "cartan_yy",
+      "cartan_zz",
+      "left_q0",
+      "left_q1",
+      "global_phase"
+    ],
+    "tt_metal_commit": "9802b80464cfd213b1146189753d8aedf86193fe",
+    "tt_rqm_base_commit": "fffa30784a00656a1a26ee89406633fecc9574ed"
+  },
+  "claim_level": null,
+  "depth": 1,
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "experiment": "su4q-chain-n300-conformance",
+  "items": 128,
+  "output_shape": [
+    128,
+    8
+  ],
+  "performance_eligible": false,
+  "protocol": "tt-rqm-su4q-chain-conformance.v1",
+  "schema": "tt-rqm-su4q-chain-conformance-metrics.v1",
+  "stable_benchmark": false,
+  "stage": "conformance",
+  "state_shape": [
+    128,
+    8
+  ],
+  "timings_s": {
+    "buffer_allocation": 0.000176498,
+    "candidate_process": 12.166186184,
+    "d2h": 0.000480985,
+    "device_close": 0.114987111,
+    "device_create": 6.738541902,
+    "device_execute_diagnostic_only": 5.303500814,
+    "h2d": 0.005790635,
+    "program_build": 0.002439633
+  }
+}
