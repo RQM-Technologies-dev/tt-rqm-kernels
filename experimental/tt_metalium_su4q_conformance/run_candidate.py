@@ -10,17 +10,17 @@ from pathlib import Path
 import subprocess
 import sys
 
-from tt_rqm_kernels.su4q_conformance import (
-    PROTOCOL,
-    TT_METAL_COMMIT,
-    TT_RQM_COMMIT,
-    sha256_file,
-)
-
 PACKAGE = Path(__file__).resolve().parent
 REPO = PACKAGE.parents[1]
 DEFAULT_BINARY = PACKAGE / "build" / "tt_rqm_metalium_su4q_conformance"
 SOURCE_SUFFIXES = {".cpp", ".h", ".py", ".txt"}
+PROTOCOL = "tt-rqm-su4q-conformance.v1"
+TT_RQM_COMMIT = "fffa30784a00656a1a26ee89406633fecc9574ed"
+TT_METAL_COMMIT = "9802b80464cfd213b1146189753d8aedf86193fe"
+
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def source_bundle_sha256() -> str:
