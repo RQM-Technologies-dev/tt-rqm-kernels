@@ -31,9 +31,15 @@ void kernel_main() {
                 reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_write_ptr(state_cb + lane));
             for (uint32_t element = 0; element < tile_elements; ++element) target[element] = 0;
         }
-        cb_reserve_back(14, 64);
-        volatile tt_l1_ptr uint32_t* scratch =
-            reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_write_ptr(14));
+        cb_reserve_back(14, 32);
+        const uint32_t scratch_first_addr = get_write_ptr(14);
+        volatile tt_l1_ptr uint32_t* scratch_first =
+            reinterpret_cast<volatile tt_l1_ptr uint32_t*>(scratch_first_addr);
+        cb_push_back(14, 32);
+        cb_reserve_back(14, 32);
+        const uint32_t scratch_second_addr = get_write_ptr(14);
+        volatile tt_l1_ptr uint32_t* scratch_second =
+            reinterpret_cast<volatile tt_l1_ptr uint32_t*>(scratch_second_addr);
         for (uint32_t element = 0; element < tile_elements; ++element) {
             const uint32_t flat_output = work_tile * tile_elements + element;
             if (flat_output >= total_amplitudes) break;
@@ -49,12 +55,18 @@ void kernel_main() {
                 const uint32_t page = flat / tile_elements;
                 for (uint32_t component = 0; component < 2; ++component) {
                     const uint32_t lane = 2 * amplitude + component;
+                    const uint32_t scratch_index =
+                        8 * (lane * tile_elements + element);
+                    const uint32_t scratch_addr =
+                        scratch_index < 32 * tile_elements
+                            ? scratch_first_addr + scratch_index * sizeof(uint32_t)
+                            : scratch_second_addr +
+                                  (scratch_index - 32 * tile_elements) * sizeof(uint32_t);
                     noc_async_read(
                         state.get_noc_addr(
                             component * state_component_tiles + page,
                             (page_offset & ~7U) * sizeof(uint32_t)),
-                        get_write_ptr(14) +
-                            (lane * tile_elements + element) * 8 * sizeof(uint32_t),
+                        scratch_addr,
                         8 * sizeof(uint32_t));
                 }
             }
@@ -73,8 +85,11 @@ void kernel_main() {
                 const uint32_t selected =
                     base | ((amplitude & 1U) << q0) | (((amplitude >> 1) & 1U) << q1);
                 const uint32_t flat = batch * amplitudes_per_state + selected;
-                target[element] =
-                    scratch[8 * (lane * tile_elements + element) + (flat % tile_elements & 7U)];
+                const uint32_t scratch_index =
+                    8 * (lane * tile_elements + element) + (flat % tile_elements & 7U);
+                target[element] = scratch_index < 32 * tile_elements
+                                      ? scratch_first[scratch_index]
+                                      : scratch_second[scratch_index - 32 * tile_elements];
             }
         }
         cb_push_back(14, 64);
