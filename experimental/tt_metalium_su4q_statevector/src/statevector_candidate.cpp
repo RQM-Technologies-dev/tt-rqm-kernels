@@ -232,7 +232,9 @@ int main() {
         auto device = distributed::MeshDevice::create_unit_mesh(0);
         const double create_s = elapsed(create_start);
         auto& queue = device->mesh_command_queue();
-        distributed::DeviceLocalBufferConfig local{.page_size = kTileBytes, .buffer_type = BufferType::DRAM};
+        distributed::DeviceLocalBufferConfig local{};
+        local.page_size = kTileBytes;
+        local.buffer_type = BufferType::DRAM;
         auto blocks = distributed::MeshBuffer::create(
             distributed::ReplicatedBufferConfig{.size = packed_blocks.size() * 4}, local, device.get());
         auto state_a = distributed::MeshBuffer::create(
