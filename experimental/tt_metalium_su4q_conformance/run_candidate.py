@@ -15,6 +15,7 @@ REPO = PACKAGE.parents[1]
 DEFAULT_BINARY = PACKAGE / "build" / "tt_rqm_metalium_su4q_conformance"
 SOURCE_SUFFIXES = {".cpp", ".h", ".py", ".txt"}
 PROTOCOL = "tt-rqm-su4q-conformance.v1"
+CHAIN_PROTOCOL = "tt-rqm-su4q-chain-conformance.v1"
 TT_RQM_COMMIT = "fffa30784a00656a1a26ee89406633fecc9574ed"
 TT_METAL_COMMIT = "9802b80464cfd213b1146189753d8aedf86193fe"
 
@@ -52,7 +53,7 @@ def _git(path: Path, *args: str) -> str:
 
 def _validate_manifest(path: Path, work_dir: Path) -> dict[str, object]:
     payload = json.loads(path.read_text())
-    if payload.get("schema") != PROTOCOL:
+    if payload.get("schema") not in {PROTOCOL, CHAIN_PROTOCOL}:
         raise ValueError("unsupported SU4Q protocol")
     if payload.get("stage") != "conformance" or payload.get("dtype") != "float32":
         raise ValueError("SU4Q candidate supports FP32 conformance only")

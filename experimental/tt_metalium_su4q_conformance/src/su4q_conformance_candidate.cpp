@@ -46,6 +46,8 @@ namespace {
 
 constexpr std::string_view kProtocol = "tt-rqm-su4q-conformance.v1";
 constexpr std::string_view kMetrics = "tt-rqm-su4q-conformance-metrics.v1";
+constexpr std::string_view kChainProtocol = "tt-rqm-su4q-chain-conformance.v1";
+constexpr std::string_view kChainMetrics = "tt-rqm-su4q-chain-conformance-metrics.v1";
 constexpr std::string_view kConvention =
     "rqm-su4q-v1-exp+iabc-qiskit-Klr:kron(q1=Kl,q0=Kr);circuit-little-endian";
 constexpr uint32_t kTileElements = 32 * 32;
@@ -137,6 +139,25 @@ std::vector<uint32_t> aos_to_planar(
     return planar;
 }
 
+std::vector<uint32_t> depth_aos_to_planar(
+    const std::vector<uint32_t>& aos,
+    uint32_t depth,
+    uint32_t items,
+    uint32_t lanes,
+    uint32_t component_tiles) {
+    const uint32_t padded = component_tiles * kTileElements;
+    std::vector<uint32_t> planar(static_cast<size_t>(depth) * lanes * padded, 0);
+    for (uint32_t layer = 0; layer < depth; ++layer) {
+        for (uint32_t item = 0; item < items; ++item) {
+            for (uint32_t lane = 0; lane < lanes; ++lane) {
+                planar[(static_cast<size_t>(layer) * lanes + lane) * padded + item] =
+                    aos[(static_cast<size_t>(layer) * items + item) * lanes + lane];
+            }
+        }
+    }
+    return planar;
+}
+
 std::vector<uint32_t> planar_to_aos(
     const std::vector<uint32_t>& planar,
     uint32_t items,
@@ -205,7 +226,8 @@ Stage build_stage(
     uint32_t component_tiles,
     StageKind kind,
     uint32_t block_lane_start,
-    uint32_t selector) {
+    uint32_t selector,
+    uint32_t block_base_page = 0) {
     const uint32_t parameter_lanes = kind == StageKind::Local ? 4 : 1;
     Program program = CreateProgram();
     const CoreCoord grid = device->compute_with_storage_grid_size();
@@ -258,6 +280,7 @@ Stage build_stage(
                 component_tiles,
                 block_lane_start,
                 parameter_lanes,
+                block_base_page,
             });
         SetRuntimeArgs(program, compute, item.core, {item.tiles, selector});
         SetRuntimeArgs(
@@ -283,8 +306,11 @@ int main() {
         const std::filesystem::path work_dir(env_required("TT_RQM_SU4Q_DIR"));
         const std::filesystem::path manifest_path(env_required("TT_RQM_SU4Q_MANIFEST"));
         const json manifest = json::parse(read_text(manifest_path));
-        if (manifest.value("schema", "") != kProtocol ||
-            manifest.value("experiment", "") != "su4q-n300-conformance" ||
+        const std::string protocol = manifest.value("schema", "");
+        const bool chain = protocol == kChainProtocol;
+        if ((!chain && protocol != kProtocol) ||
+            manifest.value("experiment", "") !=
+                (chain ? "su4q-chain-n300-conformance" : "su4q-n300-conformance") ||
             manifest.value("stage", "") != "conformance" ||
             manifest.value("dtype", "") != "float32" ||
             manifest.value("performance_eligible", true) ||
@@ -292,12 +318,19 @@ int main() {
             throw std::runtime_error("unsupported SU4Q conformance manifest");
         }
         const uint32_t items = manifest.at("items").get<uint32_t>();
-        if (items != 128 && items != 4096) {
+        const uint32_t depth = chain ? manifest.at("depth").get<uint32_t>() : 1;
+        if ((chain && items != 128) || (!chain && items != 128 && items != 4096)) {
             throw std::runtime_error("SU4Q items must be 128 or 4096");
+        }
+        if (chain && depth != 1 && depth != 8 && depth != 32 && depth != 128) {
+            throw std::runtime_error("SU4Q chain depth must be 1, 8, 32, or 128");
         }
         const auto block_shape = manifest.at("block_shape").get<std::vector<uint32_t>>();
         const auto state_shape = manifest.at("state_shape").get<std::vector<uint32_t>>();
-        if (block_shape != std::vector<uint32_t>{items, kBlockLanes} ||
+        const std::vector<uint32_t> expected_block_shape =
+            chain ? std::vector<uint32_t>{depth, items, kBlockLanes}
+                  : std::vector<uint32_t>{items, kBlockLanes};
+        if (block_shape != expected_block_shape ||
             state_shape != std::vector<uint32_t>{items, kStateLanes}) {
             throw std::runtime_error("invalid SU4Q input shapes");
         }
@@ -305,16 +338,16 @@ int main() {
         const auto& outputs = manifest.at("outputs");
         const auto blocks_aos = read_words(
             work_dir / inputs.at("blocks").at("file").get<std::string>(),
-            static_cast<size_t>(items) * kBlockLanes);
+            static_cast<size_t>(depth) * items * kBlockLanes);
         const auto states_aos = read_words(
             work_dir / inputs.at("states").at("file").get<std::string>(),
             static_cast<size_t>(items) * kStateLanes);
         const uint32_t component_tiles = (items + kTileElements - 1) / kTileElements;
-        const auto packed_blocks =
-            aos_to_planar(blocks_aos, items, kBlockLanes, component_tiles);
+        const auto packed_blocks = depth_aos_to_planar(
+            blocks_aos, depth, items, kBlockLanes, component_tiles);
         const auto packed_states =
             aos_to_planar(states_aos, items, kStateLanes, component_tiles);
-        const uint32_t block_bytes = kBlockLanes * component_tiles * kTileBytes;
+        const uint32_t block_bytes = depth * kBlockLanes * component_tiles * kTileBytes;
         const uint32_t state_bytes = kStateLanes * component_tiles * kTileBytes;
 
         const auto process_start = Clock::now();
@@ -336,22 +369,25 @@ int main() {
 
         const auto build_start = Clock::now();
         std::vector<Stage> stages;
-        stages.push_back(build_stage(
-            device, blocks, state_a, state_b, component_tiles, StageKind::Local, 11, 0));
-        stages.push_back(build_stage(
-            device, blocks, state_b, state_a, component_tiles, StageKind::Local, 15, 1));
-        stages.push_back(build_stage(
-            device, blocks, state_a, state_b, component_tiles, StageKind::Cartan, 8, 0));
-        stages.push_back(build_stage(
-            device, blocks, state_b, state_a, component_tiles, StageKind::Cartan, 9, 1));
-        stages.push_back(build_stage(
-            device, blocks, state_a, state_b, component_tiles, StageKind::Cartan, 10, 2));
-        stages.push_back(build_stage(
-            device, blocks, state_b, state_a, component_tiles, StageKind::Local, 0, 0));
-        stages.push_back(build_stage(
-            device, blocks, state_a, state_b, component_tiles, StageKind::Local, 4, 1));
-        stages.push_back(build_stage(
-            device, blocks, state_b, state_a, component_tiles, StageKind::Phase, 19, 0));
+        for (uint32_t layer = 0; layer < depth; ++layer) {
+            const uint32_t base = layer * kBlockLanes * component_tiles;
+            stages.push_back(build_stage(
+                device, blocks, state_a, state_b, component_tiles, StageKind::Local, 11, 0, base));
+            stages.push_back(build_stage(
+                device, blocks, state_b, state_a, component_tiles, StageKind::Local, 15, 1, base));
+            stages.push_back(build_stage(
+                device, blocks, state_a, state_b, component_tiles, StageKind::Cartan, 8, 0, base));
+            stages.push_back(build_stage(
+                device, blocks, state_b, state_a, component_tiles, StageKind::Cartan, 9, 1, base));
+            stages.push_back(build_stage(
+                device, blocks, state_a, state_b, component_tiles, StageKind::Cartan, 10, 2, base));
+            stages.push_back(build_stage(
+                device, blocks, state_b, state_a, component_tiles, StageKind::Local, 0, 0, base));
+            stages.push_back(build_stage(
+                device, blocks, state_a, state_b, component_tiles, StageKind::Local, 4, 1, base));
+            stages.push_back(build_stage(
+                device, blocks, state_b, state_a, component_tiles, StageKind::Phase, 19, 0, base));
+        }
         const double build_s = elapsed(build_start);
 
         const auto h2d_start = Clock::now();
@@ -382,7 +418,9 @@ int main() {
         std::vector<uint32_t> core_counts;
         for (const auto& stage : stages) core_counts.push_back(stage.core_count);
         const json metadata = {
-            {"implementation_class", "eight_program_device_resident_su4q"},
+            {"implementation_class", chain
+                ? "depth_chained_device_resident_su4q"
+                : "eight_program_device_resident_su4q"},
             {"candidate_sha256", env_required("TT_RQM_SU4Q_CANDIDATE_SHA256")},
             {"source_commit", env_required("TT_RQM_SU4Q_SOURCE_COMMIT")},
             {"source_tree_clean", env_bool("TT_RQM_SU4Q_SOURCE_TREE_CLEAN")},
@@ -397,7 +435,8 @@ int main() {
             {"device_id", 0},
             {"device_create_count", 1},
             {"device_close_count", 1},
-            {"program_count", 8},
+            {"program_count", 8 * depth},
+            {"depth", depth},
             {"stage_core_counts", core_counts},
             {"stage_order", {
                 "right_q0", "right_q1", "cartan_xx", "cartan_yy",
@@ -408,16 +447,20 @@ int main() {
             {"intermediate_storage", "device_dram_ping_pong"},
             {"intermediate_d2h_count", 0},
             {"intermediate_h2d_count", 0},
+            {"initial_block_upload_count", 1},
+            {"initial_state_upload_count", 1},
+            {"final_state_download_count", 1},
             {"automatic_normalization", false},
         };
         const json metrics = {
-            {"schema", kMetrics},
-            {"protocol", kProtocol},
-            {"experiment", "su4q-n300-conformance"},
+            {"schema", chain ? kChainMetrics : kMetrics},
+            {"protocol", protocol},
+            {"experiment", chain ? "su4q-chain-n300-conformance" : "su4q-n300-conformance"},
             {"stage", "conformance"},
             {"dtype", "float32"},
             {"execution_label", "hardware"},
             {"items", items},
+            {"depth", depth},
             {"block_shape", block_shape},
             {"state_shape", state_shape},
             {"output_shape", std::vector<uint32_t>{items, kStateLanes}},

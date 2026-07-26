@@ -14,7 +14,7 @@ def test_candidate_is_one_device_eight_program_device_resident_pipeline() -> Non
     assert text.count("stages.push_back") == 8
     assert text.count("EnqueueWriteMeshBuffer") == 2
     assert text.count("EnqueueReadMeshBuffer") == 1
-    assert '"program_count", 8' in text
+    assert '"program_count", 8 * depth' in text
     assert '"intermediate_d2h_count", 0' in text
     assert '"intermediate_h2d_count", 0' in text
     assert '"performance_eligible", false' in text
