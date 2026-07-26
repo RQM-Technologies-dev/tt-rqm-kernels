@@ -77,7 +77,10 @@ def test_fused_source_contract() -> None:
     assert "apply_local(bank_a, bank_b, 0)" in compute
     assert "apply_cartan(bank_a, bank_b, 0)" in compute
     assert "apply_phase(bank_b)" in compute
-    assert "expand_quartet" in reader and "expand_quartet" in writer
+    assert "amplitude_out & ~(1U << q0) & ~(1U << q1)" in reader
+    assert "((amplitude >> q0) & 1U)" in writer
+    assert "4 * sizeof(uint32_t)" in reader
+    assert "noc_async_write_page" in writer
     assert "block_to_unitary" not in source
 
 

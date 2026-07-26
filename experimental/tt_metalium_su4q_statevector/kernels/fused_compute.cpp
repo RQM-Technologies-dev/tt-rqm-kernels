@@ -110,6 +110,8 @@ void kernel_main() {
     constexpr uint32_t bank_b = 16;
     init_sfpu(0, bank_b);
     for (uint32_t tile = 0; tile < tile_count; ++tile) {
+        cb_wait_front(14, 32);
+        cb_pop_front(14, 32);
         apply_local(bank_a, bank_b, 0);
         apply_local(bank_b, bank_a, 1);
         apply_cartan(bank_a, bank_b, 0);

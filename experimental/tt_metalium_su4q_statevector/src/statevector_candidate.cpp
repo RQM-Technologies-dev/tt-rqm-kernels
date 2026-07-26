@@ -84,11 +84,13 @@ void write_words(const std::filesystem::path& path, const std::vector<uint32_t>&
     output.write(reinterpret_cast<const char*>(words.data()), static_cast<std::streamsize>(words.size() * 4));
     if (!output) throw std::runtime_error("failed output write");
 }
-void create_cb(Program& program, const CoreRangeSet& cores, uint32_t index) {
+void create_cb(
+    Program& program, const CoreRangeSet& cores, uint32_t index, uint32_t pages = 1) {
     const auto cb = static_cast<tt::CBIndex>(index);
     CreateCircularBuffer(
         program, cores,
-        CircularBufferConfig(kTileBytes, {{cb, DataFormat::Float32}}).set_page_size(cb, kTileBytes));
+        CircularBufferConfig(pages * kTileBytes, {{cb, DataFormat::Float32}})
+            .set_page_size(cb, kTileBytes));
 }
 std::vector<uint32_t> pack_states(
     const std::vector<uint32_t>& aos, uint32_t total_amplitudes, uint32_t component_tiles) {
@@ -109,15 +111,15 @@ std::vector<uint32_t> unpack_states(
     return aos;
 }
 std::vector<uint32_t> broadcast_blocks(
-    const std::vector<uint32_t>& blocks, uint32_t depth, uint32_t quartet_tiles) {
+    const std::vector<uint32_t>& blocks, uint32_t depth, uint32_t work_tiles) {
     std::vector<uint32_t> packed(
-        static_cast<size_t>(depth) * 20 * quartet_tiles * kTileElements);
+        static_cast<size_t>(depth) * 20 * work_tiles * kTileElements);
     for (uint32_t layer = 0; layer < depth; ++layer) {
         for (uint32_t lane = 0; lane < 20; ++lane) {
             const uint32_t value = blocks[layer * 20 + lane];
             const size_t start =
-                (static_cast<size_t>(layer) * 20 + lane) * quartet_tiles * kTileElements;
-            std::fill_n(packed.begin() + start, quartet_tiles * kTileElements, value);
+                (static_cast<size_t>(layer) * 20 + lane) * work_tiles * kTileElements;
+            std::fill_n(packed.begin() + start, work_tiles * kTileElements, value);
         }
     }
     return packed;
@@ -145,13 +147,14 @@ Stage build_stage(
     const std::shared_ptr<distributed::MeshBuffer>& blocks,
     const std::shared_ptr<distributed::MeshBuffer>& source,
     const std::shared_ptr<distributed::MeshBuffer>& destination,
-    uint32_t quartet_tiles, uint32_t total_quartets, uint32_t quartets_per_state,
-    uint32_t amplitudes_per_state, uint32_t state_tiles, uint32_t layer,
-    uint32_t q0, uint32_t q1, uint32_t qubits) {
+    uint32_t work_tiles, uint32_t total_amplitudes, uint32_t amplitudes_per_state,
+    uint32_t state_tiles, uint32_t layer, uint32_t q0, uint32_t q1) {
     Program program = CreateProgram();
     const auto [core_count, all, g1, g2, t1, t2] =
-        split_work_to_cores(device->compute_with_storage_grid_size(), quartet_tiles, true);
+        split_work_to_cores(device->compute_with_storage_grid_size(), work_tiles, true);
     for (uint32_t cb = 0; cb <= 13; ++cb) create_cb(program, all, cb);
+    create_cb(program, all, 14, 32);
+    create_cb(program, all, 15, 2);
     for (uint32_t cb = 16; cb <= 31; ++cb) create_cb(program, all, cb);
     std::vector<uint32_t> reader_compile;
     TensorAccessorArgs(*source).append_to(reader_compile);
@@ -168,16 +171,15 @@ Stage build_stage(
     config.unpack_to_dest_mode = std::move(modes);
     config.math_approx_mode = false;
     const auto compute = CreateKernel(program, TT_RQM_SV_COMPUTE_PATH, all, config);
-    for (const auto& item : assignments_for(g1, g2, t1, t2, quartet_tiles)) {
+    for (const auto& item : assignments_for(g1, g2, t1, t2, work_tiles)) {
         SetRuntimeArgs(program, reader, item.core, {
             static_cast<uint32_t>(source->address()), static_cast<uint32_t>(blocks->address()),
-            item.tiles, item.start, total_quartets, quartets_per_state,
-            amplitudes_per_state, state_tiles, quartet_tiles, layer, q0, q1, qubits});
+            item.tiles, item.start, total_amplitudes, amplitudes_per_state,
+            state_tiles, work_tiles, layer, q0, q1});
         SetRuntimeArgs(program, compute, item.core, {item.tiles});
         SetRuntimeArgs(program, writer, item.core, {
             static_cast<uint32_t>(destination->address()), item.tiles, item.start,
-            total_quartets, quartets_per_state, amplitudes_per_state, state_tiles,
-            q0, q1, qubits});
+            total_amplitudes, amplitudes_per_state, state_tiles, q0, q1});
     }
     distributed::MeshWorkload workload;
     workload.add_program(distributed::MeshCoordinateRange(device->shape()), std::move(program));
@@ -203,10 +205,7 @@ int main() {
             throw std::runtime_error("unsupported depth");
         const uint32_t amplitudes = 1U << qubits;
         const uint32_t total_amplitudes = kBatch * amplitudes;
-        const uint32_t quartets_per_state = amplitudes / 4;
-        const uint32_t total_quartets = kBatch * quartets_per_state;
         const uint32_t state_tiles = (total_amplitudes + kTileElements - 1) / kTileElements;
-        const uint32_t quartet_tiles = (total_quartets + kTileElements - 1) / kTileElements;
         if (manifest.at("block_shape") != json::array({depth, 20}) ||
             manifest.at("pair_shape") != json::array({depth, 2}) ||
             manifest.at("state_shape") != json::array({kBatch, amplitudes, 2})) {
@@ -225,7 +224,7 @@ int main() {
             const uint32_t q0 = pair_words[2 * layer], q1 = pair_words[2 * layer + 1];
             if (q0 >= qubits || q1 >= qubits || q0 == q1) throw std::runtime_error("invalid target pair");
         }
-        const auto packed_blocks = broadcast_blocks(block_words, depth, quartet_tiles);
+        const auto packed_blocks = broadcast_blocks(block_words, depth, state_tiles);
         const auto packed_states = pack_states(state_words, total_amplitudes, state_tiles);
         const auto process_start = Clock::now();
         const auto create_start = Clock::now();
@@ -247,9 +246,9 @@ int main() {
             auto source = layer % 2 == 0 ? state_a : state_b;
             auto destination = layer % 2 == 0 ? state_b : state_a;
             stages.push_back(build_stage(
-                device, blocks, source, destination, quartet_tiles, total_quartets,
-                quartets_per_state, amplitudes, state_tiles, layer,
-                pair_words[2 * layer], pair_words[2 * layer + 1], qubits));
+                device, blocks, source, destination, state_tiles, total_amplitudes,
+                amplitudes, state_tiles, layer,
+                pair_words[2 * layer], pair_words[2 * layer + 1]));
         }
         const double build_s = elapsed(build_start);
         const auto h2d_start = Clock::now();
