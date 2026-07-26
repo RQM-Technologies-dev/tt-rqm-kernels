@@ -31,13 +31,10 @@ void kernel_main() {
                 reinterpret_cast<volatile tt_l1_ptr uint32_t*>(get_write_ptr(state_cb + lane));
             for (uint32_t element = 0; element < tile_elements; ++element) target[element] = 0;
         }
-        cb_reserve_back(14, 32);
         const uint32_t scratch_first_addr = get_write_ptr(14);
         volatile tt_l1_ptr uint32_t* scratch_first =
             reinterpret_cast<volatile tt_l1_ptr uint32_t*>(scratch_first_addr);
-        cb_push_back(14, 32);
-        cb_reserve_back(14, 32);
-        const uint32_t scratch_second_addr = get_write_ptr(14);
+        const uint32_t scratch_second_addr = scratch_first_addr + 32 * tile_elements * sizeof(uint32_t);
         volatile tt_l1_ptr uint32_t* scratch_second =
             reinterpret_cast<volatile tt_l1_ptr uint32_t*>(scratch_second_addr);
         for (uint32_t element = 0; element < tile_elements; ++element) {
@@ -92,7 +89,6 @@ void kernel_main() {
                                       : scratch_second[scratch_index - 32 * tile_elements];
             }
         }
-        cb_push_back(14, 64);
         for (uint32_t lane = 0; lane < 8; ++lane) cb_push_back(state_cb + lane, 1);
         for (uint32_t stage = 0; stage < 8; ++stage) {
             for (uint32_t lane = 0; lane < stage_counts[stage]; ++lane) {
