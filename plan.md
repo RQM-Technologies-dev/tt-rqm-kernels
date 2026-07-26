@@ -108,18 +108,22 @@ contract may be prepared only after the diagnostic full path completes cleanly
 and produces structurally valid numerical output with the pinned source and
 runtime provenance. H2B cannot reuse historical H1 or H2A status.
 
-The development-only
-[D0-D5 runtime-isolation ladder](docs/benchmarks/h2b-runtime-isolation.md)
-separates device lifecycle, DRAM loopback, H2A-only, H1-only, sequential
+The development-only [D0-D5 runtime-isolation ladder](docs/benchmarks/h2b-runtime-isolation.md)
+now separates device lifecycle, DRAM loopback, H2A-only, H1-only, sequential
 device-resident H2A-to-H1, and one-case external-protocol boundaries. It does
 not replace or reinterpret Contract-v1 Session 2 and creates no benchmark or
 claim evidence.
 
 ## Deferred work
 
+- A self-contained current-main qmul programming-example port now exists
+  locally on `codex/qmul-current-main-example`. It is an upstream-shaped
+  placement candidate only. Single N300 correctness runs at `N=128` and
+  `N=4096` passed whole-output validation and clean device closure, but the port
+  does not inherit the protected Claim Level 2 status.
 - qmul upstream placement remains pending maintainer guidance in
   [tenstorrent/tt-metal#49887](https://github.com/tenstorrent/tt-metal/issues/49887).
-  No upstream port begins while it is unanswered.
+  The local port is not an acceptance decision and has not been posted.
 - TT-NN and TT-MLIR integration remain deferred; no fake bindings or native
   quaternion datatype are planned.
 - CPU matched-scope timing, energy measurement, dual-device scaling, and
