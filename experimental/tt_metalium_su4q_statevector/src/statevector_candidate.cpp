@@ -153,7 +153,7 @@ Stage build_stage(
     const auto [core_count, all, g1, g2, t1, t2] =
         split_work_to_cores(device->compute_with_storage_grid_size(), work_tiles, true);
     for (uint32_t cb = 0; cb <= 13; ++cb) create_cb(program, all, cb);
-    create_cb(program, all, 14, 32);
+    create_cb(program, all, 14, 64);
     create_cb(program, all, 15, 2);
     for (uint32_t cb = 16; cb <= 31; ++cb) create_cb(program, all, cb);
     std::vector<uint32_t> reader_compile;
