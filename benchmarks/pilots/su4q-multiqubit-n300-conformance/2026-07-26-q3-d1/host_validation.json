@@ -1,0 +1,28 @@
+{
+  "all_cases_represented": true,
+  "all_pair_classes_represented": true,
+  "batch": 4,
+  "case_coverage": [
+    5
+  ],
+  "depth": 1,
+  "experiment": "su4q-multiqubit-n300-conformance",
+  "failure_count": 0,
+  "host_only": true,
+  "max_abs_error": 8.87989457520888e-08,
+  "max_phase_aligned_abs_error": 1.82916682813419e-08,
+  "max_state_norm_error": 8.29052293482846e-09,
+  "nonfinite_value_count": 0,
+  "output_sha256": "979be15a124bd35df9de47b15ef8e358d74a1e7b7c656ef912a708301454eb08",
+  "pair_class_coverage": [
+    "non_adjacent"
+  ],
+  "passed": true,
+  "performance_eligible": false,
+  "protocol": "tt-rqm-su4q-statevector-conformance.v1",
+  "provenance_match": true,
+  "qubits": 3,
+  "schema": "tt-rqm-su4q-statevector-conformance-validation.v1",
+  "transfer_contract_match": true,
+  "values": 64
+}

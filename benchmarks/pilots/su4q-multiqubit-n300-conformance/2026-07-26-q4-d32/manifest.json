@@ -1,0 +1,801 @@
+{
+  "atol": 0.0001,
+  "basis_order": "little_endian",
+  "batch": 4,
+  "block_convention_version": "rqm-su4q-v1-exp+iabc-qiskit-Klr:kron(q1=Kl,q0=Kr);circuit-little-endian",
+  "block_lanes": [
+    "left_q0_w",
+    "left_q0_x",
+    "left_q0_y",
+    "left_q0_z",
+    "left_q1_w",
+    "left_q1_x",
+    "left_q1_y",
+    "left_q1_z",
+    "cartan_a",
+    "cartan_b",
+    "cartan_c",
+    "right_q0_w",
+    "right_q0_x",
+    "right_q0_y",
+    "right_q0_z",
+    "right_q1_w",
+    "right_q1_x",
+    "right_q1_y",
+    "right_q1_z",
+    "global_phase"
+  ],
+  "block_shape": [
+    32,
+    20
+  ],
+  "cases": [
+    {
+      "id": "compiler_rzz_heavy",
+      "index": 0,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    },
+    {
+      "id": "compiler_xyz_mixed",
+      "index": 1,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    },
+    {
+      "id": "compiler_cnot_class",
+      "index": 2,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    },
+    {
+      "id": "compiler_mixed_hamiltonian",
+      "index": 3,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    },
+    {
+      "id": "compiler_asymmetric_shells",
+      "index": 4,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    },
+    {
+      "id": "compiler_generic_interior",
+      "index": 5,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    },
+    {
+      "id": "sentinel_q1_tensor_q0_order",
+      "index": 7,
+      "kind": "convention_sentinel",
+      "oracle_source": "explicit_convention_matrix"
+    },
+    {
+      "id": "sentinel_global_phase",
+      "index": 10,
+      "kind": "convention_sentinel",
+      "oracle_source": "explicit_convention_matrix"
+    }
+  ],
+  "compiler_placement_evidence": [
+    {
+      "case_id": "compiler_rzz_heavy",
+      "placed_pair": [
+        0,
+        1
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 4,
+          "range": [
+            0,
+            10
+          ],
+          "reconstruction_error": 5.551115123125783e-16,
+          "source_hash": "43d715c9299e93844e956b1408fc068fa5a2cf6c96d9b891f5acaf396c4c5525",
+          "source_two_qubit_cost": 10,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-10"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_rzz_heavy",
+      "placed_pair": [
+        1,
+        2
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 4,
+          "range": [
+            0,
+            10
+          ],
+          "reconstruction_error": 5.551115123125783e-16,
+          "source_hash": "43d715c9299e93844e956b1408fc068fa5a2cf6c96d9b891f5acaf396c4c5525",
+          "source_two_qubit_cost": 10,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-10"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_rzz_heavy",
+      "placed_pair": [
+        2,
+        3
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 4,
+          "range": [
+            0,
+            10
+          ],
+          "reconstruction_error": 5.551115123125783e-16,
+          "source_hash": "43d715c9299e93844e956b1408fc068fa5a2cf6c96d9b891f5acaf396c4c5525",
+          "source_two_qubit_cost": 10,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-10"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_xyz_mixed",
+      "placed_pair": [
+        0,
+        1
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 6,
+          "range": [
+            0,
+            12
+          ],
+          "reconstruction_error": 1.3946208482945009e-15,
+          "source_hash": "53f49b2af179f1bba325a966b6806e1e9abe7e080b4ca07209767fcca72ee29c",
+          "source_two_qubit_cost": 12,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-12"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_xyz_mixed",
+      "placed_pair": [
+        1,
+        2
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 6,
+          "range": [
+            0,
+            12
+          ],
+          "reconstruction_error": 1.3946208482945009e-15,
+          "source_hash": "53f49b2af179f1bba325a966b6806e1e9abe7e080b4ca07209767fcca72ee29c",
+          "source_two_qubit_cost": 12,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-12"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_xyz_mixed",
+      "placed_pair": [
+        2,
+        3
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 6,
+          "range": [
+            0,
+            12
+          ],
+          "reconstruction_error": 1.3946208482945009e-15,
+          "source_hash": "53f49b2af179f1bba325a966b6806e1e9abe7e080b4ca07209767fcca72ee29c",
+          "source_two_qubit_cost": 12,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-12"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_cnot_class",
+      "placed_pair": [
+        0,
+        3
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 3,
+          "range": [
+            0,
+            18
+          ],
+          "reconstruction_error": 2.6558837364083264e-16,
+          "source_hash": "d52cd6ba0bbd219776073132d29c9ed5949a6abfb4f0a79a4574b46a5e0eea24",
+          "source_two_qubit_cost": 9,
+          "weyl_class": "cnot_cz_class",
+          "window_id": "0-1:0-18"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_mixed_hamiltonian",
+      "placed_pair": [
+        0,
+        1
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 30,
+          "range": [
+            0,
+            18
+          ],
+          "reconstruction_error": 3.043636481661797e-16,
+          "source_hash": "25db3716deb560794f36a33d9c32ab94c258330986a62a6b6abfe622ddcf97ec",
+          "source_two_qubit_cost": 36,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-18"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_mixed_hamiltonian",
+      "placed_pair": [
+        1,
+        2
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 30,
+          "range": [
+            0,
+            18
+          ],
+          "reconstruction_error": 3.043636481661797e-16,
+          "source_hash": "25db3716deb560794f36a33d9c32ab94c258330986a62a6b6abfe622ddcf97ec",
+          "source_two_qubit_cost": 36,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-18"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_mixed_hamiltonian",
+      "placed_pair": [
+        2,
+        3
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 30,
+          "range": [
+            0,
+            18
+          ],
+          "reconstruction_error": 3.043636481661797e-16,
+          "source_hash": "25db3716deb560794f36a33d9c32ab94c258330986a62a6b6abfe622ddcf97ec",
+          "source_two_qubit_cost": 36,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-18"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_asymmetric_shells",
+      "placed_pair": [
+        0,
+        1
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 4,
+          "range": [
+            0,
+            16
+          ],
+          "reconstruction_error": 8.05277995065887e-16,
+          "source_hash": "2a1a27b91aa2a51c8835a47e9f5f390619dac5fcaeac97d63b860e90f7db0d02",
+          "source_two_qubit_cost": 10,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-16"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_asymmetric_shells",
+      "placed_pair": [
+        1,
+        2
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 4,
+          "range": [
+            0,
+            16
+          ],
+          "reconstruction_error": 8.05277995065887e-16,
+          "source_hash": "2a1a27b91aa2a51c8835a47e9f5f390619dac5fcaeac97d63b860e90f7db0d02",
+          "source_two_qubit_cost": 10,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-16"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_asymmetric_shells",
+      "placed_pair": [
+        2,
+        3
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 4,
+          "range": [
+            0,
+            16
+          ],
+          "reconstruction_error": 8.05277995065887e-16,
+          "source_hash": "2a1a27b91aa2a51c8835a47e9f5f390619dac5fcaeac97d63b860e90f7db0d02",
+          "source_two_qubit_cost": 10,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-16"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    },
+    {
+      "case_id": "compiler_generic_interior",
+      "placed_pair": [
+        0,
+        3
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 24,
+          "range": [
+            0,
+            25
+          ],
+          "reconstruction_error": 8.903458734533026e-16,
+          "source_hash": "6dcd6e207eec4de2199d4b07aae945cff943bcf76150fb424a1a9271ce1b9a4d",
+          "source_two_qubit_cost": 30,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-25"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    }
+  ],
+  "depth": 32,
+  "dtype": "float32",
+  "expected_case_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    10
+  ],
+  "expected_pair_classes": [
+    "adjacent",
+    "non_adjacent",
+    "reversed_order"
+  ],
+  "experiment": "su4q-multiqubit-n300-conformance",
+  "inputs": {
+    "blocks": {
+      "file": "blocks.bin",
+      "sha256": "247311df48b5a962da7b79fbb3bc215248b9bd0576c85a63e50d4f55fcfb6d94"
+    },
+    "case_indices": {
+      "file": "case_indices.bin",
+      "sha256": "da1c81105893cef6168ade002a5fb254238fe7f8c83b201e56d988605948e3cb"
+    },
+    "pairs": {
+      "file": "pairs.bin",
+      "sha256": "86c47fed40eaa38c360d9b8b39bef5606acbb6f10c404e0186e0e2d4ce7385d6"
+    },
+    "reference_states": {
+      "file": "reference_states.bin",
+      "sha256": "995c34f1b64728917c4931a82f7d5722c28cba40a1ac197c998d64a01f0ce3fd"
+    },
+    "states": {
+      "file": "states.bin",
+      "sha256": "76bcd908b06d9eb525c38ae0e3c213255289bd774e4645669df6e6b3f7929d98"
+    }
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "states": "output_states.bin",
+    "validation": "validation.json"
+  },
+  "pair_shape": [
+    32,
+    2
+  ],
+  "performance_eligible": false,
+  "provenance": {
+    "rqm_compiler_commit": "38408fac8bec95f5e243727395161360af5223b6",
+    "rqm_entanglement_commit": "b5fa69f6a57eccc0f43765341cf84203c790920a",
+    "tt_metal_commit": "9802b80464cfd213b1146189753d8aedf86193fe",
+    "tt_rqm_kernels_commit": "fffa30784a00656a1a26ee89406633fecc9574ed",
+    "tt_rqm_kernels_source_commit": "af395c48b1a5f7748c9a1f611b84602359f6c346"
+  },
+  "quartet_order": "|q1 q0>",
+  "qubits": 4,
+  "routing_contract_checks": {
+    "changing_pairs_not_merged": true,
+    "fallback_preserved_for_selected": true,
+    "inverse_cancelled_zero_kak": true,
+    "low_benefit_not_selected": true,
+    "safe_mode_zero_kak": true,
+    "selective_fallback_preserves_original": true
+  },
+  "rtol": 0.0001,
+  "schedule": [
+    {
+      "case_index": 0,
+      "pair_class": "adjacent",
+      "q0": 0,
+      "q1": 1
+    },
+    {
+      "case_index": 1,
+      "pair_class": "adjacent",
+      "q0": 1,
+      "q1": 2
+    },
+    {
+      "case_index": 2,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 3,
+      "pair_class": "adjacent",
+      "q0": 0,
+      "q1": 1
+    },
+    {
+      "case_index": 4,
+      "pair_class": "adjacent",
+      "q0": 1,
+      "q1": 2
+    },
+    {
+      "case_index": 5,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 10,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 7,
+      "pair_class": "reversed_order",
+      "q0": 3,
+      "q1": 0
+    },
+    {
+      "case_index": 0,
+      "pair_class": "adjacent",
+      "q0": 2,
+      "q1": 3
+    },
+    {
+      "case_index": 1,
+      "pair_class": "adjacent",
+      "q0": 0,
+      "q1": 1
+    },
+    {
+      "case_index": 2,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 3,
+      "pair_class": "adjacent",
+      "q0": 2,
+      "q1": 3
+    },
+    {
+      "case_index": 4,
+      "pair_class": "adjacent",
+      "q0": 0,
+      "q1": 1
+    },
+    {
+      "case_index": 5,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 10,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 7,
+      "pair_class": "reversed_order",
+      "q0": 3,
+      "q1": 0
+    },
+    {
+      "case_index": 0,
+      "pair_class": "adjacent",
+      "q0": 1,
+      "q1": 2
+    },
+    {
+      "case_index": 1,
+      "pair_class": "adjacent",
+      "q0": 2,
+      "q1": 3
+    },
+    {
+      "case_index": 2,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 3,
+      "pair_class": "adjacent",
+      "q0": 1,
+      "q1": 2
+    },
+    {
+      "case_index": 4,
+      "pair_class": "adjacent",
+      "q0": 2,
+      "q1": 3
+    },
+    {
+      "case_index": 5,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 10,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 7,
+      "pair_class": "reversed_order",
+      "q0": 3,
+      "q1": 0
+    },
+    {
+      "case_index": 0,
+      "pair_class": "adjacent",
+      "q0": 0,
+      "q1": 1
+    },
+    {
+      "case_index": 1,
+      "pair_class": "adjacent",
+      "q0": 1,
+      "q1": 2
+    },
+    {
+      "case_index": 2,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 3,
+      "pair_class": "adjacent",
+      "q0": 0,
+      "q1": 1
+    },
+    {
+      "case_index": 4,
+      "pair_class": "adjacent",
+      "q0": 1,
+      "q1": 2
+    },
+    {
+      "case_index": 5,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 10,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 3
+    },
+    {
+      "case_index": 7,
+      "pair_class": "reversed_order",
+      "q0": 3,
+      "q1": 0
+    }
+  ],
+  "schema": "tt-rqm-su4q-statevector-conformance.v1",
+  "stage": "conformance",
+  "state_shape": [
+    4,
+    16,
+    2
+  ]
+}
