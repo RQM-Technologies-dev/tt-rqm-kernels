@@ -48,6 +48,18 @@ valid but are unsupported by the H2B conformance contract and fail closed.
 `large_angle_short_chain` remains retained as an out-of-domain stress
 diagnostic rather than a conformance gate.
 
+The generated diagnostic is environment-bound because PyTorch numerical
+kernels can change across releases and CPU dispatch targets. Canonical
+generation uses Linux x86_64, the scalar/default ATen CPU capability, one
+thread, deterministic algorithms, and the pinned PyTorch release. Install the
+pinned generator environment before regenerating or checking the canonical
+JSON and Markdown artifacts:
+
+```bash
+python -m pip install -e ".[dev,diagnostic]"
+python scripts/generate_h2b_large_angle_diagnostic.py --check
+```
+
 ## Frozen pilot contract
 
 The preregistration was frozen before candidate execution with 20 cases in

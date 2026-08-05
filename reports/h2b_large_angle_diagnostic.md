@@ -22,7 +22,7 @@ Frozen pilot domain: `abs(theta) <= 1024.0` and `abs(alpha) <= 8192.0` radians f
 The deterministic sweep contains `166` cases spanning signs, h0, vector magnitude, direction, dt, step count, commuting axes, noncommuting axes, integer/half-integer pi neighborhoods, 2pi multiples, quotient boundaries, and cancellation-sensitive reductions.
 
 Maximum compensated CPU-equivalent rotor error: `0.00068695`
-Maximum compensated CPU-equivalent phase error: `7.0025e-08`
+Maximum compensated CPU-equivalent phase error: `5.5811e-08`
 Maximum compensated CPU-equivalent matrix error: `0.00068696`
 
 The machine-readable report contains every stage, arithmetic trace, quotient, reduced angle, trigonometric error, and sweep result.

@@ -42,7 +42,7 @@
       "alpha_reduced": 2.6927,
       "alpha_reduction_error": -8.3655e-09,
       "cos_alpha": -0.90093,
-      "cos_alpha_error": 4.124e-08,
+      "cos_alpha_error": -1.8365e-08,
       "cos_theta": 0.55248,
       "cos_theta_error": -6.6046e-05,
       "dt_over_hbar_hi": 0.4488,
@@ -90,7 +90,10 @@
   },
   "numeric_serialization": {
     "computed_float_significant_digits": 5,
-    "contract_and_domain_constants_unchanged": true
+    "contract_and_domain_constants_unchanged": true,
+    "generator_cpu_capability": "default",
+    "generator_platform": "Linux-x86_64",
+    "generator_torch_version": "2.13.0"
   },
   "performance_eligible": false,
   "release_evidence": false,
@@ -111,12 +114,12 @@
     "B_float32_cpu_lowering": {
       "failing_value_count": 9,
       "max_phase_absolute_error": 0.00036254,
-      "max_rotor_absolute_error": 0.0007835,
+      "max_rotor_absolute_error": 0.00078349,
       "nonfinite_value_count": 0
     },
     "C_compensated_h2a_equivalent_cpu": {
       "failing_value_count": 0,
-      "max_phase_absolute_error": 4.124e-08,
+      "max_phase_absolute_error": 3.1832e-08,
       "max_rotor_absolute_error": 0.00011688,
       "nonfinite_value_count": 0
     },
@@ -325,26 +328,26 @@
       "noncommuting_yx_edge"
     ],
     "max_compensated_matrix_error": 0.00068696,
-    "max_compensated_phase_error": 7.0025e-08,
+    "max_compensated_phase_error": 5.5811e-08,
     "max_compensated_rotor_error": 0.00068695,
     "noncommuting_reversal_matrix_difference": 2.0,
     "results": [
       {
         "case_id": "turn_1_minus_neg_x",
-        "complex128_final_matrix_error": 8.1615e-08,
+        "complex128_final_matrix_error": 5.5614e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.5731e-08,
-        "max_rotor_absolute_error": 5.9434e-08,
+        "max_phase_absolute_error": 5.5614e-08,
+        "max_rotor_absolute_error": 1.7077e-10,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_minus_neg_y",
-        "complex128_final_matrix_error": 8.1615e-08,
+        "complex128_final_matrix_error": 5.5614e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.5731e-08,
-        "max_rotor_absolute_error": 5.9434e-08,
+        "max_phase_absolute_error": 5.5614e-08,
+        "max_rotor_absolute_error": 1.7077e-10,
         "nonfinite_value_count": 0
       },
       {
@@ -358,7 +361,7 @@
       },
       {
         "case_id": "turn_1_minus_neg_mixed",
-        "complex128_final_matrix_error": 2.6505e-07,
+        "complex128_final_matrix_error": 2.5823e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5614e-08,
@@ -367,70 +370,70 @@
       },
       {
         "case_id": "turn_1_exact_neg_x",
-        "complex128_final_matrix_error": 8.1536e-08,
+        "complex128_final_matrix_error": 5.5636e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.5321e-14,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_exact_neg_y",
-        "complex128_final_matrix_error": 8.1536e-08,
+        "complex128_final_matrix_error": 5.5636e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.5321e-14,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_exact_neg_z",
-        "complex128_final_matrix_error": 8.1536e-08,
+        "complex128_final_matrix_error": 5.5636e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.5321e-14,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_exact_neg_mixed",
-        "complex128_final_matrix_error": 1.9361e-07,
+        "complex128_final_matrix_error": 1.8421e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.2857e-07,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_neg_x",
-        "complex128_final_matrix_error": 1.3157e-07,
+        "complex128_final_matrix_error": 5.5653e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
-        "max_rotor_absolute_error": 5.9775e-08,
+        "max_phase_absolute_error": 5.5653e-08,
+        "max_rotor_absolute_error": 1.7072e-10,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_neg_y",
-        "complex128_final_matrix_error": 1.3157e-07,
+        "complex128_final_matrix_error": 5.5653e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
-        "max_rotor_absolute_error": 5.9775e-08,
+        "max_phase_absolute_error": 5.5653e-08,
+        "max_rotor_absolute_error": 1.7072e-10,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_neg_z",
-        "complex128_final_matrix_error": 8.171e-08,
+        "complex128_final_matrix_error": 5.5703e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5653e-08,
-        "max_rotor_absolute_error": 5.9543e-08,
+        "max_rotor_absolute_error": 6.2119e-11,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_neg_mixed",
-        "complex128_final_matrix_error": 1.6061e-07,
+        "complex128_final_matrix_error": 1.4899e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5653e-08,
@@ -457,19 +460,19 @@
       },
       {
         "case_id": "half_1_minus_neg_z",
-        "complex128_final_matrix_error": 9.3187e-08,
+        "complex128_final_matrix_error": 7.1609e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9422e-08,
+        "max_phase_absolute_error": 7.9537e-09,
         "max_rotor_absolute_error": 6.3656e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_1_minus_neg_mixed",
-        "complex128_final_matrix_error": 7.9427e-08,
+        "complex128_final_matrix_error": 5.2517e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9422e-08,
+        "max_phase_absolute_error": 7.9537e-09,
         "max_rotor_absolute_error": 4.4563e-08,
         "nonfinite_value_count": 0
       },
@@ -511,34 +514,34 @@
       },
       {
         "case_id": "turn_31_minus_neg_x",
-        "complex128_final_matrix_error": 7.4515e-08,
+        "complex128_final_matrix_error": 5.67e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
-        "max_rotor_absolute_error": 5.6644e-08,
+        "max_rotor_absolute_error": 2.9603e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_minus_neg_y",
-        "complex128_final_matrix_error": 7.4515e-08,
+        "complex128_final_matrix_error": 5.67e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
-        "max_rotor_absolute_error": 5.6644e-08,
+        "max_rotor_absolute_error": 2.9603e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_minus_neg_z",
-        "complex128_final_matrix_error": 6.9908e-08,
+        "complex128_final_matrix_error": 5.8524e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
-        "max_rotor_absolute_error": 4.9246e-08,
+        "max_rotor_absolute_error": 1.0359e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_minus_neg_mixed",
-        "complex128_final_matrix_error": 7.44e-06,
+        "complex128_final_matrix_error": 7.4398e-06,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
@@ -547,20 +550,20 @@
       },
       {
         "case_id": "turn_31_exact_neg_x",
-        "complex128_final_matrix_error": 8.162e-08,
+        "complex128_final_matrix_error": 5.5794e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5794e-08,
-        "max_rotor_absolute_error": 5.96e-08,
+        "max_rotor_absolute_error": 4.6088e-12,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_exact_neg_y",
-        "complex128_final_matrix_error": 8.162e-08,
+        "complex128_final_matrix_error": 5.5794e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5794e-08,
-        "max_rotor_absolute_error": 5.96e-08,
+        "max_rotor_absolute_error": 4.6088e-12,
         "nonfinite_value_count": 0
       },
       {
@@ -601,19 +604,19 @@
       },
       {
         "case_id": "turn_31_plus_neg_z",
-        "complex128_final_matrix_error": 8.3748e-08,
+        "complex128_final_matrix_error": 5.5886e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
+        "max_phase_absolute_error": 5.5811e-08,
         "max_rotor_absolute_error": 2.9694e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_plus_neg_mixed",
-        "complex128_final_matrix_error": 3.0829e-07,
+        "complex128_final_matrix_error": 3.019e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
+        "max_phase_absolute_error": 5.5811e-08,
         "max_rotor_absolute_error": 2.4608e-07,
         "nonfinite_value_count": 0
       },
@@ -637,7 +640,7 @@
       },
       {
         "case_id": "half_31_minus_neg_z",
-        "complex128_final_matrix_error": 8.9565e-08,
+        "complex128_final_matrix_error": 7.1436e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 7.7961e-09,
@@ -646,7 +649,7 @@
       },
       {
         "case_id": "half_31_minus_neg_mixed",
-        "complex128_final_matrix_error": 2.5497e-06,
+        "complex128_final_matrix_error": 2.549e-06,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 7.7961e-09,
@@ -655,19 +658,19 @@
       },
       {
         "case_id": "half_31_plus_neg_x",
-        "complex128_final_matrix_error": 1.114e-07,
+        "complex128_final_matrix_error": 1.1146e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 6.0719e-08,
+        "max_phase_absolute_error": 7.7573e-09,
         "max_rotor_absolute_error": 1.1146e-07,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_31_plus_neg_y",
-        "complex128_final_matrix_error": 1.114e-07,
+        "complex128_final_matrix_error": 1.1146e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 6.0719e-08,
+        "max_phase_absolute_error": 7.7573e-09,
         "max_rotor_absolute_error": 1.1146e-07,
         "nonfinite_value_count": 0
       },
@@ -691,29 +694,29 @@
       },
       {
         "case_id": "turn_1024_minus_neg_x",
-        "complex128_final_matrix_error": 8.3425e-08,
+        "complex128_final_matrix_error": 3.7921e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.3151e-08,
-        "max_rotor_absolute_error": 3.9608e-08,
+        "max_phase_absolute_error": 1.6454e-08,
+        "max_rotor_absolute_error": 1.9996e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_minus_neg_y",
-        "complex128_final_matrix_error": 8.3425e-08,
+        "complex128_final_matrix_error": 3.7921e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.3151e-08,
-        "max_rotor_absolute_error": 3.9608e-08,
+        "max_phase_absolute_error": 1.6454e-08,
+        "max_rotor_absolute_error": 1.9996e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_minus_neg_z",
-        "complex128_final_matrix_error": 5.4271e-08,
+        "complex128_final_matrix_error": 1.2284e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 1.0491e-08,
-        "max_rotor_absolute_error": 5.1783e-08,
+        "max_rotor_absolute_error": 7.8219e-09,
         "nonfinite_value_count": 0
       },
       {
@@ -727,19 +730,19 @@
       },
       {
         "case_id": "turn_1024_exact_neg_x",
-        "complex128_final_matrix_error": 2.8735e-08,
+        "complex128_final_matrix_error": 3.4499e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.2769e-08,
+        "max_phase_absolute_error": 1.6835e-08,
         "max_rotor_absolute_error": 1.6028e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_exact_neg_y",
-        "complex128_final_matrix_error": 2.8735e-08,
+        "complex128_final_matrix_error": 3.4499e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.2769e-08,
+        "max_phase_absolute_error": 1.6835e-08,
         "max_rotor_absolute_error": 1.6028e-08,
         "nonfinite_value_count": 0
       },
@@ -763,20 +766,20 @@
       },
       {
         "case_id": "turn_1024_plus_neg_x",
-        "complex128_final_matrix_error": 8.9503e-08,
+        "complex128_final_matrix_error": 3.1096e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 1.7217e-08,
-        "max_rotor_absolute_error": 7.1664e-08,
+        "max_rotor_absolute_error": 1.206e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_plus_neg_y",
-        "complex128_final_matrix_error": 8.9503e-08,
+        "complex128_final_matrix_error": 3.1096e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 1.7217e-08,
-        "max_rotor_absolute_error": 7.1664e-08,
+        "max_rotor_absolute_error": 1.206e-08,
         "nonfinite_value_count": 0
       },
       {
@@ -817,10 +820,10 @@
       },
       {
         "case_id": "half_1024_minus_neg_z",
-        "complex128_final_matrix_error": 7.318e-08,
+        "complex128_final_matrix_error": 7.3269e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5075e-08,
+        "max_phase_absolute_error": 4.5192e-08,
         "max_rotor_absolute_error": 1.2931e-08,
         "nonfinite_value_count": 0
       },
@@ -829,7 +832,7 @@
         "complex128_final_matrix_error": 8.9955e-05,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5075e-08,
+        "max_phase_absolute_error": 4.5192e-08,
         "max_rotor_absolute_error": 8.991e-05,
         "nonfinite_value_count": 0
       },
@@ -838,7 +841,7 @@
         "complex128_final_matrix_error": 7.4131e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5048e-08,
+        "max_phase_absolute_error": 4.5164e-08,
         "max_rotor_absolute_error": 7.4098e-08,
         "nonfinite_value_count": 0
       },
@@ -847,16 +850,16 @@
         "complex128_final_matrix_error": 7.4131e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5048e-08,
+        "max_phase_absolute_error": 4.5164e-08,
         "max_rotor_absolute_error": 7.4098e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_1024_plus_neg_z",
-        "complex128_final_matrix_error": 1.3362e-07,
+        "complex128_final_matrix_error": 1.192e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 7.0025e-08,
+        "max_phase_absolute_error": 4.5124e-08,
         "max_rotor_absolute_error": 7.4061e-08,
         "nonfinite_value_count": 0
       },
@@ -865,25 +868,25 @@
         "complex128_final_matrix_error": 0.00025725,
         "failing_value_count": 3,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 7.0025e-08,
+        "max_phase_absolute_error": 4.5124e-08,
         "max_rotor_absolute_error": 0.0002572,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_4096_minus_neg_x",
-        "complex128_final_matrix_error": 4.6198e-08,
+        "complex128_final_matrix_error": 4.6304e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.1908e-08,
+        "max_phase_absolute_error": 4.2024e-08,
         "max_rotor_absolute_error": 9.8284e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_4096_minus_neg_y",
-        "complex128_final_matrix_error": 4.6198e-08,
+        "complex128_final_matrix_error": 4.6304e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.1908e-08,
+        "max_phase_absolute_error": 4.2024e-08,
         "max_rotor_absolute_error": 9.8284e-09,
         "nonfinite_value_count": 0
       },
@@ -979,28 +982,28 @@
       },
       {
         "case_id": "half_4096_minus_neg_x",
-        "complex128_final_matrix_error": 5.7309e-08,
+        "complex128_final_matrix_error": 6.4995e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 4.2e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_4096_minus_neg_y",
-        "complex128_final_matrix_error": 5.7309e-08,
+        "complex128_final_matrix_error": 6.4995e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 4.2e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_4096_minus_neg_z",
-        "complex128_final_matrix_error": 7.8719e-08,
+        "complex128_final_matrix_error": 8.4459e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 4.2e-08,
         "nonfinite_value_count": 0
       },
@@ -1009,7 +1012,7 @@
         "complex128_final_matrix_error": 0.00068696,
         "failing_value_count": 3,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 0.00068695,
         "nonfinite_value_count": 0
       },
@@ -1033,7 +1036,7 @@
       },
       {
         "case_id": "half_4096_plus_neg_z",
-        "complex128_final_matrix_error": 5.6031e-08,
+        "complex128_final_matrix_error": 7.8257e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 2.3453e-08,
@@ -1051,20 +1054,20 @@
       },
       {
         "case_id": "turn_1_minus_pos_x",
-        "complex128_final_matrix_error": 8.1615e-08,
+        "complex128_final_matrix_error": 5.5614e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.5731e-08,
-        "max_rotor_absolute_error": 5.9434e-08,
+        "max_phase_absolute_error": 5.5614e-08,
+        "max_rotor_absolute_error": 1.7077e-10,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_minus_pos_y",
-        "complex128_final_matrix_error": 8.1615e-08,
+        "complex128_final_matrix_error": 5.5614e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.5731e-08,
-        "max_rotor_absolute_error": 5.9434e-08,
+        "max_phase_absolute_error": 5.5614e-08,
+        "max_rotor_absolute_error": 1.7077e-10,
         "nonfinite_value_count": 0
       },
       {
@@ -1078,7 +1081,7 @@
       },
       {
         "case_id": "turn_1_minus_pos_mixed",
-        "complex128_final_matrix_error": 2.6505e-07,
+        "complex128_final_matrix_error": 2.5823e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5614e-08,
@@ -1087,70 +1090,70 @@
       },
       {
         "case_id": "turn_1_exact_pos_x",
-        "complex128_final_matrix_error": 8.1536e-08,
+        "complex128_final_matrix_error": 5.5636e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.5321e-14,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_exact_pos_y",
-        "complex128_final_matrix_error": 8.1536e-08,
+        "complex128_final_matrix_error": 5.5636e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.5321e-14,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_exact_pos_z",
-        "complex128_final_matrix_error": 8.1536e-08,
+        "complex128_final_matrix_error": 5.5636e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.5321e-14,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_exact_pos_mixed",
-        "complex128_final_matrix_error": 1.9361e-07,
+        "complex128_final_matrix_error": 1.8421e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9605e-08,
+        "max_phase_absolute_error": 5.5636e-08,
         "max_rotor_absolute_error": 1.2857e-07,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_pos_x",
-        "complex128_final_matrix_error": 1.3157e-07,
+        "complex128_final_matrix_error": 5.5653e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
-        "max_rotor_absolute_error": 5.9775e-08,
+        "max_phase_absolute_error": 5.5653e-08,
+        "max_rotor_absolute_error": 1.7072e-10,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_pos_y",
-        "complex128_final_matrix_error": 1.3157e-07,
+        "complex128_final_matrix_error": 5.5653e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
-        "max_rotor_absolute_error": 5.9775e-08,
+        "max_phase_absolute_error": 5.5653e-08,
+        "max_rotor_absolute_error": 1.7072e-10,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_pos_z",
-        "complex128_final_matrix_error": 8.171e-08,
+        "complex128_final_matrix_error": 5.5703e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5653e-08,
-        "max_rotor_absolute_error": 5.9543e-08,
+        "max_rotor_absolute_error": 6.2119e-11,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1_plus_pos_mixed",
-        "complex128_final_matrix_error": 1.6061e-07,
+        "complex128_final_matrix_error": 1.4899e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5653e-08,
@@ -1177,19 +1180,19 @@
       },
       {
         "case_id": "half_1_minus_pos_z",
-        "complex128_final_matrix_error": 9.3187e-08,
+        "complex128_final_matrix_error": 7.1609e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9422e-08,
+        "max_phase_absolute_error": 7.9537e-09,
         "max_rotor_absolute_error": 6.3656e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_1_minus_pos_mixed",
-        "complex128_final_matrix_error": 7.9427e-08,
+        "complex128_final_matrix_error": 5.2517e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9422e-08,
+        "max_phase_absolute_error": 7.9537e-09,
         "max_rotor_absolute_error": 4.4563e-08,
         "nonfinite_value_count": 0
       },
@@ -1231,34 +1234,34 @@
       },
       {
         "case_id": "turn_31_minus_pos_x",
-        "complex128_final_matrix_error": 7.4515e-08,
+        "complex128_final_matrix_error": 5.67e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
-        "max_rotor_absolute_error": 5.6644e-08,
+        "max_rotor_absolute_error": 2.9603e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_minus_pos_y",
-        "complex128_final_matrix_error": 7.4515e-08,
+        "complex128_final_matrix_error": 5.67e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
-        "max_rotor_absolute_error": 5.6644e-08,
+        "max_rotor_absolute_error": 2.9603e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_minus_pos_z",
-        "complex128_final_matrix_error": 6.9908e-08,
+        "complex128_final_matrix_error": 5.8524e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
-        "max_rotor_absolute_error": 4.9246e-08,
+        "max_rotor_absolute_error": 1.0359e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_minus_pos_mixed",
-        "complex128_final_matrix_error": 7.44e-06,
+        "complex128_final_matrix_error": 7.4398e-06,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5769e-08,
@@ -1267,20 +1270,20 @@
       },
       {
         "case_id": "turn_31_exact_pos_x",
-        "complex128_final_matrix_error": 8.162e-08,
+        "complex128_final_matrix_error": 5.5794e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5794e-08,
-        "max_rotor_absolute_error": 5.96e-08,
+        "max_rotor_absolute_error": 4.6088e-12,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_exact_pos_y",
-        "complex128_final_matrix_error": 8.162e-08,
+        "complex128_final_matrix_error": 5.5794e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 5.5794e-08,
-        "max_rotor_absolute_error": 5.96e-08,
+        "max_rotor_absolute_error": 4.6088e-12,
         "nonfinite_value_count": 0
       },
       {
@@ -1321,19 +1324,19 @@
       },
       {
         "case_id": "turn_31_plus_pos_z",
-        "complex128_final_matrix_error": 8.3748e-08,
+        "complex128_final_matrix_error": 5.5886e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
+        "max_phase_absolute_error": 5.5811e-08,
         "max_rotor_absolute_error": 2.9694e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_31_plus_pos_mixed",
-        "complex128_final_matrix_error": 3.0829e-07,
+        "complex128_final_matrix_error": 3.019e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 5.9469e-08,
+        "max_phase_absolute_error": 5.5811e-08,
         "max_rotor_absolute_error": 2.4608e-07,
         "nonfinite_value_count": 0
       },
@@ -1357,7 +1360,7 @@
       },
       {
         "case_id": "half_31_minus_pos_z",
-        "complex128_final_matrix_error": 8.9565e-08,
+        "complex128_final_matrix_error": 7.1436e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 7.7961e-09,
@@ -1366,7 +1369,7 @@
       },
       {
         "case_id": "half_31_minus_pos_mixed",
-        "complex128_final_matrix_error": 2.5497e-06,
+        "complex128_final_matrix_error": 2.549e-06,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 7.7961e-09,
@@ -1375,19 +1378,19 @@
       },
       {
         "case_id": "half_31_plus_pos_x",
-        "complex128_final_matrix_error": 1.114e-07,
+        "complex128_final_matrix_error": 1.1146e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 6.0719e-08,
+        "max_phase_absolute_error": 7.7573e-09,
         "max_rotor_absolute_error": 1.1146e-07,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_31_plus_pos_y",
-        "complex128_final_matrix_error": 1.114e-07,
+        "complex128_final_matrix_error": 1.1146e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 6.0719e-08,
+        "max_phase_absolute_error": 7.7573e-09,
         "max_rotor_absolute_error": 1.1146e-07,
         "nonfinite_value_count": 0
       },
@@ -1411,29 +1414,29 @@
       },
       {
         "case_id": "turn_1024_minus_pos_x",
-        "complex128_final_matrix_error": 8.3425e-08,
+        "complex128_final_matrix_error": 3.7921e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.3151e-08,
-        "max_rotor_absolute_error": 3.9608e-08,
+        "max_phase_absolute_error": 1.6454e-08,
+        "max_rotor_absolute_error": 1.9996e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_minus_pos_y",
-        "complex128_final_matrix_error": 8.3425e-08,
+        "complex128_final_matrix_error": 3.7921e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.3151e-08,
-        "max_rotor_absolute_error": 3.9608e-08,
+        "max_phase_absolute_error": 1.6454e-08,
+        "max_rotor_absolute_error": 1.9996e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_minus_pos_z",
-        "complex128_final_matrix_error": 5.4271e-08,
+        "complex128_final_matrix_error": 1.2284e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 1.0491e-08,
-        "max_rotor_absolute_error": 5.1783e-08,
+        "max_rotor_absolute_error": 7.8219e-09,
         "nonfinite_value_count": 0
       },
       {
@@ -1447,19 +1450,19 @@
       },
       {
         "case_id": "turn_1024_exact_pos_x",
-        "complex128_final_matrix_error": 2.8735e-08,
+        "complex128_final_matrix_error": 3.4499e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.2769e-08,
+        "max_phase_absolute_error": 1.6835e-08,
         "max_rotor_absolute_error": 1.6028e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_exact_pos_y",
-        "complex128_final_matrix_error": 2.8735e-08,
+        "complex128_final_matrix_error": 3.4499e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.2769e-08,
+        "max_phase_absolute_error": 1.6835e-08,
         "max_rotor_absolute_error": 1.6028e-08,
         "nonfinite_value_count": 0
       },
@@ -1483,20 +1486,20 @@
       },
       {
         "case_id": "turn_1024_plus_pos_x",
-        "complex128_final_matrix_error": 8.9503e-08,
+        "complex128_final_matrix_error": 3.1096e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 1.7217e-08,
-        "max_rotor_absolute_error": 7.1664e-08,
+        "max_rotor_absolute_error": 1.206e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_1024_plus_pos_y",
-        "complex128_final_matrix_error": 8.9503e-08,
+        "complex128_final_matrix_error": 3.1096e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 1.7217e-08,
-        "max_rotor_absolute_error": 7.1664e-08,
+        "max_rotor_absolute_error": 1.206e-08,
         "nonfinite_value_count": 0
       },
       {
@@ -1537,10 +1540,10 @@
       },
       {
         "case_id": "half_1024_minus_pos_z",
-        "complex128_final_matrix_error": 7.318e-08,
+        "complex128_final_matrix_error": 7.3269e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5075e-08,
+        "max_phase_absolute_error": 4.5192e-08,
         "max_rotor_absolute_error": 1.2931e-08,
         "nonfinite_value_count": 0
       },
@@ -1549,7 +1552,7 @@
         "complex128_final_matrix_error": 8.9955e-05,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5075e-08,
+        "max_phase_absolute_error": 4.5192e-08,
         "max_rotor_absolute_error": 8.991e-05,
         "nonfinite_value_count": 0
       },
@@ -1558,7 +1561,7 @@
         "complex128_final_matrix_error": 7.4131e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5048e-08,
+        "max_phase_absolute_error": 4.5164e-08,
         "max_rotor_absolute_error": 7.4098e-08,
         "nonfinite_value_count": 0
       },
@@ -1567,16 +1570,16 @@
         "complex128_final_matrix_error": 7.4131e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.5048e-08,
+        "max_phase_absolute_error": 4.5164e-08,
         "max_rotor_absolute_error": 7.4098e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_1024_plus_pos_z",
-        "complex128_final_matrix_error": 1.3362e-07,
+        "complex128_final_matrix_error": 1.192e-07,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 7.0025e-08,
+        "max_phase_absolute_error": 4.5124e-08,
         "max_rotor_absolute_error": 7.4061e-08,
         "nonfinite_value_count": 0
       },
@@ -1585,25 +1588,25 @@
         "complex128_final_matrix_error": 0.00025725,
         "failing_value_count": 3,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 7.0025e-08,
+        "max_phase_absolute_error": 4.5124e-08,
         "max_rotor_absolute_error": 0.0002572,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_4096_minus_pos_x",
-        "complex128_final_matrix_error": 4.6198e-08,
+        "complex128_final_matrix_error": 4.6304e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.1908e-08,
+        "max_phase_absolute_error": 4.2024e-08,
         "max_rotor_absolute_error": 9.8284e-09,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "turn_4096_minus_pos_y",
-        "complex128_final_matrix_error": 4.6198e-08,
+        "complex128_final_matrix_error": 4.6304e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 4.1908e-08,
+        "max_phase_absolute_error": 4.2024e-08,
         "max_rotor_absolute_error": 9.8284e-09,
         "nonfinite_value_count": 0
       },
@@ -1699,28 +1702,28 @@
       },
       {
         "case_id": "half_4096_minus_pos_x",
-        "complex128_final_matrix_error": 5.7309e-08,
+        "complex128_final_matrix_error": 6.4995e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 4.2e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_4096_minus_pos_y",
-        "complex128_final_matrix_error": 5.7309e-08,
+        "complex128_final_matrix_error": 6.4995e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 4.2e-08,
         "nonfinite_value_count": 0
       },
       {
         "case_id": "half_4096_minus_pos_z",
-        "complex128_final_matrix_error": 7.8719e-08,
+        "complex128_final_matrix_error": 8.4459e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 4.2e-08,
         "nonfinite_value_count": 0
       },
@@ -1729,7 +1732,7 @@
         "complex128_final_matrix_error": 0.00068696,
         "failing_value_count": 3,
         "kind": "single_step_combined",
-        "max_phase_absolute_error": 2.7681e-08,
+        "max_phase_absolute_error": 3.1924e-08,
         "max_rotor_absolute_error": 0.00068695,
         "nonfinite_value_count": 0
       },
@@ -1753,7 +1756,7 @@
       },
       {
         "case_id": "half_4096_plus_pos_z",
-        "complex128_final_matrix_error": 5.6031e-08,
+        "complex128_final_matrix_error": 7.8257e-08,
         "failing_value_count": 0,
         "kind": "single_step_combined",
         "max_phase_absolute_error": 2.3453e-08,

@@ -24,6 +24,9 @@ from tt_rqm_kernels.hamiltonian_evolution_domain import (
 
 DIAGNOSTIC_SCHEMA = "tt-rqm-h2b-large-angle-diagnostic.v1"
 DIAGNOSTIC_SIGNIFICANT_DIGITS = 5
+DIAGNOSTIC_TORCH_VERSION = "2.13.0"
+DIAGNOSTIC_PLATFORM = "Linux-x86_64"
+DIAGNOSTIC_CPU_CAPABILITY = "default"
 ATOL = 1e-4
 RTOL = 1e-4
 MATRIX_THRESHOLD = 2e-4
@@ -288,6 +291,9 @@ def build_large_angle_diagnostic(repo_root: Path) -> dict[str, Any]:
         "numeric_serialization": {
             "computed_float_significant_digits": DIAGNOSTIC_SIGNIFICANT_DIGITS,
             "contract_and_domain_constants_unchanged": True,
+            "generator_cpu_capability": DIAGNOSTIC_CPU_CAPABILITY,
+            "generator_platform": DIAGNOSTIC_PLATFORM,
+            "generator_torch_version": DIAGNOSTIC_TORCH_VERSION,
         },
         "tolerances": {
             "atol": ATOL,

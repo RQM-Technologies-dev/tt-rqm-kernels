@@ -12,7 +12,10 @@ from tt_rqm_kernels.hamiltonian_evolution_pilot_contract import (
     validate_pilot_contract,
 )
 from tt_rqm_kernels.hamiltonian_evolution_diagnostics import (
+    DIAGNOSTIC_CPU_CAPABILITY,
+    DIAGNOSTIC_PLATFORM,
     DIAGNOSTIC_SIGNIFICANT_DIGITS,
+    DIAGNOSTIC_TORCH_VERSION,
     _diagnostic_float,
 )
 from tt_rqm_kernels.hamiltonian_evolution_source_identity import (
@@ -63,6 +66,9 @@ def test_source_manifest_and_large_angle_diagnostic_are_hash_bound() -> None:
     assert diagnostic["numeric_serialization"] == {
         "computed_float_significant_digits": DIAGNOSTIC_SIGNIFICANT_DIGITS,
         "contract_and_domain_constants_unchanged": True,
+        "generator_cpu_capability": DIAGNOSTIC_CPU_CAPABILITY,
+        "generator_platform": DIAGNOSTIC_PLATFORM,
+        "generator_torch_version": DIAGNOSTIC_TORCH_VERSION,
     }
     markdown = (ROOT / "reports/h2b_large_angle_diagnostic.md").read_text()
     assert all(line == line.rstrip() for line in markdown.splitlines())
