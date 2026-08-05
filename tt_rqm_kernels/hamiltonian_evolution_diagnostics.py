@@ -23,6 +23,10 @@ from tt_rqm_kernels.hamiltonian_evolution_domain import (
 )
 
 DIAGNOSTIC_SCHEMA = "tt-rqm-h2b-large-angle-diagnostic.v1"
+DIAGNOSTIC_SIGNIFICANT_DIGITS = 5
+DIAGNOSTIC_TORCH_VERSION = "2.13.0"
+DIAGNOSTIC_PLATFORM = "Linux-x86_64"
+DIAGNOSTIC_CPU_CAPABILITY = "default"
 ATOL = 1e-4
 RTOL = 1e-4
 MATRIX_THRESHOLD = 2e-4
@@ -268,7 +272,7 @@ def build_large_angle_diagnostic(repo_root: Path) -> dict[str, Any]:
     retained_report = retained_root / "development-report.json"
 
     sweep_results = [_sweep_result(item) for item in large_angle_sweep()]
-    order_difference = float(
+    order_difference = _diagnostic_float(
         torch.max(
             torch.abs(
                 compose_hamiltonian_matrices(large_angle_sweep()[-2]["hamiltonians"], 1.0)
@@ -284,6 +288,13 @@ def build_large_angle_diagnostic(repo_root: Path) -> dict[str, Any]:
         "claim_level": None,
         "stable_benchmark": False,
         "performance_eligible": False,
+        "numeric_serialization": {
+            "computed_float_significant_digits": DIAGNOSTIC_SIGNIFICANT_DIGITS,
+            "contract_and_domain_constants_unchanged": True,
+            "generator_cpu_capability": DIAGNOSTIC_CPU_CAPABILITY,
+            "generator_platform": DIAGNOSTIC_PLATFORM,
+            "generator_torch_version": DIAGNOSTIC_TORCH_VERSION,
+        },
         "tolerances": {
             "atol": ATOL,
             "rtol": RTOL,
@@ -418,8 +429,8 @@ def _step_summary(
     rotor_error = torch.abs(actual[0].double() - expected[0].double())
     phase_error = torch.abs(actual[1].double() - expected[1].double())
     return {
-        "max_rotor_absolute_error": float(rotor_error.max()),
-        "max_phase_absolute_error": float(phase_error.max()),
+        "max_rotor_absolute_error": _diagnostic_float(rotor_error.max()),
+        "max_phase_absolute_error": _diagnostic_float(phase_error.max()),
         "failing_value_count": _failure_count(actual, expected),
         "nonfinite_value_count": int(
             (~torch.isfinite(actual[0])).sum() + (~torch.isfinite(actual[1])).sum()
@@ -449,7 +460,7 @@ def _failure_count(
 
 def _matrix_error(actual: tuple[torch.Tensor, torch.Tensor], oracle: torch.Tensor) -> float:
     matrix = u2_matrix_from_rotor_phase(actual[0].double(), actual[1].double())
-    return float(torch.max(torch.abs(matrix - oracle)).item())
+    return _diagnostic_float(torch.max(torch.abs(matrix - oracle)))
 
 
 def _step_matrix_error(
@@ -470,7 +481,7 @@ def _step_matrix_error(
         -2,
     )
     reference = torch.linalg.matrix_exp(-1j * dt64[..., None, None] * hmatrix)
-    return float(torch.max(torch.abs(matrix - reference)).item())
+    return _diagnostic_float(torch.max(torch.abs(matrix - reference)))
 
 
 def _read_float32(path: Path, shape: tuple[int, ...]) -> torch.Tensor:
@@ -482,4 +493,20 @@ def _read_float32(path: Path, shape: tuple[int, ...]) -> torch.Tensor:
 
 
 def _value(value: torch.Tensor) -> float:
-    return float(value.detach().cpu().item())
+    return _diagnostic_float(value)
+
+
+def _diagnostic_float(value: float | torch.Tensor) -> float:
+    """Return a platform-stable decimal representation of a computed value.
+
+    The diagnostic emulates FP32 device arithmetic, whose meaningful precision
+    is lower than the raw host-library digits previously serialized here.
+    Canonicalizing computed values prevents libm/PyTorch implementation details
+    from making the generated artifact differ across supported CI platforms.
+    """
+
+    number = float(value.detach().cpu().item()) if isinstance(value, torch.Tensor) else float(value)
+    if not math.isfinite(number):
+        raise ValueError("diagnostic values must be finite")
+    canonical = float(f"{number:.{DIAGNOSTIC_SIGNIFICANT_DIGITS}g}")
+    return 0.0 if canonical == 0.0 else canonical

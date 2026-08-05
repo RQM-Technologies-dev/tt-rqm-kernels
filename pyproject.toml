@@ -22,6 +22,9 @@ dev = [
   "pytest>=8.0",
   "ruff==0.15.17"
 ]
+diagnostic = [
+  "torch==2.13.0"
+]
 benchmark = [
   "matplotlib==3.10.1"
 ]

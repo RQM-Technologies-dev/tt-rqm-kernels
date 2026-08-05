@@ -73,14 +73,15 @@ def render_packet(report: dict[str, object]) -> str:
                 "`tt-rqm-kernels` is an independent RQM Technologies LLC project "
                 "for structured quaternion, rotor, and phase-aware tensor kernels "
                 "represented inside ordinary floating-point tensors. StructuredBench "
-                "provides a conformance-gated benchmark contract and an implemented "
-                "scalar RISC-V TT-Metalium correctness baseline."
+                "provides conformance-gated benchmark contracts, CPU/PyTorch references, "
+                "simulator and emulator paths, and reproducible Wormhole/N300 evidence "
+                "for `qmul`, fused SU(2) composition, and H2A Hamiltonian lowering."
             ),
             "",
             (
-                "Committed reports are sample CPU/PyTorch reference outputs. They "
-                "are included to show the report shape and outreach packet format, "
-                "not to claim stable hardware performance."
+                "The table below is generated from the committed CPU/PyTorch reference "
+                "report. Separate linked artifacts contain real Tenstorrent hardware "
+                "evidence with their own provenance, claim levels, and limitations."
             ),
             "",
             "Report labels:",
@@ -112,34 +113,30 @@ def render_packet(report: dict[str, object]) -> str:
             "Proof path:",
             "",
             "```text",
-            "CPU/PyTorch qmul reference",
-            "-> scalar correctness check",
-            "-> TT-Lang simulator qmul for [N, 4]",
-            "-> tt-emule run of real TT-Metalium qmul candidate",
-            "-> real TT-Metalium / Tenstorrent hardware report",
-            "-> compare throughput, latency, numerical error, FLOPs/sec, GB/sec, and arithmetic intensity",
+            "CPU/PyTorch qmul reference: complete",
+            "-> scalar correctness check: complete",
+            "-> TT-Lang simulator and tt-emule TT-Metalium paths: complete",
+            "-> N300 Stage A silicon conformance: complete",
+            "-> multicore Tensix/SFPU Stage B evidence: complete",
+            "-> three-session one-device qmul stability qualification: Claim Level 2",
+            "-> current-main upstream-shaped example: correctness validated; placement pending",
             "```",
             "",
             "## Immediate Ask",
             "",
             (
-                "The current request is one Stage A silicon-conformance `qmul` run "
-                "using the delegated engineer packet: "
-                "[docs/tenstorrent-engineer-copy-paste-packet.md]"
-                "(../docs/tenstorrent-engineer-copy-paste-packet.md)."
+                "The remaining external request is maintainer placement guidance in "
+                "[tenstorrent/tt-metal#49887]"
+                "(https://github.com/tenstorrent/tt-metal/issues/49887): should the "
+                "minimal FP32 `[N,4]` Hamilton-product example live as a contributed "
+                "TT-Metalium programming example or an experimental TT-NN operation?"
             ),
             "",
-            "The returned artifacts should be:",
-            "",
-            "```text",
-            "reports/tt_hardware_qmul_quickstart.json",
-            "reports/tt_hardware_qmul_quickstart.md",
-            "reports/tt_hardware_qmul_environment.txt",
-            "```",
-            "",
             (
-                "Use `execution_label=hardware`, `benchmark_stage=conformance`, "
-                "and `stable_benchmark=false` only for real Tenstorrent hardware."
+                "A self-contained current-main programming example is available on the "
+                "public review branch. Its N=128 and N=4096 N300 runs are correctness "
+                "evidence only; the port does not inherit the protected external "
+                "candidate's Claim Level 2 status and makes no acceleration claim."
             ),
             "",
             "## Long-Term Direction: QuantumIR for Classical AI Compute",
@@ -147,8 +144,8 @@ def render_packet(report: dict[str, object]) -> str:
             (
                 "QuantumIR here means a classical/AI accelerator front end for "
                 "selected quantum-mechanics workloads, not a quantum-hardware "
-                "proposal. The immediate ask remains narrow: one Stage A silicon "
-                "conformance run for the existing `[N, 4]` `qmul` candidate."
+                "proposal. The immediate ask remains the narrow placement decision for "
+                "the existing current-main `[N, 4]` `qmul` example."
             ),
             "",
             (
@@ -170,7 +167,7 @@ def render_packet(report: dict[str, object]) -> str:
                 "on the same kernel foundation."
             ),
             "",
-            "## Benchmark Table",
+            "## CPU/PyTorch Reference Table",
             "",
             _markdown_table(
                 [
@@ -185,7 +182,7 @@ def render_packet(report: dict[str, object]) -> str:
                 benchmark_rows,
             ),
             "",
-            "## Hardware Metrics Table",
+            "## Reference Workload-Shape Metrics",
             "",
             _markdown_table(
                 [
@@ -200,9 +197,15 @@ def render_packet(report: dict[str, object]) -> str:
                 hardware_rows,
             ),
             "",
-            "## Proposed First TT-Metalium Target",
+            "## Current TT-Metalium Result",
             "",
-            "Implemented Stage A TT-Metalium target: scalar RISC-V `qmul` for `[N, 4]` quaternion tensors; not performance-eligible.",
+            (
+                "The scalar RISC-V Stage A baseline and multicore Tensix/SFPU Stage B "
+                "candidate both ran on Wormhole. Three qualified device-0 sessions "
+                "support the protected aggregate qmul Claim Level 2 release; this is "
+                "stable one-device performance evidence, not a CPU or application "
+                "acceleration claim."
+            ),
             "",
             "## Proposed Second Target",
             "",
@@ -211,7 +214,9 @@ def render_packet(report: dict[str, object]) -> str:
             "## Relevant Docs",
             "",
             "- [docs/tenstorrent-landing.md](../docs/tenstorrent-landing.md)",
-            "- [docs/tenstorrent-engineer-copy-paste-packet.md](../docs/tenstorrent-engineer-copy-paste-packet.md)",
+            "- [docs/benchmarks/wormhole-qmul.md](../docs/benchmarks/wormhole-qmul.md)",
+            "- [docs/benchmarks/wormhole-qmul-hardware-evidence.md](../docs/benchmarks/wormhole-qmul-hardware-evidence.md)",
+            "- [docs/upstream/current-main-qmul-port.md](../docs/upstream/current-main-qmul-port.md)",
             "- [docs/operator-contracts.md](../docs/operator-contracts.md)",
             "- [docs/structuredbench-spec.md](../docs/structuredbench-spec.md)",
             "- [docs/tenstorrent-rfc.md](../docs/tenstorrent-rfc.md)",
@@ -225,23 +230,21 @@ def render_packet(report: dict[str, object]) -> str:
             "```text",
             "Hi Tenstorrent maintainers,",
             "",
-            "RQM Technologies has a CPU/PyTorch reference benchmark for structured quaternion and rotor tensor kernels, with qmul as the proposed first [N, 4] TT-Metalium target.",
+            "RQM Technologies maintains an independent structured-kernel benchmark with CPU/PyTorch references and real Wormhole/N300 evidence for FP32 [N,4] qmul.",
             "",
-            "The repo now has a one-command readiness check (`python scripts/rqm_tt_quickstart.py --check`), an external-qmul protocol for candidate commands, and tt-emule evidence for the experimental TT-Metalium candidate. The tt-emule report is emulation-only and is not hardware performance.",
+            "The external multicore Tensix/SFPU candidate has whole-output validation, profiler diagnostics, and a three-session one-device Claim Level 2 stability qualification. A separate self-contained example was refreshed against tt-metal main and passed N=128 and N=4096 N300 correctness runs; those two runs are correctness-only and do not inherit the protected release status.",
             "",
-            "Could Tenstorrent enable or run one Stage A hardware conformance report for the existing [N, 4] TT-Metalium qmul candidate?",
+            "Would Tenstorrent prefer the minimal current-main example as a contributed TT-Metalium programming example, or should it remain external / move to an experimental TT-NN ProgramDescriptor operation?",
             "",
-            "Secondary questions, only if there is actionable guidance: where should the existing TT-Metalium qmul example live, and is there a preferred TT-NN custom-op path after Stage B hardware evidence exists?",
-            "",
-            "The benchmark reports throughput, latency, numerical error, estimated FLOPs/sec, effective GB/sec, and arithmetic intensity, with scalar-reference spot checks for correctness.",
+            "No upstream implementation PR will be opened until maintainers establish the preferred placement and layout boundary.",
             "```",
             "",
             "## Suggested Discord Post",
             "",
             "```text",
-            "Hi Tenstorrent community, RQM Technologies is building an independent structured-kernel benchmark for quaternion and rotor tensor operators represented inside ordinary floating-point tensors.",
+            "Hi Tenstorrent community, RQM Technologies maintains an independent structured-kernel benchmark for quaternion and rotor tensor operators represented inside ordinary floating-point tensors.",
             "",
-            "The immediate ask is one Stage A qmul silicon-conformance report, not a new hardware feature or placement decision. The copy/paste packet is in docs/tenstorrent-engineer-copy-paste-packet.md.",
+            "The qmul path now has real Wormhole/N300 correctness, profiler, and one-device stability evidence. The remaining ask is placement guidance for the self-contained current-main example; it is not a request for a new datatype, silicon feature, or endorsement.",
             "",
             "Repo: https://github.com/RQM-Technologies-dev/tt-rqm-kernels",
             "```",
