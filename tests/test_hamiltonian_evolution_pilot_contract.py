@@ -11,6 +11,10 @@ from tt_rqm_kernels.hamiltonian_evolution_pilot_contract import (
     DEFAULT_MANIFEST,
     validate_pilot_contract,
 )
+from tt_rqm_kernels.hamiltonian_evolution_diagnostics import (
+    DIAGNOSTIC_SIGNIFICANT_DIGITS,
+    _diagnostic_float,
+)
 from tt_rqm_kernels.hamiltonian_evolution_source_identity import (
     HamiltonianEvolutionSourceIdentityError,
     validate_source_manifest,
@@ -56,8 +60,18 @@ def test_source_manifest_and_large_angle_diagnostic_are_hash_bound() -> None:
     diagnostic = json.loads((ROOT / "reports/h2b_large_angle_diagnostic.json").read_text())
     assert diagnostic["diagnosis"]["acceptance_path"] == "B_formally_bounded_operating_domain"
     assert diagnostic["sweep"]["case_count"] == 166
+    assert diagnostic["numeric_serialization"] == {
+        "computed_float_significant_digits": DIAGNOSTIC_SIGNIFICANT_DIGITS,
+        "contract_and_domain_constants_unchanged": True,
+    }
     markdown = (ROOT / "reports/h2b_large_angle_diagnostic.md").read_text()
     assert all(line == line.rstrip() for line in markdown.splitlines())
+
+
+def test_large_angle_diagnostic_computed_values_use_canonical_precision() -> None:
+    assert _diagnostic_float(0.00014089839848412345) == 0.000140898
+    assert _diagnostic_float(1539.3794236964986) == 1539.38
+    assert _diagnostic_float(-0.0) == 0.0
 
 
 def test_source_manifest_rejects_manifest_tampering(tmp_path: Path) -> None:

@@ -335,11 +335,13 @@ def test_tenstorrent_packet_generator(tmp_path: Path) -> None:
     )
 
     packet = output_path.read_text(encoding="utf-8")
-    assert "Implemented Stage A TT-Metalium target" in packet
-    assert "one Stage A hardware conformance report" in packet
+    assert "three-session one-device qmul stability qualification" in packet
+    assert "tenstorrent/tt-metal#49887" in packet
+    assert "one Stage A hardware conformance report" not in packet
     assert "docs/tenstorrent-landing.md" in packet
-    assert "docs/tenstorrent-engineer-copy-paste-packet.md" in packet
+    assert "docs/benchmarks/wormhole-qmul.md" in packet
+    assert "docs/upstream/current-main-qmul-port.md" in packet
     assert "reports/tt_emule_qmul_candidate.md" in packet
-    assert "tt-emule evidence" in packet
+    assert "tt-emule TT-Metalium paths" in packet
     assert "QuantumIR for Classical AI Compute" in packet
     assert "AI augmentation" in packet
