@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import json
 from pathlib import Path
 
@@ -29,11 +30,35 @@ def main() -> int:
     rendered_json = json.dumps(report, indent=2, sort_keys=True) + "\n"
     rendered_markdown = render_large_angle_diagnostic(report)
     if args.check:
-        if args.json_output.read_text(encoding="utf-8") != rendered_json:
+        committed_json = args.json_output.read_text(encoding="utf-8")
+        if committed_json != rendered_json:
             print("H2B large-angle JSON diagnostic is stale")
+            print(
+                "".join(
+                    difflib.unified_diff(
+                        committed_json.splitlines(keepends=True),
+                        rendered_json.splitlines(keepends=True),
+                        fromfile=str(args.json_output),
+                        tofile="regenerated JSON",
+                    )
+                ),
+                end="",
+            )
             return 1
-        if args.markdown_output.read_text(encoding="utf-8") != rendered_markdown:
+        committed_markdown = args.markdown_output.read_text(encoding="utf-8")
+        if committed_markdown != rendered_markdown:
             print("H2B large-angle Markdown diagnostic is stale")
+            print(
+                "".join(
+                    difflib.unified_diff(
+                        committed_markdown.splitlines(keepends=True),
+                        rendered_markdown.splitlines(keepends=True),
+                        fromfile=str(args.markdown_output),
+                        tofile="regenerated Markdown",
+                    )
+                ),
+                end="",
+            )
             return 1
     else:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)

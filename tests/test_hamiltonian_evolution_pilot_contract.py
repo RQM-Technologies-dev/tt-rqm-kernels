@@ -69,8 +69,8 @@ def test_source_manifest_and_large_angle_diagnostic_are_hash_bound() -> None:
 
 
 def test_large_angle_diagnostic_computed_values_use_canonical_precision() -> None:
-    assert _diagnostic_float(0.00014089839848412345) == 0.000140898
-    assert _diagnostic_float(1539.3794236964986) == 1539.38
+    assert _diagnostic_float(0.00014089839848412345) == 0.0001409
+    assert _diagnostic_float(1539.3794236964986) == 1539.4
     assert _diagnostic_float(-0.0) == 0.0
 
 

@@ -23,7 +23,7 @@ from tt_rqm_kernels.hamiltonian_evolution_domain import (
 )
 
 DIAGNOSTIC_SCHEMA = "tt-rqm-h2b-large-angle-diagnostic.v1"
-DIAGNOSTIC_SIGNIFICANT_DIGITS = 6
+DIAGNOSTIC_SIGNIFICANT_DIGITS = 5
 ATOL = 1e-4
 RTOL = 1e-4
 MATRIX_THRESHOLD = 2e-4
