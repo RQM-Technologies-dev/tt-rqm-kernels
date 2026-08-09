@@ -4,6 +4,14 @@ This directory is the public, evidence-backed benchmark surface for
 `tt-rqm-kernels`. Every published number must be traceable to a hashed source
 artifact and a versioned release manifest.
 
+## QKERNEL-1 pending hardware lane
+
+- [QKERNEL-1 matched computational-efficiency benchmark](qsp-kernel-v1.md)
+- Source and CPU correctness harness: implemented
+- N300 status: `pending_hardware` until three new matched cold-start sessions
+  qualify
+- Existing qmul and SU(2) evidence is ineligible for the new acceleration gates
+
 ## Flagship H1 report
 
 - [Fused Time-Ordered SU(2) Composition on Tenstorrent Wormhole](su2-compose-bench.md)

@@ -1,0 +1,26 @@
+{
+  "comparators": ["unrestricted", "materialized_structured", "direct_structured_real", "complex_pair", "quaternion"],
+  "cpu": {"repetitions": 10, "sizes": [256, 4096], "threads": 1, "warmups": 3},
+  "hardware": {
+    "cold_start_sessions": 3,
+    "execution_label": "hardware",
+    "historical_qmul_evidence_eligible": false,
+    "nonhardware_paths_rejected": true,
+    "status_when_unavailable": "pending_hardware"
+  },
+  "native_gate": {
+    "cpu_matched_control_ratio_min": 0.95,
+    "device_time_reduction_min": 0.15,
+    "paired_interval_excludes_parity": true,
+    "throughput_ratio_min": 1.15
+  },
+  "operators": ["qmul", "qdot", "su2-frame-transport", "selective-q-plus-qj", "fused-frame-filter", "ordered-rotor-composition"],
+  "schema": "tt-rqm-qsp-kernel-preregistration.v1",
+  "structured_gate": {
+    "coefficient_reduction_min": 2.0,
+    "correctness_required": true,
+    "geomean_throughput_ratio_min": 1.25,
+    "improved_size_fraction_min": 0.8,
+    "p95_non_regression": true
+  }
+}
