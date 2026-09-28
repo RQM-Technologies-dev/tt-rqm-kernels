@@ -1,0 +1,16 @@
+{
+  "schema": "tt-rqm-sanitized-device-health.v1",
+  "captured_before": "n300_hardware_ladder",
+  "device_id": 0,
+  "architecture": "wormhole_b0",
+  "firmware_bundle": "19.6.0.0",
+  "dram_status": true,
+  "reported_fault_count": 0,
+  "healthy": true,
+  "identifiers_removed": [
+    "board_id",
+    "serial_number",
+    "pci_bus_id",
+    "network_address"
+  ]
+}

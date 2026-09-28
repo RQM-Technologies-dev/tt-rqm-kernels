@@ -1,0 +1,148 @@
+{
+  "atol": 0.0001,
+  "basis_order": "little_endian",
+  "batch": 4,
+  "block_convention_version": "rqm-su4q-v1-exp+iabc-qiskit-Klr:kron(q1=Kl,q0=Kr);circuit-little-endian",
+  "block_lanes": [
+    "left_q0_w",
+    "left_q0_x",
+    "left_q0_y",
+    "left_q0_z",
+    "left_q1_w",
+    "left_q1_x",
+    "left_q1_y",
+    "left_q1_z",
+    "cartan_a",
+    "cartan_b",
+    "cartan_c",
+    "right_q0_w",
+    "right_q0_x",
+    "right_q0_y",
+    "right_q0_z",
+    "right_q1_w",
+    "right_q1_x",
+    "right_q1_y",
+    "right_q1_z",
+    "global_phase"
+  ],
+  "block_shape": [
+    1,
+    20
+  ],
+  "cases": [
+    {
+      "id": "compiler_generic_interior",
+      "index": 5,
+      "kind": "compiler_selected",
+      "oracle_source": "original_source_circuit_complex128"
+    }
+  ],
+  "compiler_placement_evidence": [
+    {
+      "case_id": "compiler_generic_interior",
+      "placed_pair": [
+        0,
+        2
+      ],
+      "placement_contract": "pair_local_unitary_is_index_independent",
+      "rejected_windows": [],
+      "selected_windows": [
+        {
+          "pair": [
+            0,
+            1
+          ],
+          "predicted_savings": 24,
+          "range": [
+            0,
+            25
+          ],
+          "reconstruction_error": 8.903458734533026e-16,
+          "source_hash": "6dcd6e207eec4de2199d4b07aae945cff943bcf76150fb424a1a9271ce1b9a4d",
+          "source_two_qubit_cost": 30,
+          "weyl_class": "generic_interior",
+          "window_id": "0-1:0-25"
+        }
+      ],
+      "semantic_verified": true,
+      "source_pair": [
+        0,
+        1
+      ]
+    }
+  ],
+  "depth": 1,
+  "dtype": "float32",
+  "expected_case_indices": [
+    5
+  ],
+  "expected_pair_classes": [
+    "non_adjacent"
+  ],
+  "experiment": "su4q-multiqubit-n300-conformance",
+  "inputs": {
+    "blocks": {
+      "file": "blocks.bin",
+      "sha256": "34356be1b6588b6de8c3ccba62dd513436df4ba5e781e8432083a5434d6ec851"
+    },
+    "case_indices": {
+      "file": "case_indices.bin",
+      "sha256": "2594b6a92ebfb1c3312deb7d01c015fb95e9fbe9bd7bc6b527af07813ec7b910"
+    },
+    "pairs": {
+      "file": "pairs.bin",
+      "sha256": "2fcd151b8295e8b3bf8ec64ede173523417960a8db6cbc569de9a25a458f9135"
+    },
+    "reference_states": {
+      "file": "reference_states.bin",
+      "sha256": "e29b218426479aaad26cf2652a09404c0bf626d543d8141f991e6932e74247f2"
+    },
+    "states": {
+      "file": "states.bin",
+      "sha256": "aeaa28c9e449270e859c13a51f5f9d05a09c5f75e13399331fb777da8039ceaa"
+    }
+  },
+  "outputs": {
+    "metrics": "metrics.json",
+    "states": "output_states.bin",
+    "validation": "validation.json"
+  },
+  "pair_shape": [
+    1,
+    2
+  ],
+  "performance_eligible": false,
+  "provenance": {
+    "rqm_compiler_commit": "38408fac8bec95f5e243727395161360af5223b6",
+    "rqm_entanglement_commit": "b5fa69f6a57eccc0f43765341cf84203c790920a",
+    "tt_metal_commit": "9802b80464cfd213b1146189753d8aedf86193fe",
+    "tt_rqm_kernels_commit": "fffa30784a00656a1a26ee89406633fecc9574ed",
+    "tt_rqm_kernels_source_commit": "af395c48b1a5f7748c9a1f611b84602359f6c346"
+  },
+  "quartet_order": "|q1 q0>",
+  "qubits": 3,
+  "routing_contract_checks": {
+    "changing_pairs_not_merged": true,
+    "fallback_preserved_for_selected": true,
+    "inverse_cancelled_zero_kak": true,
+    "low_benefit_not_selected": true,
+    "safe_mode_zero_kak": true,
+    "selective_fallback_preserves_original": true
+  },
+  "rtol": 0.0001,
+  "schedule": [
+    {
+      "case_index": 5,
+      "pair_class": "non_adjacent",
+      "q0": 0,
+      "q1": 2
+    }
+  ],
+  "schema": "tt-rqm-su4q-statevector-conformance.v1",
+  "stage": "conformance",
+  "state_shape": [
+    4,
+    8,
+    2
+  ]
+}

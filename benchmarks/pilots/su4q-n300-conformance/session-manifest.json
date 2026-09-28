@@ -1,0 +1,56 @@
+{
+  "schema": "tt-rqm-su4q-conformance-session.v1",
+  "label": "su4q-n300-conformance",
+  "protocol": "tt-rqm-su4q-conformance.v1",
+  "performance_eligible": false,
+  "claim": "correctness-only",
+  "dependency_commits": {
+    "rqm-compiler": "38408fac8bec95f5e243727395161360af5223b6",
+    "rqm-entanglement": "b5fa69f6a57eccc0f43765341cf84203c790920a",
+    "tt-rqm-kernels-base": "fffa30784a00656a1a26ee89406633fecc9574ed",
+    "tt-rqm-kernels-execution-source": "c1cfa884de17e5afcbab0ab5a7b3266e5a5c834e",
+    "tt-metal": "9802b80464cfd213b1146189753d8aedf86193fe"
+  },
+  "device": {
+    "id": 0,
+    "architecture": "wormhole_b0",
+    "board_type": "n300 L"
+  },
+  "execution_order": [
+    128,
+    4096
+  ],
+  "sessions": [
+    {
+      "items": 128,
+      "directory": "2026-07-26-n128",
+      "passed": true,
+      "failure_count": 0,
+      "nonfinite_value_count": 0,
+      "all_cases_represented": true,
+      "provenance_match": true,
+      "device_close_count": 1,
+      "max_abs_error": 1.7308668465165766e-7,
+      "max_state_norm_error": 1.3913574670176843e-7,
+      "max_phase_aligned_abs_error": 1.9374889297602987e-7,
+      "output_sha256": "51efd7dd81f954e546e8bd4eb0ba9a05109740c571629f0041a2b60efea13857"
+    },
+    {
+      "items": 4096,
+      "directory": "2026-07-26-n4096",
+      "passed": true,
+      "failure_count": 0,
+      "nonfinite_value_count": 0,
+      "all_cases_represented": true,
+      "provenance_match": true,
+      "device_close_count": 1,
+      "max_abs_error": 2.8242813776557796e-7,
+      "max_state_norm_error": 2.120702573549238e-7,
+      "max_phase_aligned_abs_error": 2.3345442658158545e-7,
+      "output_sha256": "967c966f70eaae4aefe5db8d1c197d4d7bde7d648bfaafaf3ecd0c67878674a1"
+    }
+  ],
+  "routing_and_device_correctness_reported_separately": true,
+  "second_chip_used": false,
+  "published": false
+}

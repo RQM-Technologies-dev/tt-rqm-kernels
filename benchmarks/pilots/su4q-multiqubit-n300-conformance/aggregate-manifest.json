@@ -1,0 +1,63 @@
+{
+  "schema": "tt-rqm-su4q-statevector-conformance-aggregate.v1",
+  "experiment": "su4q-multiqubit-n300-conformance",
+  "label": "su4q-multiqubit-n300-conformance",
+  "date": "2026-07-26",
+  "performance_eligible": false,
+  "overall_status": "incomplete_failed_baseline",
+  "branch": "codex/su4q-multiqubit-conformance",
+  "base_commit": "7268592",
+  "host_export_source_commit": "af395c48b1a5f7748c9a1f611b84602359f6c346",
+  "final_candidate_source_commit": "ea94606fcc6d17eaafdb0819f63479102ead0031",
+  "final_source_bundle_sha256": "c70a04bcd5a0eba94c0c36e3daebe254603dcde1a2ccdee64773916f10423ccc",
+  "candidate_binary_sha256": "92a5277deb0d5493dbe85a7020f2c2a8235659c5737644b8aa0cb06b2a3a1b52",
+  "dependencies": {
+    "rqm_compiler": "38408fac8bec95f5e243727395161360af5223b6",
+    "rqm_entanglement": "b5fa69f6a57eccc0f43765341cf84203c790920a",
+    "tt_rqm_kernels_pin": "fffa30784a00656a1a26ee89406633fecc9574ed",
+    "tt_metal": "9802b80464cfd213b1146189753d8aedf86193fe"
+  },
+  "host_sessions": [
+    {"qubits": 3, "depth": 1, "passed": true, "max_abs_error": 8.87989457520888e-8, "max_norm_drift": 8.29052293482846e-9},
+    {"qubits": 3, "depth": 8, "passed": true, "max_abs_error": 1.4530352962505155e-7, "max_norm_drift": 6.221972959075117e-8},
+    {"qubits": 4, "depth": 32, "passed": true, "max_abs_error": 3.969394715003238e-7, "max_norm_drift": 1.7529439844121697e-7},
+    {"qubits": 6, "depth": 32, "passed": true, "max_abs_error": 2.3179961933239568e-7, "max_norm_drift": 1.8048867889142173e-7},
+    {"qubits": 10, "depth": 32, "passed": true, "max_abs_error": 1.8709030623342837e-7, "max_norm_drift": 1.81309006808128e-7},
+    {"qubits": 15, "depth": 32, "passed": true, "max_abs_error": 1.7822038336778867e-7, "max_norm_drift": 1.8037535398640614e-7},
+    {"qubits": 15, "depth": 128, "passed": true, "max_abs_error": 2.1142410299226921e-7, "max_norm_drift": 6.690784517537907e-7}
+  ],
+  "hardware_ladder": [
+    {
+      "qubits": 3,
+      "depth": 1,
+      "status": "failed",
+      "output_produced": false,
+      "failure_gate": "reader_compute_circular_buffer_handoff",
+      "clean_device_closure": false,
+      "post_failure_reset": "successful"
+    },
+    {"qubits": 3, "depth": 8, "status": "not_run_stop_on_failure"},
+    {"qubits": 4, "depth": 32, "status": "not_run_stop_on_failure"},
+    {"qubits": 6, "depth": 32, "status": "not_run_stop_on_failure"},
+    {"qubits": 10, "depth": 32, "status": "not_run_stop_on_failure"},
+    {"qubits": 15, "depth": 32, "status": "not_run_stop_on_failure"},
+    {"qubits": 15, "depth": 128, "status": "not_run_stop_on_failure"}
+  ],
+  "hardware_failure_sequence": [
+    "unaligned_4_byte_dram_read",
+    "unaligned_16_byte_dram_read",
+    "reader_scratch_circular_buffer_assert",
+    "reader_compute_circular_buffer_deadlock"
+  ],
+  "acceptance": {
+    "source_contract_tests": "passed",
+    "host_ladder": "passed",
+    "warnings_as_errors_build": "passed",
+    "n300_ladder": "failed_at_first_session",
+    "program_count_equals_depth": "not_demonstrated_on_hardware",
+    "no_intermediate_host_transfers": "implemented_but_not_completed_on_hardware",
+    "clean_device_closure": "failed",
+    "publication_allowed": false,
+    "performance_phase_recommended": false
+  }
+}

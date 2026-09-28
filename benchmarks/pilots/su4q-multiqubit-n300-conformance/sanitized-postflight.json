@@ -1,0 +1,17 @@
+{
+  "schema": "tt-rqm-sanitized-device-health.v1",
+  "captured_after": "failed_3_qubit_depth_1_baseline_and_device_reset",
+  "device_id": 0,
+  "architecture": "wormhole_b0",
+  "firmware_bundle": "19.6.0.0",
+  "dram_status": true,
+  "heartbeat": "20",
+  "asic_temperature_c": 37.5,
+  "reset_completed": true,
+  "identifiers_removed": [
+    "board_id",
+    "serial_number",
+    "pci_bus_id",
+    "network_address"
+  ]
+}

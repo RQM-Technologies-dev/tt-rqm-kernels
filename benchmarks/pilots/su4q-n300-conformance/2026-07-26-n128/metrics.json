@@ -1,0 +1,84 @@
+{
+  "block_shape": [
+    128,
+    20
+  ],
+  "candidate_metadata": {
+    "automatic_normalization": false,
+    "basis_order": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ],
+    "block_convention_version": "rqm-su4q-v1-exp+iabc-qiskit-Klr:kron(q1=Kl,q0=Kr);circuit-little-endian",
+    "candidate_sha256": "5a926e943c9a4abebdb4bddabfd9bc4df0414daace483c9246184bee67044821",
+    "cartan_convention": "exp[i(aXX+bYY+cZZ)]",
+    "compiler_version": "c++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "device_arch": "wormhole_b0",
+    "device_close_count": 1,
+    "device_count": 1,
+    "device_create_count": 1,
+    "device_id": 0,
+    "implementation_class": "eight_program_device_resident_su4q",
+    "intermediate_d2h_count": 0,
+    "intermediate_h2d_count": 0,
+    "intermediate_storage": "device_dram_ping_pong",
+    "local_factor_order": "SU(2)(q1) tensor SU(2)(q0)",
+    "program_count": 8,
+    "runtime_version": "tt-metal-9802b80464cfd213b1146189753d8aedf86193fe",
+    "source_bundle_sha256": "bf99fb08e014cbb5f3c83b69dcb1c6ba3b9d675d52ccdd7711d58caa452ab284",
+    "source_commit": "c1cfa884de17e5afcbab0ab5a7b3266e5a5c834e",
+    "source_tree_clean": true,
+    "stage_core_counts": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "stage_order": [
+      "right_q0",
+      "right_q1",
+      "cartan_xx",
+      "cartan_yy",
+      "cartan_zz",
+      "left_q0",
+      "left_q1",
+      "global_phase"
+    ],
+    "tt_metal_commit": "9802b80464cfd213b1146189753d8aedf86193fe",
+    "tt_rqm_base_commit": "fffa30784a00656a1a26ee89406633fecc9574ed"
+  },
+  "claim_level": null,
+  "dtype": "float32",
+  "execution_label": "hardware",
+  "experiment": "su4q-n300-conformance",
+  "items": 128,
+  "output_shape": [
+    128,
+    8
+  ],
+  "performance_eligible": false,
+  "protocol": "tt-rqm-su4q-conformance.v1",
+  "schema": "tt-rqm-su4q-conformance-metrics.v1",
+  "stable_benchmark": false,
+  "stage": "conformance",
+  "state_shape": [
+    128,
+    8
+  ],
+  "timings_s": {
+    "buffer_allocation": 0.000162948,
+    "candidate_process": 12.167094998,
+    "d2h": 0.000255218,
+    "device_close": 0.114423101,
+    "device_create": 6.738461565,
+    "device_execute_diagnostic_only": 5.306170994,
+    "h2d": 0.005672831,
+    "program_build": 0.001713083
+  }
+}
