@@ -1,3 +1,6 @@
 # Raw hardware captures are byte-preserved evidence, including terminal whitespace.
 benchmarks/raw/** -whitespace
 benchmarks/pilots/hamiltonian-lowering-h2a/**/stderr.txt -whitespace
+
+# Preserve the captured hardware failure log byte-for-byte.
+benchmarks/pilots/su4q-multiqubit-n300-conformance/hardware-failure/*.log -whitespace
